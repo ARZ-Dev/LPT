@@ -21,12 +21,13 @@ class UsersSeeder extends Seeder
         $permissions = Permission::pluck('id','id')->all();
 
         $users=[
-            ['1','SA1','Super','Admin','sa1@padel.com'],//Super Admin
-            ['1','SA2','Super','Admin','sa2@padel.com'],//Super Admin
-            ['1','SA3','Super','Admin','sa3@padel.com'],//Super Admin
-            ['2','ED1','Editor','Editor','ed1@padel.com'],//Editor
-            ['2','ED2','Editor','Editor','ed2@padel.com'],//Editor
-            ['2','ED3','Editor','Editor','ed3@padel.com'],//Editor
+            ['1','SA1','Super','Admin','sa1@arzgt.com'],//Super Admin
+            ['1','SA2','Super','Admin','sa2@arzgt.com'],//Super Admin
+            ['1','SA3','Super','Admin','sa3@arzgt.com'],//Super Admin
+            
+            ['2','ED1','Editor','Editor','ed1@arzgt.com'],//Editor
+            ['2','ED2','Editor','Editor','ed2@arzgt.com'],//Editor
+            ['2','ED3','Editor','Editor','ed3@arzgt.com'],//Editor
         ];
 
         foreach($users as $u){
@@ -38,8 +39,7 @@ class UsersSeeder extends Seeder
                 'phone' => '000',
                 'password' => Hash::make('secret')
             ]);
-            // $user->assignRole($u[0]);
-            Role::firstOrCreate(['name' => $u[0], 'guard_name' => 'web']);
+            $user->assignRole($u[0]);
         }
     }
 }

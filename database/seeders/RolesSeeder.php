@@ -9,14 +9,18 @@ use Spatie\Permission\Models\Permission;
 
 class RolesSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $permissions = Permission::pluck('id','id')->all();
 
+        //Create Roles
         $roles=['Super Admin', 'Editor'];
 
         foreach($roles as $role){
-            $role = Role::updateOrCreate(['name' => $role]);
+            $role = Role::create(['name' => $role]);
             $role->syncPermissions($permissions);
         }
     }
