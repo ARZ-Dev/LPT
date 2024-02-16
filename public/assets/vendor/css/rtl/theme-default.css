@@ -10,10 +10,12 @@
   --main-color: #D4C522;
   --secondary-color: #388DA2;
   --hover-color: #30c5eb;
-  --linear-color: rgb(35, 120, 218);
+  --linear-color: #388DA2;
+  --linear-color2: #388DA2;
 
 
-  d4a37
+
+
 
 }
 
@@ -497,7 +499,7 @@ button.list-group-item-primary.active {
 }
 
 .nav-pills .nav-link.active, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active:focus {
-  background-color: var(--main-color)
+  background-color: var(--linear-color)
 ;
   color: #fff;
 }
@@ -506,7 +508,7 @@ button.list-group-item-primary.active {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-link.active:hover,
 .nav-tabs .nav-link.active:focus {
-  box-shadow: 0 -2px 0 var(--main-color)
+  box-shadow: 0 -2px 0 var(--linear-color)
  inset;
 }
 
@@ -514,7 +516,7 @@ button.list-group-item-primary.active {
 .nav-align-bottom .nav-tabs .nav-link.active,
 .nav-align-bottom .nav-tabs .nav-link.active:hover,
 .nav-align-bottom .nav-tabs .nav-link.active:focus {
-  box-shadow: 0 2px 0 var(--main-color)
+  box-shadow: 0 2px 0 var(--linear-color)
  inset;
 }
 
@@ -530,7 +532,7 @@ button.list-group-item-primary.active {
 .nav-align-right .nav-tabs .nav-link.active,
 .nav-align-right .nav-tabs .nav-link.active:hover,
 .nav-align-right .nav-tabs .nav-link.active:focus {
-  box-shadow: 2px 0px 0 var(--main-color)
+  box-shadow: 2px 0px 0 var(--linear-color)
  inset;
 }
 
@@ -538,14 +540,14 @@ button.list-group-item-primary.active {
 [dir=rtl] .nav-align-left .nav-tabs .nav-link.active,
 [dir=rtl] .nav-align-left .nav-tabs .nav-link.active:hover,
 [dir=rtl] .nav-align-left .nav-tabs .nav-link.active:focus {
-  box-shadow: 2px 0px 0 var(--main-color)
+  box-shadow: 2px 0px 0 var(--linear-color)
  inset;
 }
 [dir=rtl] .nav-align-right .nav-tabs .nav-link.active, [dir=rtl] .nav-align-right .nav-tabs .nav-link.active:hover, [dir=rtl] .nav-align-right .nav-tabs .nav-link.active:focus,
 [dir=rtl] .nav-align-right .nav-tabs .nav-link.active,
 [dir=rtl] .nav-align-right .nav-tabs .nav-link.active:hover,
 [dir=rtl] .nav-align-right .nav-tabs .nav-link.active:focus {
-  box-shadow: -2px 0px 0 var(--main-color)
+  box-shadow: -2px 0px 0 var(--linear-color)
  inset;
 }
 
@@ -812,30 +814,30 @@ button.list-group-item-primary.active {
 }
 .menu.bg-primary.menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
   background: linear-gradient(72.47deg, var(--linear-color)
-3 22.16%, var(--main-color)
+3 22.16%, var(--linear-color2)
  76.47%);
-  box-shadow: 0px 2px 6px 0px var(--main-color)
+  box-shadow: 0px 2px 6px 0px var(--linear-color)
 ;
   color: #fff !important;
 }
 [dir=rtl] .menu.bg-primary.menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
-  background: linear-gradient(72.47deg, var(--main-color)
+  background: linear-gradient(72.47deg, var(--linear-color2)
  22.16%, var(--linear-color)
 3 76.47%) !important;
 }
 .menu.bg-primary.menu-horizontal .menu-inner > .menu-item.active > .menu-link.menu-toggle {
   background: linear-gradient(72.47deg, var(--linear-color)
-3 22.16%, var(--main-color)
+3 22.16%, var(--linear-color2)
  76.47%);
   color: #fff !important;
-  box-shadow: 0px 2px 6px 0px var(--main-color)
+  box-shadow: 0px 2px 6px 0px var(--linear-color)
 ;
 }
 [dir=rtl] .menu.bg-primary.menu-horizontal .menu-inner > .menu-item.active > .menu-link.menu-toggle {
-  background: linear-gradient(72.47deg, var(--main-color)
+  background: linear-gradient(72.47deg, var(--linear-color2)
  22.16%, var(--linear-color)
 3 76.47%);
-  box-shadow: 0px 2px 6px 0px var(--main-color)
+  box-shadow: 0px 2px 6px 0px var(--linear-color)
 ;
   color: #fff !important;
 }
@@ -1456,13 +1458,13 @@ li.ui-timepicker-selected,
 }
 
 .app-chat .sidebar-body .chat-contact-list li.active {
-  background: linear-gradient(72.47deg, var(--secondary-color)
- 22.16%, var(--main-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%);
 }
 [dir=rtl] .app-chat .sidebar-body .chat-contact-list li.active {
-  background: linear-gradient(72.47deg, var(--main-color)
- 22.16%, var(--secondary-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%) !important;
 }
 .app-chat .app-chat-history .chat-history .chat-message.chat-message-right .chat-message-text {
@@ -1601,29 +1603,29 @@ li.ui-timepicker-selected,
   /* textcolor */
 }
 .bg-menu-theme.menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
-  background: linear-gradient(72.47deg, var(--secondary-color)
- 22.16%, var(--main-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%);
   box-shadow: 0px 2px 6px 0px var(--main-color)
 ;
   color: #fff !important;
 }
 [dir=rtl] .bg-menu-theme.menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
-  background: linear-gradient(72.47deg, var(--main-color)
- 22.16%, var(--secondary-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%) !important;
 }
 .bg-menu-theme.menu-horizontal .menu-inner > .menu-item.active > .menu-link.menu-toggle {
-  background: linear-gradient(72.47deg, var(--secondary-color)
- 22.16%, var(--main-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%);
   color: #fff !important;
   box-shadow: 0px 2px 6px 0px var(--main-color)
 ;
 }
 [dir=rtl] .bg-menu-theme.menu-horizontal .menu-inner > .menu-item.active > .menu-link.menu-toggle {
-  background: linear-gradient(72.47deg, var(--main-color)
- 22.16%, var(--secondary-color)
+  background: linear-gradient(72.47deg, var(--linear-color)
+ 22.16%, var(--linear-color2)
  76.47%);
   box-shadow: 0px 2px 6px 0px var(--main-color)
 ;

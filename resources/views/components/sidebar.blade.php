@@ -3,7 +3,7 @@
 	
 
 <div class=" text-center">
-		<img id="logoImage" src="" style="height:100%;width:230px;">
+		<img id="logoImage" src="{{ asset('assets/images/login/Racket-and-ball-Tennis-Logo-by-yahyaanasatokillah.png') }}" style="height:100%;width:230px;">
 </div>
 
 	<div class="app-brand  demo">

@@ -22,7 +22,7 @@
                     <div class="card-body">
 
                         <!-- Logo -->
-                        <img src="" style="max-width: 100%;" >
+                        <img src="{{ asset('assets/images/login/Racket-and-ball-Tennis-Logo-by-yahyaanasatokillah.png') }}" style="max-width: 100%;" alt="Tennis Logo">
 
                         <!-- <h4 class="mb-1 pt-2">Welcome to LPT! ☕</h4> -->
                         <!-- <p class="mb-4">Please sign-in to your account</p> -->
