@@ -155,7 +155,7 @@ class RoleView extends Component
         $data = [];
         $data['roles'] = Role::withCount('users')->get();
 
-        $this->emit('initializeDatatable');
+        // $this->emit('initializeDatatable');
 
         return view('livewire.roles-permissions.role-view', $data);
     }
