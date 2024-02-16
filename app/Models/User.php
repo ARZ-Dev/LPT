@@ -3,14 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Utils\Constants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable , HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -18,8 +22,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
+        'first_name',
+        'last_name',
+        'phone',
         'email',
+  
         'password',
     ];
 
@@ -42,4 +50,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isSuperAdmin()
+    {
+        return $this->hasRole(Constants::SUPER_ADMIN_ROLE_ID);
+    }
+
+    public function isProcurementManager()
+    {
+        return $this->hasRole(Constants::PROCUREMENT_MANAGER_ROLE_ID);
+    }
+
+    public function isSales()
+    {
+        return $this->hasRole(Constants::SALES_ROLE_ID);
+    }
+
 }
