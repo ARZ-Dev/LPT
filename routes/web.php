@@ -15,11 +15,15 @@ use App\Livewire\RolesPermissions\RoleView;
 
 Route::get('/login', Login::class)->name('login');
 Route::get('/dashboard', DashboardView::class)->name('dashboard');
-
 Route::get('/permissions', PermissionView::class)->name('permissions');
 Route::get('/roles', RoleView::class)->name('roles');
 
-
+Route::group(['prefix' => 'users'], function() {
+    Route::get('/', UserView::class)->name('users');
+    Route::get('/create', UserForm::class)->name('users.create');
+    Route::get('/edit/{id}', UserForm::class)->name('users.edit');
+    Route::get('/view/{id}/{status}', UserForm::class)->name('users.view');
+});
 
 Route::get('/test', Test::class)->name('Test');
 

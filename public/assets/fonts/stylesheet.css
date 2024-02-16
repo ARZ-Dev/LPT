@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Phenomena';
+    src: url('Phenomena-Regular.eot');
+    src: url('Phenomena-Regular.eot?#iefix') format('embedded-opentype'),
+        url('Phenomena-Regular.woff2') format('woff2'),
+        url('Phenomena-Regular.woff') format('woff'),
+        url('Phenomena-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

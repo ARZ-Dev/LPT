@@ -2,7 +2,7 @@
 
     <style>
         body{
-        background-image: url("/assets/images/login/coffebg2.jpg");
+        background-image: url("/assets/images/login/pexels-todd-trapani-2339377.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -64,7 +64,7 @@
                             <div class="mb-3">
                                 <div class="form-check">
                                     <input wire:model="rememberMe" class="form-check-input" type="checkbox" id="remember-me" />
-                                    <label class="form-check-label" for="remember-me"> Remember Me </label>
+                                    <label class="form-check-label" for="remember-me" > Remember Me </label>
                                 </div>
                             </div>
                             @error('username')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Users;
+namespace App\Livewire\Users;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;

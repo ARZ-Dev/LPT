@@ -1,0 +1,49 @@
+{
+  "pages": [
+    {
+      "name": "Bids",
+      "icon": "ti-news",
+      "url": "bids"
+    },
+    {
+      "name": "Pricing Requests",
+      "icon": "ti-report-money",
+      "url": "pricing-requests"
+    },
+    {
+      "name": "Dashboard - Report",
+      "icon": "ti-report",
+      "url": "dashboard"
+    },
+      {
+          "name": "Settings - Items",
+          "icon": "ti-box",
+          "url": "items"
+      },
+      {
+          "name": "Settings - Roles",
+          "icon": "ti-settings",
+          "url": "roles"
+      },
+      {
+          "name": "Settings - Permissions",
+          "icon": "ti-settings",
+          "url": "permissions"
+      },
+      {
+          "name": "Settings - Suppliers",
+          "icon": "ti-building-warehouse",
+          "url": "suppliers"
+      },
+      {
+          "name": "Settings - Incoterms",
+          "icon": "ti-truck-delivery",
+          "url": "incoterms"
+      },
+      {
+          "name": "Settings - Users",
+          "icon": "ti-users",
+          "url": "users"
+      }
+  ]
+}
