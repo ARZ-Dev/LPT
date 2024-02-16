@@ -38,29 +38,29 @@
 
 			<ul class="menu-sub">
 
-                @can('role-list')
+               
                 <li class="menu-item {{ request()->is('roles') ? "active" : "" }}">
                     <a href="{{ route('roles') }}" class="menu-link">
                     <div data-i18n="Roles">Roles</div>
                     </a>
                 </li>
-                @endcan
+            
 
-                @can('permission-list')
+               
                 <li class="menu-item {{ request()->is('permissions') ? "active" : "" }}">
                     <a href="{{ route('permissions') }}" class="menu-link">
                     <div data-i18n="Permissions">Permissions</div>
                     </a>
                 </li>
-                @endcan
+              
                 
-                @can('user-list')
+              
                     <li class="menu-item">
                         <a href="{{ route('users') }}" class="menu-link">
                             <div data-i18n="Users">Users</div>
                         </a>
                     </li>
-                @endcan
+            
 
 			</ul>
 

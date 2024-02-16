@@ -1,4 +1,4 @@
-<div>
+<body>
     <!-- Users List Table -->
     <div wire:ignore class="card">
         <div class="card-header border-bottom">
@@ -403,5 +403,5 @@
 
     </script>
 
-</div>
+    </body>
 
