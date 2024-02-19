@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 
 class PermissionsSeeder extends Seeder
 {
@@ -27,8 +29,15 @@ class PermissionsSeeder extends Seeder
             'permission-list',
         ];
 
+        $permissionsIds = [];
         foreach ($permissions as $permission) {
-            Permission::updateOrCreate(['name' => $permission]);
+            $createdPermission = Permission::updateOrCreate(['name' => $permission]);
+            $permissionsIds[] = $createdPermission->id;
+        }
+        
+        $adminRole = Role::find(1);
+        if($adminRole!=null){
+            $adminRole->syncPermissions($permissionsIds);
         }
     }
 }
