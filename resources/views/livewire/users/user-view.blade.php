@@ -25,7 +25,7 @@
     </div>
 
     <script>
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('livewire:navigated', function () {
             var dt_user_table = $('.datatables-users')
 
             var users = @json($users ?? []);

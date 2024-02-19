@@ -145,7 +145,7 @@
 
     <script>
         
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('livewire:navigated', function () {
             $(document).ready(function () {
 
                 if (usersList) {
@@ -158,7 +158,7 @@
 
             });
         })
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('livewire:navigated', function () {
             var status={{$status}};
             if (status=="1") {$('input').prop('disabled', true);}
         });

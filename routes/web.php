@@ -11,9 +11,15 @@ use App\Livewire\Users\UserForm;
 
 use App\Livewire\RolesPermissions\PermissionView;
 use App\Livewire\RolesPermissions\RoleView;
-// use App\Controllers\DashboardController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/login', Login::class)->name('login');
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::middleware('auth')->group(function () {
 Route::get('/dashboard', DashboardView::class)->name('dashboard');
 Route::get('/permissions', PermissionView::class)->name('permissions');
 Route::get('/roles', RoleView::class)->name('roles');
@@ -26,9 +32,9 @@ Route::group(['prefix' => 'users'], function() {
 });
 
 Route::get('/test', Test::class)->name('Test');
+Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
 
-
-
-Route::get('/', function () {
-    return view('welcome');
 });
+
+
+

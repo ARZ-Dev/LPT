@@ -295,11 +295,11 @@
                     };
 
                     // Search API AJAX call
-                   {{--  var searchData = $.ajax({
+                     var searchData = $.ajax({
                         url: "{{ route('pages') }}",
                         dataType: 'json',
                         async: false
-                    }).responseJSON; --}}
+                    }).responseJSON; 
 
                     // Init typeahead on searchInput
                     searchInput.each(function () {

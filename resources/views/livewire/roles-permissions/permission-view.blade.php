@@ -23,7 +23,7 @@
     <!--/ Permission Table -->
 
     <script>
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('livewire:navigated', function () {
             var permissions = @json($permissions ?? []);
             var rolesBadgeObj = @json($rolesBadgeObj ?? []);
             $(function () {
