@@ -98,6 +98,7 @@ class UserForm extends Component
 
     public function update()
     {
+        
         $this->authorize('user-edit');
 
         $this->validate([
