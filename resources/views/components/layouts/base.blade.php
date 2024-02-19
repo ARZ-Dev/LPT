@@ -14,7 +14,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
-    
+
 
     @php
         $title = ucwords(str_replace('.', '-', request()->route()->getName()));
@@ -22,7 +22,7 @@
     @endphp
 
     <title>ARZGT - {{ $title }}</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{url('/assets/images/favicon.ico')}}" />
 
@@ -68,12 +68,12 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
     <!-- <link rel="stylesheet" href="{{ asset('assets/css/codenepal.css') }}" /> -->
 
-    
+
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" integrity="sha512-zxBiDORGDEAYDdKLuYU9X/JaJo/DPzE42UubfBw9yg8Qvb2YRRIQ8v4KsGHOx2H1/+sdSXyXxLXv5r7tHc9ygg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
-    
+
 
 
 
@@ -140,12 +140,12 @@
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->
 
-    
+
 
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js" integrity="sha512-vUJTqeDCu0MKkOhuI83/MEX5HSNPW+Lw46BA775bAWIp1Zwgz3qggia/t2EnSGB9GoS2Ln6npDmbJTdNhHy1Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 
-    
+
 
 
 
@@ -165,11 +165,11 @@
     <script>
         window.addEventListener('swal:confirm', event => {
             Swal.fire({
-                title: event.detail.title,
-                text: event.detail.text,
-                icon: event.detail.type,
+                title: event.detail[0].title,
+                text: event.detail[0].text,
+                icon: event.detail[0].type,
                 showCancelButton: true,
-                confirmButtonText: event.detail.buttonText ?? 'Yes, delete it!',
+                confirmButtonText: event.detail[0].buttonText ?? 'Yes, delete it!',
                 customClass: {
                     confirmButton: 'btn btn-primary me-3',
                     cancelButton: 'btn btn-label-secondary'
@@ -178,15 +178,15 @@
             })
             .then((willDelete) => {
                 if (willDelete.isConfirmed) {
-                    window.livewire.emit(event.detail.method, event.detail.id);
+                    window.livewire.emit(event.detail[0].method, event.detail[0].id);
                 }
             });
         });
 
         window.addEventListener('swal:success', event => {
             Swal.fire({
-                title: event.detail.title,
-                text: event.detail.text,
+                title: event.detail[0].title,
+                text: event.detail[0].text,
                 icon: 'success',
                 customClass: {
                     confirmButton: 'btn btn-primary'
@@ -197,8 +197,8 @@
 
         window.addEventListener('swal:error', event => {
             Swal.fire({
-                title: event.detail.title,
-                text: event.detail.text,
+                title: event.detail[0].title,
+                text: event.detail[0].text,
                 icon: 'error',
                 customClass: {
                     confirmButton: 'btn btn-primary'
@@ -301,7 +301,7 @@
                         url: "{{ route('pages') }}",
                         dataType: 'json',
                         async: false
-                    }).responseJSON; 
+                    }).responseJSON;
 
                     // Init typeahead on searchInput
                     searchInput.each(function () {
@@ -411,11 +411,11 @@
         //     var image_width=0;
         //     var image_height=0;
         //     var image_count=0;
-            
+
         //     // const uploadInput = document.getElementById('image_test');
 
         //     $(".crop_image").on('change', function (e) {
-                
+
         //         image_width=$(this).attr("width");
         //         image_height=$(this).attr("height");
         //         image_count=$(this).attr("count");
@@ -457,7 +457,7 @@
         //                 };
         //                 reader.readAsDataURL(file);
         //             }
-        //         }   
+        //         }
         //     });
 
         //     $modal.on('shown.bs.modal', function () {
@@ -474,7 +474,7 @@
         //     // $modal.modal('show');
 
         //     $("#crop").click(function(){
-                                
+
         //         canvas = cropper.getCroppedCanvas({
         //             // width: ,
         //             // height: ,
@@ -485,14 +485,14 @@
         //             var reader = new FileReader();
         //             reader.readAsDataURL(blob);
         //             reader.onloadend = function() {
-        //                 var base64data = reader.result;  
+        //                 var base64data = reader.result;
         //                 document.getElementById('previewImage'+image_count).src = base64data;
         //                 console.log(base64data);
         //                 $("#cropLoader").removeClass("hidden");
         //                 window.livewire.emit('croppedImage', base64data,image_count);
         //             }
         //         },'image/jpg',0.9);
-                
+
         //     });
 
         //     $(".closeBtn").click(function(){
@@ -511,7 +511,7 @@
        </script>
     <script>
             const inputElements = document.querySelectorAll('.numberInput');
-    
+
             inputElements.forEach(function(inputElement) {
                 inputElement.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, '');
