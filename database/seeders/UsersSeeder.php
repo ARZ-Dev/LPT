@@ -21,12 +21,12 @@ class UsersSeeder extends Seeder
         $permissions = Permission::pluck('id','id')->all();
 
         $users=[
-            ['1','SA1','Super','Admin','sa1@arzgt.com'],//Super Admin
-            ['1','SA2','Super','Admin','sa2@arzgt.com'],//Super Admin
-            ['1','SA3','Super','Admin','sa3@arzgt.com'],//Super Admin
-            ['2','ED1','Editor','Editor','ed1@arzgt.com'],//Editor
-            ['2','ED2','Editor','Editor','ed2@arzgt.com'],//Editor
-            ['2','ED3','Editor','Editor','ed3@arzgt.com'],//Editor
+            ['Super Admin','SA1','Super','Admin','sa1@arzgt.com'],//Super Admin
+            ['Super Admin','SA2','Super','Admin','sa2@arzgt.com'],//Super Admin
+            ['Super Admin','SA3','Super','Admin','sa3@arzgt.com'],//Super Admin
+            ['Editor','ED1','Editor','Editor','ed1@arzgt.com'],//Editor
+            ['Editor','ED2','Editor','Editor','ed2@arzgt.com'],//Editor
+            ['Editor','ED3','Editor','Editor','ed3@arzgt.com'],//Editor
         ];
 
         foreach($users as $u){
