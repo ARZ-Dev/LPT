@@ -21,11 +21,7 @@
         $title = ucwords(str_replace('-', ' ', $title));
     @endphp
 
-<<<<<<< HEAD
-    <title>LPT - {{ $title }}</title>
-=======
     <title>ARZGT - {{ $title }}</title>
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{url('/assets/images/favicon.ico')}}" />
@@ -37,13 +33,8 @@
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
-<<<<<<< HEAD
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script> -->
-=======
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome.css') }}" />
@@ -416,107 +407,6 @@
 
 
     <!-- cropper -->
-<<<<<<< HEAD
-    // <script>
-
-     
-
-    //     document.addEventListener('DOMContentLoaded', function () {
-    //         var $modal = $('#modal');
-    //         var cropper;
-    //         var image=document.getElementById('image');
-    //         var ratio=0;
-    //         var image_width=0;
-    //         var image_height=0;
-    //         var image_count=0;
-    //         var extension=".webp";
-    //         // const uploadInput = document.getElementById('image_test');
-    //         $(".crop_image").on('change', function (e) {
-    //             const input = e.target;
-    //             if (input.files && input.files[0]) {
-    //                 const file = input.files[0];
-    //                 // Get file extension
-    //                 extension = file.name.split('.').pop().toLowerCase();
-    //             }
-    //             image_width=$(this).attr("width");
-    //             image_height=$(this).attr("height");
-    //             image_count=$(this).attr("count");
-    //             ratio=parseInt(image_width)/parseInt(image_height);
-    //             var files = e.target.files;
-    //             var maxFileSize = 1024 * 1024;
-    //             var done = function (url) {
-    //                 image.src = url;
-    //                 $("#popupCropImage").removeClass('hidden');
-    //                 $modal.modal('show');
-    //                 // alert("!");
-    //             };
-    //             var reader;
-    //             var file;
-    //             var url;
-    //             if (files && files.length > 0) {
-    //                 file = files[0];
-    //                 if(file.size > maxFileSize) {
-    //                     Swal.fire({
-    //                         icon: 'error',
-    //                         title: 'Oops...',
-    //                         text: 'File size must be less than 1MB!',
-    //                     });
-    //                     uploadInput.value = ''; // Clear the input
-    //                     return; // Prevent further execution
-    //                 }
-    //                 if (URL) {
-    //                     done(URL.createObjectURL(file));
-    //                 } else if (FileReader) {
-    //                     reader = new FileReader();
-    //                     reader.onload = function (e) {
-    //                         done(reader.result);
-    //                     };
-    //                     reader.readAsDataURL(file);
-    //                 }
-    //             }
-    //         });
-    //         $modal.on('shown.bs.modal', function () {
-    //             cropper = new Cropper(image, {
-    //                 aspectRatio: parseInt(ratio),
-    //                 viewMode: 0,
-    //                 // preview: '.preview',
-    //             });
-    //         }).on('hidden.bs.modal', function () {
-    //             cropper.destroy();
-    //             cropper = null;
-    //         });
-    //         // $modal.modal('show');
-    //         $("#crop").click(function(){
-    //             canvas = cropper.getCroppedCanvas({
-    //                 // width: ,
-    //                 // height: ,
-    //             });
-    //             canvas.toBlob(function(blob) {
-    //                 url = URL.createObjectURL(blob);
-    //                 var reader = new FileReader();
-    //                 reader.readAsDataURL(blob);
-    //                 reader.onloadend = function() {
-    //                     var base64data = reader.result;
-    //                     document.getElementById('previewImage'+image_count).src = base64data;
-    //                     console.log(base64data);
-    //                     $("#cropLoader").removeClass("hidden"); 
-    //                     window.livewire.emit('croppedImage', base64data,image_count,extension);
-    //                 }
-    //             },'image/webp', 0.6);
-    //         });
-    //         $(".closeBtn").click(function(){
-    //             $("#cropLoader").addClass("hidden");
-    //             $modal.modal('hide');
-    //         });
-    //         Livewire.on('hideCropTool', function () {
-    //             console.log("hide");
-    //             $("#cropLoader").addClass("hidden");
-    //             $modal.modal('hide');
-    //         });
-    //     });
-
-    // </script>
-=======
     <script>
 
         // document.addEventListener('DOMContentLoaded', function () {
@@ -720,7 +610,6 @@
         });
 
     </script>
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
 
     <script>
             const inputElements = document.querySelectorAll('.numberInput');
