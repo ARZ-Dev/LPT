@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UserView extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, WithPagination;
 
     protected $listeners = [
         'deleteConfirm',
@@ -48,7 +49,7 @@ class UserView extends Component
     {
         $data = [];
 
-        $users = UserResource::collection(User::all());
+        $users = User::paginate(5);
         $data['users'] = $users;
 
         return view('livewire.users.user-view', $data);

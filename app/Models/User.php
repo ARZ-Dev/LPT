@@ -50,5 +50,20 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function setFullNameAttribute($value)
+    {
+        $names = explode(' ', $value);
+        $this->attributes['first_name'] = isset($names[0]) ? $names[0] : '';
+        $this->attributes['last_name'] = isset($names[1]) ? $names[1] : '';
+    }
+
+    public function getFullNameAttribute()
+    {
+        $first_name = isset($this->attributes['first_name']) ? $this->attributes['first_name'] : '';
+        $last_name = isset($this->attributes['last_name']) ? $this->attributes['last_name'] : '';
+
+        return trim($first_name . ' ' . $last_name);
+    }
+
 
 }
