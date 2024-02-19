@@ -2,7 +2,7 @@
 
     <style>
         body{
-        background-image: url("/assets/images/login/pexels-todd-trapani-2339377.jpg");
+        background-image: url("/assets/images/login/coffebg2.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -22,9 +22,9 @@
                     <div class="card-body">
 
                         <!-- Logo -->
-                        <img src="{{ asset('assets/images/login/Racket-and-ball-Tennis-Logo-by-yahyaanasatokillah.png') }}" style="max-width: 100%;" alt="Tennis Logo">
+                        <img src="" style="max-width: 100%;" >
 
-                        <!-- <h4 class="mb-1 pt-2">Welcome to LPT! ☕</h4> -->
+                        <!-- <h4 class="mb-1 pt-2">Welcome to ARZGT! ☕</h4> -->
                         <!-- <p class="mb-4">Please sign-in to your account</p> -->
 
                         <div id="formAuthentication" class="mb-3">
@@ -64,7 +64,7 @@
                             <div class="mb-3">
                                 <div class="form-check">
                                     <input wire:model="rememberMe" class="form-check-input" type="checkbox" id="remember-me" />
-                                    <label class="form-check-label" for="remember-me" > Remember Me </label>
+                                    <label class="form-check-label" for="remember-me"> Remember Me </label>
                                 </div>
                             </div>
                             @error('username')

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
+
 use Livewire\Component;
 
 class Login extends Component
@@ -10,10 +12,21 @@ class Login extends Component
     public $password = '';
     public $rememberMe = false;
 
+    public $headerStyle;
+
+
     protected $rules = [
         'username' => ['required', 'string', 'username'],
         'password' => ['required', 'string'],
     ];
+
+    public function mount()
+    {
+        if(auth()->user())
+        {
+            return to_route('dashboard');
+        }
+    }
 
     public function login()
     {

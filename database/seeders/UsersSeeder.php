@@ -24,7 +24,10 @@ class UsersSeeder extends Seeder
             ['1','SA1','Super','Admin','sa1@arzgt.com'],//Super Admin
             ['1','SA2','Super','Admin','sa2@arzgt.com'],//Super Admin
             ['1','SA3','Super','Admin','sa3@arzgt.com'],//Super Admin
+<<<<<<< HEAD
             
+=======
+>>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
             ['2','ED1','Editor','Editor','ed1@arzgt.com'],//Editor
             ['2','ED2','Editor','Editor','ed2@arzgt.com'],//Editor
             ['2','ED3','Editor','Editor','ed3@arzgt.com'],//Editor
