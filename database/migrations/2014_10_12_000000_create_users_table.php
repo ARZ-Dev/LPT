@@ -18,11 +18,6 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone');
             $table->string('email')->unique();
-<<<<<<< HEAD
-            $table->foreignId('delegate_id')->nullable()->constrained('users')->nullOnDelete();
-=======
-
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
