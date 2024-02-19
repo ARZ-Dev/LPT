@@ -21,7 +21,7 @@ class UserView extends Component
 
     public function deleteConfirm($method, $id = null): void
     {
-        $this->dispatchBrowserEvent('swal:confirm', [
+        $this->dispatch('swal:confirm', [
             'type'  => 'warning',
             'title' => 'Are you sure?',
             'text'  => 'You won\'t be able to revert this!',

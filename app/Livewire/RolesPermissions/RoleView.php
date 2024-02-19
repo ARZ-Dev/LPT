@@ -110,9 +110,9 @@ class RoleView extends Component
         }
         $this->role->syncPermissions($this->selectedPermissions);
 
-        $this->emit('dismissModal');
+        $this->dispatch('dismissModal');
 
-        $this->dispatchBrowserEvent('swal:success', [
+        $this->dispatch('swal:success', [
             'title' => 'Great!',
             'text'  => "Role has been saved successfully!",
         ]);
@@ -120,7 +120,7 @@ class RoleView extends Component
 
     public function deleteConfirm($method, $id = null): void
     {
-        $this->dispatchBrowserEvent('swal:confirm', [
+        $this->dispatch('swal:confirm', [
             'type'  => 'warning',
             'title' => 'Are you sure?',
             'text'  => 'You won\'t be able to revert this!',
@@ -135,7 +135,7 @@ class RoleView extends Component
         // check if role has users before deleting
         $role = Role::findById($id);
         if (count($role->users)) {
-            $this->dispatchBrowserEvent('swal:error', [
+            $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => "You have to unassign this role from users before deleting!",
             ]);
@@ -144,7 +144,7 @@ class RoleView extends Component
 
         $role->delete();
 
-        $this->dispatchBrowserEvent('swal:success', [
+        $this->dispatch('swal:success', [
             'title' => 'Great!',
             'text'  => "Role has been deleted successfully!",
         ]);
@@ -155,7 +155,7 @@ class RoleView extends Component
         $data = [];
         $data['roles'] = Role::withCount('users')->get();
 
-        // $this->emit('initializeDatatable');
+        $this->dispatch('initializeDatatable');
 
         return view('livewire.roles-permissions.role-view', $data);
     }
