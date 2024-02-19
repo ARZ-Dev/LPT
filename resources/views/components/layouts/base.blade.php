@@ -137,13 +137,8 @@
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 
     <!-- <script src="{{ asset('assets/js/codenepal.js') }}"></script> -->
-<<<<<<< HEAD
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->
-=======
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
 
     
 
@@ -300,15 +295,9 @@
                     };
 
                     // Search API AJAX call
-<<<<<<< HEAD
+
                      var searchData = $.ajax({
-=======
-<<<<<<< HEAD
-                   {{--  var searchData = $.ajax({
-=======
-                    {{--var searchData = $.ajax({
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
->>>>>>> 39de77df6b66b9bbe8026dc51138a5f57ac39b0a
+
                         url: "{{ route('pages') }}",
                         dataType: 'json',
                         async: false

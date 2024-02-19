@@ -171,7 +171,6 @@
 
     <script>
         document.addEventListener('livewire:navigated', function () {
-            alert(1);
             Livewire.on('dismissModal', function() {
                 $('.close-modal').click();
             })
