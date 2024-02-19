@@ -2,11 +2,8 @@
 
 namespace App\Livewire\Auth;
 
-<<<<<<< HEAD
-=======
 use App\Models\User;
 
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
 use Livewire\Component;
 
 class Login extends Component
@@ -15,19 +12,14 @@ class Login extends Component
     public $password = '';
     public $rememberMe = false;
 
-<<<<<<< HEAD
-=======
     public $headerStyle;
 
 
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
     protected $rules = [
         'username' => ['required', 'string', 'username'],
         'password' => ['required', 'string'],
     ];
 
-<<<<<<< HEAD
-=======
     public function mount()
     {
         if(auth()->user())
@@ -36,7 +28,6 @@ class Login extends Component
         }
     }
 
->>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
     public function login()
     {
         $validatedData = $this->validate([
