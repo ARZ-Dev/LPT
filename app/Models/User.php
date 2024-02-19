@@ -27,7 +27,6 @@ class User extends Authenticatable
         'last_name',
         'phone',
         'email',
-  
         'password',
     ];
 
@@ -51,19 +50,5 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function isSuperAdmin()
-    {
-        return $this->hasRole(Constants::SUPER_ADMIN_ROLE_ID);
-    }
-
-    public function isProcurementManager()
-    {
-        return $this->hasRole(Constants::PROCUREMENT_MANAGER_ROLE_ID);
-    }
-
-    public function isSales()
-    {
-        return $this->hasRole(Constants::SALES_ROLE_ID);
-    }
 
 }
