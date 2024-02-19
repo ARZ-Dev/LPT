@@ -35,10 +35,17 @@
                             <div class="container-xxl">
                                 <div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
                                     <div>
+<<<<<<< HEAD
                                         LPT © <?php echo date('Y'); ?>. All Rights Reserved.
                                     </div>
                                     <div>
                                         Designed & Developed by <a href="https://LPT.com" target="_blank" class="fw-semibold">LPT</a>
+=======
+                                        Arzgt © <?php echo date('Y'); ?>. All Rights Reserved.
+                                    </div>
+                                    <div>
+                                        Designed & Developed by <a href="https://arzgt.com" target="_blank" class="fw-semibold">ARZGT</a>
+>>>>>>> 9154491a58cbe5c3e5c8224a1b7d7230e479e1e5
                                     </div>
                                 </div>
                             </div>
