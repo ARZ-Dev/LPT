@@ -137,7 +137,7 @@
             
             @if(!$status)
                 <div class="col-12 text-end mt-2">
-                    <button onclick="submit('{{ $editing ? "update" : "store" }}')" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                    <button wire:click="{{ $editing ? "update" : "store" }}" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
                 </div>
             @endif
         </div>

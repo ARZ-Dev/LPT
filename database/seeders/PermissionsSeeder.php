@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+
 class PermissionsSeeder extends Seeder
 {
     public function run(): void
@@ -33,7 +34,7 @@ class PermissionsSeeder extends Seeder
             $createdPermission = Permission::updateOrCreate(['name' => $permission]);
             $permissionsIds[] = $createdPermission->id;
         }
-
+        
         $adminRole = Role::find(1);
         if($adminRole!=null){
             $adminRole->syncPermissions($permissionsIds);
