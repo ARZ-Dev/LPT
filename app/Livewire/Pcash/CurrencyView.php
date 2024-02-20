@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Pcash;
 
-use App\Models\Category;
+use App\Models\Currency;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
 
-class CategoryView extends Component
+class CurrencyView extends Component
 {
     use AuthorizesRequests;
 
@@ -26,12 +26,12 @@ class CategoryView extends Component
 
     public function delete($id)
     {
-        $this->authorize('category-delete');
+        $this->authorize('currency-delete');
 
-        $category = Category::findOrFail($id);
-        $category->delete();
+        $currency = Currency::findOrFail($id);
+        $currency->delete();
 
-        return to_route('category')->with('success', 'category has been deleted successfully!');
+        return to_route('currency')->with('success', 'currency has been deleted successfully!');
     }
 
 
@@ -39,9 +39,9 @@ class CategoryView extends Component
     {
         $data = [];
 
-        $category = Category::all();
-        $data['category'] = $category;
+        $currency = Currency::all();
+        $data['currency'] = $currency;
 
-        return view('livewire.pcash.category-view', $data);
+        return view('livewire.pcash.currency-view', $data);
     }
 }

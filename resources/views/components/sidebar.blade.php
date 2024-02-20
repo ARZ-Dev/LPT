@@ -61,6 +61,11 @@
 						<div data-i18n="Category">Category</div>
 					</a>
 				</li>
+				<li class="menu-item">
+					<a href="{{ route('currency') }}" class="menu-link">
+						<div data-i18n="Currency">Currency</div>
+					</a>
+				</li>
 
 			</ul>
 

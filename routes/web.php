@@ -16,6 +16,10 @@ use App\Http\Controllers\DashboardController;
 use App\Livewire\Pcash\CategoryForm;
 use App\Livewire\Pcash\CategoryView;
 
+use App\Livewire\Pcash\CurrencyForm;
+use App\Livewire\Pcash\CurrencyView;
+
+
 Route::get('/login', Login::class)->name('login');
 
 Route::get('/', function () {
@@ -47,6 +51,17 @@ Route::group(['prefix' => 'category'], function() {
     Route::get('/create', CategoryForm::class)->name('category.create');
     Route::get('/edit/{id}', CategoryForm::class)->name('category.edit');
     Route::get('/view/{id}/{status}', CategoryForm::class)->name('category.view');
+});
+
+// |--------------------------------------------------------------------------
+// |CATEGORY 
+// |--------------------------------------------------------------------------
+
+Route::group(['prefix' => 'currency'], function() {
+    Route::get('/', CurrencyView::class)->name('currency');
+    Route::get('/create', CurrencyForm::class)->name('currency.create');
+    Route::get('/edit/{id}', CurrencyForm::class)->name('currency.edit');
+    Route::get('/view/{id}/{status}', CurrencyForm::class)->name('currency.view');
 });
 
 });

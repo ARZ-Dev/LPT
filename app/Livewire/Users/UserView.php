@@ -5,19 +5,14 @@ namespace App\Livewire\Users;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+
 use Livewire\Component;
 
 class UserView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = [
-        'deleteConfirm',
-        'delete'
-    ];
+    protected $listeners = ['deleteConfirm','delete'];
 
     public function deleteConfirm($method, $id = null): void
     {

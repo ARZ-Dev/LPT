@@ -13,8 +13,8 @@
                  <tr>
                     <th></th>
 
-                    <th>Category Name</th>
-                    <th>Sub Category Name</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
                     <th>Created At</th>
 
     
@@ -106,7 +106,7 @@
                                     '<a href="'+ editLink +'" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>' +
                                     @endcan
                                     @can('category-delete')
-                                    '<a href="#" class="text-body delete-record delete-button" data-id="'+ full['id'] +'"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>' +
+                                    '<a wire:click="delete(' + full['id'] + ')" href="#" class="text-body delete-record delete-button" data-id="'+ full['id'] +'"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>' +
                                     @endcan
                                     '</div>'
                                 );
