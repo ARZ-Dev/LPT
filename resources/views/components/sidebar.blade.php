@@ -38,29 +38,29 @@
 
 			<ul class="menu-sub">
 
-               
                 <li class="menu-item {{ request()->is('roles') ? "active" : "" }}">
                     <a href="{{ route('roles') }}" class="menu-link">
                     <div data-i18n="Roles">Roles</div>
                     </a>
                 </li>
-            
-
-               
+             
                 <li class="menu-item {{ request()->is('permissions') ? "active" : "" }}">
                     <a href="{{ route('permissions') }}" class="menu-link">
                     <div data-i18n="Permissions">Permissions</div>
                     </a>
                 </li>
               
-                
-              
-                    <li class="menu-item">
-                        <a href="{{ route('users') }}" class="menu-link">
-                            <div data-i18n="Users">Users</div>
-                        </a>
-                    </li>
-            
+				<li class="menu-item">
+					<a href="{{ route('users') }}" class="menu-link">
+						<div data-i18n="Users">Users</div>
+					</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ route('category') }}" class="menu-link">
+						<div data-i18n="Category">Category</div>
+					</a>
+				</li>
 
 			</ul>
 

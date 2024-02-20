@@ -27,6 +27,12 @@ class PermissionsSeeder extends Seeder
 
             // Permissions Page
             'permission-list',
+
+            'category-list',
+            'category-create',
+            'category-edit',
+            'category-delete',
+
         ];
 
         $permissionsIds = [];

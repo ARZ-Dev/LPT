@@ -13,6 +13,9 @@ use App\Livewire\RolesPermissions\PermissionView;
 use App\Livewire\RolesPermissions\RoleView;
 use App\Http\Controllers\DashboardController;
 
+use App\Livewire\Pcash\CategoryForm;
+use App\Livewire\Pcash\CategoryView;
+
 Route::get('/login', Login::class)->name('login');
 
 Route::get('/', function () {
@@ -33,6 +36,18 @@ Route::group(['prefix' => 'users'], function() {
 
 Route::get('/test', Test::class)->name('Test');
 Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
+
+
+// |--------------------------------------------------------------------------
+// |CATEGORY 
+// |--------------------------------------------------------------------------
+
+Route::group(['prefix' => 'category'], function() {
+    Route::get('/', CategoryView::class)->name('category');
+    Route::get('/create', CategoryForm::class)->name('category.create');
+    Route::get('/edit/{id}', CategoryForm::class)->name('category.edit');
+    Route::get('/view/{id}/{status}', CategoryForm::class)->name('category.view');
+});
 
 });
 
