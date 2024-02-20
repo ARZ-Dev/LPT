@@ -2,7 +2,7 @@
 
     <style>
         body{
-        background-image: url("/assets/images/login/coffebg2.jpg");
+        background-image: url("/assets/images/login/pexels-todd-trapani-2339377.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
