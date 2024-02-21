@@ -56,6 +56,20 @@
 					</a>
 				</li>
 
+			</ul>
+
+		</li>
+
+
+		<li class="menu-item {{ request()->is('roles') || request()->is('permissions') ? "active open" : "" }}">
+
+			<a href="javascript:void(0);" class="menu-link menu-toggle">
+				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
+				<div data-i18n="Settings">Pcash</div>
+			</a>
+
+			<ul class="menu-sub">
+
 				<li class="menu-item">
 					<a href="{{ route('category') }}" class="menu-link">
 						<div data-i18n="Category">Category</div>
@@ -66,11 +80,15 @@
 						<div data-i18n="Currency">Currency</div>
 					</a>
 				</li>
+				<li class="menu-item">
+					<a href="{{ route('till') }}" class="menu-link">
+						<div data-i18n="Till">Till</div>
+					</a>
+				</li>
 
 			</ul>
 
 		</li>
-
 
 
 		

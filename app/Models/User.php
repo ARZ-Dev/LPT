@@ -50,5 +50,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function till()
+    {
+        return $this->hasMany(till::class,'user_id');
+    }
+
 
 }

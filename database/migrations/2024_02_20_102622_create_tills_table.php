@@ -6,20 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-  
+   
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('tills', function (Blueprint $table) {
             $table->id();
-            $table->string('category_name');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->nullable();
+            $table->string('name');
+            $table->double('usd_opening')->nullable();
+            $table->double('lbp_opening')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
         });
     }
 
+
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('tills');
     }
 };

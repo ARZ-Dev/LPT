@@ -6,18 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class till extends Model
 {
-
     use SoftDeletes;
-    
-    protected $table = 'categories';
+    protected $table = 'tills';
     protected $primaryKey = 'id';
 
     protected $guarded = [];
 
-    public function subCategory()
+    public function user()
     {
-        return $this->hasMany(SubCategory::class,'category_id');
+        return $this->belongsTo(User::class,'user_id');
     }
 }

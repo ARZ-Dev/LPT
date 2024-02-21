@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Pcash;
 
-use App\Models\Category;
+use App\Models\Till;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
 
-class CategoryView extends Component
+class TillView extends Component
 {
     use AuthorizesRequests;
 
@@ -26,14 +26,12 @@ class CategoryView extends Component
 
     public function delete($id)
     {
-        $this->authorize('category-delete');
+        $this->authorize('till-delete');
 
-        $category = Category::findOrFail($id);
+        $till = Till::findOrFail($id);
+        $till->delete();
 
-        $category->subCategory()->delete();
-        $category->delete();
-
-        return to_route('category')->with('success', 'category has been deleted successfully!');
+        return to_route('till')->with('success', 'till has been deleted successfully!');
     }
 
 
@@ -41,9 +39,9 @@ class CategoryView extends Component
     {
         $data = [];
 
-        $category = Category::all();
-        $data['category'] = $category;
+        $till = Till::with(['user'])->get();
+        $data['till'] = $till;
 
-        return view('livewire.pcash.category-view', $data);
+        return view('livewire.pcash.till-view', $data);
     }
 }

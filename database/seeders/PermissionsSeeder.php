@@ -38,6 +38,11 @@ class PermissionsSeeder extends Seeder
             'currency-edit',
             'currency-delete',
 
+            'till-list',
+            'till-create',
+            'till-edit',
+            'till-delete',
+
         ];
 
         $permissionsIds = [];

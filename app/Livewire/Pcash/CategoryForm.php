@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -18,7 +19,11 @@ class CategoryForm extends Component
     public $category;
 
     public $category_name;
+
+    public $sub_category = []; 
+    public $categoty_id;
     public $sub_category_name;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -34,7 +39,8 @@ class CategoryForm extends Component
             $this->category = Category::findOrFail($id);
 
             $this->category_name = $this->category->category_name;
-            $this->sub_category_name = $this->category->sub_category_name;
+
+            $this->sub_category = $this->category->subCategory->toArray();
         }
 
     }
@@ -43,28 +49,53 @@ class CategoryForm extends Component
     {
         $rules = [
             'category_name' => ['required', 'string'],
-            'sub_category_name' => ['required', 'string'],
+
+            'sub_category' => ['array'],
+            'sub_category.*.categoty_id' => ['nullable', 'integer'],
+            'sub_category.*.sub_category_name' => ['nullable', 'string'],   
         ];
 
         return $rules;
     }
 
-    public function store()
+
+    public function addSubCategory()
     {
-    $this->authorize('category-edit');
+        $this->sub_category[] = [
+            'category_id' => $this->editing ? $this->category->id : $this->categoty_id,
+            'sub_category_name' => ''
+        ];
+    }
 
-    $this->validate();
+    public function removeSubCategory($index)
+    {
+        unset($this->sub_category[$index]);
+        $this->sub_category = array_values($this->sub_category);
+    }
 
-    Category::create([
-        'category_name' => $this->category_name ,
-        'sub_category_name' => $this->sub_category_name ,
-    ]);
 
+    public function store()
+    {   
+        $this->authorize('category-edit');
 
-    session()->flash('success', 'category has been created successfully!');
+        $this->validate();
 
-    return redirect()->route('category');
-}
+        $category = Category::create([
+            'category_name' => $this->category_name,
+        ]);
+
+        $categoryId = $category->id;
+
+        foreach ($this->sub_category as $subCategory) {
+            SubCategory::create([
+                'category_id' => $categoryId,
+                'sub_category_name' => $subCategory['sub_category_name'],
+            ]);
+        }
+        session()->flash('success', 'category has been created successfully!');
+
+        return redirect()->route('category');
+    }
 
 
     public function update()
@@ -74,11 +105,18 @@ class CategoryForm extends Component
         $this->validate();
 
         $this->category->update([
-            'category_name' => $this->category_name ,
-            'sub_category_name' => $this->sub_category_name ,
+            'category_name' => $this->category_name,
         ]);
 
-        session()->flash('success', 'category has been updated successfully!');
+        SubCategory::where('category_id', $this->category->id)->delete();
+        foreach ($this->sub_category as $subCategory) {
+            SubCategory::create([
+                    'category_id' => $this->category->id,
+                    'sub_category_name' => $subCategory['sub_category_name'],
+                ]);
+        }
+
+        session()->flash('success', 'Category has been updated successfully!');
 
         return redirect()->route('category');
     }

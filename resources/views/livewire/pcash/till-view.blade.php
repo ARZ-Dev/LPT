@@ -2,18 +2,22 @@
    
     <div wire:ignore class="card">
         <div class="card-header border-bottom">
-            <h4 class="card-title mb-3">Category</h4>
+            <h4 class="card-title mb-3">Till</h4>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
                 <div class="col-md-4"></div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-category table border-top">
+            <table class="datatables-till table border-top">
                 <thead>
                  <tr>
                     <th></th>
 
-                    <th>Category</th>
+                    <th>UserName</th>
+                    <th>till name</th>
+                    <!-- <th>usd opening</th>
+                    <th>lbp opening</th> -->
+
                     <th>Created At</th>
 
     
@@ -27,17 +31,20 @@
     @script
     <script>
         document.addEventListener('livewire:navigated', function () {
-            var dt_category_table = $('.datatables-category')
+            var dt_till_table = $('.datatables-till')
 
-            var category = @json($category ?? []);
-            if (dt_category_table.length) {
-                var dt_category = dt_category_table.DataTable({
-                    data: category,
+            var till = @json($till ?? []);
+            if (dt_till_table.length) {
+                var dt_till = dt_till_table.DataTable({
+                    data: till,
                     columns: [
                         { data: '' },
 
-                        { data: 'category_name' },
-       
+                        { data: 'user_id' },
+                        { data: 'name' },
+                        // { data: 'usd_opening' },
+                        // { data: 'lbp_opening' },
+
                         { data: 'created_at' },
 
                         { data: 'action' }
@@ -59,14 +66,40 @@
                            
                             targets: 1,
                             render: function (data, type, full, meta) {
-                                var $category_name = full['category_name'];
+                                var $user_id = full['user']['username'];
 
-                                return '<span class="fw-semibold">' + $category_name + '</span>';
+                                return '<span class="fw-semibold">' + $user_id + '</span>';
                             }
                         },
-         
                         {
-                            targets: 2,
+                           
+                           targets: 2,
+                           render: function (data, type, full, meta) {
+                               var $name = full['name'];
+
+                               return '<span class="fw-semibold">' + $name + '</span>';
+                           }
+                       },
+                    //    {
+                           
+                    //        targets: 3,
+                    //        render: function (data, type, full, meta) {
+                    //            var $usd_opening = full['usd_opening'];
+
+                    //            return '<span class="fw-semibold">' + $usd_opening + '</span>';
+                    //        }
+                    //    },
+                    //    {
+                           
+                    //        targets: 4,
+                    //        render: function (data, type, full, meta) {
+                    //            var $lbp_opening = full['lbp_opening'];
+
+                    //            return '<span class="fw-semibold">' + $lbp_opening + '</span>';
+                    //        }
+                    //    },
+                        {
+                            targets: 3,
                             render: function (data, type, full, meta) {
                                 var created_at = full['created_at'];
 
@@ -85,19 +118,19 @@
                             searchable: false,
                             orderable: false,
                             render: function (data, type, full, meta) {
-                                let editLink = "{{ route('category.edit', '%id%') }}".replace('%id%', full['id']);
-                                let viewLink = "{{ route('category.view', ['id' => '%id%', 'status' => '%status%']) }}".replace('%id%', full['id']).replace('%status%', 1);
+                                let editLink = "{{ route('till.edit', '%id%') }}".replace('%id%', full['id']);
+                                let viewLink = "{{ route('till.view', ['id' => '%id%', 'status' => '%status%']) }}".replace('%id%', full['id']).replace('%status%', 1);
 
 
                                 return (
                                     '<div class="d-flex align-items-center">' +
-                                    @can('category-list')
+                                    @can('till-list')
                                     '<a href="'+ viewLink +'" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>' +
                                     @endcan
-                                    @can('category-edit')
+                                    @can('till-edit')
                                     '<a href="'+ editLink +'" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>' +
                                     @endcan
-                                    @can('category-delete')
+                                    @can('till-delete')
                                     '<a wire:click="delete(' + full['id'] + ')" href="#" class="text-body delete-record delete-button" data-id="'+ full['id'] +'"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>' +
                                     @endcan
                                     '</div>'
@@ -267,7 +300,7 @@
                             text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
                             className: 'add-new btn btn-primary add-new-button',
                             attr: {
-                                'data-href': "{{ route('category.create') }}",
+                                'data-href': "{{ route('till.create') }}",
                             }
                         }
                         @endcan

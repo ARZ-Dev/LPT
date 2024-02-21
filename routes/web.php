@@ -19,6 +19,9 @@ use App\Livewire\Pcash\CategoryView;
 use App\Livewire\Pcash\CurrencyForm;
 use App\Livewire\Pcash\CurrencyView;
 
+use App\Livewire\Pcash\TillForm;
+use App\Livewire\Pcash\TillView;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -54,7 +57,7 @@ Route::group(['prefix' => 'category'], function() {
 });
 
 // |--------------------------------------------------------------------------
-// |CATEGORY 
+// |Currency 
 // |--------------------------------------------------------------------------
 
 Route::group(['prefix' => 'currency'], function() {
@@ -62,6 +65,17 @@ Route::group(['prefix' => 'currency'], function() {
     Route::get('/create', CurrencyForm::class)->name('currency.create');
     Route::get('/edit/{id}', CurrencyForm::class)->name('currency.edit');
     Route::get('/view/{id}/{status}', CurrencyForm::class)->name('currency.view');
+});
+
+// |--------------------------------------------------------------------------
+// |Till 
+// |--------------------------------------------------------------------------
+
+Route::group(['prefix' => 'till'], function() {
+    Route::get('/', TillView::class)->name('till');
+    Route::get('/create', TillForm::class)->name('till.create');
+    Route::get('/edit/{id}', TillForm::class)->name('till.edit');
+    Route::get('/view/{id}/{status}', TillForm::class)->name('till.view');
 });
 
 });
