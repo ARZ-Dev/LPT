@@ -43,6 +43,11 @@ class PermissionsSeeder extends Seeder
             'till-edit',
             'till-delete',
 
+            'payment-list',
+            'payment-create',
+            'payment-edit',
+            'payment-delete',
+
         ];
 
         $permissionsIds = [];

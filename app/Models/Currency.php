@@ -15,4 +15,9 @@ class Currency extends Model
     protected $primaryKey = 'id';
 
     protected $guarded = [];
+
+    public function payment()
+    {
+        return $this->hasMany(Payment::class,'currency_id');
+    }
 }

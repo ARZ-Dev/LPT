@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class PaymentAmount extends Model
 {
-
     use SoftDeletes;
-    
-    protected $table = 'categories';
+
+    protected $table = 'payment_amounts';
     protected $primaryKey = 'id';
 
     protected $guarded = [];
 
-    public function subCategory()
-    {
-        return $this->hasMany(SubCategory::class,'category_id');
-    }
-
     public function payment()
     {
-        return $this->hasMany(Payment::class,'category_id');
+        return $this->belongsTo(Payment::class,'payment_id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id');
     }
 }

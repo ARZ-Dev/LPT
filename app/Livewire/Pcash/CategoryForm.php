@@ -24,7 +24,6 @@ class CategoryForm extends Component
     public $categoty_id;
     public $sub_category_name;
 
-
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -33,6 +32,7 @@ class CategoryForm extends Component
 
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
+        $this->addRow();
 
         if ($id) {
             $this->editing = true;
@@ -59,20 +59,25 @@ class CategoryForm extends Component
     }
 
 
-    public function addSubCategory()
+    public function addRow()
     {
         $this->sub_category[] = [
-            'category_id' => $this->editing ? $this->category->id : $this->categoty_id,
             'sub_category_name' => ''
         ];
     }
 
     public function removeSubCategory($index)
     {
+        if (isset($this->sub_category[$index])) {
+            $subCategory = $this->sub_category[$index];
+
+        if (isset($subCategory['id'])) {
+            SubCategory::find($subCategory['id'])->delete();
+        }
         unset($this->sub_category[$index]);
         $this->sub_category = array_values($this->sub_category);
-    }
-
+    }}
+    
 
     public function store()
     {   
@@ -108,17 +113,32 @@ class CategoryForm extends Component
             'category_name' => $this->category_name,
         ]);
 
-        SubCategory::where('category_id', $this->category->id)->delete();
         foreach ($this->sub_category as $subCategory) {
-            SubCategory::create([
-                    'category_id' => $this->category->id,
-                    'sub_category_name' => $subCategory['sub_category_name'],
-                ]);
+            $data = [
+                'category_id' => $this->category->id,
+                'sub_category_name' => $subCategory['sub_category_name'],
+            ];
+        
+            if (isset($subCategory['id'])) {
+                SubCategory::updateOrCreate(['id' => $subCategory['id']], $data);
+            } else {
+                SubCategory::create($data);
+            }
         }
-
+        
         session()->flash('success', 'Category has been updated successfully!');
 
         return redirect()->route('category');
+    }
+
+    private function sanitizeNumber($number)
+    {
+        $number = str_replace(',', '', $number);
+        if (substr($number, -1) === '.') {
+            $number = substr($number, 0, -1);
+        }
+
+        return $number;
     }
     
 

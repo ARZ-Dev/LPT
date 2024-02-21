@@ -428,6 +428,7 @@ function getUserFullName(user) {
 
 function triggerCleave()
 {
+
     for(let field of $('.cleave-input').toArray()){
         new Cleave(field, {
             numeral: true,

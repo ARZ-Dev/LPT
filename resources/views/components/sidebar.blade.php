@@ -65,7 +65,7 @@
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
-				<div data-i18n="Settings">Pcash</div>
+				<div data-i18n="Pcash">Pcash</div>
 			</a>
 
 			<ul class="menu-sub">
@@ -83,6 +83,11 @@
 				<li class="menu-item">
 					<a href="{{ route('till') }}" class="menu-link">
 						<div data-i18n="Till">Till</div>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ route('payment') }}" class="menu-link">
+						<div data-i18n="Payment">Payment</div>
 					</a>
 				</li>
 

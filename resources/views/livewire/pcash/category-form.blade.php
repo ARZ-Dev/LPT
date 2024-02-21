@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <button type="button" class="btn btn-success mt-4 " wire:click="addSubCategory">Add Sub-category</button>
+                        <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub-category</button>
                     </div>
 
                     @foreach($sub_category as $index => $subcategory)
@@ -33,7 +33,9 @@
                         <label for="sub_category[{{ $index }}][sub_category_name]">Sub-category Name</label>
                         <div class="d-flex flex-row">
                         <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.sub_category_name" type="text" id="sub_category[{{ $index }}][sub_category_name]" name="sub_category[{{ $index }}][sub_category_name]" required>
-                        <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})" >Remove</button>
+                        @if($index !== 0)
+                            <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})" >Remove</button>
+                        @endif
                         </div>
                     </div>
                     @endforeach 

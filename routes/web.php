@@ -22,6 +22,9 @@ use App\Livewire\Pcash\CurrencyView;
 use App\Livewire\Pcash\TillForm;
 use App\Livewire\Pcash\TillView;
 
+use App\Livewire\Pcash\PaymentForm;
+use App\Livewire\Pcash\PaymentView;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -77,6 +80,19 @@ Route::group(['prefix' => 'till'], function() {
     Route::get('/edit/{id}', TillForm::class)->name('till.edit');
     Route::get('/view/{id}/{status}', TillForm::class)->name('till.view');
 });
+
+
+// |--------------------------------------------------------------------------
+// |Payment 
+// |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'payment'], function() {
+        Route::get('/', PaymentView::class)->name('payment');
+        Route::get('/create', PaymentForm::class)->name('payment.create');
+        Route::get('/edit/{id}', PaymentForm::class)->name('payment.edit');
+        Route::get('/view/{id}/{status}', PaymentForm::class)->name('payment.view');
+    });
+
 
 });
 

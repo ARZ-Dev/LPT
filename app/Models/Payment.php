@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SubCategory extends Model
+class Payment extends Model
 {
     use SoftDeletes;
 
-    
-    protected $table = 'sub_categories';
+    protected $table = 'payments';
     protected $primaryKey = 'id';
 
     protected $guarded = [];
@@ -21,8 +20,17 @@ class SubCategory extends Model
         return $this->belongsTo(Category::class,'category_id');
     }
 
-    public function payment()
+    public function subCategory()
     {
-        return $this->hasMany(Payment::class,'sub_category_id');
+        return $this->belongsTo(SubCategory::class,'sub_category_id');
     }
+
+    public function paymentAmount()
+    {
+        return $this->hasMany(PaymentAmount::class,'payment_id');
+    }
+
+
+
+    
 }
