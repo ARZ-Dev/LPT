@@ -25,6 +25,9 @@ use App\Livewire\Pcash\TillView;
 use App\Livewire\Pcash\PaymentForm;
 use App\Livewire\Pcash\PaymentView;
 
+use App\Livewire\Pcash\ReceiptForm;
+use App\Livewire\Pcash\ReceiptView;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -92,6 +95,17 @@ Route::group(['prefix' => 'till'], function() {
         Route::get('/edit/{id}', PaymentForm::class)->name('payment.edit');
         Route::get('/view/{id}/{status}', PaymentForm::class)->name('payment.view');
     });
+
+// |--------------------------------------------------------------------------
+// |Payment 
+// |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'receipt'], function() {
+        Route::get('/', ReceiptView::class)->name('receipt');
+        Route::get('/create', ReceiptForm::class)->name('receipt.create');
+        Route::get('/edit/{id}', ReceiptForm::class)->name('receipt.edit');
+        Route::get('/view/{id}/{status}', ReceiptForm::class)->name('receipt.view');
+});
 
 
 });

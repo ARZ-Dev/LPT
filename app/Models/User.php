@@ -55,5 +55,10 @@ class User extends Authenticatable
         return $this->hasMany(till::class,'user_id');
     }
 
+    public function receipt()
+    {
+        return $this->hasMany(Receipt::class,'user_id');
+    }
+
 
 }

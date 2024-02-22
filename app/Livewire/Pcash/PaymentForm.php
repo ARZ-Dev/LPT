@@ -63,9 +63,9 @@ class PaymentForm extends Component
             'description' => ['nullable', 'string'],
 
             'paymentAmount' => ['array'],
-            'paymentAmount.*.payment_id' => ['required', 'integer'],
-            'paymentAmount.*.currency_id' => ['required', 'integer'],
-            'paymentAmount.*.amount' => ['required','integer'],  
+            'paymentAmount.*.payment_id' => ['nullable'],
+            'paymentAmount.*.currency_id' => ['required'],
+            'paymentAmount.*.amount' => ['required'],  
         ];
 
         return $rules;
@@ -108,13 +108,13 @@ class PaymentForm extends Component
 
     $this->validate();
 
-    $payemnt=Payment::create([
+    $payment=Payment::create([
         'category_id' => $this->category_id ,
         'sub_category_id' => $this->sub_category_id ,
         'description' => $this->description ,
     ]);
 
-    $paymentId = $payemnt->id;
+    $paymentId = $payment->id;
     foreach ($this->paymentAmount as $paymentAmount) {
         PaymentAmount::create([
             'payment_id' => $paymentId,

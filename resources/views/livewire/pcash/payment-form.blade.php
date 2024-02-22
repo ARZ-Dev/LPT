@@ -47,7 +47,7 @@
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-12">
                         <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
 
                         @foreach($paymentAmount as $key => $paymentAmount)
@@ -55,7 +55,7 @@
                        
                         <div wire:key="paymentAmount-{{ $key }}">
                             <div class="d-flex flex-row mt-3 mb-3">
-                                <input class="form-control w-50 me-2" wire:model="paymentAmount.{{ $key }}.amount" type="text" name="paymentAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                <input class="form-control  cleave-input w-100 me-2" wire:model="paymentAmount.{{ $key }}.amount" type="text" name="paymentAmount[{{ $key }}][amount]" placeholder="amount" required>
 
                                 <select class="form-select " aria-label="Default select example" wire:model="paymentAmount.{{ $key }}.currency_id">
                                     <option selected>Open this select menu</option>
@@ -94,6 +94,8 @@
         document.addEventListener('livewire:navigated', function () {
             var status={{$status}};
             if (status=="1") {$('input').prop('disabled', true);}
+            triggerCleave();
+
         });
 
         function submit(action)

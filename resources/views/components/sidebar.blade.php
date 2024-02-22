@@ -90,6 +90,11 @@
 						<div data-i18n="Payment">Payment</div>
 					</a>
 				</li>
+				<li class="menu-item">
+					<a href="{{ route('receipt') }}" class="menu-link">
+						<div data-i18n="Receipt">Receipt</div>
+					</a>
+				</li>
 
 			</ul>
 

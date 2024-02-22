@@ -6,22 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Currency extends Model
+class Receipt extends Model
 {
     use SoftDeletes;
 
-    
-    protected $table = 'currencies';
+    protected $table = 'receipts';
     protected $primaryKey = 'id';
 
     protected $guarded = [];
 
-    public function paymentAmount()
+    public function user()
     {
-        return $this->hasMany(PaymentAmount::class,'currency_id');
+        return $this->belongsTo(User::class,'user_id');
     }
     public function receiptAmount()
     {
-        return $this->hasMany(ReceiptAmount::class,'currency_id');
+        return $this->hasMany(ReceiptAmount::class,'receipt_id');
     }
 }

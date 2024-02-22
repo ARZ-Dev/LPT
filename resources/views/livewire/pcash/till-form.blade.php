@@ -11,9 +11,9 @@
                 <div class="card-body">
                     <form class="row g-3">
 
-                        <div class="col-12 col-md-2">
+                        <div class="col-12 col-md-6 ">
                         <label class="form-label" for="user_id">Users</label>
-                            <select wire:model="user_id" class="form-select selectpicker " aria-label="Default select example" name="user_id" id="user_id">
+                            <select wire:model="user_id" class="form-select selectpicker w-100 " aria-label="Default select example" name="user_id" id="user_id">
                                 <option>Open this select menu</option>
                                     @foreach($users as $user)
                                         <option {{ $user->id == $user_id ? 'selected' : '' }} value='{{$user->id}}'>{{$user->username}}</option>
@@ -22,7 +22,7 @@
                             @error('user_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="col-12 col-md-10">
+                        <div class="col-12 col-md-6">
                             <label class="form-label" for="name">name</label>
                             <input  
                             wire:model.defer="name"
