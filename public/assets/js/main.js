@@ -425,3 +425,14 @@ function getUserFullName(user) {
 
     return user['first_name'] + " " + user['last_name'];
 }
+
+function triggerCleave()
+{
+
+    for(let field of $('.cleave-input').toArray()){
+        new Cleave(field, {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand'
+        });
+    }
+}

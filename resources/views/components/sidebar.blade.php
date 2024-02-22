@@ -38,34 +38,67 @@
 
 			<ul class="menu-sub">
 
-               
                 <li class="menu-item {{ request()->is('roles') ? "active" : "" }}">
                     <a href="{{ route('roles') }}" class="menu-link">
                     <div data-i18n="Roles">Roles</div>
                     </a>
                 </li>
-            
-
-               
+             
                 <li class="menu-item {{ request()->is('permissions') ? "active" : "" }}">
                     <a href="{{ route('permissions') }}" class="menu-link">
                     <div data-i18n="Permissions">Permissions</div>
                     </a>
                 </li>
               
-                
-              
-                    <li class="menu-item">
-                        <a href="{{ route('users') }}" class="menu-link">
-                            <div data-i18n="Users">Users</div>
-                        </a>
-                    </li>
-            
+				<li class="menu-item">
+					<a href="{{ route('users') }}" class="menu-link">
+						<div data-i18n="Users">Users</div>
+					</a>
+				</li>
 
 			</ul>
 
 		</li>
 
+
+		<li class="menu-item {{ request()->is('roles') || request()->is('permissions') ? "active open" : "" }}">
+
+			<a href="javascript:void(0);" class="menu-link menu-toggle">
+				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
+				<div data-i18n="Pcash">Pcash</div>
+			</a>
+
+			<ul class="menu-sub">
+
+				<li class="menu-item">
+					<a href="{{ route('category') }}" class="menu-link">
+						<div data-i18n="Category">Category</div>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ route('currency') }}" class="menu-link">
+						<div data-i18n="Currency">Currency</div>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ route('till') }}" class="menu-link">
+						<div data-i18n="Till">Till</div>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ route('payment') }}" class="menu-link">
+						<div data-i18n="Payment">Payment</div>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ route('receipt') }}" class="menu-link">
+						<div data-i18n="Receipt">Receipt</div>
+					</a>
+				</li>
+
+			</ul>
+
+		</li>
 
 
 		

@@ -50,19 +50,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function setFullNameAttribute($value)
+    public function till()
     {
-        $names = explode(' ', $value);
-        $this->attributes['first_name'] = isset($names[0]) ? $names[0] : '';
-        $this->attributes['last_name'] = isset($names[1]) ? $names[1] : '';
+        return $this->hasMany(till::class,'user_id');
     }
 
-    public function getFullNameAttribute()
+    public function receipt()
     {
-        $first_name = isset($this->attributes['first_name']) ? $this->attributes['first_name'] : '';
-        $last_name = isset($this->attributes['last_name']) ? $this->attributes['last_name'] : '';
-
-        return trim($first_name . ' ' . $last_name);
+        return $this->hasMany(Receipt::class,'user_id');
     }
 
 

@@ -27,6 +27,32 @@ class PermissionsSeeder extends Seeder
 
             // Permissions Page
             'permission-list',
+
+            'category-list',
+            'category-create',
+            'category-edit',
+            'category-delete',
+
+            'currency-list',
+            'currency-create',
+            'currency-edit',
+            'currency-delete',
+
+            'till-list',
+            'till-create',
+            'till-edit',
+            'till-delete',
+
+            'payment-list',
+            'payment-create',
+            'payment-edit',
+            'payment-delete',
+
+            'receipt-list',
+            'receipt-create',
+            'receipt-edit',
+            'receipt-delete',
+
         ];
 
         $permissionsIds = [];

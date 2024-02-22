@@ -35,10 +35,10 @@
                             <div class="container-xxl">
                                 <div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
                                     <div>
-                                        Arzgt © <?php echo date('Y'); ?>. All Rights Reserved.
+                                        lpt © <?php echo date('Y'); ?>. All Rights Reserved.
                                     </div>
                                     <div>
-                                        Designed & Developed by <a href="https://arzgt.com" target="_blank" class="fw-semibold">ARZGT</a>
+                                        Designed & Developed by <a href="https://lpt.com" target="_blank" class="fw-semibold">lpt</a>
                                     </div>
                                 </div>
                             </div>

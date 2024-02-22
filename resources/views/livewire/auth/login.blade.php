@@ -2,7 +2,7 @@
 
     <style>
         body{
-        background-image: url("/assets/images/login/coffebg2.jpg");
+        background-image: url("/assets/images/login/pexels-todd-trapani-2339377.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -24,7 +24,7 @@
                         <!-- Logo -->
                         <img src="" style="max-width: 100%;" >
 
-                        <!-- <h4 class="mb-1 pt-2">Welcome to ARZGT! ☕</h4> -->
+                        <!-- <h4 class="mb-1 pt-2">Welcome to lpt! ☕</h4> -->
                         <!-- <p class="mb-4">Please sign-in to your account</p> -->
 
                         <div id="formAuthentication" class="mb-3">
