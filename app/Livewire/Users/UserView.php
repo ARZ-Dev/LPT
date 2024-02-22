@@ -2,13 +2,9 @@
 
 namespace App\Livewire\Users;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
 use Livewire\Component;
-use Livewire\WithoutUrlPagination;
-use Livewire\WithPagination;
 
 class UserView extends Component
 {
