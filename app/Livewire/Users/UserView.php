@@ -7,11 +7,12 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 class UserView extends Component
 {
-    use AuthorizesRequests, WithPagination;
+    use AuthorizesRequests;
 
     protected $listeners = ['deleteConfirm','delete'];
 
@@ -31,7 +32,6 @@ class UserView extends Component
         $this->authorize('user-delete');
 
         if ($id == 1) {
-
             return to_route('users')->with('error', 'You cannot delete the user with ID 1.');
         }
 
@@ -44,7 +44,7 @@ class UserView extends Component
     {
         $data = [];
 
-        $users = User::paginate(5);
+        $users = User::all();
         $data['users'] = $users;
 
         return view('livewire.users.user-view', $data);
