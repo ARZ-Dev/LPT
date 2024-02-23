@@ -12,7 +12,7 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row g-3">
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="nickname">Nickname</label>
                                 <input
@@ -44,8 +44,6 @@
                                 </div>
                                 @error('levelCategoryId') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="playersIds">Players *</label>
                                 <div wire:ignore>

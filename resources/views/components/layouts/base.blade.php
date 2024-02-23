@@ -71,12 +71,8 @@
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" integrity="sha512-zxBiDORGDEAYDdKLuYU9X/JaJo/DPzE42UubfBw9yg8Qvb2YRRIQ8v4KsGHOx2H1/+sdSXyXxLXv5r7tHc9ygg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
-
-
-
-
+    <link href="{{asset('assets/css/filepond.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/css/filepond.preview.css')}}" rel="stylesheet" />
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
@@ -136,18 +132,13 @@
     <!-- Page JS -->
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 
-    <!-- <script src="{{ asset('assets/js/codenepal.js') }}"></script> -->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script> -->
+    <script src="{{ asset('assets/js/filepond.min.js') }}"></script>
 
+    <!-- include FilePond plugins -->
+    <script src="{{ asset('assets/js/filepond.preview.js') }}"></script>
 
-
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js" integrity="sha512-vUJTqeDCu0MKkOhuI83/MEX5HSNPW+Lw46BA775bAWIp1Zwgz3qggia/t2EnSGB9GoS2Ln6npDmbJTdNhHy1Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-
-
-
-
+    <!-- include FilePond jQuery adapter -->
+    <script src="{{ asset('assets/js/filepond.jquery.js') }}"></script>
 
     @livewireScripts
 
@@ -157,12 +148,10 @@
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sortablejs/sortable.js') }}"></script>
 
-    <!--DropZone Upload File-->
-    <!-- <script src="{{ asset('assets/vendor/libs/dropzone/dropzone.js') }}"></script>
-    <script src="{{asset('assets/js/forms-file-upload.js')}}"></script>
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/dropzone/dropzone.css') }}" /> -->
-
     <script>
+
+
+
         window.addEventListener('swal:confirm', event => {
             Swal.fire({
                 title: event.detail[0].title,
@@ -396,117 +385,6 @@
             });
         }
     </script>
-
-    <!-- cropper -->
-    <script>
-
-        // document.addEventListener('DOMContentLoaded', function () {
-
-        //     var $modal = $('#modal');
-        //     var cropper;
-        //     var image=document.getElementById('image');
-        //     var ratio=0;
-        //     var image_width=0;
-        //     var image_height=0;
-        //     var image_count=0;
-
-        //     // const uploadInput = document.getElementById('image_test');
-
-        //     $(".crop_image").on('change', function (e) {
-
-        //         image_width=$(this).attr("width");
-        //         image_height=$(this).attr("height");
-        //         image_count=$(this).attr("count");
-
-        //         ratio=parseInt(image_width)/parseInt(image_height);
-
-        //         var files = e.target.files;
-        //         var maxFileSize = 1024 * 1024;
-        //         var done = function (url) {
-        //             image.src = url;
-        //             $("#popupCropImage").removeClass('hidden');
-        //             $modal.modal('show');
-        //             // alert("!");
-        //         };
-
-        //         var reader;
-        //         var file;
-        //         var url;
-
-        //         if (files && files.length > 0) {
-        //             file = files[0];
-
-        //             if(file.size > maxFileSize) {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Oops...',
-        //                     text: 'File size must be less than 1MB!',
-        //                 });
-        //                 uploadInput.value = ''; // Clear the input
-        //                 return; // Prevent further execution
-        //             }
-
-        //             if (URL) {
-        //                 done(URL.createObjectURL(file));
-        //             } else if (FileReader) {
-        //                 reader = new FileReader();
-        //                 reader.onload = function (e) {
-        //                     done(reader.result);
-        //                 };
-        //                 reader.readAsDataURL(file);
-        //             }
-        //         }
-        //     });
-
-        //     $modal.on('shown.bs.modal', function () {
-        //         cropper = new Cropper(image, {
-        //             aspectRatio: parseInt(ratio),
-        //             viewMode: 0,
-        //             // preview: '.preview',
-        //         });
-        //     }).on('hidden.bs.modal', function () {
-        //         cropper.destroy();
-        //         cropper = null;
-        //     });
-
-        //     // $modal.modal('show');
-
-        //     $("#crop").click(function(){
-
-        //         canvas = cropper.getCroppedCanvas({
-        //             // width: ,
-        //             // height: ,
-        //         });
-
-        //         canvas.toBlob(function(blob) {
-        //             url = URL.createObjectURL(blob);
-        //             var reader = new FileReader();
-        //             reader.readAsDataURL(blob);
-        //             reader.onloadend = function() {
-        //                 var base64data = reader.result;
-        //                 document.getElementById('previewImage'+image_count).src = base64data;
-        //                 console.log(base64data);
-        //                 $("#cropLoader").removeClass("hidden");
-        //                 window.livewire.emit('croppedImage', base64data,image_count);
-        //             }
-        //         },'image/jpg',0.9);
-
-        //     });
-
-        //     $(".closeBtn").click(function(){
-        //         $("#cropLoader").addClass("hidden");
-        //         $modal.modal('hide');
-        //     });
-
-        //     Livewire.on('hideCropTool', function () {
-        //         console.log("hide");
-        //         $("#cropLoader").addClass("hidden");
-        //         $modal.modal('hide');
-        //     });
-
-        // });
-
-       </script>
     <script>
             const inputElements = document.querySelectorAll('.numberInput');
 
@@ -520,6 +398,7 @@
   <script>
       $(document).ready(function () {
           $('.dataTable').dataTable()
+          $('.filepond').filepond()
       })
   </script>
 

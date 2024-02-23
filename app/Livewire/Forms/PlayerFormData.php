@@ -12,16 +12,16 @@ class PlayerFormData extends Form
     public ?Player $player;
 
     #[Validate('required|max:255')]
-    public string $firstName = '';
+    public string $first_name = '';
 
     #[Validate('required|max:255')]
-    public string $middleName = '';
+    public string $middle_name = '';
 
     #[Validate('required|max:255')]
-    public string $lastName = '';
+    public string $last_name = '';
 
     #[Validate(['nullable', new Exists('teams', 'id')])]
-    public $teamId = null;
+    public $team_id = null;
 
     #[Validate('required|date')]
     public string $birthdate = '';
@@ -30,22 +30,39 @@ class PlayerFormData extends Form
     public string $email = '';
 
     #[Validate('required')]
-    public string $phoneNumber = '';
+    public string $phone_number = '';
 
     #[Validate('required')]
-    public $countryId = null;
+    public $country_id = '';
 
     #[Validate('required')]
     public string $nickname = '';
 
     #[Validate('required')]
-    public string $playingSide = '';
+    public string $playing_side = '';
 
     public function setPlayer(Player $player): void
     {
         $this->player = $player;
-        $this->firstName = $player->first_name;
-        $this->middleName = $player->middle_name;
-        $this->lastName = $player->last_name;
+        $this->first_name = $player->first_name;
+        $this->middle_name = $player->middle_name;
+        $this->last_name = $player->last_name;
+        $this->team_id = $player->team_id;
+        $this->birthdate = $player->birthdate;
+        $this->email = $player->email;
+        $this->phone_number = $player->phone_number;
+        $this->country_id = $player->country_id;
+        $this->nickname = $player->nickname;
+        $this->playing_side = $player->playing_side;
+    }
+
+    public function store()
+    {
+        Player::create($this->except('player'));
+    }
+
+    public function update()
+    {
+        $this->player->update($this->except('player'));
     }
 }

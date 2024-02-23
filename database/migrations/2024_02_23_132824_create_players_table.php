@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('middle_name');
             $table->string('last_name');
             $table->date('birthdate');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone_number');
-            $table->string('national_id_upload');
+            $table->string('national_id_upload')->nullable();
             $table->foreignId('country_id')->constrained()->cascadeOnDelete();
             $table->string('nickname');
             $table->string('playing_side');
