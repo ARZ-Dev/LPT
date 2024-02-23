@@ -13,25 +13,26 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="category_id">Categories</label>
-                            <select wire:model="category_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="category_id" id="category_id">
-                                <option>Open this select menu</option>
-                                    @foreach($categories as $category)
-                                        <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{$category->id}}'>{{$category->category_name}}</option>
-                                    @endforeach
-                            </select>
-                            @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" name="category_id" id="category_id">
+                            <option>Open this select menu</option>
+                            @foreach($categories as $category)
+                                <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{ $category->id }}'>{{ $category->category_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
 
-                        <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label" for="sub_category_id">Sub Category</label>
-                            <select wire:model="sub_category_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="sub_category_id" id="sub_category_id">
-                                <option>Open this select menu</option>
-                                    @foreach($subCategories as $subCategory)
-                                        <option {{ $subCategory->id == $sub_category_id ? 'selected' : '' }} value='{{$subCategory->id}}'>{{$subCategory->sub_category_name}}</option>
-                                    @endforeach
-                            </select>
-                            @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                        <select wire:model="sub_category_id" class="form-select selectpickerz w-100" aria-label="Default select example" name="sub_category_id" id="sub_category_id">
+                            <option>Open this select menu</option>
+                            @foreach($subCategories as $subCategory)
+                                <option {{ $subCategory->id == $sub_category_id ? 'selected' : '' }} value='{{ $subCategory->id }}'>{{ $subCategory->sub_category_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
 
 
                         <div class="col-12 col-md-12">
@@ -112,14 +113,7 @@
         {
             window.livewire.emit(action)
         }
-
-
-
-
-    document.getElementById('category_id').addEventListener('change', function (e) {
-        @this.set('category_id', e.target.value);
-    });
-                 
+     
         </script>
     </div>
 </div>

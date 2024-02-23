@@ -105,7 +105,7 @@ Route::group(['prefix' => 'till'], function() {
 
     Route::group(['prefix' => 'receipt'], function() {
         Route::get('/', ReceiptView::class)->name('receipt');
-        Route::get('/create', ReceiptForm::class)->name('receipt.create');
+        Route::get('/cre  ate', ReceiptForm::class)->name('receipt.create');
         Route::get('/edit/{id}', ReceiptForm::class)->name('receipt.edit');
         Route::get('/view/{id}/{status}', ReceiptForm::class)->name('receipt.view');
 });
