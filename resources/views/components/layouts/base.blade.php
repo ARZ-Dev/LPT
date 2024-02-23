@@ -132,14 +132,6 @@
     <!-- Page JS -->
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 
-    <script src="{{ asset('assets/js/filepond.min.js') }}"></script>
-
-    <!-- include FilePond plugins -->
-    <script src="{{ asset('assets/js/filepond.preview.js') }}"></script>
-
-    <!-- include FilePond jQuery adapter -->
-    <script src="{{ asset('assets/js/filepond.jquery.js') }}"></script>
-
     @livewireScripts
 
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
