@@ -34,7 +34,7 @@
                         <div class="d-flex flex-row">
                         <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.sub_category_name" type="text" id="sub_category[{{ $index }}][sub_category_name]" name="sub_category[{{ $index }}][sub_category_name]" required>
                         @if($index !== 0)
-                            <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})" >Remove</button>
+                            <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})">Remove</button>
                         @endif
                         </div>
                     </div>

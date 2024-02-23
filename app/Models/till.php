@@ -28,4 +28,9 @@ class Till extends Model
     {
         return $this->hasMany(Transfer::class,'to_till_id');
     }
+
+    public function tillAmount()
+    {
+        return $this->hasMany(TillAmount::class,'till_id');
+    }
 }

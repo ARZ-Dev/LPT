@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Category;
+use App\Models\Payment;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;

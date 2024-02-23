@@ -39,34 +39,29 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                        <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
+                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
 
-                        @foreach($receiptAmount as $key => $receiptAmount)
+                            @foreach($receiptAmount as $key => $receiptAmount)
+                                <div wire:key="receiptAmount-{{ $key }}">
+                                    <div class="d-flex flex-row mt-3 mb-3">
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
 
-                       
-                        <div wire:key="receiptAmount-{{ $key }}">
-                            <div class="d-flex flex-row mt-3 mb-3">
-                                <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                        <select class="form-select " aria-label="Default select example" wire:model="receiptAmount.{{ $key }}.currency_id">
+                                            <option selected>Open this select menu</option>
+                                            @foreach($currencies as $index => $currency)
+                                                <option value="{{$currency->id}}">{{$currency->name}}</option>
+                                            @endforeach
+                                        </select>
 
-                                <select class="form-select " aria-label="Default select example" wire:model="receiptAmount.{{ $key }}.currency_id">
-                                    <option selected>Open this select menu</option>
-                                    @foreach($currencies as $index => $currency)
-                                        <option value="{{$currency->id}}">{{$currency->name}}</option>
-                                    @endforeach
-                                </select>
-
-                                @if($key !== 0)
-                                <button type="button" class="btn btn-danger ms-2"  wire:click="removeReceiptAmount({{ $key }})">Remove</button>
-                                @endif
-                            </div>
+                                        @if($key !== 0)
+                                        <button type="button" class="btn btn-danger ms-2"  wire:click="removeReceiptAmount({{ $key }})">Remove</button>
+                                        @endif
+                                    </div>
+                                </div>
+                                @error('receiptAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('receiptAmount.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                            @endforeach 
                         </div>
-                        @error('receiptAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                        @error('receiptAmount.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
-
-
-                    @endforeach 
-
-                    </div>
 
                     </form>
                 </div>

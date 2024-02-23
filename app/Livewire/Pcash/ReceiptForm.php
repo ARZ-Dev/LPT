@@ -75,17 +75,16 @@ class ReceiptForm extends Component
     public function addRow()
     {
         $this->receiptAmount[] = ['currency_id' => '','amount' => ''];  
-        
-        
     }
 
     public function removeReceiptAmount($key)
     {
-        $removedItemId = $this->receiptAmount[$key]['id'];
+        if($this->editing == true){
+            $removedItemId = $this->receiptAmount[$key]['id'];
+            $this->deletedReceiptAmount[] = $removedItemId;
+        }
         unset($this->receiptAmount[$key]);
         $this->receiptAmount = array_values($this->receiptAmount);
-        $this->deletedReceiptAmount[] = $removedItemId;
-
     }
 
 

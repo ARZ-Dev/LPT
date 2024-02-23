@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Category;
+use App\Models\Payment;
 use App\Models\SubCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -70,11 +71,13 @@ class CategoryForm extends Component
 
     public function removeSubCategory($index)
     {
-        $removedItemId = $this->sub_category[$index]['id'];
-
+        if($this->editing == true){
+            $removedItemId = $this->sub_category[$index]['id'];
+            $this->deletedSubCategory[] = $removedItemId;
+        }
             unset($this->sub_category[$index]);
             $this->sub_category = array_values($this->sub_category);
-            $this->deletedSubCategory[] = $removedItemId;
+
     }
     
 
@@ -124,7 +127,10 @@ class CategoryForm extends Component
                 SubCategory::create($data);
             }
         }
+
+        Payment::whereIn('sub_category_id', $this->deletedSubCategory)->delete();
         SubCategory::whereIn('id',$this->deletedSubCategory)->delete();
+ 
     
 
         
