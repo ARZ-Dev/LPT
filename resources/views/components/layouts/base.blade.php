@@ -390,7 +390,6 @@
   <script>
       $(document).ready(function () {
           $('.dataTable').dataTable()
-          $('.filepond').filepond()
       })
   </script>
 
