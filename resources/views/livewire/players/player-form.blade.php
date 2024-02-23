@@ -175,7 +175,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-12">
-                                <input type="file" name="national_id" id="national_id" wire:model="nationalIdFile" class="filepond" />
+                                <div wire:ignore class="filePondContainer">
+                                    <input type="file" class="fileInput" class="test-filepond" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -193,11 +195,45 @@
 
     <script>
 
+
         document.addEventListener('livewire:navigated', function () {
+            FilePond.registerPlugin(FilePondPluginFileValidateType);
+            FilePond.registerPlugin(FilePondPluginFileValidateType);
+            FilePond.registerPlugin(FilePondPluginImagePreview);
 
             $(document).ready(function () {
 
+                const filePondContainer = document.querySelector('.filePondContainer');
+                const fileInput = filePondContainer.querySelector('.fileInput');
 
+                const post = FilePond.create(fileInput);
+
+                post.setOptions({
+                    server: {
+                        load: null,
+                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                            // Upload logic...
+                            @this.upload('nationalIdFile', file, load, error, progress)
+                        },
+                        revert: (filename, load) => {
+                            // Revert logic...
+                            @this.removeUpload('nationalIdFile', filename, load)
+                        },
+                    },
+
+                });
+
+                post.on('processfile', (error, file) => {
+                    console.log(file)
+                });
+
+                @if($player->national_id_upload)
+                    // Assuming the file is stored in Laravel storage at 'national_ids/filename.jpg'
+                    var fileUrl = '{{ asset(Storage::url($player->national_id_upload)) }}';
+
+                    // Add the file to FilePond
+                    post.addFile(fileUrl);
+                @endif
 
             });
 
