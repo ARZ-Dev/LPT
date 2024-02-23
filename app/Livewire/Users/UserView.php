@@ -20,7 +20,10 @@ class UserView extends Component
             return to_route('users')->with('error', 'You cannot delete the user with ID 1.');
         }
 
-        User::where('id', $id)->delete();
+        $user=User::where('id', $id)->delete();
+        $user->till()->delete();
+        $user->receipt()->delete();
+        $user->delete();
 
         return to_route('users')->with('success', 'User has been deleted successfully!');
     }

@@ -11,18 +11,7 @@ class CategoryView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['deleteConfirm','delete'];
-
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
+    protected $listeners = ['delete'];
 
     public function delete($id)
     {
@@ -31,6 +20,8 @@ class CategoryView extends Component
         $category = Category::findOrFail($id);
 
         $category->subCategory()->delete();
+        $category->payment()->delete();
+
         $category->delete();
 
         return to_route('category')->with('success', 'category has been deleted successfully!');
@@ -41,8 +32,8 @@ class CategoryView extends Component
     {
         $data = [];
 
-        $category = Category::all();
-        $data['category'] = $category;
+        $categories = Category::all();
+        $data['categories'] = $categories;
 
         return view('livewire.pcash.category-view', $data);
     }

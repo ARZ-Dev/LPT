@@ -11,24 +11,15 @@ class PaymentView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['deleteConfirm','delete'];
-
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
+    protected $listeners = ['delete'];
 
     public function delete($id)
     {
         $this->authorize('payment-delete');
 
         $payment = Payment::findOrFail($id);
+        $payment->paymentAmount()->delete();
+
         $payment->delete();
 
         return to_route('payment')->with('success', 'payment has been deleted successfully!');
@@ -39,9 +30,9 @@ class PaymentView extends Component
     {
         $data = [];
 
-        $payment = Payment::with(['category', 'subCategory', 'paymentAmount'])->get();
+        $payments = Payment::with(['category', 'subCategory', 'paymentAmount'])->get();
 
-        $data['payment'] = $payment;
+        $data['payments'] = $payments;
         
 
         return view('livewire.pcash.payment-view', $data);

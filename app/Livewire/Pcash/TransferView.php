@@ -11,18 +11,7 @@ class TransferView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['deleteConfirm','delete'];
-
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
+    protected $listeners = ['delete'];
 
     public function delete($id)
     {
@@ -40,12 +29,9 @@ class TransferView extends Component
         $data = [];
 
 
-        $transfer = Transfer::with(['fromTill','toTill'])->get();
+        $transfers = Transfer::with(['fromTill.user','toTill'])->get();
 
-
-        // dd($transfer);
-
-        $data['transfer'] = $transfer;
+        $data['transfers'] = $transfers;
 
         return view('livewire.pcash.transfer-view', $data);
     }

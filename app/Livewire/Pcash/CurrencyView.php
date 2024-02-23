@@ -11,24 +11,15 @@ class CurrencyView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['deleteConfirm','delete'];
-
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
+    protected $listeners = ['delete'];
 
     public function delete($id)
     {
         $this->authorize('currency-delete');
 
         $currency = Currency::findOrFail($id);
+        $currency->paymentAmount()->delete();
+        $currency->receiptAmount()->delete();
         $currency->delete();
 
         return to_route('currency')->with('success', 'currency has been deleted successfully!');
@@ -39,8 +30,8 @@ class CurrencyView extends Component
     {
         $data = [];
 
-        $currency = Currency::all();
-        $data['currency'] = $currency;
+        $currencies = Currency::all();
+        $data['currencies'] = $currencies;
 
         return view('livewire.pcash.currency-view', $data);
     }

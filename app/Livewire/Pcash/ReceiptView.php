@@ -11,24 +11,16 @@ class ReceiptView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['deleteConfirm','delete'];
+    protected $listeners = ['delete'];
 
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
+
 
     public function delete($id)
     {
         $this->authorize('receipt-delete');
 
         $receipt = Receipt::findOrFail($id);
+        $receipt->receiptAmount()->delete();
         $receipt->delete();
 
         return to_route('receipt')->with('success', 'receipt has been deleted successfully!');
@@ -39,9 +31,9 @@ class ReceiptView extends Component
     {
         $data = [];
 
-        $receipt = Receipt::with(['user', 'receiptAmount'])->get();
+        $receipts = Receipt::with(['user', 'receiptAmount'])->get();
 
-        $data['receipt'] = $receipt;
+        $data['receipts'] = $receipts;
         
 
         return view('livewire.pcash.receipt-view', $data);
