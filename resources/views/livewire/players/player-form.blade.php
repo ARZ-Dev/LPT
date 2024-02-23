@@ -175,7 +175,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-12">
-                                <input type="file" name="national_id" id="national_id" class="filepond" />
+                                <input type="file" name="national_id" id="national_id" wire:model="nationalIdFile" class="filepond" />
                             </div>
                         </div>
                     </div>

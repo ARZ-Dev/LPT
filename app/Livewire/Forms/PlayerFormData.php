@@ -56,13 +56,25 @@ class PlayerFormData extends Form
         $this->playing_side = $player->playing_side;
     }
 
-    public function store()
+    public function store($path)
     {
-        Player::create($this->except('player'));
+        $data = $this->except('player');
+
+        if ($path) {
+            $data['national_id_upload'] = $path;
+        }
+
+        Player::create($data);
     }
 
-    public function update()
+    public function update($path)
     {
-        $this->player->update($this->except('player'));
+        $data = $this->except('player');
+
+        if ($path) {
+            $data['national_id_upload'] = $path;
+        }
+
+        $this->player->update($data);
     }
 }

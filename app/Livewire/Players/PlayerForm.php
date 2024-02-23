@@ -8,16 +8,18 @@ use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class PlayerForm extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, WithFileUploads;
 
     public bool $editing = false;
     public int $status = 0;
     public $teams = [];
     public PlayerFormData $form;
     public $countries = [];
+    public $nationalIdFile;
 
     public function mount($id = 0, $status = 0)
     {
@@ -38,7 +40,13 @@ class PlayerForm extends Component
     public function store()
     {
         $this->validate();
-        $this->form->store();
+
+        $path = null;
+        if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
+            $path = $this->nationalIdFile->store(path: 'national_ids');
+        }
+
+        $this->form->store($path);
 
         return to_route('players')->with('success', 'Player has been added successfully!');
     }
@@ -46,7 +54,13 @@ class PlayerForm extends Component
     public function update()
     {
         $this->validate();
-        $this->form->update();
+
+        $path = null;
+        if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
+            $path = $this->nationalIdFile->store(path: 'national_ids');
+        }
+
+        $this->form->update($path);
 
         return to_route('players')->with('success', 'Player has been updated successfully!');
     }
