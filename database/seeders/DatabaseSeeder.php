@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TournamentTypeSeeder::class);
         $this->call(TournamentFormatSeeder::class);
         $this->call(TournamentDeuceTypeSeeder::class);
+        $this->call(CountrySeeder::class);
     }
 }
