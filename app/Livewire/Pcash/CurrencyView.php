@@ -17,7 +17,7 @@ class CurrencyView extends Component
     {
         $this->authorize('currency-delete');
 
-        $currency = Currency::findOrFail($id);
+        $currency = Currency::with('paymentAmount','receiptAmount')->findOrFail($id);
         $currency->paymentAmount()->delete();
         $currency->receiptAmount()->delete();
         $currency->delete();

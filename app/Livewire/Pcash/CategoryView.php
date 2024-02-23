@@ -17,7 +17,7 @@ class CategoryView extends Component
     {
         $this->authorize('category-delete');
 
-        $category = Category::findOrFail($id);
+        $category = Category::with('subCategory','payment')->findOrFail($id);
 
         $category->subCategory()->delete();
         $category->payment()->delete();

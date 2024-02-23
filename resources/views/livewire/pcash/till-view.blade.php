@@ -18,7 +18,7 @@
                 <tbody>
                 @foreach($tills as $till)
                     <tr>
-                        <td>{{ $till->user->username }}</td>
+                        <td>{{ $till->user->username ?? 'N/A' }}</td>
                         <td>{{ $till->name }}</td>
                         <td>{{ $till->created_at->format('m-d-Y h:i a') }}</td>
 

@@ -17,7 +17,7 @@ class PaymentView extends Component
     {
         $this->authorize('payment-delete');
 
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::with('paymentAmount')->findOrFail($id);
         $payment->paymentAmount()->delete();
 
         $payment->delete();

@@ -19,7 +19,7 @@ class ReceiptView extends Component
     {
         $this->authorize('receipt-delete');
 
-        $receipt = Receipt::findOrFail($id);
+        $receipt = Receipt::with('receiptAmount')->findOrFail($id);
         $receipt->receiptAmount()->delete();
         $receipt->delete();
 

@@ -17,7 +17,7 @@ class TillView extends Component
     {
         $this->authorize('till-delete');
 
-        $till = Till::findOrFail($id);
+        $till = Till::with('fromTransfer','toTransfer')->findOrFail($id);
         $till->fromTransfer()->delete();
         $till->toTransfer()->delete();
         $till->delete();
