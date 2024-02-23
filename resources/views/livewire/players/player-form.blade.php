@@ -197,8 +197,6 @@
 
             $(document).ready(function () {
 
-                // Register the plugin
-                FilePond.registerPlugin(FilePondPluginImagePreview);
 
 
             });

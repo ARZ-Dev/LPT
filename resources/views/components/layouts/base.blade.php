@@ -71,8 +71,6 @@
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 
-    <link href="{{asset('assets/css/filepond.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/css/filepond.preview.css')}}" rel="stylesheet" />
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
