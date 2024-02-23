@@ -287,7 +287,7 @@
                         },
                         @can('user-create')
                         {
-                            text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
+                            text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New</span>',
                             className: 'add-new btn btn-primary add-new-button',
                             attr: {
                                 'data-href': "{{ route('payment.create') }}",

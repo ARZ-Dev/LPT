@@ -95,6 +95,16 @@
             var status={{$status}};
             if (status=="1") {$('input').prop('disabled', true);}
             triggerCleave();
+            
+    //         Livewire.on('triggerCleave', function() {
+                
+    //             for(let field of $('.cleave-input').toArray()){
+    //     new Cleave(field, {
+    //         numeral: true,
+    //         numeralThousandsGroupStyle: 'thousand'
+    //     });
+    // }
+    //         })
 
         });
 

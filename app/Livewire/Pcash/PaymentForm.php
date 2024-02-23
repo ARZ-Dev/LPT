@@ -75,6 +75,7 @@ class PaymentForm extends Component
     {
         $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
         
+        $this->dispatch('triggerCleave');
         
     }
 

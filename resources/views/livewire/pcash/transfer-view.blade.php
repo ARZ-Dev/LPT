@@ -2,19 +2,21 @@
    
     <div wire:ignore class="card">
         <div class="card-header border-bottom">
-            <h4 class="card-title mb-3">Currency</h4>
+            <h4 class="card-title mb-3">Transfer</h4>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
                 <div class="col-md-4"></div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-currency table border-top">
+            <table class="datatables-transfer table border-top">
                 <thead>
                  <tr>
                     <th></th>
 
-                    <th>name</th>
-                    <th>Symbol</th>
+                    <th>UserName</th>
+                    <th>transfer name</th>
+                   
+
                     <th>Created At</th>
 
     
@@ -28,17 +30,20 @@
     @script
     <script>
         document.addEventListener('livewire:navigated', function () {
-            var dt_currency_table = $('.datatables-currency')
+            var dt_transfer_table = $('.datatables-transfer')
 
-            var currency = @json($currency ?? []);
-            if (dt_currency_table.length) {
-                var dt_currency = dt_currency_table.DataTable({
-                    data: currency,
+            var transfer = @json($transfer ?? []);
+            if (dt_transfer_table.length) {
+                var dt_transfer = dt_transfer_table.DataTable({
+                    data: transfer,
                     columns: [
                         { data: '' },
 
-                        { data: 'name' },
-                        { data: 'symbol' },
+                        { data: 'from_till_id' },
+                        { data: 'to_till_id' },
+                        // { data: 'usd_opening' },
+                        // { data: 'lbp_opening' },
+
                         { data: 'created_at' },
 
                         { data: 'action' }
@@ -60,19 +65,20 @@
                            
                             targets: 1,
                             render: function (data, type, full, meta) {
-                                var $name = full['name'];
+                                var $fromTill = full['from_till']['name'];
 
-                                return '<span class="fw-semibold">' + $name + '</span>';
+                                return '<span class="fw-semibold">' + $fromTill + '</span>';
                             }
                         },
                         {
-                            targets: 2,
-                            render: function (data, type, full, meta) {
-                                var $symbol = full['symbol'];
+                           
+                           targets: 2,
+                           render: function (data, type, full, meta) {
+                                var $toTill = full['to_till']['name'];
 
-                                return '<span class="fw-semibold">' + $symbol + '</span>';
-                            }
-                        },
+                               return '<span class="fw-semibold">' + $toTill + '</span>';
+                           }
+                       },
                         {
                             targets: 3,
                             render: function (data, type, full, meta) {
@@ -93,19 +99,19 @@
                             searchable: false,
                             orderable: false,
                             render: function (data, type, full, meta) {
-                                let editLink = "{{ route('currency.edit', '%id%') }}".replace('%id%', full['id']);
-                                let viewLink = "{{ route('currency.view', ['id' => '%id%', 'status' => '%status%']) }}".replace('%id%', full['id']).replace('%status%', 1);
+                                let editLink = "{{ route('transfer.edit', '%id%') }}".replace('%id%', full['id']);
+                                let viewLink = "{{ route('transfer.view', ['id' => '%id%', 'status' => '%status%']) }}".replace('%id%', full['id']).replace('%status%', 1);
 
 
                                 return (
                                     '<div class="d-flex align-items-center">' +
-                                    @can('currency-list')
+                                    @can('transfer-list')
                                     '<a href="'+ viewLink +'" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>' +
                                     @endcan
-                                    @can('currency-edit')
+                                    @can('transfer-edit')
                                     '<a href="'+ editLink +'" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>' +
                                     @endcan
-                                    @can('currency-delete')
+                                    @can('transfer-delete')
                                     '<a wire:click="delete(' + full['id'] + ')" href="#" class="text-body delete-record delete-button" data-id="'+ full['id'] +'"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>' +
                                     @endcan
                                     '</div>'
@@ -275,7 +281,7 @@
                             text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New</span>',
                             className: 'add-new btn btn-primary add-new-button',
                             attr: {
-                                'data-href': "{{ route('currency.create') }}",
+                                'data-href': "{{ route('transfer.create') }}",
                             }
                         }
                         @endcan

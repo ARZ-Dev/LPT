@@ -13,14 +13,14 @@
 
                     <div class="col-12 col-md-12">
                             <label class="form-label" for="paid_by">From Costumer</label>
-                            <textarea
+                            <input
                             wire:model.defer="paid_by"
                             type="text"
                             id="paid_by"
                             name="paid_by"
                             class="form-control"
                             placeholder="From Costumer"
-                            /></textarea>
+                            />
                             @error('paid_by') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 

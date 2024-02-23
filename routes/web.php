@@ -28,6 +28,9 @@ use App\Livewire\Pcash\PaymentView;
 use App\Livewire\Pcash\ReceiptForm;
 use App\Livewire\Pcash\ReceiptView;
 
+use App\Livewire\Pcash\TransferForm;
+use App\Livewire\Pcash\TransferView;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -97,7 +100,7 @@ Route::group(['prefix' => 'till'], function() {
     });
 
 // |--------------------------------------------------------------------------
-// |Payment 
+// |Receipt 
 // |--------------------------------------------------------------------------
 
     Route::group(['prefix' => 'receipt'], function() {
@@ -105,6 +108,17 @@ Route::group(['prefix' => 'till'], function() {
         Route::get('/create', ReceiptForm::class)->name('receipt.create');
         Route::get('/edit/{id}', ReceiptForm::class)->name('receipt.edit');
         Route::get('/view/{id}/{status}', ReceiptForm::class)->name('receipt.view');
+});
+
+// |--------------------------------------------------------------------------
+// |Receipt 
+// |--------------------------------------------------------------------------
+
+Route::group(['prefix' => 'transfer'], function() {
+    Route::get('/', TransferView::class)->name('transfer');
+    Route::get('/create', TransferForm::class)->name('transfer.create');
+    Route::get('/edit/{id}', TransferForm::class)->name('transfer.edit');
+    Route::get('/view/{id}/{status}', TransferForm::class)->name('transfer.view');
 });
 
 

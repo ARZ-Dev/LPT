@@ -53,6 +53,11 @@ class PermissionsSeeder extends Seeder
             'receipt-edit',
             'receipt-delete',
 
+            'transfer-list',
+            'transfer-create',
+            'transfer-edit',
+            'transfer-delete',
+
         ];
 
         $permissionsIds = [];
