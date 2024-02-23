@@ -227,7 +227,7 @@
                     console.log(file)
                 });
 
-                @if($player->national_id_upload)
+                @if($player?->national_id_upload)
                     // Assuming the file is stored in Laravel storage at 'national_ids/filename.jpg'
                     var fileUrl = '{{ asset(Storage::url($player->national_id_upload)) }}';
 

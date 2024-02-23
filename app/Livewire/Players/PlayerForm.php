@@ -46,7 +46,8 @@ class PlayerForm extends Component
 
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
-            $imageName = time().rand(0, 999999999999) . '.png';
+            $extension = $this->nationalIdFile->getClientOriginalExtension();
+            $imageName = time().rand(0, 999999999999) . '.' . $extension;
             $path = Storage::disk("")->putFileAs('public/national_ids/', $this->nationalIdFile, $imageName);
         }
 
