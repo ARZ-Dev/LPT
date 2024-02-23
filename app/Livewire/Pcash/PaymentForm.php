@@ -34,6 +34,8 @@ class PaymentForm extends Component
     public $categories;
     public $subCategories;
     public $currencies;
+    
+    public $deletedPaymentAmount=[];
 
 
     protected $listeners = ['store', 'update'];
@@ -92,14 +94,15 @@ class PaymentForm extends Component
 
     public function removePaymentAmount($key)
     {
-        if (isset($this->paymentAmount[$key])) {
-        $paymentIndex = $this->paymentAmount[$key];
-        if (isset($paymentIndex['id'])) {
-            PaymentAmount::find($paymentIndex['id'])->delete();
-        }
+  
+        $removedItemId = $this->paymentAmount[$key]['id'];
+
         unset($this->paymentAmount[$key]);
         $this->paymentAmount = array_values($this->paymentAmount);
-    }}
+        $this->deletedPaymentAmount[] = $removedItemId;
+    }
+
+
 
 
 
@@ -167,6 +170,9 @@ class PaymentForm extends Component
                 PaymentAmount::create($data);
             }
         }
+
+        PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->delete();
+
 
         session()->flash('success', 'payment has been updated successfully!');
 

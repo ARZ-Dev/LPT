@@ -20,7 +20,7 @@
                 @foreach($payments as $payment)
                     <tr>
                         <td>{{ $payment->category->category_name }}</td>
-                        <td>{{ $payment->subCategory->sub_category_name }}</td>
+                        <td>{{ $payment->subCategory->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
                         <td>{{ $payment->created_at->format('m-d-Y h:i a') }}</td>
                         <td>

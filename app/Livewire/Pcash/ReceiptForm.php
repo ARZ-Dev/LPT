@@ -31,6 +31,8 @@ class ReceiptForm extends Component
     public $currency_id;
     public $amount;
 
+    public $deletedReceiptAmount = [];
+
 
     protected $listeners = ['store', 'update'];
 
@@ -79,14 +81,12 @@ class ReceiptForm extends Component
 
     public function removeReceiptAmount($key)
     {
-        if (isset($this->receiptAmount[$key])) {
-        $receiptIndex = $this->receiptAmount[$key];
-        if (isset($receiptIndex['id'])) {
-            ReceiptAmount::find($receiptIndex['id'])->delete();
-        }
+        $removedItemId = $this->receiptAmount[$key]['id'];
         unset($this->receiptAmount[$key]);
         $this->receiptAmount = array_values($this->receiptAmount);
-    }}
+        $this->deletedReceiptAmount[] = $removedItemId;
+
+    }
 
 
 
@@ -155,6 +155,9 @@ class ReceiptForm extends Component
                 ReceiptAmount::create($data);
             }
         }
+
+        ReceiptAmount::whereIn('id',$this->deletedReceiptAmount)->delete();
+
 
         session()->flash('success', 'receipt has been updated successfully!');
 

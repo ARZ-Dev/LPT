@@ -24,6 +24,8 @@ class CategoryForm extends Component
     public $categoty_id;
     public $sub_category_name;
 
+    public $deletedSubCategory = [];
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -68,15 +70,12 @@ class CategoryForm extends Component
 
     public function removeSubCategory($index)
     {
-        if (isset($this->sub_category[$index])) {
-            $subCategory = $this->sub_category[$index];
+        $removedItemId = $this->sub_category[$index]['id'];
 
-        if (isset($subCategory['id'])) {
-            SubCategory::find($subCategory['id'])->delete();
-        }
-        unset($this->sub_category[$index]);
-        $this->sub_category = array_values($this->sub_category);
-    }}
+            unset($this->sub_category[$index]);
+            $this->sub_category = array_values($this->sub_category);
+            $this->deletedSubCategory[] = $removedItemId;
+    }
     
 
     public function store()
@@ -125,6 +124,9 @@ class CategoryForm extends Component
                 SubCategory::create($data);
             }
         }
+        SubCategory::whereIn('id',$this->deletedSubCategory)->delete();
+    
+
         
         session()->flash('success', 'Category has been updated successfully!');
 
