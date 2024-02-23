@@ -6,11 +6,15 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    
+
     public function run(): void
     {
         $this->call(RolesSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->call(LevelCategorySeeder::class);
+        $this->call(TournamentTypeSeeder::class);
+        $this->call(TournamentFormatSeeder::class);
+        $this->call(TournamentDeuceTypeSeeder::class);
     }
 }
