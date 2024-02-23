@@ -12,6 +12,16 @@ class Player extends Model
 
     protected $guarded = [];
 
+    /**
+     * Accessor method to get the full name attribute.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
+    }
+
     public function team()
     {
         return $this->belongsTo(Team::class);

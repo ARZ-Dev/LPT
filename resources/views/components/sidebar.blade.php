@@ -1,6 +1,6 @@
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-	
+
 
 <div class=" text-center">
 		<img id="logoImage" src="{{ asset('assets/images/login/Racket-and-ball-Tennis-Logo-by-yahyaanasatokillah.png') }}" style="height:100%;width:230px;">
@@ -43,13 +43,13 @@
                     <div data-i18n="Roles">Roles</div>
                     </a>
                 </li>
-             
+
                 <li class="menu-item {{ request()->is('permissions') ? "active" : "" }}">
                     <a href="{{ route('permissions') }}" class="menu-link">
                     <div data-i18n="Permissions">Permissions</div>
                     </a>
                 </li>
-              
+
 				<li class="menu-item">
 					<a href="{{ route('users') }}" class="menu-link">
 						<div data-i18n="Users">Users</div>
@@ -105,46 +105,23 @@
 
 		</li>
 
+        @can('team-list')
+        <li class="menu-item {{ request()->is('teams') ? "active" : "" }}">
+            <a href="{{ route('teams') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-users"></i>
+                <div data-i18n="Teams">Teams</div>
+            </a>
+        </li>
+        @endcan
 
-		
-
-	
-
-				
-
-
-
-
-
-
-
-
-	
-
-	
-
-
-	
-
-	
-			
-
-	
-					
-			
-
-
-
-
-
-
-
-	
-
-		
-		</li>	
-
-
+        @can('player-list')
+            <li class="menu-item {{ request()->is('players') ? "active" : "" }}">
+                <a href="{{ route('players') }}" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-user"></i>
+                    <div data-i18n="Players">Players</div>
+                </a>
+            </li>
+        @endcan
 
 	</ul>
 

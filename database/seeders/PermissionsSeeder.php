@@ -58,6 +58,18 @@ class PermissionsSeeder extends Seeder
             'transfer-edit',
             'transfer-delete',
 
+            'team-list',
+            'team-create',
+            'team-edit',
+            'team-view',
+            'team-delete',
+
+            'player-list',
+            'player-create',
+            'player-edit',
+            'player-view',
+            'player-delete',
+
         ];
 
         $permissionsIds = [];
@@ -65,7 +77,7 @@ class PermissionsSeeder extends Seeder
             $createdPermission = Permission::updateOrCreate(['name' => $permission]);
             $permissionsIds[] = $createdPermission->id;
         }
-        
+
         $adminRole = Role::find(1);
         if($adminRole!=null){
             $adminRole->syncPermissions($permissionsIds);

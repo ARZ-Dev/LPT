@@ -31,6 +31,11 @@ use App\Livewire\Pcash\ReceiptView;
 use App\Livewire\Pcash\TransferForm;
 use App\Livewire\Pcash\TransferView;
 
+use App\Livewire\Teams\TeamView;
+use App\Livewire\Teams\TeamForm;
+
+use App\Livewire\Players\PlayerView;
+use App\Livewire\Players\PlayerForm;
 
 Route::get('/login', Login::class)->name('login');
 
@@ -39,58 +44,59 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-Route::get('/dashboard', DashboardView::class)->name('dashboard');
-Route::get('/permissions', PermissionView::class)->name('permissions');
-Route::get('/roles', RoleView::class)->name('roles');
 
-Route::group(['prefix' => 'users'], function() {
-    Route::get('/', UserView::class)->name('users');
-    Route::get('/create', UserForm::class)->name('users.create');
-    Route::get('/edit/{id}', UserForm::class)->name('users.edit');
-    Route::get('/view/{id}/{status}', UserForm::class)->name('users.view');
-});
+    Route::get('/dashboard', DashboardView::class)->name('dashboard');
+    Route::get('/permissions', PermissionView::class)->name('permissions');
+    Route::get('/roles', RoleView::class)->name('roles');
 
-Route::get('/test', Test::class)->name('Test');
-Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
+    Route::group(['prefix' => 'users'], function() {
+        Route::get('/', UserView::class)->name('users');
+        Route::get('/create', UserForm::class)->name('users.create');
+        Route::get('/edit/{id}', UserForm::class)->name('users.edit');
+        Route::get('/view/{id}/{status}', UserForm::class)->name('users.view');
+    });
 
-
-// |--------------------------------------------------------------------------
-// |CATEGORY 
-// |--------------------------------------------------------------------------
-
-Route::group(['prefix' => 'category'], function() {
-    Route::get('/', CategoryView::class)->name('category');
-    Route::get('/create', CategoryForm::class)->name('category.create');
-    Route::get('/edit/{id}', CategoryForm::class)->name('category.edit');
-    Route::get('/view/{id}/{status}', CategoryForm::class)->name('category.view');
-});
-
-// |--------------------------------------------------------------------------
-// |Currency 
-// |--------------------------------------------------------------------------
-
-Route::group(['prefix' => 'currency'], function() {
-    Route::get('/', CurrencyView::class)->name('currency');
-    Route::get('/create', CurrencyForm::class)->name('currency.create');
-    Route::get('/edit/{id}', CurrencyForm::class)->name('currency.edit');
-    Route::get('/view/{id}/{status}', CurrencyForm::class)->name('currency.view');
-});
-
-// |--------------------------------------------------------------------------
-// |Till 
-// |--------------------------------------------------------------------------
-
-Route::group(['prefix' => 'till'], function() {
-    Route::get('/', TillView::class)->name('till');
-    Route::get('/create', TillForm::class)->name('till.create');
-    Route::get('/edit/{id}', TillForm::class)->name('till.edit');
-    Route::get('/view/{id}/{status}', TillForm::class)->name('till.view');
-});
+    Route::get('/test', Test::class)->name('Test');
+    Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
 
 
-// |--------------------------------------------------------------------------
-// |Payment 
-// |--------------------------------------------------------------------------
+    // |--------------------------------------------------------------------------
+    // |CATEGORY
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'category'], function() {
+        Route::get('/', CategoryView::class)->name('category');
+        Route::get('/create', CategoryForm::class)->name('category.create');
+        Route::get('/edit/{id}', CategoryForm::class)->name('category.edit');
+        Route::get('/view/{id}/{status}', CategoryForm::class)->name('category.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |Currency
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'currency'], function() {
+        Route::get('/', CurrencyView::class)->name('currency');
+        Route::get('/create', CurrencyForm::class)->name('currency.create');
+        Route::get('/edit/{id}', CurrencyForm::class)->name('currency.edit');
+        Route::get('/view/{id}/{status}', CurrencyForm::class)->name('currency.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |Till
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'till'], function() {
+        Route::get('/', TillView::class)->name('till');
+        Route::get('/create', TillForm::class)->name('till.create');
+        Route::get('/edit/{id}', TillForm::class)->name('till.edit');
+        Route::get('/view/{id}/{status}', TillForm::class)->name('till.view');
+    });
+
+
+    // |--------------------------------------------------------------------------
+    // |Payment
+    // |--------------------------------------------------------------------------
 
     Route::group(['prefix' => 'payment'], function() {
         Route::get('/', PaymentView::class)->name('payment');
@@ -99,27 +105,49 @@ Route::group(['prefix' => 'till'], function() {
         Route::get('/view/{id}/{status}', PaymentForm::class)->name('payment.view');
     });
 
-// |--------------------------------------------------------------------------
-// |Receipt 
-// |--------------------------------------------------------------------------
+    // |--------------------------------------------------------------------------
+    // |Receipt
+    // |--------------------------------------------------------------------------
 
     Route::group(['prefix' => 'receipt'], function() {
         Route::get('/', ReceiptView::class)->name('receipt');
         Route::get('/create', ReceiptForm::class)->name('receipt.create');
         Route::get('/edit/{id}', ReceiptForm::class)->name('receipt.edit');
         Route::get('/view/{id}/{status}', ReceiptForm::class)->name('receipt.view');
-});
+    });
 
-// |--------------------------------------------------------------------------
-// |Receipt 
-// |--------------------------------------------------------------------------
+    // |--------------------------------------------------------------------------
+    // |Receipt
+    // |--------------------------------------------------------------------------
 
-Route::group(['prefix' => 'transfer'], function() {
-    Route::get('/', TransferView::class)->name('transfer');
-    Route::get('/create', TransferForm::class)->name('transfer.create');
-    Route::get('/edit/{id}', TransferForm::class)->name('transfer.edit');
-    Route::get('/view/{id}/{status}', TransferForm::class)->name('transfer.view');
-});
+    Route::group(['prefix' => 'transfer'], function() {
+        Route::get('/', TransferView::class)->name('transfer');
+        Route::get('/create', TransferForm::class)->name('transfer.create');
+        Route::get('/edit/{id}', TransferForm::class)->name('transfer.edit');
+        Route::get('/view/{id}/{status}', TransferForm::class)->name('transfer.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |Teams
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'teams'], function() {
+        Route::get('/', TeamView::class)->name('teams');
+        Route::get('/create', TeamForm::class)->name('teams.create');
+        Route::get('/edit/{id}', TeamForm::class)->name('teams.edit');
+        Route::get('/view/{id}/{status}', TeamForm::class)->name('teams.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |Players
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'players'], function() {
+        Route::get('/', PlayerView::class)->name('players');
+        Route::get('/create', PlayerForm::class)->name('players.create');
+        Route::get('/edit/{id}', PlayerForm::class)->name('players.edit');
+        Route::get('/view/{id}/{status}', PlayerForm::class)->name('players.view');
+    });
 
 
 });
