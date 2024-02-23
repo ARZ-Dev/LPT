@@ -95,7 +95,7 @@ class PaymentForm extends Component
     public function removePaymentAmount($key)
     {
         if($this->editing == true){
-            $removedItemId = $this->paymentAmount[$key]['id'];
+            $removedItemId = $this->paymentAmount[$key]['id'] ?? null;
             $this->deletedPaymentAmount[] = $removedItemId;
         }
 

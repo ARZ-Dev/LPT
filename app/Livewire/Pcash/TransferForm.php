@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Pcash;
 
+use App\Models\Currency;
 use App\Models\till;
 use App\Models\Transfer;
+use App\Models\TransferAmount;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -22,8 +24,10 @@ class TransferForm extends Component
     public $from_till_id;
     public $to_till_id;
 
-    public $usd_amount;
-    public $lbp_amount;
+    public  $transferAmount=[];
+    public $currency_id;
+    public $amount;
+    public $deletedTransferAmount = [];
 
     protected $listeners = ['store', 'update'];
 
@@ -33,6 +37,8 @@ class TransferForm extends Component
 
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
+        $this->addRow();
+
 
         if ($id) {
             $this->editing = true;
@@ -40,8 +46,8 @@ class TransferForm extends Component
 
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
-            $this->usd_amount = $this->transfer->usd_amount;
-            $this->lbp_amount = $this->transfer->lbp_amount;
+            $this->transferAmount = $this->transfer->transferAmount->toArray();
+
 
         }
 
@@ -52,12 +58,42 @@ class TransferForm extends Component
         $rules = [
             'from_till_id' => ['required', 'integer'],
             'to_till_id' => ['required', 'integer'],
-            'usd_amount' => ['required'],
-            'lbp_amount' => ['required'],
+
+            'transferAmount' => ['array'],
+            'transferAmount.*.transfer_id' => ['nullable'],
+            'transferAmount.*.currency_id' => ['required'],
+            'transferAmount.*.amount' => ['required'], 
         ];
 
         return $rules;
     }
+    public function addRow()
+    {
+        $this->transferAmount[] = ['currency_id' => '','amount' => ''];  
+    }
+
+    public function removeTransferAmount($key)
+    {
+
+      
+        if($this->editing == true){
+        $removedItemId = $this->transferAmount[$key]['id'] ?? null ;
+        $this->deletedTransferAmount[] = $removedItemId;
+        }
+
+        unset($this->transferAmount[$key]);
+        $this->transferAmount = array_values($this->transferAmount);
+    }
+
+    private function sanitizeNumber($number)
+    {
+        $number = str_replace(',', '', $number);
+        if (substr($number, -1) === '.') {
+            $number = substr($number, 0, -1);
+        }
+        return $number;
+    }
+    
 
     public function store()
     {
@@ -65,12 +101,20 @@ class TransferForm extends Component
 
     $this->validate();
 
-    Transfer::create([
+    $transfer=Transfer::create([
         'from_till_id' => $this->from_till_id ,
         'to_till_id' => $this->to_till_id ,
-        'usd_amount' => $this->sanitizeNumber($this->usd_amount) ,
-        'lbp_amount' => $this->sanitizeNumber($this->lbp_amount) ,
+
     ]);
+
+    $transferId = $transfer->id;
+    foreach ($this->transferAmount as $transferAmount) {
+        TransferAmount::create([
+            'transfer_id' => $transferId,
+            'currency_id' => $transferAmount['currency_id'],
+            'amount' => $this->sanitizeNumber($transferAmount['amount']),
+        ]);
+    }
 
 
     session()->flash('success', 'transfer has been created successfully!');
@@ -89,10 +133,23 @@ class TransferForm extends Component
         $this->transfer->update([
             'from_till_id' => $this->from_till_id ,
             'to_till_id' => $this->to_till_id ,
-            'usd_amount' => $this->sanitizeNumber($this->usd_amount) ,
-            'lbp_amount' => $this->sanitizeNumber($this->lbp_amount) ,
-
         ]);
+
+        foreach ($this->transferAmount as $transferAmount) {
+            $data = [
+                'transfer_id' => $this->transfer->id,
+                'currency_id' => $transferAmount['currency_id'],
+                'amount' => $this->sanitizeNumber($transferAmount['amount']),
+            ];
+        
+            if (isset($transferAmount['id'])) {
+                TransferAmount::updateOrCreate(['id' => $transferAmount['id']], $data);
+            } else {
+                TransferAmount::create($data);
+            }
+        }
+
+        TransferAmount::whereIn('id',$this->deletedTransferAmount)->delete();
 
         session()->flash('success', 'transfer has been updated successfully!');
 
@@ -100,23 +157,15 @@ class TransferForm extends Component
     }
     
 
-    private function sanitizeNumber($number)
-    {
-        // Remove commas
-        $number = str_replace(',', '', $number);
-        // Remove dot at the end, if it exists
-        if (substr($number, -1) === '.') {
-            $number = substr($number, 0, -1);
-        }
 
-        return $number;
-    }
 
     public function render()
     {
         $fromTills = Till::where('user_id',auth()->id())->get();
         $toTills = Till::where('user_id', '<>', auth()->id())->get();
+        $currencies = Currency::all();
 
-        return view('livewire.pcash.transfer-form',compact('fromTills','toTills'));
+
+        return view('livewire.pcash.transfer-form',compact('fromTills','toTills','currencies'));
     }
 }

@@ -55,7 +55,7 @@ class CategoryForm extends Component
 
             'sub_category' => ['array'],
             'sub_category.*.categoty_id' => ['nullable', 'integer'],
-            'sub_category.*.sub_category_name' => ['nullable', 'string'],   
+            'sub_category.*.sub_category_name' => ['required', 'string'],   
         ];
 
         return $rules;
@@ -72,7 +72,7 @@ class CategoryForm extends Component
     public function removeSubCategory($index)
     {
         if($this->editing == true){
-            $removedItemId = $this->sub_category[$index]['id'];
+            $removedItemId = $this->sub_category[$index]['id'] ?? null;
             $this->deletedSubCategory[] = $removedItemId;
         }
             unset($this->sub_category[$index]);

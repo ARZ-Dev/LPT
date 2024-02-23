@@ -12,7 +12,7 @@
                     <form class="row g-3">
 
                         <div class="col-12 col-md-6 ">
-                        <label class="form-label" for="user_id">Users</label>
+                        <label class="form-label" for="user_id">Users <span style="color: red;">*</span></label>
                             <select wire:model="user_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="user_id" id="user_id">
                                 <option>Open this select menu</option>
                                     @foreach($users as $user)
@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="name">name</label>
+                            <label class="form-label" for="name">name <span style="color: red;">*</span></label>
                             <input  
                             wire:model.defer="name"
                             type="text"
@@ -39,17 +39,18 @@
                             <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
 
                             @foreach($tillAmount as $key => $tillAmount)
-                                <div wire:key="tillAmount-{{ $key }}">
+                            <div wire:key="tillAmount-{{ $key }}">
+                                    <label class="mt-3" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
                                     <div class="d-flex flex-row mt-3 mb-3">
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmount.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmount.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
 
-                                        <select class="form-select " aria-label="Default select example" wire:model="tillAmount.{{ $key }}.currency_id">
-                                            <option selected>Open this select menu</option>
+                                        <select class="form-select " aria-label="Default select example" wire:model="tillAmount.{{ $key }}.currency_id" id="currency{{$key}}">
+                                            <option selected>Open this select menu <span style="color: red;">*</span></option>
                                             @foreach($currencies as $index => $currency)
                                                 <option value="{{$currency->id}}">{{$currency->name}}</option>
                                             @endforeach
                                         </select>
-
+                                      
                                         @if($key !== 0)
                                         <button type="button" class="btn btn-danger ms-2"  wire:click="removeTillAmount({{ $key }})">Remove</button>
                                         @endif

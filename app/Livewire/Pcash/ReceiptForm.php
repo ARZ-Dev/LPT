@@ -80,7 +80,7 @@ class ReceiptForm extends Component
     public function removeReceiptAmount($key)
     {
         if($this->editing == true){
-            $removedItemId = $this->receiptAmount[$key]['id'];
+            $removedItemId = $this->receiptAmount[$key]['id'] ?? null;
             $this->deletedReceiptAmount[] = $removedItemId;
         }
         unset($this->receiptAmount[$key]);

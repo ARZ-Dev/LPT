@@ -24,6 +24,10 @@ class Transfer extends Model
     {
         return $this->belongsTo(Till::class,'to_till_id');
     }
+    public function transferAmount()
+    {
+        return $this->hasMany(TransferAmount::class,'transfer_id');
+    }
 
 
 }

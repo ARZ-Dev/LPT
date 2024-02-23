@@ -26,7 +26,6 @@ class TillForm extends Component
     public  $tillAmount=[];
     public $currency_id;
     public $amount;
-
     public $deletedTillAmount = [];
 
 
@@ -79,7 +78,7 @@ class TillForm extends Component
     {
 
         if($this->editing == true){
-        $removedItemId = $this->tillAmount[$key]['id'];
+        $removedItemId = $this->tillAmount[$key]['id'] ?? null;
         $this->deletedTillAmount[] = $removedItemId;
         }
         unset($this->tillAmount[$key]);

@@ -12,7 +12,7 @@
                     <form class="row g-3">
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="name">name</label>
+                            <label class="form-label" for="name">name<span style="color: red;">*</span></label>
                             <input  
                             wire:model.defer="name"
                             type="text"
@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="symbol">symbol</label>
+                            <label class="form-label" for="symbol">symbol<span style="color: red;">*</span></label>
                             <input
                             wire:model.defer="symbol"
                             type="text"
