@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Users;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
 use Livewire\Component;
 
 class UserView extends Component
@@ -30,7 +28,6 @@ class UserView extends Component
         $this->authorize('user-delete');
 
         if ($id == 1) {
-
             return to_route('users')->with('error', 'You cannot delete the user with ID 1.');
         }
 
@@ -43,7 +40,7 @@ class UserView extends Component
     {
         $data = [];
 
-        $users = UserResource::collection(User::all());
+        $users = User::all();
         $data['users'] = $users;
 
         return view('livewire.users.user-view', $data);

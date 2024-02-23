@@ -397,8 +397,6 @@
         }
     </script>
 
-
-
     <!-- cropper -->
     <script>
 
@@ -519,6 +517,11 @@
             });
     </script>
 
+  <script>
+      $(document).ready(function () {
+          $('.dataTable').dataTable()
+      })
+  </script>
 
   </body>
 
