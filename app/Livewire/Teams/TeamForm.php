@@ -81,7 +81,18 @@ class TeamForm extends Component
             'current_team_id' => $this->team->id,
         ]);
 
-        $this->team->players()->sync($this->playersIds);
+        $playersData = [];
+        foreach ($this->playersIds as $playerId) {
+            $playingSide = Player::find($playerId)?->playing_side;
+            $playersData[] = [
+                $playerId => [
+                    'playing_side' => $playingSide ?? "",
+                ],
+            ];
+        }
+        dd(array_values($playersData));
+
+        $this->team->players()->sync($playersData);
 
         return to_route('teams')->with('success', 'Team has been updated successfully!');
     }
