@@ -176,7 +176,7 @@
                         <div class="row">
                             <div class="col-12 col-md-12">
                                 <div wire:ignore class="filePondContainer">
-                                    <input type="file" class="fileInput" class="test-filepond" />
+                                    <input type="file" class="fileInput" />
                                 </div>
                             </div>
                         </div>
@@ -193,11 +193,11 @@
         </div>
     </div>
 
+    @script
     <script>
 
 
         document.addEventListener('livewire:navigated', function () {
-            FilePond.registerPlugin(FilePondPluginFileValidateType);
             FilePond.registerPlugin(FilePondPluginFileValidateType);
             FilePond.registerPlugin(FilePondPluginImagePreview);
 
@@ -208,38 +208,48 @@
 
                 const post = FilePond.create(fileInput);
 
+                let files = [];
+
+                @if($player?->national_id_upload)
+
+                files.push({
+                    source: '{{ asset(Storage::url($player?->national_id_upload)) }}',
+                    options: {
+                        type: 'local',
+                        load: true
+                    }
+                })
+
+                @endif
+
                 post.setOptions({
                     server: {
-                        load: null,
+                        load: (source, load, error, progress, abort, headers) => {
+                            var myRequest = new Request(source);
+                            fetch(myRequest).then((res) => {
+                                return res.blob();
+                            }).then(load);
+                        },
+
                         process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
                             // Upload logic...
                             @this.upload('nationalIdFile', file, load, error, progress)
                         },
                         revert: (filename, load) => {
+                            $wire.dispatch('deleteNationalIdFile');
                             // Revert logic...
                             @this.removeUpload('nationalIdFile', filename, load)
                         },
                     },
-
+                    files: files,
                 });
-
-                post.on('processfile', (error, file) => {
-                    console.log(file)
-                });
-
-                @if($player?->national_id_upload)
-                    // Assuming the file is stored in Laravel storage at 'national_ids/filename.jpg'
-                    var fileUrl = '{{ asset(Storage::url($player->national_id_upload)) }}';
-
-                    // Add the file to FilePond
-                    post.addFile(fileUrl);
-                @endif
 
             });
 
         })
 
     </script>
+    @endscript
 
 </div>
 

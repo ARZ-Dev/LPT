@@ -8,6 +8,7 @@ use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -46,9 +47,7 @@ class PlayerForm extends Component
 
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
-            $extension = $this->nationalIdFile->getClientOriginalExtension();
-            $imageName = time().rand(0, 999999999999) . '.' . $extension;
-            $path = Storage::disk("")->putFileAs('public/national_ids/', $this->nationalIdFile, $imageName);
+            $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
         }
 
         $this->form->store($path);
@@ -62,15 +61,23 @@ class PlayerForm extends Component
 
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
-            $extension = $this->nationalIdFile->getClientOriginalExtension();
-            $imageName = time().rand(0, 999999999999) . '.' . $extension;
-            $path = Storage::disk("")->putFileAs('public/national_ids', $this->nationalIdFile, $imageName);
+            $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
         }
 
         $this->form->update($path);
 
         return to_route('players')->with('success', 'Player has been updated successfully!');
     }
+
+    #[On('deleteNationalIdFile')]
+    public function deleteNationalIdFile()
+    {
+        if ($this->player) {
+            $this->player->national_id_upload = NULL;
+            $this->player->save();
+        }
+    }
+
 
     public function render()
     {
