@@ -175,9 +175,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-12">
-                                <div wire:ignore class="filePondContainer">
-                                    <input type="file" class="fileInput" />
-                                </div>
+                                @php
+                                    $uploadedFile = $player->national_id_upload ? [asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload))] : [];
+                                @endphp
+                                <x-filepond :files="$uploadedFile" wire:model="nationalIdFile" delete-event="deleteNationalIdFile" />
                             </div>
                         </div>
                     </div>
@@ -198,51 +199,10 @@
 
 
         document.addEventListener('livewire:navigated', function () {
-            FilePond.registerPlugin(FilePondPluginFileValidateType);
-            FilePond.registerPlugin(FilePondPluginImagePreview);
 
             $(document).ready(function () {
 
-                const filePondContainer = document.querySelector('.filePondContainer');
-                const fileInput = filePondContainer.querySelector('.fileInput');
 
-                const post = FilePond.create(fileInput);
-
-                let files = [];
-
-                @if($player?->national_id_upload)
-
-                files.push({
-                    source: '{{ asset(Storage::url($player?->national_id_upload)) }}',
-                    options: {
-                        type: 'local',
-                        load: true
-                    }
-                })
-
-                @endif
-
-                post.setOptions({
-                    server: {
-                        load: (source, load, error, progress, abort, headers) => {
-                            var myRequest = new Request(source);
-                            fetch(myRequest).then((res) => {
-                                return res.blob();
-                            }).then(load);
-                        },
-
-                        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                            // Upload logic...
-                            @this.upload('nationalIdFile', file, load, error, progress)
-                        },
-                        revert: (filename, load) => {
-                            $wire.dispatch('deleteNationalIdFile');
-                            // Revert logic...
-                            @this.removeUpload('nationalIdFile', filename, load)
-                        },
-                    },
-                    files: files,
-                });
 
             });
 
