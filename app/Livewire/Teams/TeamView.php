@@ -22,7 +22,7 @@ class TeamView extends Component
         $team = Team::with('players')->find($id);
 
         $team->players()->update([
-            'team_id' => NULL,
+            'current_team_id' => NULL,
         ]);
 
         $team->delete();

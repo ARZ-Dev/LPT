@@ -129,10 +129,10 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-12 col-md-6">
-                                <label class="form-label" for="team_id">Team</label>
+                                <label class="form-label" for="team_id">Current Team</label>
                                 <div wire:ignore>
                                     <select
-                                        wire:model="form.team_id"
+                                        wire:model="form.current_team_id"
                                         id="team_id"
                                         class="selectpicker w-100 @error('team_id') invalid-validation-select @enderror"
                                         title="Select Team"
@@ -141,7 +141,7 @@
                                         data-icon-base="ti"
                                         data-tick-icon="ti-check text-white" required>
                                         @foreach($teams as $team)
-                                            <option value="{{ $team->id }}" @selected($team->id == $form->team_id)>{{ $team->nickname }}</option>
+                                            <option value="{{ $team->id }}" @selected($team->id == $form->current_team_id)>{{ $team->nickname }}</option>
                                         @endforeach
                                     </select>
                                 </div>

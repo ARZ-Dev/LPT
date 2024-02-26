@@ -60,8 +60,10 @@ class TeamForm extends Component
         ]);
 
         Player::whereIn('id', $this->playersIds)->update([
-            'team_id' => $team->id,
+            'current_team_id' => $team->id,
         ]);
+
+        $team->players()->sync($this->playersIds);
 
         return to_route('teams')->with('success', 'Team has been created successfully!');
     }
@@ -76,8 +78,10 @@ class TeamForm extends Component
         ]);
 
         Player::whereIn('id', $this->playersIds)->update([
-            'team_id' => $this->team->id,
+            'current_team_id' => $this->team->id,
         ]);
+
+        $this->team->players()->sync($this->playersIds);
 
         return to_route('teams')->with('success', 'Team has been updated successfully!');
     }

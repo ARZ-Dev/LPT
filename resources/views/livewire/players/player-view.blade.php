@@ -22,7 +22,7 @@
                     <tr>
                         <td>{{ $player->id }}</td>
                         <td>{{ $player->full_name }}</td>
-                        <td>{{ $player->team?->nickname }}</td>
+                        <td>{{ $player->currentTeam?->nickname }}</td>
                         <td>{{ $player->birthdate }}</td>
                         <td>{{ $player->phone_number }}</td>
                         <td>

@@ -14,7 +14,7 @@ class PlayerView extends Component
     ];
     public function mount()
     {
-        $this->players = Player::with('team')->get();
+        $this->players = Player::with('currentTeam')->get();
     }
 
     public function delete($id)

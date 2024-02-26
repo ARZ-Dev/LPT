@@ -22,8 +22,13 @@ class Player extends Model
         return "{$this->first_name} {$this->middle_name} {$this->last_name}";
     }
 
-    public function team()
+    public function currentTeam()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class);
     }
 }
