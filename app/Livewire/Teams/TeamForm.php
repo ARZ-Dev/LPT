@@ -63,7 +63,15 @@ class TeamForm extends Component
             'current_team_id' => $team->id,
         ]);
 
-        $team->players()->sync($this->playersIds);
+        $playersData = collect();
+        foreach ($this->playersIds as $playerId) {
+            $playingSide = Player::find($playerId)?->playing_side;
+            $playersData->put($playerId, [
+                'playing_side' => $playingSide ?? ""
+            ]);
+        }
+
+        $team->players()->sync($playersData);
 
         return to_route('teams')->with('success', 'Team has been created successfully!');
     }
@@ -81,16 +89,13 @@ class TeamForm extends Component
             'current_team_id' => $this->team->id,
         ]);
 
-        $playersData = [];
+        $playersData = collect();
         foreach ($this->playersIds as $playerId) {
             $playingSide = Player::find($playerId)?->playing_side;
-            $playersData[] = [
-                $playerId => [
-                    'playing_side' => $playingSide ?? "",
-                ],
-            ];
+            $playersData->put($playerId, [
+                'playing_side' => $playingSide ?? ""
+            ]);
         }
-        dd(array_values($playersData));
 
         $this->team->players()->sync($playersData);
 
