@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Till;
+use App\Models\Transfer;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
@@ -18,8 +19,8 @@ class TillView extends Component
         $this->authorize('till-delete');
 
         $till = Till::with('fromTransfer','toTransfer')->findOrFail($id);
-        $till->fromTransfer()->delete();
-        $till->toTransfer()->delete();
+        Transfer::Where('from_till_id',$till->id)->delete();
+        Transfer::Where('to_till_id',$till->id)->delete();
         $till->delete();
 
         return to_route('till')->with('success', 'till has been deleted successfully!');

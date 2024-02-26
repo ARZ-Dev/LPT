@@ -12,26 +12,27 @@
                     <form class="row g-3">
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="category_id">Categories</label>
-                            <select wire:model="category_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="category_id" id="category_id">
-                                <option>Open this select menu</option>
-                                    @foreach($categories as $category)
-                                        <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{$category->id}}'>{{$category->category_name}}</option>
-                                    @endforeach
-                            </select>
-                            @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                        <label class="form-label" for="category_id">Categories<span style="color: red;">*</span></label>
+                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" name="category_id" id="category_id">
+                            <option>Open this select menu</option>
+                            @foreach($categories as $category)
+                                <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{ $category->id }}'>{{ $category->category_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
 
-                        <div class="col-12 col-md-6">
-                        <label class="form-label" for="sub_category_id">Sub Category</label>
-                            <select wire:model="sub_category_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="sub_category_id" id="sub_category_id">
-                                <option>Open this select menu</option>
-                                    @foreach($subCategories as $subCategory)
-                                        <option {{ $subCategory->id == $sub_category_id ? 'selected' : '' }} value='{{$subCategory->id}}'>{{$subCategory->sub_category_name}}</option>
-                                    @endforeach
-                            </select>
-                            @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="sub_category_id">Sub Category<span style="color: red;">*</span></label>
+                        <select wire:model="sub_category_id" class="form-select selectpickerz w-100" aria-label="Default select example" name="sub_category_id" id="sub_category_id">
+                            <option>Open this select menu</option>
+                            @foreach($subCategories as $subCategory)
+                                <option {{ $subCategory->id == $sub_category_id ? 'selected' : '' }} value='{{ $subCategory->id }}'>{{ $subCategory->sub_category_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
 
 
                         <div class="col-12 col-md-12">
@@ -54,11 +55,13 @@
 
                        
                         <div wire:key="paymentAmount-{{ $key }}">
+                            <label class="mt-3" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
+
                             <div class="d-flex flex-row mt-3 mb-3">
                                 <input class="form-control  cleave-input w-100 me-2" wire:model="paymentAmount.{{ $key }}.amount" type="text" name="paymentAmount[{{ $key }}][amount]" placeholder="amount" required>
 
                                 <select class="form-select " aria-label="Default select example" wire:model="paymentAmount.{{ $key }}.currency_id">
-                                    <option selected>Open this select menu</option>
+                                    <option selected>Open this select menu*</option>
                                     @foreach($currencies as $index => $currency)
                                         <option value="{{$currency->id}}">{{$currency->name}}</option>
                                     @endforeach
@@ -112,14 +115,7 @@
         {
             window.livewire.emit(action)
         }
-
-
-
-
-    document.getElementById('category_id').addEventListener('change', function (e) {
-        @this.set('category_id', e.target.value);
-    });
-                 
+     
         </script>
     </div>
 </div>

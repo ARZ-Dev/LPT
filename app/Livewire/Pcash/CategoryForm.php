@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Category;
+use App\Models\Payment;
 use App\Models\SubCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -23,6 +24,8 @@ class CategoryForm extends Component
     public $sub_category = []; 
     public $categoty_id;
     public $sub_category_name;
+
+    public $deletedSubCategory = [];
 
     protected $listeners = ['store', 'update'];
 
@@ -52,7 +55,7 @@ class CategoryForm extends Component
 
             'sub_category' => ['array'],
             'sub_category.*.categoty_id' => ['nullable', 'integer'],
-            'sub_category.*.sub_category_name' => ['nullable', 'string'],   
+            'sub_category.*.sub_category_name' => ['required', 'string'],   
         ];
 
         return $rules;
@@ -68,15 +71,14 @@ class CategoryForm extends Component
 
     public function removeSubCategory($index)
     {
-        if (isset($this->sub_category[$index])) {
-            $subCategory = $this->sub_category[$index];
-
-        if (isset($subCategory['id'])) {
-            SubCategory::find($subCategory['id'])->delete();
+        if($this->editing == true){
+            $removedItemId = $this->sub_category[$index]['id'] ?? null;
+            $this->deletedSubCategory[] = $removedItemId;
         }
-        unset($this->sub_category[$index]);
-        $this->sub_category = array_values($this->sub_category);
-    }}
+            unset($this->sub_category[$index]);
+            $this->sub_category = array_values($this->sub_category);
+
+    }
     
 
     public function store()
@@ -125,6 +127,12 @@ class CategoryForm extends Component
                 SubCategory::create($data);
             }
         }
+
+        Payment::whereIn('sub_category_id', $this->deletedSubCategory)->delete();
+        SubCategory::whereIn('id',$this->deletedSubCategory)->delete();
+ 
+    
+
         
         session()->flash('success', 'Category has been updated successfully!');
 

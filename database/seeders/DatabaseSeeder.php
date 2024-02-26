@@ -12,6 +12,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(SubCategorySeeder::class);
+        $this->call(CurrencySeeder::class);
+        $this->call(TillSeeder::class);
         $this->call(LevelCategorySeeder::class);
         $this->call(TournamentTypeSeeder::class);
         $this->call(TournamentFormatSeeder::class);

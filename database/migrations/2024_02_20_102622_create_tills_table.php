@@ -13,9 +13,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->nullable();
             $table->string('name');
-            $table->double('usd_opening')->nullable();
-            $table->double('lbp_opening')->nullable();
-
             $table->softDeletes();
             $table->timestamps();
         });

@@ -31,6 +31,13 @@ class PaymentForm extends Component
     public $amount;
 
 
+    public $categories;
+    public $subCategories;
+    public $currencies;
+    
+    public $deletedPaymentAmount=[];
+
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -40,6 +47,10 @@ class PaymentForm extends Component
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
+
+        $this->categories = Category::all();
+        $this->currencies = Currency::all();
+        $this->updateSubCategories();
         
 
         if ($id) {
@@ -47,6 +58,7 @@ class PaymentForm extends Component
             $this->payment = Payment::findOrFail($id);
 
             $this->category_id = $this->payment->category_id;
+            $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
             $this->sub_category_id = $this->payment->sub_category_id;
             $this->description = $this->payment->description;
 
@@ -54,6 +66,7 @@ class PaymentForm extends Component
         }
 
     }
+
 
     protected function rules()
     {
@@ -81,14 +94,16 @@ class PaymentForm extends Component
 
     public function removePaymentAmount($key)
     {
-        if (isset($this->paymentAmount[$key])) {
-        $paymentIndex = $this->paymentAmount[$key];
-        if (isset($paymentIndex['id'])) {
-            PaymentAmount::find($paymentIndex['id'])->delete();
+        if($this->editing == true){
+            $removedItemId = $this->paymentAmount[$key]['id'] ?? null;
+            $this->deletedPaymentAmount[] = $removedItemId;
         }
+
         unset($this->paymentAmount[$key]);
         $this->paymentAmount = array_values($this->paymentAmount);
-    }}
+    }
+
+
 
 
 
@@ -157,19 +172,28 @@ class PaymentForm extends Component
             }
         }
 
+        PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->delete();
+
+
         session()->flash('success', 'payment has been updated successfully!');
 
         return redirect()->route('payment');
     }
     
+
+    public function updateSubCategories()
+    {
+        $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
+        $this->sub_category_id = null;
+    }
+    public function updatedCategory_id()
+    {
+        $this->updateSubCategories();
+    }
+    
     public function render()
     {
-        $categories = Category::all();
-        $subCategories = SubCategory::where('category_id', $this->category_id)->get();
-        $currencies = Currency::all();
 
-
-
-        return view('livewire.pcash.payment-form',compact('categories','subCategories','currencies'));
+        return view('livewire.pcash.payment-form');
     }
 }

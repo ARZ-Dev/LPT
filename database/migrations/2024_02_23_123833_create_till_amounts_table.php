@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
- 
+
     public function up(): void
     {
-        Schema::create('transfers', function (Blueprint $table) {
+        Schema::create('till_amounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from_till_id')->constrained('tills')->cascadeOnDelete();
-            $table->foreignId('to_till_id')->constrained('tills')->cascadeOnDelete();
-
-
-
+            $table->foreignId('till_id')->constrained('tills')->cascadeOnDelete();
+            $table->double('amount');
+            $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
     }
 
- 
+  
     public function down(): void
     {
-        Schema::dropIfExists('transfers');
+        Schema::dropIfExists('till_amounts');
     }
 };
