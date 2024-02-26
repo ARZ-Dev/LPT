@@ -44,10 +44,10 @@
                                     <div class="d-flex flex-row mt-3 mb-3">
                                         <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmount.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
 
-                                        <select class="form-select " aria-label="Default select example" wire:model="tillAmount.{{ $key }}.currency_id" id="currency{{$key}}">
+                                        <select class="form-select " aria-label="Default select example" wire:model="tillAmount.{{ $key }}.currency_id" id="currency{{$key}}" wire:change="checkCurrencies($event.target.value)">
                                             <option selected>Open this select menu <span style="color: red;">*</span></option>
                                             @foreach($currencies as $index => $currency)
-                                                <option value="{{$currency->id}}">{{$currency->name}}</option>
+                                                <option value="{{$currency->id}}" {{in_array($currency->id, $selectedCurrencies) ? "hidden" : ""}} >{{$currency->name}}</option>
                                             @endforeach
                                         </select>
                                       

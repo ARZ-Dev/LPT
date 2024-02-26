@@ -27,6 +27,7 @@ class TillForm extends Component
     public $currency_id;
     public $amount;
     public $deletedTillAmount = [];
+    public $selectedCurrencies = [];
 
 
     protected $listeners = ['store', 'update'];
@@ -39,7 +40,7 @@ class TillForm extends Component
         $this->status=$status;
         $this->addRow();
 
-
+        
         if ($id) {
             $this->editing = true;
             $this->till = Till::findOrFail($id);
@@ -49,9 +50,15 @@ class TillForm extends Component
 
             $this->tillAmount = $this->till->tillAmount->toArray();
 
-
+            foreach($this->tillAmount as $tillAmount) {
+                $this->selectedCurrencies[] = $tillAmount['currency_id'];
+            }
         }
 
+    }
+
+    public function checkCurrencies($value) {
+        $this->selectedCurrencies[] = $value;
     }
 
     protected function rules()
@@ -76,6 +83,10 @@ class TillForm extends Component
 
     public function removeTillAmount($key)
     {
+        $index = array_search($this->tillAmount[$key]['currency_id'], $this->selectedCurrencies);
+        if ($index !== false) {
+            unset($this->selectedCurrencies[$index]);
+        }
 
         if($this->editing == true){
         $removedItemId = $this->tillAmount[$key]['id'] ?? null;
@@ -83,6 +94,7 @@ class TillForm extends Component
         }
         unset($this->tillAmount[$key]);
         $this->tillAmount = array_values($this->tillAmount);
+
     }
 
     private function sanitizeNumber($number)

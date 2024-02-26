@@ -224,6 +224,18 @@
         </script>
     @endif
 
+    @if (Session::has('error'))
+        <script>
+            toastr.error("{{ Session::get('error') }}", "Error", {
+                positionClass: "toast-top-right",
+                progressBar: true,
+                timeOut: 3000,
+                extendedTimeOut: 2000,
+                closeButton: true,
+            });
+        </script>
+    @endif
+
     <script>
         // ! Removed following code if you do't wish to use jQuery. Remember that navbar search functionality will stop working on removal.
         if (typeof $ !== 'undefined') {
