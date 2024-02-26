@@ -66,8 +66,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-advance.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
-      <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-      <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/filepond/filepond.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/filepond/filepond-plugin-image-preview.css') }}">
 
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
@@ -139,12 +139,12 @@
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sortablejs/sortable.js') }}"></script>
 
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond-plugin-image-preview.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond-plugin-image-preview.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond-plugin-file-validate-type.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond-plugin-file-validate-size.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/filepond/filepond.min.js') }}"></script>
 
     <script>
 

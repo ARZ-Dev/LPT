@@ -105,6 +105,19 @@
                                 </div>
                                 @error('form.country_id') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="nickname">Nickname *</label>
+                                <input
+                                    wire:model="form.nickname"
+                                    type="text"
+                                    id="nickname"
+                                    name="nickname"
+                                    class="form-control"
+                                    placeholder="Nickname"
+                                />
+                                @error('form.nickname') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -133,18 +146,6 @@
                                     </select>
                                 </div>
                                 @error('form.team_id') <div class="text-danger">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label" for="nickname">Nickname *</label>
-                                <input
-                                    wire:model="form.nickname"
-                                    type="text"
-                                    id="nickname"
-                                    name="nickname"
-                                    class="form-control"
-                                    placeholder="Nickname"
-                                />
-                                @error('form.nickname') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="playing_side">Playing Side *</label>
@@ -176,7 +177,7 @@
                         <div class="row">
                             <div class="col-12 col-md-12">
                                 @php
-                                    $uploadedFile = $player->national_id_upload ? [asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload))] : [];
+                                    $uploadedFile = $player?->national_id_upload ? [asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload))] : [];
                                 @endphp
                                 <x-filepond :files="$uploadedFile" wire:model="nationalIdFile" delete-event="deleteNationalIdFile" />
                             </div>
