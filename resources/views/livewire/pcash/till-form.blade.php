@@ -61,11 +61,12 @@
                                         <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmounts.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
                                     </div>
                                     <div class="col-4">
-                                        <div wire:ignore>
+                                        <div>
                                             <select
                                                 wire:model="tillAmounts.{{ $key }}.currency_id"
+                                                wire:change="checkCurrencies($event.target.value)"
                                                 id="currency-{{$key}}"
-                                                class="selectpicker w-100"
+                                                class="form-select w-100"
                                                 title="Select Currency"
                                                 data-style="btn-default"
                                                 data-live-search="true"
@@ -73,8 +74,14 @@
                                                 data-tick-icon="ti-check text-white"
                                                 required
                                             >
+                                                <option value="" disabled selected>Select Currency</option>
                                                 @foreach($currencies as $currency)
-                                                    <option value="{{$currency->id}}" @selected($tillAmount['currency_id'] == $currency->id) {{in_array($currency->id, $selectedCurrencies) ? "hidden" : ""}} >{{$currency->name}}</option>
+                                                    <option value="{{$currency->id}}"
+                                                        @selected($tillAmount['currency_id'] == $currency->id)
+                                                        {{ in_array($currency->id, $selectedCurrencies) ? "hidden" : "" }}
+                                                    >
+                                                        {{ $currency->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -53,7 +53,10 @@ class TillForm extends Component
     }
 
     public function checkCurrencies($value) {
-        $this->selectedCurrencies[] = $value;
+        $this->selectedCurrencies = [];
+        foreach ($this->tillAmounts as $tillAmount) {
+            $this->selectedCurrencies[] = $tillAmount['currency_id'];
+        }
     }
 
     protected function rules()
@@ -87,10 +90,6 @@ class TillForm extends Component
             unset($this->selectedCurrencies[$index]);
         }
 
-        if($this->editing == true){
-        $removedItemId = $this->tillAmounts[$key]['id'] ?? null;
-        $this->deletedTillAmount[] = $removedItemId;
-        }
         unset($this->tillAmounts[$key]);
         $this->tillAmounts = array_values($this->tillAmounts);
 
@@ -99,7 +98,7 @@ class TillForm extends Component
     private function sanitizeNumber($number)
     {
         $number = str_replace(',', '', $number);
-        if (substr($number, -1) === '.') {
+        if (str_ends_with($number, '.')) {
             $number = substr($number, 0, -1);
         }
 
