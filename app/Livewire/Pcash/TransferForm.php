@@ -31,6 +31,7 @@ class TransferForm extends Component
     public $currency_id;
     public $amount;
     public $deletedTransferAmount = [];
+    public $selectedCurrencies = [];
 
     protected $listeners = ['store', 'update'];
 
@@ -50,8 +51,16 @@ class TransferForm extends Component
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
             $this->transferAmount = $this->transfer->transferAmount->toArray();
+
+            foreach($this->transferAmount as $transferAmount) {
+                $this->selectedCurrencies[] = $transferAmount['currency_id'];
+            }
         }
 
+    }
+
+    public function checkCurrencies($value) {
+        $this->selectedCurrencies[] = $value;
     }
 
     protected function rules()
@@ -72,12 +81,16 @@ class TransferForm extends Component
     public function addRow()
     {
         $this->transferAmount[] = ['currency_id' => '','amount' => ''];  
+        // dd($this->selectedCurrencies);
     }
 
     public function removeTransferAmount($key)
     {
+        $index = array_search($this->transferAmount[$key]['currency_id'], $this->selectedCurrencies);
+        if ($index !== false) {
+            unset($this->selectedCurrencies[$index]);
+        }
 
-      
         if($this->editing == true){
         $removedItemId = $this->transferAmount[$key]['id'] ?? null ;
         $this->deletedTransferAmount[] = $removedItemId;
@@ -103,6 +116,9 @@ class TransferForm extends Component
         $this->authorize('transfer-edit');
 
         $this->validate();
+
+        DB::beginTransaction();
+        try {
         
         $transfer=Transfer::create([
             'from_till_id' => $this->from_till_id ,
@@ -123,8 +139,12 @@ class TransferForm extends Component
 
             $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
             $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
+
+            if ($fromTill->amount < $this->sanitizeNumber($transferAmount['amount'])) {
+                throw new Exception("Cannot transfer, transfered amount does not exists");
+            }
             
-            if ($fromTill->amount > $transferAmount['amount']) {
+            if ($fromTill->amount > $this->sanitizeNumber( $transferAmount['amount'])) {
 
                 $fromTill->update([
                     'amount' => $fromTill->amount - $this->sanitizeNumber($transferAmount['amount']),
@@ -149,8 +169,15 @@ class TransferForm extends Component
 
     session()->flash('success', 'transfer has been created successfully!');
 
-    return redirect()->route('transfer');
-}
+        DB::commit();
+    } catch (\Exception $exception) {
+        DB::rollBack();
+
+        return to_route('transfer')->with('error', $exception->getMessage());
+    }
+
+        return redirect()->route('transfer');
+    }
 
 
 
@@ -211,24 +238,24 @@ class TransferForm extends Component
                 $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
                 $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
 
-                if ($fromTill->amount > $this->sanitizeNumber($transferAmount['amount'])) {
-                    $fromTill->update([
-                        'amount' => $fromTill->amount - $this->sanitizeNumber($transferAmount['amount'])   ,
-                    ]);
-                
-                    if (!$toTill) {
-                        TillAmount::create([
-                            'till_id' => $this->to_till_id,
-                            'currency_id' => $fromTill->currency_id,
-                            'amount' => $this->sanitizeNumber($transferAmount['amount']),
-                        ]);
-                    } else {
-                        $toTill->update([
-                            'amount' => $toTill->amount + $this->sanitizeNumber($transferAmount['amount']),
-                        ]);
-                    }
-                } else {
+                if ($fromTill->amount < $this->sanitizeNumber($transferAmount['amount'])) {
                     throw new Exception("Cannot transfer, transfered amount does not exists");
+                }
+
+                $fromTill->update([
+                    'amount' => $fromTill->amount - $this->sanitizeNumber($transferAmount['amount'])   ,
+                ]);
+            
+                if (!$toTill) {
+                    TillAmount::create([
+                        'till_id' => $this->to_till_id,
+                        'currency_id' => $fromTill->currency_id,
+                        'amount' => $this->sanitizeNumber($transferAmount['amount']),
+                    ]);
+                } else {
+                    $toTill->update([
+                        'amount' => $toTill->amount + $this->sanitizeNumber($transferAmount['amount']),
+                    ]);
                 }
 
             }
