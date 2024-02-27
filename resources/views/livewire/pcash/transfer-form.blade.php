@@ -5,7 +5,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Edit")) : "Create" }} Transfer</h5>
                         <a href="{{ route('transfer') }}"class="btn btn-primary mb-2 text-nowrap">
-                        Transfer
+                        Till
                         </a>
                     </div>
                 <div class="card-body">
@@ -42,10 +42,10 @@
                                     <div class="d-flex flex-row mt-3 mb-3">
                                         <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmount.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
 
-                                        <select class="form-select " aria-label="Default select example" wire:model="transferAmount.{{ $key }}.currency_id" id="currency{{$key}}"wire:change="checkCurrencies($event.target.value)">
+                                        <select class="form-select " aria-label="Default select example" wire:model="transferAmount.{{ $key }}.currency_id" id="currency{{$key}}">
                                             <option selected>Open this select menu <span style="color: red;">*</span></option>
                                             @foreach($currencies as $index => $currency)
-                                                <option value="{{$currency->id}}" {{in_array($currency->id, $selectedCurrencies) ? "hidden" : ""}}>{{$currency->name}}</option>
+                                                <option value="{{$currency->id}}">{{$currency->name}}</option>
                                             @endforeach
                                         </select>
                                       
