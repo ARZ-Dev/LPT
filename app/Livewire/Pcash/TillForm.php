@@ -58,8 +58,18 @@ class TillForm extends Component
     }
 
     public function checkCurrencies($value) {
+        $index = array_search($value, $this->selectedCurrencies);
+    
+        if ($index !== false) {
+            unset($this->selectedCurrencies[$index]);
+        }
         $this->selectedCurrencies[] = $value;
+    
+        $this->selectedCurrencies = array_values(array_unique($this->selectedCurrencies));
+        // $this->selectedCurrencies[] = $value;
     }
+
+
 
     protected function rules()
     {
