@@ -20,10 +20,7 @@ class TillForm extends Component
     public $till;
     public $user_id;
     public $name;
-    public $tillAmounts=[];
-    public $currency_id;
-    public $amount;
-    public $deletedTillAmount = [];
+    public $tillAmounts = [];
     public $selectedCurrencies = [];
     public $users = [];
     public $currencies = [];
@@ -36,6 +33,7 @@ class TillForm extends Component
 
         $this->users = User::all();
         $this->currencies = Currency::all();
+
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
@@ -47,12 +45,19 @@ class TillForm extends Component
             $this->user_id = $this->till->user_id;
             $this->name = $this->till->name;
 
-            $this->tillAmounts = $this->till->tillAmount->toArray();
+            $this->tillAmounts = [];
+            foreach ($this->till->tillAmount as $tillAmount) {
+                $this->tillAmounts[] = [
+                    'amount' => number_format($tillAmount->amount),
+                    'currency_id' => $tillAmount->currency_id
+                ];
+                $this->selectedCurrencies[] = $tillAmount['currency_id'];
+            }
         }
 
     }
 
-    public function checkCurrencies($value) {
+    public function checkCurrencies() {
         $this->selectedCurrencies = [];
         foreach ($this->tillAmounts as $tillAmount) {
             $this->selectedCurrencies[] = $tillAmount['currency_id'];
@@ -92,7 +97,6 @@ class TillForm extends Component
 
         unset($this->tillAmounts[$key]);
         $this->tillAmounts = array_values($this->tillAmounts);
-
     }
 
     private function sanitizeNumber($number)
@@ -132,10 +136,6 @@ class TillForm extends Component
         return redirect()->route('till');
     }
 
-
-
-
-
     public function update()
     {
         $this->authorize('till-edit');
@@ -145,25 +145,23 @@ class TillForm extends Component
         $this->till->update([
             'user_id' => $this->user_id ,
             'name' => $this->name ,
-
-
         ]);
 
+        $tillAmountsIds = [];
         foreach ($this->tillAmounts as $tillAmount) {
-            $data = [
+
+            $tillAmount = TillAmount::updateOrCreate([
+                'id' => $tillAmount['id'] ?? 0,
+            ],[
                 'till_id' => $this->till->id,
                 'currency_id' => $tillAmount['currency_id'],
                 'amount' => $this->sanitizeNumber($tillAmount['amount']),
-            ];
+            ]);
 
-            if (isset($tillAmount['id'])) {
-                TillAmount::updateOrCreate(['id' => $tillAmount['id']], $data);
-            } else {
-                TillAmount::create($data);
-            }
+            $tillAmountsIds[] = $tillAmount->id;
         }
 
-        TillAmount::whereIn('id',$this->deletedTillAmount)->delete();
+        TillAmount::whereNotIn('id', $tillAmountsIds)->delete();
 
         session()->flash('success', 'till has been updated successfully!');
 

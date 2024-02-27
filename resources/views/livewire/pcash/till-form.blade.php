@@ -50,23 +50,24 @@
                         @foreach($tillAmounts as $key => $tillAmount)
                                 <div class="row">
                                     <div class="col-6">
-                                        <label class="form-label mt-3" for="amount{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label mt-3" for="currency{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmounts.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmounts.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount-{{$key}}" required>
+                                        @error('tillAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-4">
-                                        <div>
+                                        <div wire:ignore>
                                             <select
                                                 wire:model="tillAmounts.{{ $key }}.currency_id"
                                                 wire:change="checkCurrencies($event.target.value)"
                                                 id="currency-{{$key}}"
-                                                class="form-select w-100"
+                                                class="form-select w-100 currency selectpicker"
                                                 title="Select Currency"
                                                 data-style="btn-default"
                                                 data-live-search="true"
@@ -74,28 +75,28 @@
                                                 data-tick-icon="ti-check text-white"
                                                 required
                                             >
-                                                <option value="" disabled selected>Select Currency</option>
                                                 @foreach($currencies as $currency)
                                                     <option value="{{$currency->id}}"
                                                         @selected($tillAmount['currency_id'] == $currency->id)
-                                                        {{ in_array($currency->id, $selectedCurrencies) ? "hidden" : "" }}
+                                                        @disabled(in_array($currency->id, $selectedCurrencies))
                                                     >
                                                         {{ $currency->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @error('tillAmounts.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-2">
                                         @if($key == 0)
-                                            <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
+                                            @if(count($tillAmounts) < count($currencies))
+                                                <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
+                                            @endif
                                         @else
                                             <button type="button" class="btn btn-danger ms-2"  wire:click="removeRow({{ $key }})">Remove</button>
                                         @endif
                                     </div>
                                 </div>
-                            @error('tillAmounts.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                            @error('tillAmounts.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                         @endforeach
                     </div>
 
@@ -114,13 +115,22 @@
     @script
     <script>
 
-
             triggerCleave()
             $('.selectpicker').selectpicker();
 
             Livewire.on('triggerLibraries', function () {
                 $('.selectpicker').selectpicker();
                 triggerCleave()
+            })
+
+            Livewire.hook('morph.updated', ({ el, component }) => {
+                $('.selectpicker').selectpicker();
+                triggerCleave()
+            })
+
+            $(document).on('change', '.currency', function () {
+                @this.set($(this).attr('wire:model'), $(this).val())
+                $wire.dispatch('checkCurrencies')
             })
 
     </script>
