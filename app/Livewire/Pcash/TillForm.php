@@ -73,11 +73,14 @@ class TillForm extends Component
 
     public function addRow()
     {
-        $this->tillAmounts[] = ['currency_id' => '','amount' => ''];
-        $this->dispatch('triggerSelectPicker');
+        $this->tillAmounts[] = [
+            'amount' => '',
+            'currency_id' => '',
+        ];
+        $this->dispatch('triggerLibraries');
     }
 
-    public function removeTillAmount($key)
+    public function removeRow($key)
     {
         $index = array_search($this->tillAmounts[$key]['currency_id'], $this->selectedCurrencies);
         if ($index !== false) {
