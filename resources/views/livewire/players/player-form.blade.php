@@ -91,7 +91,7 @@
                                     <select
                                         wire:model="form.country_id"
                                         id="country_id"
-                                        class="selectpicker w-100 @error('country_id') invalid-validation-select @enderror"
+                                        class="selectpicker w-100"
                                         title="Select Country"
                                         data-style="btn-default"
                                         data-live-search="true"

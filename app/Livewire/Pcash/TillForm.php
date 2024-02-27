@@ -16,19 +16,17 @@ class TillForm extends Component
 
     public $editing = false;
     public int $status;
-
     public $roles;
     public $till;
-
     public $user_id;
     public $name;
-
-    public  $tillAmount=[];
+    public $tillAmounts=[];
     public $currency_id;
     public $amount;
     public $deletedTillAmount = [];
     public $selectedCurrencies = [];
-
+    public $users = [];
+    public $currencies = [];
 
     protected $listeners = ['store', 'update'];
 
@@ -36,11 +34,12 @@ class TillForm extends Component
     {
         $this->authorize('till-list');
 
+        $this->users = User::all();
+        $this->currencies = Currency::all();
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
 
-        
         if ($id) {
             $this->editing = true;
             $this->till = Till::findOrFail($id);
@@ -48,11 +47,7 @@ class TillForm extends Component
             $this->user_id = $this->till->user_id;
             $this->name = $this->till->name;
 
-            $this->tillAmount = $this->till->tillAmount->toArray();
-
-            foreach($this->tillAmount as $tillAmount) {
-                $this->selectedCurrencies[] = $tillAmount['currency_id'];
-            }
+            $this->tillAmounts = $this->till->tillAmount->toArray();
         }
 
     }
@@ -67,10 +62,10 @@ class TillForm extends Component
             'user_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
 
-            'tillAmount' => ['array'],
-            'tillAmount.*.till_id' => ['nullable'],
-            'tillAmount.*.currency_id' => ['required'],
-            'tillAmount.*.amount' => ['required'], 
+            'tillAmounts' => ['array'],
+            'tillAmounts.*.till_id' => ['nullable'],
+            'tillAmounts.*.currency_id' => ['required'],
+            'tillAmounts.*.amount' => ['required'],
         ];
 
         return $rules;
@@ -78,22 +73,23 @@ class TillForm extends Component
 
     public function addRow()
     {
-        $this->tillAmount[] = ['currency_id' => '','amount' => ''];  
+        $this->tillAmounts[] = ['currency_id' => '','amount' => ''];
+        $this->dispatch('triggerSelectPicker');
     }
 
     public function removeTillAmount($key)
     {
-        $index = array_search($this->tillAmount[$key]['currency_id'], $this->selectedCurrencies);
+        $index = array_search($this->tillAmounts[$key]['currency_id'], $this->selectedCurrencies);
         if ($index !== false) {
             unset($this->selectedCurrencies[$index]);
         }
 
         if($this->editing == true){
-        $removedItemId = $this->tillAmount[$key]['id'] ?? null;
+        $removedItemId = $this->tillAmounts[$key]['id'] ?? null;
         $this->deletedTillAmount[] = $removedItemId;
         }
-        unset($this->tillAmount[$key]);
-        $this->tillAmount = array_values($this->tillAmount);
+        unset($this->tillAmounts[$key]);
+        $this->tillAmounts = array_values($this->tillAmounts);
 
     }
 
@@ -121,7 +117,7 @@ class TillForm extends Component
         ]);
 
         $tillId = $till->id;
-        foreach ($this->tillAmount as $tillAmount) {
+        foreach ($this->tillAmounts as $tillAmount) {
             TillAmount::create([
                 'till_id' => $tillId,
                 'currency_id' => $tillAmount['currency_id'],
@@ -151,13 +147,13 @@ class TillForm extends Component
 
         ]);
 
-        foreach ($this->tillAmount as $tillAmount) {
+        foreach ($this->tillAmounts as $tillAmount) {
             $data = [
                 'till_id' => $this->till->id,
                 'currency_id' => $tillAmount['currency_id'],
                 'amount' => $this->sanitizeNumber($tillAmount['amount']),
             ];
-        
+
             if (isset($tillAmount['id'])) {
                 TillAmount::updateOrCreate(['id' => $tillAmount['id']], $data);
             } else {
@@ -171,15 +167,13 @@ class TillForm extends Component
 
         return redirect()->route('till');
     }
-    
+
 
 
 
     public function render()
     {
-        $users = User::all();
-        $currencies = Currency::all();
 
-        return view('livewire.pcash.till-form',compact('users','currencies'));
+        return view('livewire.pcash.till-form');
     }
 }
