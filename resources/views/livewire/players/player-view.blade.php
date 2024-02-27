@@ -11,7 +11,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Full Name</th>
-                    <th>Team</th>
+                    <th>Current Team</th>
                     <th>Birthdate</th>
                     <th>Phone Number</th>
                     <th>Actions</th>

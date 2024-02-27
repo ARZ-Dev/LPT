@@ -171,7 +171,12 @@
                 </div>
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">National ID Upload</h5>
+                        <h5 class="mb-0">
+                            National ID Upload
+                            @if($player?->national_id_upload)
+                                - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload)) }}" download>Download Link</a>
+                            @endif
+                        </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
