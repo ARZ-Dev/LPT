@@ -50,12 +50,23 @@
                                     </div>
                                     <div class="col-4">
                                         <div wire:ignore>
-                                            <select wire:model="tillAmounts.{{ $key }}.currency_id" wire:change="checkCurrencies" id="currency-{{$key}}" class="w-100 currency selectpicker" title="Select Currency {{ $key + 1 }}" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                            <select
+                                                wire:model="tillAmounts.{{ $key }}.currency_id"
+                                                wire:change="checkCurrencies"
+                                                id="currency-{{$key}}" class="w-100 currency selectpicker"
+                                                title="Select Currency {{ $key + 1 }}"
+                                                data-style="btn-default"
+                                                data-live-search="true"
+                                                data-icon-base="ti"
+                                                data-tick-icon="ti-check text-white"
+                                                required
+                                            >
                                                 @foreach($currencies as $currency)
-                                                <option value="{{$currency->id}}" @selected($tillAmount['currency_id']==$currency->id)
+                                                    <option value="{{$currency->id}}"
+                                                        @selected($tillAmount['currency_id'] == $currency->id)
                                                     >
-                                                    {{ $currency->name }}
-                                                </option>
+                                                        {{ $currency->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -63,11 +74,12 @@
                                     </div>
                                     <div class="col-2">
                                         @if($key == 0)
-                                        @if(count($tillAmounts) < count($currencies)) <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
+                                            @if(count($tillAmounts) < count($currencies))
+                                                <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
                                             @endif
-                                            @else
+                                        @else
                                             <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
-                                            @endif
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -88,23 +100,17 @@
 
     @script
     <script>
-        let currencies = @json($currencies);
-
         triggerCleave()
         $('.selectpicker').selectpicker();
 
-        Livewire.hook('morph.added', ({
-            el
-        }) => {
+        Livewire.hook('morph.added', ({ el }) => {
             $('.selectpicker').selectpicker();
             triggerCleave()
         })
 
         $(document).on('change', '.currency', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
-            $wire.dispatch('checkCurrencies')
         })
-
     </script>
     @endscript
 </div>
