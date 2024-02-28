@@ -31,7 +31,7 @@ class TransferForm extends Component
     public $currency_id;
     public $amount;
     public $deletedTransferAmount = [];
-    public $selectedCurrencies = [];
+    
 
     protected $listeners = ['store', 'update'];
 
@@ -51,16 +51,8 @@ class TransferForm extends Component
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
             $this->transferAmount = $this->transfer->transferAmount->toArray();
-
-            foreach($this->transferAmount as $transferAmount) {
-                $this->selectedCurrencies[] = $transferAmount['currency_id'];
-            }
         }
 
-    }
-
-    public function checkCurrencies($value) {
-        $this->selectedCurrencies[] = $value;
     }
 
     protected function rules()
@@ -81,16 +73,12 @@ class TransferForm extends Component
     public function addRow()
     {
         $this->transferAmount[] = ['currency_id' => '','amount' => ''];  
-        // dd($this->selectedCurrencies);
     }
 
     public function removeTransferAmount($key)
     {
-        $index = array_search($this->transferAmount[$key]['currency_id'], $this->selectedCurrencies);
-        if ($index !== false) {
-            unset($this->selectedCurrencies[$index]);
-        }
 
+      
         if($this->editing == true){
         $removedItemId = $this->transferAmount[$key]['id'] ?? null ;
         $this->deletedTransferAmount[] = $removedItemId;
@@ -173,7 +161,7 @@ class TransferForm extends Component
     } catch (\Exception $exception) {
         DB::rollBack();
 
-        return to_route('transfer')->with('error', $exception->getMessage());
+        return to_route('transfer.create')->with('error', $exception->getMessage());
     }
 
         return redirect()->route('transfer');
@@ -263,8 +251,7 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-
-            return to_route('transfer')->with('error', $exception->getMessage());
+            return to_route('transfer.edit',$this->transfer->id)->with('error', $exception->getMessage());
         }
             
         

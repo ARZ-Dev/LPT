@@ -20,9 +20,7 @@ class CurrencyForm extends Component
 
     public $name;
     public $symbol;
-    public $rate;
-
-
+    
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -38,7 +36,6 @@ class CurrencyForm extends Component
 
             $this->name = $this->currency->name;
             $this->symbol = $this->currency->symbol;
-            $this->rate = $this->currency->rate;
 
         }
 
@@ -49,7 +46,6 @@ class CurrencyForm extends Component
         $rules = [
             'name' => ['required', 'string'],
             'symbol' => ['required', 'string'],
-            'rate' => ['nullable', 'string'],
 
         ];
 
@@ -65,7 +61,7 @@ class CurrencyForm extends Component
     Currency::create([
         'name' => $this->name ,
         'symbol' => $this->symbol ,
-        'rate' => $this->rate ,
+
     ]);
 
 
@@ -84,7 +80,7 @@ class CurrencyForm extends Component
         $this->currency->update([
             'name' => $this->name ,
             'symbol' => $this->symbol ,
-            'rate' => $this->rate ,
+    
 
         ]);
 

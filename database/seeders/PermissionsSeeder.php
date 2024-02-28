@@ -58,6 +58,11 @@ class PermissionsSeeder extends Seeder
             'transfer-edit',
             'transfer-delete',
 
+            'exchange-list',
+            'exchange-create',
+            'exchange-edit',
+            'exchange-delete',
+
             'team-list',
             'team-create',
             'team-edit',
@@ -69,6 +74,7 @@ class PermissionsSeeder extends Seeder
             'player-edit',
             'player-view',
             'player-delete',
+
 
         ];
 
