@@ -17,7 +17,8 @@ class ExchangeForm extends Component
 
     public $roles;
     public $exchange;
-    
+
+    public $currencies;
 
     public $from_currency_id;
     public $to_currency_id;
@@ -26,8 +27,6 @@ class ExchangeForm extends Component
     public $description;
     public $result;
 
-
-    
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -36,6 +35,8 @@ class ExchangeForm extends Component
 
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
+
+        $this->currencies = Currency::all();
 
         if ($id) {
             $this->editing = true;
@@ -67,6 +68,17 @@ class ExchangeForm extends Component
         return $rules;
     }
 
+
+    public function calculateResult(){
+        if($this->amount>0 && $this->rate>0){
+            $this->result=$this->amount*$this->rate;
+
+        }else{
+            $this->result=0;
+        }
+    }
+
+
     private function sanitizeNumber($number)
     {
         $number = str_replace(',', '', $number);
@@ -79,26 +91,24 @@ class ExchangeForm extends Component
 
     public function store()
     {
-    $this->authorize('exchange-edit');
 
-    $this->validate();
+        $this->authorize('exchange-edit');
 
-    Exchange::create([
-        'from_currency_id' => $this->from_currency_id ,
-        'to_currency_id' => $this->to_currency_id ,
-        'amount' => $this->sanitizeNumber($this->amount) ,
-        'rate' => $this->sanitizeNumber($this->rate) ,
-        'description' => $this->description ,
-        'result' => $this->sanitizeNumber($this->result) ,
+        $this->validate();
 
+        Exchange::create([
+            'from_currency_id' => $this->from_currency_id ,
+            'to_currency_id' => $this->to_currency_id ,
+            'amount' => $this->sanitizeNumber($this->amount) ,
+            'rate' => $this->sanitizeNumber($this->rate) ,
+            'description' => $this->description ,
+            'result' => $this->sanitizeNumber($this->result) ,
+        ]);
 
-    ]);
+        session()->flash('success', 'exchange has been created successfully!');
 
-
-    session()->flash('success', 'exchange has been created successfully!');
-
-    return redirect()->route('exchange');
-}
+        return redirect()->route('exchange');
+    }
 
 
     public function update()
@@ -125,7 +135,6 @@ class ExchangeForm extends Component
 
     public function render()
     {
-        $currencies = Currency::all();
-        return view('livewire.pcash.exchange-form',compact('currencies'));
+        return view('livewire.pcash.exchange-form');
     }
 }
