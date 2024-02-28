@@ -7,6 +7,7 @@ use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
@@ -57,11 +58,13 @@ class TillForm extends Component
 
     }
 
+    #[On('checkCurrencies')]
     public function checkCurrencies() {
         $this->selectedCurrencies = [];
         foreach ($this->tillAmounts as $tillAmount) {
             $this->selectedCurrencies[] = $tillAmount['currency_id'];
         }
+        $this->dispatch('refreshCurrencies', $this->selectedCurrencies);
     }
 
     protected function rules()
@@ -72,7 +75,7 @@ class TillForm extends Component
 
             'tillAmounts' => ['array'],
             'tillAmounts.*.till_id' => ['nullable'],
-            'tillAmounts.*.currency_id' => ['required'],
+            'tillAmounts.*.currency_id' => ['required', 'distinct'],
             'tillAmounts.*.amount' => ['required'],
         ];
 
@@ -85,7 +88,6 @@ class TillForm extends Component
             'amount' => '',
             'currency_id' => '',
         ];
-        $this->dispatch('triggerLibraries');
     }
 
     public function removeRow($key)

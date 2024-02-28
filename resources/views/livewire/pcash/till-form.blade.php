@@ -39,7 +39,7 @@
                         id="name"
                         name="name"
                         class="form-control"
-                        placeholder="name"
+                        placeholder="Name"
                         />
                         @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
@@ -48,6 +48,8 @@
 
 
                         @foreach($tillAmounts as $key => $tillAmount)
+                            <div wire:key="till-amount-{{ $key }}">
+
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
@@ -58,17 +60,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmounts.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="amount" id="amount-{{$key}}" required>
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="tillAmounts.{{ $key }}.amount" type="text" name="tillAmount[{{ $key }}][amount]" placeholder="Amount {{ $key + 1 }}" id="amount-{{$key}}" required>
                                         @error('tillAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-4">
                                         <div wire:ignore>
                                             <select
                                                 wire:model="tillAmounts.{{ $key }}.currency_id"
-                                                wire:change="checkCurrencies($event.target.value)"
+                                                wire:change="checkCurrencies"
                                                 id="currency-{{$key}}"
-                                                class="form-select w-100 currency selectpicker"
-                                                title="Select Currency"
+                                                class="w-100 currency selectpicker"
+                                                title="Select Currency {{ $key + 1 }}"
                                                 data-style="btn-default"
                                                 data-live-search="true"
                                                 data-icon-base="ti"
@@ -78,7 +80,6 @@
                                                 @foreach($currencies as $currency)
                                                     <option value="{{$currency->id}}"
                                                         @selected($tillAmount['currency_id'] == $currency->id)
-                                                        @disabled(in_array($currency->id, $selectedCurrencies))
                                                     >
                                                         {{ $currency->name }}
                                                     </option>
@@ -97,6 +98,7 @@
                                         @endif
                                     </div>
                                 </div>
+                            </div>
                         @endforeach
                     </div>
 
@@ -114,16 +116,12 @@
 
     @script
     <script>
+            let currencies = @json($currencies);
 
             triggerCleave()
             $('.selectpicker').selectpicker();
 
-            Livewire.on('triggerLibraries', function () {
-                $('.selectpicker').selectpicker();
-                triggerCleave()
-            })
-
-            Livewire.hook('morph.updated', ({ el, component }) => {
+            Livewire.hook('morph.added', ({ el }) => {
                 $('.selectpicker').selectpicker();
                 triggerCleave()
             })
