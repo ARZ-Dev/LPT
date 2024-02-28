@@ -34,6 +34,8 @@ use App\Livewire\Pcash\TransferView;
 use App\Livewire\Pcash\ExchangeForm;
 use App\Livewire\Pcash\ExchangeView;
 
+use App\Livewire\Pcash\ReportView;
+
 use App\Livewire\Teams\TeamView;
 use App\Livewire\Teams\TeamForm;
 
@@ -142,6 +144,15 @@ Route::middleware('auth')->group(function () {
     });
 
     // |--------------------------------------------------------------------------
+    // |Report
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'report'], function() {
+        Route::get('/', ReportView::class)->name('report');
+
+    });
+
+    // |--------------------------------------------------------------------------
     // |Teams
     // |--------------------------------------------------------------------------
 
@@ -162,6 +173,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', PlayerForm::class)->name('players.edit');
         Route::get('/view/{id}/{status}', PlayerForm::class)->name('players.view');
     });
+
+
 
 
 });

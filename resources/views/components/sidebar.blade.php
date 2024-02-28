@@ -105,6 +105,11 @@
 						<div data-i18n="Exchange">Exchange</div>
 					</a>
 				</li>
+				<li class="menu-item">
+					<a href="{{ route('report') }}" class="menu-link">
+						<div data-i18n="Report">Report</div>
+					</a>
+				</li>
 
 			</ul>
 
