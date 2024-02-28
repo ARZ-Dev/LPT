@@ -36,18 +36,7 @@
                             />
                             @error('symbol') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label" for="rate">rate</label>
-                            <input
-                            wire:model.defer="rate"
-                            type="number"
-                            id="rate"
-                            name="rate"
-                            class="form-control"
-                            placeholder="rate"
-                            />
-                            @error('rate') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+           
                     </form>
                 </div>
 

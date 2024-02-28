@@ -161,7 +161,7 @@ class TransferForm extends Component
     } catch (\Exception $exception) {
         DB::rollBack();
 
-        return to_route('transfer')->with('error', $exception->getMessage());
+        return to_route('transfer.create')->with('error', $exception->getMessage());
     }
 
         return redirect()->route('transfer');
@@ -251,8 +251,7 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-
-            return to_route('transfer')->with('error', $exception->getMessage());
+            return to_route('transfer.edit',$this->transfer->id)->with('error', $exception->getMessage());
         }
             
         

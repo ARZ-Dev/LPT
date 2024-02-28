@@ -27,7 +27,7 @@ class TillForm extends Component
     public $currency_id;
     public $amount;
     public $deletedTillAmount = [];
-    public $selectedCurrencies = [];
+    // public $selectedCurrencies = [];
 
 
     protected $listeners = ['store', 'update'];
@@ -50,24 +50,24 @@ class TillForm extends Component
 
             $this->tillAmount = $this->till->tillAmount->toArray();
 
-            foreach($this->tillAmount as $tillAmount) {
-                $this->selectedCurrencies[] = $tillAmount['currency_id'];
-            }
+            // foreach($this->tillAmount as $tillAmount) {
+            //     $this->selectedCurrencies[] = $tillAmount['currency_id'];
+            // }
         }
 
     }
 
-    public function checkCurrencies($value) {
-        $index = array_search($value, $this->selectedCurrencies);
+    // public function checkCurrencies($value) {
+    //     $index = array_search($value, $this->selectedCurrencies);
     
-        if ($index !== false) {
-            unset($this->selectedCurrencies[$index]);
-        }
-        $this->selectedCurrencies[] = $value;
+    //     if ($index !== false) {
+    //         unset($this->selectedCurrencies[$index]);
+    //     }
+    //     $this->selectedCurrencies[] = $value;
     
-        $this->selectedCurrencies = array_values(array_unique($this->selectedCurrencies));
-        // $this->selectedCurrencies[] = $value;
-    }
+    //     $this->selectedCurrencies = array_values(array_unique($this->selectedCurrencies));
+    //     // $this->selectedCurrencies[] = $value;
+    // }
 
 
 
@@ -93,10 +93,10 @@ class TillForm extends Component
 
     public function removeTillAmount($key)
     {
-        $index = array_search($this->tillAmount[$key]['currency_id'], $this->selectedCurrencies);
-        if ($index !== false) {
-            unset($this->selectedCurrencies[$index]);
-        }
+        // $index = array_search($this->tillAmount[$key]['currency_id'], $this->selectedCurrencies);
+        // if ($index !== false) {
+        //     unset($this->selectedCurrencies[$index]);
+        // }
 
         if($this->editing == true){
         $removedItemId = $this->tillAmount[$key]['id'] ?? null;

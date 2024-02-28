@@ -31,6 +31,9 @@ use App\Livewire\Pcash\ReceiptView;
 use App\Livewire\Pcash\TransferForm;
 use App\Livewire\Pcash\TransferView;
 
+use App\Livewire\Pcash\ExchangeForm;
+use App\Livewire\Pcash\ExchangeView;
+
 use App\Livewire\Teams\TeamView;
 use App\Livewire\Teams\TeamForm;
 
@@ -125,6 +128,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', TransferForm::class)->name('transfer.create');
         Route::get('/edit/{id}', TransferForm::class)->name('transfer.edit');
         Route::get('/view/{id}/{status}', TransferForm::class)->name('transfer.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |Exchange
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'exchange'], function() {
+        Route::get('/', ExchangeView::class)->name('exchange');
+        Route::get('/create', ExchangeForm::class)->name('exchange.create');
+        Route::get('/edit/{id}', ExchangeForm::class)->name('exchange.edit');
+        Route::get('/view/{id}/{status}', ExchangeForm::class)->name('exchange.view');
     });
 
     // |--------------------------------------------------------------------------

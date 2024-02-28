@@ -5,7 +5,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Edit")) : "Create" }} Transfer</h5>
                         <a href="{{ route('transfer') }}"class="btn btn-primary mb-2 text-nowrap">
-                        Till
+                        Transfer
                         </a>
                     </div>
                 <div class="card-body">

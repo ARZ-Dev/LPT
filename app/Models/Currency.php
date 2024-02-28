@@ -24,4 +24,13 @@ class Currency extends Model
     {
         return $this->hasMany(ReceiptAmount::class,'currency_id');
     }
+
+    public function exchangeTo()
+    {
+        return $this->hasMany(Exchange::class,'from_currency_id');
+    }
+    public function exchangeFrom()
+    {
+        return $this->hasMany(Exchange::class,'to_currency_id');
+    }
 }
