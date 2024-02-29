@@ -6,7 +6,7 @@
 
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-reportData dataTable table border-top">
+            <table id="datatables-reportData" class="datatables-reportData dataTable table border-top">
                 <thead>
                  <tr>
                     <th>description</th>
@@ -19,16 +19,17 @@
                     <tr>
                         <td>
                             @if($data['section'] == 'categories')
-                            Category:<a href="{{ route('category.edit', $data['id']) }}"><u> {{$data['category_name']}}</u></a> was added 
-                            with subcategory :
-                            @foreach ($data['subcategories'] as $subcategory)
-                            <a href="{{ route('category.edit', $data['id']) }}"><u>
-                                 {{ $subcategory->sub_category_name }}
-                            </u></a> &nbsp;
-                            @endforeach
+                            Category:<a href="{{ route('category.edit', $data['id']) }}"><u>{{$data['category_name']}}</u></a> with subcategory :
+                                @foreach ($data['subcategories'] as $subcategory)
+                                    <a href="{{ route('category.edit', $data['id']) }}"><u>
+                                        {{ $subcategory->sub_category_name }}
+                                    </u></a> &nbsp; 
+                                @endforeach
+                            was added
+
                                 
                             @elseif($data['section'] == 'currencies')
-                                Currency: {{$data['name']}} was added
+                                Currency: <a href="{{ route('currency.edit', $data['id']) }}"><u> {{$data['name']}}</u></a> was added
 
                             @elseif($data['section'] == 'tills')
                                 Till :  <a href="{{ route('till.edit', $data['id']) }}"><u>{{$data['name']}}</u></a> was added
@@ -57,7 +58,15 @@
 
         </div>
     </div>
-
+    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+        $('#datatables-reportData').DataTable({
+            "lengthChange": false,
+            "paging": false,
+        });
+    });
+    </script>
 
 </div>
 

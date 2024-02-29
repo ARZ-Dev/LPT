@@ -39,6 +39,7 @@ class ReportView extends Component
         $reportData = collect();
 
         foreach ($tables as $section => $model) {
+
             $entries = $model::all();
             foreach ($entries as $entry) {
                 $reportData->push([
@@ -54,7 +55,6 @@ class ReportView extends Component
                     'category_id'=> Category::find($entry->category_id),
                     'subcategories'=>SubCategory::where('category_id',$entry->id)->get(),
                     'user_id'=> User::find($entry->user_id),
-
                 ]);
             }
         }
