@@ -13,7 +13,7 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="category_id">Categories<span style="color: red;">*</span></label>
-                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" name="category_id" id="category_id">
+                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpicker w-100" aria-label="Default select example" name="category_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                             <option>Open this select menu</option>
                             @foreach($categories as $category)
                                 <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{ $category->id }}'>{{ $category->category_name }}</option>

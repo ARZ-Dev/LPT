@@ -44,10 +44,10 @@ class ExchangeForm extends Component
 
             $this->from_currency_id = $this->exchange->from_currency_id;
             $this->to_currency_id = $this->exchange->to_currency_id;
-            $this->amount = $this->exchange->amount;
-            $this->rate = $this->exchange->rate;
+            $this->amount = number_format($this->exchange->amount);
+            $this->rate = number_format($this->exchange->rate);
             $this->description = $this->exchange->description;
-            $this->result = $this->exchange->result;
+            $this->result = number_format($this->exchange->result);
 
         }
 

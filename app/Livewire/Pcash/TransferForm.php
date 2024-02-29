@@ -75,7 +75,7 @@ class TransferForm extends Component
         $this->transferAmount[] = ['currency_id' => '','amount' => ''];  
     }
 
-    public function removeTransferAmount($key)
+    public function removeRow($key)
     {
 
       
@@ -161,7 +161,10 @@ class TransferForm extends Component
     } catch (\Exception $exception) {
         DB::rollBack();
 
-        return to_route('transfer.create')->with('error', $exception->getMessage());
+        return $this->dispatch('swal:error', [
+            'title' => 'Error!',
+            'text'  => $exception->getMessage(),
+        ]);
     }
 
         return redirect()->route('transfer');
@@ -251,7 +254,10 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            return to_route('transfer.edit',$this->transfer->id)->with('error', $exception->getMessage());
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
         }
             
         

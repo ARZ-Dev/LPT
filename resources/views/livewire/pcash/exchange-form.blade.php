@@ -13,22 +13,25 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="from_currency_id">from<span style="color: red;">*</span></label>
-                            <select wire:model="from_currency_id"  class="form-select selectpickerz w-100" aria-label="Default select example" id="from_currency_id">
-                                <option>Open this select menu</option>
-                                @foreach($currencies as $currency)
-                                    <option {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+
+                                <select wire:model="from_currency_id"  class="selectpicker w-100" title="Select From Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                    @foreach($currencies as $currency)
+                                        <option {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @error('from_currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="to_currency_id">to<span style="color: red;">*</span></label>
-                            <select wire:model="to_currency_id"  class="form-select selectpickerz w-100" aria-label="Default select example" id="to_currency_id">
-                                <option>Open this select menu</option>
-                                @foreach($currencies as $currency)
-                                    <option {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+                                <select wire:model="to_currency_id"  class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                    @foreach($currencies as $currency)
+                                        <option {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @error('to_currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -95,21 +98,13 @@
 
         </div>
 
-        <script>
+        @script
+    <script>
+        triggerCleave()
+        $('.selectpicker').selectpicker();
 
-            document.addEventListener('livewire:navigated', function () {
-                var status={{$status}};
-                if (status=="1") {$('input').prop('disabled', true);}
-                triggerCleave()
-
-            });
-
-            function submit(action)
-            {
-                window.livewire.emit(action)
-            }
-
-        </script>
+    </script>
+    @endscript
     </div>
 </div>
 

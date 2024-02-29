@@ -50,7 +50,15 @@ class ReceiptForm extends Component
 
             $this->paid_by = $this->receipt->paid_by;
             $this->description = $this->receipt->description;
-            $this->receiptAmount = $this->receipt->receiptAmount->toArray();
+            $this->receiptAmount = [];
+            foreach($this->receipt->receiptAmount as $receiptAmount) {
+                $this->receiptAmount[] = [
+                    'id' => $receiptAmount->id,
+                    'receipt_id' => $receiptAmount->receipt_id,
+                    'currency_id' => $receiptAmount->currency_id,
+                    'amount' => $this->sanitizeNumber($receiptAmount->amount),
+                ];
+            }
             
         }
 
@@ -77,12 +85,8 @@ class ReceiptForm extends Component
         $this->receiptAmount[] = ['currency_id' => '','amount' => ''];  
     }
 
-    public function removeReceiptAmount($key)
+    public function removeRow($key)
     {
-        if($this->editing == true){
-            $removedItemId = $this->receiptAmount[$key]['id'] ?? null;
-            $this->deletedReceiptAmount[] = $removedItemId;
-        }
         unset($this->receiptAmount[$key]);
         $this->receiptAmount = array_values($this->receiptAmount);
     }
@@ -141,21 +145,21 @@ class ReceiptForm extends Component
             'description' => $this->description ,
         ]);
 
+        $receiptAmountsIds = [];
         foreach ($this->receiptAmount as $receiptAmount) {
-            $data = [
+
+            $receipt = ReceiptAmount::updateOrCreate([
+                'id' => $receiptAmount['id'] ?? 0,
+            ],[
                 'receipt_id' => $this->receipt->id,
                 'currency_id' => $receiptAmount['currency_id'],
                 'amount' => $this->sanitizeNumber($receiptAmount['amount']),
-            ];
-        
-            if (isset($receiptAmount['id'])) {
-                ReceiptAmount::updateOrCreate(['id' => $receiptAmount['id']], $data);
-            } else {
-                ReceiptAmount::create($data);
-            }
+            ]);
+
+            $receiptAmountsIds[] = $receipt->id;
         }
 
-        ReceiptAmount::whereIn('id',$this->deletedReceiptAmount)->delete();
+        ReceiptAmount::whereNotIn('id', $receiptAmountsIds)->delete();
 
 
         session()->flash('success', 'receipt has been updated successfully!');

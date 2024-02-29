@@ -13,7 +13,7 @@
 
                         <div class="col-12 col-md-6 ">
                         <label class="form-label" for="from_till_id">From Tills</label>
-                            <select wire:model="from_till_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="from_till_id" id="from_till_id">
+                            <select wire:model="from_till_id" class="form-select selectpicker w-100 " name="from_till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 <option>Open this select menu</option>
                                     @foreach($fromTills as $fromTill)
                                         <option {{ $fromTill->id == $from_till_id ? 'selected' : '' }} value='{{$fromTill->id}}'>{{$fromTill->name}}</option>
@@ -24,7 +24,7 @@
 
                         <div class="col-12 col-md-6 ">
                         <label class="form-label" for="to_till_id">From Tills</label>
-                            <select wire:model="to_till_id" class="form-select selectpickerz w-100 " aria-label="Default select example" name="to_till_id" id="to_till_id">
+                            <select wire:model="to_till_id" class="form-select selectpicker w-100" aria-label="Default select example" name="to_till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 <option>Open this select menu</option>
                                     @foreach($toTills as $toTill)
                                         <option {{ $toTill->id == $to_till_id ? 'selected' : '' }} value='{{$toTill->id}}'>{{$toTill->name}}</option>
@@ -34,28 +34,56 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
-
                             @foreach($transferAmount as $key => $transferAmount)
                             <div wire:key="transferAmount-{{ $key }}">
-                                    <label class="mt-3" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
-                                    <div class="d-flex flex-row mt-3 mb-3">
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmount.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="amount" id="amount{{$key}}" required>
 
-                                        <select class="form-select " aria-label="Default select example" wire:model="transferAmount.{{ $key }}.currency_id" id="currency{{$key}}">
-                                            <option selected>Open this select menu <span style="color: red;">*</span></option>
-                                            @foreach($currencies as $index => $currency)
-                                                <option value="{{$currency->id}}">{{$currency->name}}</option>
-                                            @endforeach
-                                        </select>
-                                      
+                            <div class="row">
+                                    <div class="col-5">
+                                        <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="col-5">
+                                        <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-5">
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmount.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount {{ $key + 1 }}" id="amount-{{$key}}" required>
+                                        @error('transferAmount.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-5">
+                                        <div wire:ignore>
+                                            <select
+                                                wire:model="transferAmount.{{ $key }}.currency_id"
+                                            
+                                                id="currency-{{$key}}" class="w-100 currency selectpicker"
+                                                title="Select Currency {{ $key + 1 }}"
+                                                data-style="btn-default"
+                                                data-live-search="true"
+                                                data-icon-base="ti"
+                                                data-tick-icon="ti-check text-white"
+                                                required
+                                            >
+                                                @foreach($currencies as $currency)
+                                                    <option value="{{$currency->id}}"
+                                                        @selected($transferAmount['currency_id'] == $currency->id)
+                                                    >
+                                                        {{ $currency->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('transferAmount.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-2">
+                                        @if($key == 0)
+                                            <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
+                                        @endif
                                         @if($key !== 0)
-                                        <button type="button" class="btn btn-danger ms-2"  wire:click="removeTransferAmount({{ $key }})">Remove</button>
+                                            <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
                                         @endif
                                     </div>
                                 </div>
-                                @error('transferAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                                @error('transferAmount.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                             @endforeach 
                         </div>
 
@@ -74,23 +102,21 @@
             @endif
         </div>
 
+    @script
         <script>
-            
-            
+            triggerCleave()
+            $('.selectpicker').selectpicker();
 
-
-            document.addEventListener('livewire:navigated', function () {
-                var status={{$status}};
-                if (status=="1") {$('input').prop('disabled', true);}
+            Livewire.hook('morph.added', ({ el }) => {
+                $('.selectpicker').selectpicker();
                 triggerCleave()
-            });
+            })
 
-            function submit(action)
-            {
-                window.livewire.emit(action)
-            }
-
+            $(document).on('change', '.currency', function() {
+                @this.set($(this).attr('wire:model'), $(this).val())
+            })
         </script>
+    @endscript
     </div>
 </div>
 
