@@ -69,12 +69,11 @@ class ExchangeForm extends Component
     }
 
 
-    public function calculateResult(){
-        if($this->amount>0 && $this->rate>0){
+    public function calculateResult($type){
+        if($type == 'rate' && $this->amount>0 && $this->rate>0){
             $this->result=$this->sanitizeNumber($this->amount)*$this->sanitizeNumber($this->rate);
-
-        }else{
-            $this->result=0;
+        }elseif($type == 'result' && $this->amount>0 && $this->result>0){
+            $this->rate=$this->sanitizeNumber($this->result)/$this->sanitizeNumber($this->amount);
         }
     }
 

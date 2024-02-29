@@ -39,7 +39,7 @@
                             <label class="form-label" for="amount">amount<span style="color: red;">*</span></label>
                             <input
                             wire:model="amount"
-                            wire:change="calculateResult"
+                            wire:change="calculateResult('rate')"
                             type="text"
                             id="amount"
                             class="form-control cleave-input"
@@ -52,7 +52,7 @@
                             <label class="form-label" for="rate">rate<span style="color: red;">*</span></label>
                             <input
                             wire:model="rate"
-                            wire:change="calculateResult"
+                            wire:change="calculateResult('rate')"
                             type="text"
                             id="rate"
                             class="form-control cleave-input"
@@ -65,11 +65,12 @@
                             <label class="form-label" for="rate">result<span style="color: red;">*</span></label>
                             <input
                             wire:model="result"
+                            wire:change="calculateResult('result')"
                             type="text"
                             id="result"
                             class="form-control cleave-input"
                             placeholder="result"
-                            disabled
+                            
                             />
                         </div>
 
