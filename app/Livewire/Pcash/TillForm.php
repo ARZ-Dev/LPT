@@ -22,7 +22,6 @@ class TillForm extends Component
     public $user_id;
     public $name;
     public $tillAmounts = [];
-    public $selectedCurrencies = [];
     public $users = [];
     public $currencies = [];
 
@@ -52,19 +51,9 @@ class TillForm extends Component
                     'amount' => number_format($tillAmount->amount),
                     'currency_id' => $tillAmount->currency_id
                 ];
-                $this->selectedCurrencies[] = $tillAmount['currency_id'];
             }
         }
 
-    }
-
-    #[On('checkCurrencies')]
-    public function checkCurrencies() {
-        $this->selectedCurrencies = [];
-        foreach ($this->tillAmounts as $tillAmount) {
-            $this->selectedCurrencies[] = $tillAmount['currency_id'];
-        }
-        $this->dispatch('refreshCurrencies', $this->selectedCurrencies);
     }
 
     protected function rules()
@@ -72,7 +61,6 @@ class TillForm extends Component
         $rules = [
             'user_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
-
             'tillAmounts' => ['array'],
             'tillAmounts.*.till_id' => ['nullable'],
             'tillAmounts.*.currency_id' => ['required', 'distinct'],
@@ -92,11 +80,6 @@ class TillForm extends Component
 
     public function removeRow($key)
     {
-        $index = array_search($this->tillAmounts[$key]['currency_id'], $this->selectedCurrencies);
-        if ($index !== false) {
-            unset($this->selectedCurrencies[$index]);
-        }
-
         unset($this->tillAmounts[$key]);
         $this->tillAmounts = array_values($this->tillAmounts);
     }
