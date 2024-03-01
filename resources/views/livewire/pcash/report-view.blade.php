@@ -29,7 +29,7 @@
 
                                 
                             @elseif($data['section'] == 'currencies')
-                                Currency: <a href="{{ route('currency.edit', $data['id']) }}"><u> {{$data['name']}}</u></a> was added
+                                {{ $data['model']::reportMessage($data); }}
 
                             @elseif($data['section'] == 'tills')
                                 Till :  <a href="{{ route('till.edit', $data['id']) }}"><u>{{$data['name']}}</u></a> was added
@@ -58,14 +58,8 @@
 
         </div>
     </div>
-    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script>
-        $(document).ready(function() {
-        $('#datatables-reportData').DataTable({
-            "lengthChange": false,
-            "paging": false,
-        });
-    });
+        
     </script>
 
 </div>

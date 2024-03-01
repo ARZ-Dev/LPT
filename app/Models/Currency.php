@@ -33,4 +33,8 @@ class Currency extends Model
     {
         return $this->hasMany(Exchange::class,'to_currency_id');
     }
+
+    public static function reportMessage($data){
+        return 'currency '.$data['name'].' was added ';
+    }
 }

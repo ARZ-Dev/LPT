@@ -21,13 +21,10 @@ class ReportView extends Component
 
     public function render()
     {
-
         $data = [];
 
         $tables = [
             'categories' => Category::class,
-         
-
             'currencies' => Currency::class,
             'tills' => Till::class,
             'payments' => Payment::class,
@@ -44,14 +41,13 @@ class ReportView extends Component
             foreach ($entries as $entry) {
                 $reportData->push([
                     'section' => $section,
+                    'model' => $model,
                     'date' => $entry->created_at,
-
                     'id' => $entry->id,
                     'category_name' => $entry->category_name,
                     'name' => $entry->name,
                     'amount'=>$entry->amount,
                     'paid_by'=>$entry->paid_by,
-                    
                     'category_id'=> Category::find($entry->category_id),
                     'subcategories'=>SubCategory::where('category_id',$entry->id)->get(),
                     'user_id'=> User::find($entry->user_id),
