@@ -17,7 +17,7 @@
 
                                 <select wire:model="from_currency_id"  class="selectpicker w-100" title="Select From Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
-                                        <option {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
+                                        <option @if($status == 1) disabled @endif  {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -28,7 +28,7 @@
                             <div wire:ignore>
                                 <select wire:model="to_currency_id"  class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
-                                        <option {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
+                                        <option @if($status == 1) disabled @endif  {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -101,6 +101,15 @@
 
         @script
     <script>
+        document.addEventListener('livewire:navigated', function () {
+            var status={{$status}};
+            if (status=="1") {
+                $('input').prop('disabled', true);
+                $('textarea').prop('disabled', true);
+
+            }
+        });
+
         triggerCleave()
         $('.selectpicker').selectpicker();
 

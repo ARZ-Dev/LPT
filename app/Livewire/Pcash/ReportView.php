@@ -36,6 +36,7 @@ class ReportView extends Component
         foreach ($tables as $section => $model) {
 
             $entries = $model::all();
+            
             foreach ($entries as $entry) {
                 $this->reportData->push([
                     'model' => $model,
@@ -45,6 +46,13 @@ class ReportView extends Component
                     'name' => $entry->name,
                     'amount'=>$entry->amount,
                     'paid_by'=>$entry->paid_by,
+                    
+             
+             
+
+                    'from_till_id'=>Till::find($entry->from_till_id),
+                    'to_till_id'=>Till::find($entry->to_till_id),
+
                     'date' => $entry->created_at,
                 ]);
             }

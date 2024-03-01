@@ -25,7 +25,9 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub-category</button>
+                        @if(!$status)
+                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub-category</button>
+                        @endif
                     </div>
 
                     @foreach($sub_category as $index => $subcategory)
@@ -34,7 +36,9 @@
                         <div class="d-flex flex-row">
                         <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.sub_category_name" type="text" id="sub_category[{{ $index }}][sub_category_name]" name="sub_category[{{ $index }}][sub_category_name]" required>
                         @if($index !== 0)
-                            <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})">Remove</button>
+                            @if(!$status)
+                                <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})">Remove</button>
+                            @endif
                         @endif
                         </div>
                     </div>
@@ -48,22 +52,18 @@
 
             @if(!$status)
             <div class="col-12 text-end mt-2">
-            <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                @if(!$status)
+                    <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                @endif
             </div>
-
             @endif
         </div>
 
     <script>
         document.addEventListener('livewire:navigated', function () {
-        var status={{$status}};
-        if (status=="1") {$('input').prop('disabled', true);}
+            var status={{$status}};
+            if (status=="1") {$('input').prop('disabled', true);}
         });
-
-        function submit(action)
-        {
-        window.livewire.emit(action)
-        }
 
     </script>
     </div>

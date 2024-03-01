@@ -25,6 +25,9 @@
                         <td>{{ $receipt->created_at->format('m-d-Y h:i a') }}</td>
 
                         <td>
+                            @can('receipt-list')
+                                <a href="{{ route('receipt.view', ['id' => $receipt->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                            @endcan
                             @can('receipt-edit')
                                 <a href="{{ route('receipt.edit', $receipt->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
                             @endcan

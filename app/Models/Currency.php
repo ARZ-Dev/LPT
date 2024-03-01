@@ -37,6 +37,8 @@ class Currency extends Model
     }
 
     public static function reportMessage($data){
-        return 'currency '.$data['name'].' was added ';
+        echo 'new currency <u><a href="'. route('currency.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> '.$data['name'].' has been created ';
+
+
     }
 }

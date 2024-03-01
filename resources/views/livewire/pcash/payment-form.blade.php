@@ -13,7 +13,7 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="category_id">Categories<span style="color: red;">*</span></label>
-                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpicker w-100" aria-label="Default select example" name="category_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                        <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" name="category_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                             <option>Open this select menu</option>
                             @foreach($categories as $category)
                                 <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{ $category->id }}'>{{ $category->category_name }}</option>
@@ -49,8 +49,9 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                        <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
-
+                            @if(!$status)
+                                <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
+                            @endif
                         @foreach($paymentAmount as $key => $paymentAmount)
 
                        
@@ -68,7 +69,9 @@
                                 </select>
 
                                 @if($key !== 0)
-                                <button type="button" class="btn btn-danger ms-2"  wire:click="removePaymentAmount({{ $key }})">Remove</button>
+                                    @if(!$status)
+                                        <button type="button" class="btn btn-danger ms-2"  wire:click="removePaymentAmount({{ $key }})">Remove</button>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -96,19 +99,15 @@
         <script>
         document.addEventListener('livewire:navigated', function () {
             var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-            triggerCleave();
-            
-    //         Livewire.on('triggerCleave', function() {
-                
-    //             for(let field of $('.cleave-input').toArray()){
-    //     new Cleave(field, {
-    //         numeral: true,
-    //         numeralThousandsGroupStyle: 'thousand'
-    //     });
-    // }
-    //         })
+            if (status=="1") {
+                $('input').prop('disabled', true);
+                $('option').prop('disabled', true);
+                $('textarea').prop('disabled', true);
 
+
+            
+            }
+            triggerCleave();
         });
 
         function submit(action)

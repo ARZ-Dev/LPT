@@ -30,6 +30,12 @@ class Payment extends Model
         return $this->hasMany(PaymentAmount::class,'payment_id');
     }
 
+    public static function reportMessage($data){
+        echo 'new payment <u><a href="'. route('payment.view', ['id' => $data['id'], 'status' => 1]).' ">#'.$data['id'].'</a></u> has been created';
+
+
+    }
+
 
 
     

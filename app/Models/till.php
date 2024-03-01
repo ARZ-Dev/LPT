@@ -33,4 +33,9 @@ class Till extends Model
     {
         return $this->hasMany(TillAmount::class,'till_id');
     }
+
+    public static function reportMessage($data){
+        echo 'new till <u><a href="'. route('till.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u>  '.$data['name'].'  has been created ';
+
+    }
 }

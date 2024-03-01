@@ -14,9 +14,9 @@
                         <div class="col-12 col-md-6 ">
                         <label class="form-label" for="from_till_id">From Tills</label>
                             <select wire:model="from_till_id" class="form-select selectpicker w-100 " name="from_till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                                <option>Open this select menu</option>
+                                <option @if($status == 1) disabled @endif>Open this select menu</option>
                                     @foreach($fromTills as $fromTill)
-                                        <option {{ $fromTill->id == $from_till_id ? 'selected' : '' }} value='{{$fromTill->id}}'>{{$fromTill->name}}</option>
+                                        <option @if($status == 1) disabled @endif {{ $fromTill->id == $from_till_id ? 'selected' : '' }} value='{{$fromTill->id}}'>{{$fromTill->name}}</option>
                                     @endforeach
                             </select>
                             @error('from_till_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -25,9 +25,9 @@
                         <div class="col-12 col-md-6 ">
                         <label class="form-label" for="to_till_id">From Tills</label>
                             <select wire:model="to_till_id" class="form-select selectpicker w-100" aria-label="Default select example" name="to_till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                                <option>Open this select menu</option>
+                                <option @if($status == 1) disabled @endif>Open this select menu</option>
                                     @foreach($toTills as $toTill)
-                                        <option {{ $toTill->id == $to_till_id ? 'selected' : '' }} value='{{$toTill->id}}'>{{$toTill->name}}</option>
+                                        <option @if($status == 1) disabled @endif {{ $toTill->id == $to_till_id ? 'selected' : '' }} value='{{$toTill->id}}'>{{$toTill->name}}</option>
                                     @endforeach
                             </select>
                             @error('to_till_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -65,7 +65,7 @@
                                                 required
                                             >
                                                 @foreach($currencies as $currency)
-                                                    <option value="{{$currency->id}}"
+                                                    <option @if($status == 1) disabled @endif value="{{$currency->id}}"
                                                         @selected($transferAmount['currency_id'] == $currency->id)
                                                     >
                                                         {{ $currency->name }}
@@ -75,14 +75,17 @@
                                         </div>
                                         @error('transferAmount.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
-                                    <div class="col-2">
-                                        @if($key == 0)
-                                            <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
-                                        @endif
-                                        @if($key !== 0)
-                                            <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
-                                        @endif
-                                    </div>
+                                    
+                                    @if(!$status)
+                                        <div class="col-2">
+                                            @if($key == 0)
+                                                <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
+                                            @endif
+                                            @if($key !== 0)
+                                                <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach 
                         </div>
@@ -104,6 +107,13 @@
 
     @script
         <script>
+        document.addEventListener('livewire:navigated', function () {
+            var status={{$status}};
+            if (status=="1") {
+                $('input').prop('disabled', true);
+                $('textarea').prop('disabled', true);
+            }
+        });
             triggerCleave()
             $('.selectpicker').selectpicker();
 
