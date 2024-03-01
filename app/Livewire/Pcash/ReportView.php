@@ -19,12 +19,10 @@ class ReportView extends Component
 {
     use AuthorizesRequests;
 
-    public function render()
-    {
-        $data = [];
+    public $reportData;
 
+    public function mount(){
         $tables = [
-            'categories' => Category::class,
             'currencies' => Currency::class,
             'tills' => Till::class,
             'payments' => Payment::class,
@@ -33,29 +31,28 @@ class ReportView extends Component
             'exchanges' => Exchange::class,
         ];
 
-        $reportData = collect();
+        $this->reportData = collect();
 
         foreach ($tables as $section => $model) {
 
             $entries = $model::all();
             foreach ($entries as $entry) {
-                $reportData->push([
-                    'section' => $section,
+                $this->reportData->push([
                     'model' => $model,
-                    'date' => $entry->created_at,
+                    'section' => $section,
                     'id' => $entry->id,
-                    'category_name' => $entry->category_name,
+                    'user'=> User::find($entry->user_id),
                     'name' => $entry->name,
                     'amount'=>$entry->amount,
                     'paid_by'=>$entry->paid_by,
-                    'category_id'=> Category::find($entry->category_id),
-                    'subcategories'=>SubCategory::where('category_id',$entry->id)->get(),
-                    'user_id'=> User::find($entry->user_id),
+                    'date' => $entry->created_at,
                 ]);
             }
         }
-        $data['reportData'] = $reportData;
+    }
 
-        return view('livewire.pcash.report-view', $data);
+    public function render()
+    {
+        return view('livewire.pcash.report-view');
     }
 }

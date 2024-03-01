@@ -18,17 +18,8 @@
                 @foreach($reportData as $data)
                     <tr>
                         <td>
-                            @if($data['section'] == 'categories')
-                            Category:<a href="{{ route('category.edit', $data['id']) }}"><u>{{$data['category_name']}}</u></a> with subcategory :
-                                @foreach ($data['subcategories'] as $subcategory)
-                                    <a href="{{ route('category.edit', $data['id']) }}"><u>
-                                        {{ $subcategory->sub_category_name }}
-                                    </u></a> &nbsp; 
-                                @endforeach
-                            was added
-
-                                
-                            @elseif($data['section'] == 'currencies')
+                            
+                            @if($data['section'] == 'currencies')
                                 {{ $data['model']::reportMessage($data); }}
 
                             @elseif($data['section'] == 'tills')
@@ -39,14 +30,13 @@
                                 Payments: {{$data['category_id']->category_name}}
 
                             @elseif($data['section'] == 'receipts')
-                                Receipt By  {{$data['user_id']->username}} Paid By {{$data['paid_by']}}
+                                Receipt By  {{$data['user']->username}} Paid By {{$data['paid_by']}}
 
                             @elseif($data['section'] == 'transfers')
-                            Transfer: {{$data['name']}}
+                                Transfer: {{$data['name']}}
 
                             @elseif($data['section'] == 'exchanges')
                                 Exchange: {{$data['amount']}}
-
                             @endif
                         </td>
                         <td>{{ $data['section'] }}</td>
