@@ -21,7 +21,7 @@
                             {{  $data['model']::reportMessage($data); }}
                         </td>
                         <td>{{ $data['section'] }}</td>
-                        <td>{{ $data['date']->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $data['date']->format('m-d-Y h:i a') }} </td>
                     </tr>
                 @endforeach
                 </tbody>
