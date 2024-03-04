@@ -12,6 +12,12 @@ class TransferView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $transfers;
+
+    public function mount(){
+
+        $this->transfers = Transfer::with(['fromTill.user','toTill'])->get();
+    }
 
     public function delete($id)
     {
@@ -26,13 +32,6 @@ class TransferView extends Component
 
     public function render()
     {
-        $data = [];
-
-
-        $transfers = Transfer::with(['fromTill.user','toTill'])->get();
-
-        $data['transfers'] = $transfers;
-
-        return view('livewire.pcash.transfer-view', $data);
+        return view('livewire.pcash.transfer-view');
     }
 }

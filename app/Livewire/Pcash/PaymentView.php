@@ -12,6 +12,13 @@ class PaymentView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $payments;
+
+    public function mount(){
+
+        $this->payments = Payment::with(['category', 'subCategory', 'paymentAmount'])->get();
+
+    }
 
     public function delete($id)
     {
@@ -28,13 +35,6 @@ class PaymentView extends Component
 
     public function render()
     {
-        $data = [];
-
-        $payments = Payment::with(['category', 'subCategory', 'paymentAmount'])->get();
-
-        $data['payments'] = $payments;
-        
-
-        return view('livewire.pcash.payment-view', $data);
+        return view('livewire.pcash.payment-view');
     }
 }

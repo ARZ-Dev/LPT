@@ -13,6 +13,11 @@ class TillView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $tills;
+
+    public function mount(){
+        $this->tills =  Till::with(['user'])->get();
+    }
 
     public function delete($id)
     {
@@ -29,11 +34,6 @@ class TillView extends Component
 
     public function render()
     {
-        $data = [];
-
-        $tills = Till::with(['user'])->get();
-        $data['tills'] = $tills;
-
-        return view('livewire.pcash.till-view', $data);
+        return view('livewire.pcash.till-view');
     }
 }

@@ -12,6 +12,13 @@ class CurrencyView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $currencies;
+
+    public function mount(){
+
+        $this->currencies = Currency::all();
+
+    }
 
     public function delete($id)
     {
@@ -28,11 +35,6 @@ class CurrencyView extends Component
 
     public function render()
     {
-        $data = [];
-
-        $currencies = Currency::all();
-        $data['currencies'] = $currencies;
-
-        return view('livewire.pcash.currency-view', $data);
+        return view('livewire.pcash.currency-view');
     }
 }
