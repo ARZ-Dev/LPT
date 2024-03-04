@@ -13,6 +13,13 @@ class CategoryView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $categories;
+
+    public function mount(){
+        $this->authorize('category-list');
+        $this->categories = Category::all();
+        
+    }
 
     public function delete($id)
     {
@@ -31,11 +38,6 @@ class CategoryView extends Component
 
     public function render()
     {
-        $data = [];
-
-        $categories = Category::all();
-        $data['categories'] = $categories;
-
-        return view('livewire.pcash.category-view', $data);
+        return view('livewire.pcash.category-view');
     }
 }

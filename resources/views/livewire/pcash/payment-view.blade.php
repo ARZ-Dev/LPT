@@ -24,6 +24,9 @@
                         <td>{{ $payment->description }}</td>
                         <td>{{ $payment->created_at->format('m-d-Y h:i a') }}</td>
                         <td>
+                            @can('payment-list')
+                                <a href="{{ route('payment.view', ['id' => $payment->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                            @endcan
                             @can('payment-edit')
                                 <a href="{{ route('payment.edit', $payment->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
                             @endcan

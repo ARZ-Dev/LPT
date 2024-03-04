@@ -20,6 +20,7 @@ class Currency extends Model
     {
         return $this->hasMany(PaymentAmount::class,'currency_id');
     }
+    
     public function receiptAmount()
     {
         return $this->hasMany(ReceiptAmount::class,'currency_id');
@@ -29,8 +30,15 @@ class Currency extends Model
     {
         return $this->hasMany(Exchange::class,'from_currency_id');
     }
+
     public function exchangeFrom()
     {
         return $this->hasMany(Exchange::class,'to_currency_id');
+    }
+
+    public static function reportMessage($data){
+        echo 'new currency <u><a href="'. route('currency.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> '.$data['name'].' has been created ';
+
+
     }
 }

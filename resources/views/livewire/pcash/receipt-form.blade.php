@@ -12,14 +12,14 @@
                     <form class="row g-3">
 
                     <div class="col-12 col-md-12">
-                            <label class="form-label" for="paid_by">From Costumer<span style="color: red;">*</span></label>
+                            <label class="form-label" for="paid_by">From Customer<span style="color: red;">*</span></label>
                             <input
                             wire:model.defer="paid_by"
                             type="text"
                             id="paid_by"
                             name="paid_by"
                             class="form-control"
-                            placeholder="From Costumer"
+                            placeholder="From Customer"
                             />
                             @error('paid_by') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -39,28 +39,57 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
-
                             @foreach($receiptAmount as $key => $receiptAmount)
-                                <div wire:key="receiptAmount-{{ $key }}">
-                                    <label class="mt-3" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
-                                    <div class="d-flex flex-row mt-3 mb-3">
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                    <div wire:key="receiptAmount-{{ $key }}">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-5">
+                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                          
+                                        <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required></div>
 
-                                        <select class="form-select " aria-label="Default select example" wire:model="receiptAmount.{{ $key }}.currency_id">
-                                            <option selected>Open this select menu*</option>
-                                            @foreach($currencies as $index => $currency)
-                                                <option value="{{$currency->id}}">{{$currency->name}}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="col-5">
+                                            <select wire:model="receiptAmount.{{ $key }}.currency_id"
+                                                    aria-label="Default select example"
+                                                    id="currency-{{$key}}" 
+                                                    class="w-100 currency selectpicker"
+                                                    title="Select Currency {{ $key + 1 }}"
+                                                    data-style="btn-default"
+                                                    data-live-search="true"
+                                                    data-icon-base="ti"
+                                                    data-tick-icon="ti-check text-white"
+                                                    required
+                                                    >
+                                                <option @if($status == 1) disabled @endif  selected>Open this select menu*</option>
+                                                @foreach($currencies as $index => $currency)
+                                                    <option @if($status == 1) disabled @endif
+                                                            value="{{$currency->id}}" 
+                                                            @selected($receiptAmount['currency_id'] == $currency->id)>
+                                                            {{$currency->name}}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-                                        @if($key !== 0)
-                                        <button type="button" class="btn btn-danger ms-2"  wire:click="removeReceiptAmount({{ $key }})">Remove</button>
-                                        @endif
+                                    @if(!$status)
+                                        <div class="col-2">
+                                            @if($key == 0)
+                                                <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
+                                            @else
+                                                <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
+                                            @endif
+                                        </div>
+                                    @endif
                                     </div>
                                 </div>
-                                @error('receiptAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                                @error('receiptAmount.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('receiptAmount.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('receiptAmount.'.$key.'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                             @endforeach 
                         </div>
 
@@ -77,27 +106,30 @@
             @endif
         </div>
 
+    @script
         <script>
         document.addEventListener('livewire:navigated', function () {
             var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-            triggerCleave();
-
+            if (status=="1") {
+                $('input').prop('disabled', true);
+                $('textarea').prop('disabled', true);
+            }
         });
 
-        function submit(action)
-        {
-            window.livewire.emit(action)
-        }
+        triggerCleave()
+        $('.selectpicker').selectpicker();
 
+        Livewire.hook('morph.added', ({ el }) => {
+            $('.selectpicker').selectpicker();
+            triggerCleave()
+        })
 
-
-
-    document.getElementById('category_id').addEventListener('change', function (e) {
-        @this.set('category_id', e.target.value);
-    });
-                 
+        $(document).on('change', '.currency', function() {
+            @this.set($(this).attr('wire:model'), $(this).val())
+        })
         </script>
+    @endscript
+
     </div>
 </div>
 

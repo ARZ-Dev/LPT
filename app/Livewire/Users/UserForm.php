@@ -93,6 +93,8 @@ class UserForm extends Component
 
         $user->assignRole($this->role_name);
 
+        dd(Role::all());
+
         return to_route('users')->with('success', 'User has been created successfully!');
     }
 

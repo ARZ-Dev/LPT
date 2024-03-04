@@ -44,10 +44,10 @@ class ExchangeForm extends Component
 
             $this->from_currency_id = $this->exchange->from_currency_id;
             $this->to_currency_id = $this->exchange->to_currency_id;
-            $this->amount = $this->exchange->amount;
-            $this->rate = $this->exchange->rate;
+            $this->amount = number_format($this->exchange->amount);
+            $this->rate = number_format($this->exchange->rate);
             $this->description = $this->exchange->description;
-            $this->result = $this->exchange->result;
+            $this->result = number_format($this->exchange->result);
 
         }
 
@@ -69,12 +69,11 @@ class ExchangeForm extends Component
     }
 
 
-    public function calculateResult(){
-        if($this->amount>0 && $this->rate>0){
+    public function calculateResult($type){
+        if($type == 'rate' && $this->amount>0 && $this->rate>0){
             $this->result=$this->sanitizeNumber($this->amount)*$this->sanitizeNumber($this->rate);
-
-        }else{
-            $this->result=0;
+        }elseif($type == 'result' && $this->amount>0 && $this->result>0){
+            $this->rate=$this->sanitizeNumber($this->result)/$this->sanitizeNumber($this->amount);
         }
     }
 

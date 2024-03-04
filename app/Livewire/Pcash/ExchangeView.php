@@ -10,8 +10,15 @@ use Livewire\Component;
 class ExchangeView extends Component
 {
     use AuthorizesRequests;
-
+    
     protected $listeners = ['delete'];
+    public $exchanges;
+
+    public function mount(){
+        $this->authorize('exchange-list');
+        $this->exchanges = Exchange::with('fromCurrency','toCurrency')->get();
+
+    }
 
     public function delete($id)
     {
@@ -27,13 +34,7 @@ class ExchangeView extends Component
 
     public function render()
     {
-        $data = [];
 
-        $exchanges = Exchange::with('fromCurrency','toCurrency')->get();
-        $data['exchanges'] = $exchanges;
-
-        // dd($exchanges);
-
-        return view('livewire.pcash.exchange-view', $data);
+        return view('livewire.pcash.exchange-view');
     }
 }
