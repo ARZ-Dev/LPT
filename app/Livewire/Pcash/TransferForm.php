@@ -3,7 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
-use App\Models\till;
+use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\Transfer;
 use App\Models\TransferAmount;
