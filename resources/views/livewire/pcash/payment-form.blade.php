@@ -137,7 +137,7 @@
         })
 
         $(document).on('change', '.currency', function() {
-            @this.set('$(this).attr('wire:model')', $(this).val())
+            @this.set($(this).attr('wire:model'), $(this).val())
         })
      
         </script>
