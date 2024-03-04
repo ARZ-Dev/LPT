@@ -55,8 +55,6 @@
                                     @can('role-edit')
                                         @if($role->id != \App\Utils\Constants::SUPER_ADMIN_ROLE_ID)
                                             <a wire:click="edit({{ $role->id }})" href="#" data-bs-toggle="modal" data-bs-target="#saveRoleModal" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
-                                        @endif
-                                        @if(!in_array($role->id, $primaryRolesIds))
                                             @can('role-delete')
                                             <a wire:click="deleteConfirm('delete', {{ $role->id }})" href="#" class="text-body delete-record"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                                             @endcan
@@ -136,8 +134,8 @@
                                             <div class="d-flex">
                                                 @foreach($permissions as $permission)
                                                 <div class="form-check me-3 me-lg-5">
-                                                    <input wire:click="togglePermission('{{ $permission['id'] }}')" class="form-check-input" type="checkbox" id="permission_{{ $permission['id'] }}" value="{{ $permission['id'] }}"
-                                                      {{ in_array($permission['id'], $selectedPermissions) ? "checked" : "" }} {{ $allowPermissionEditing ? "" : "disabled" }} />
+                                                    <input wire:click="togglePermission('{{ $key . "-" . $permission['name'] }}')" class="form-check-input" type="checkbox" id="permission_{{ $permission['id'] }}" value="{{ $permission['id'] }}"
+                                                      {{ in_array($key . "-" . $permission['name'], $selectedPermissions) ? "checked" : "" }} {{ $allowPermissionEditing ? "" : "disabled" }} />
                                                     <label class="form-check-label" for="permission_{{ $permission['id'] }}"> {{ ucfirst($permission['name']) }} </label>
                                                 </div>
                                                 @endforeach

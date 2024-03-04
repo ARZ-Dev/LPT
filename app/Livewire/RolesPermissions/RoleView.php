@@ -67,7 +67,7 @@ class RoleView extends Component
         $this->reset('selectedPermissions');
         if (!$this->isAllPermissionsSelected) {
             foreach ($this->permissions as $permission) {
-                $this->selectedPermissions[] = $permission->id;
+                $this->selectedPermissions[] = $permission->name;
             }
         }
         $this->isAllPermissionsSelected = !$this->isAllPermissionsSelected;
@@ -80,7 +80,7 @@ class RoleView extends Component
         $this->allowPermissionEditing = $id != Constants::SUPER_ADMIN_ROLE_ID;
         $this->role = Role::findById($id);
         $this->name = $this->role->name;
-        $this->selectedPermissions = $this->role->permissions()->pluck('id')->toArray();
+        $this->selectedPermissions = $this->role->permissions()->pluck('name')->toArray();
         $this->isAllPermissionsSelected = count($this->selectedPermissions) == count($this->permissions);
     }
 
