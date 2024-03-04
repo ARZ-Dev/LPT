@@ -89,9 +89,6 @@ class PaymentForm extends Component
     public function addRow()
     {
         $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
-        
-        $this->dispatch('triggerCleave');
-        
     }
 
     public function removeRow($key)
