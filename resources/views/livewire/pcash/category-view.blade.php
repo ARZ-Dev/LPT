@@ -18,7 +18,7 @@
                 @foreach($categories as $category)
                     <tr>
                         <td>{{ $category->category_name }}</td>
-                        <td>{{ $category->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $category->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('category-list')
                                 <a href="{{ route('category.view', ['id' => $category->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>

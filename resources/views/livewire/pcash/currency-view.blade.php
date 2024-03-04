@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ $currency->name }}</td>
                         <td>{{ $currency->symbol }}</td>
-                        <td>{{ $currency->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $currency->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('currency-list')
                                 <a href="{{ route('currency.view', ['id' => $currency->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>

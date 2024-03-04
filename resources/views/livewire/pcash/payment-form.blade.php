@@ -52,41 +52,58 @@
                            {{-- @if(!$status)
                                 <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
                             @endif --}}
+                            
                         @foreach($paymentAmount as $key => $paymentAmount)
+                            <div wire:key="paymentAmount-{{ $key }}">
+                                
+                                <div class="row">
 
-                       
-                        <div wire:key="paymentAmount-{{ $key }}">
-                            <label class="mt-3" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
-
-                            <div class="d-flex flex-row mt-3 mb-3">
-                                <input class="form-control  cleave-input w-100 me-2" wire:model="paymentAmount.{{ $key }}.amount" type="text" name="paymentAmount[{{ $key }}][amount]" placeholder="amount" required>
-
-                                <select class="form-select " aria-label="Default select example" wire:model="paymentAmount.{{ $key }}.currency_id">
-                                    <option selected>Open this select menu*</option>
-                                    @foreach($currencies as $index => $currency)
-                                        <option value="{{$currency->id}}">{{$currency->name}}</option>
-                                    @endforeach
-                                </select>
-
-                                @if(!$status)
-                                    <div class="col-2">
-                                        @if($key == 0)
-                                            <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
-                                        @else
-                                            <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
-                                        @endif
+                                    <div class="col-5">
+                                        <label class="form-label" for="amount{{$key}}">amount<span style="color: red;">*</span></label>
+                                        <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="paymentAmount.{{ $key }}.amount" type="text" name="paymentAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                        @error('paymentAmount.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
-                                @endif
 
-                            </div>
+
+                                    <div class="col-5">
+                                        <label class="form-label" for="currency{{$key}}">Currency<span style="color: red;">*</span></label>
+                                        <div wire:ignore>
+                                            <select class="form-select selectpicker w-100 currency"
+                                                aria-label="Default select example"
+                                                id="currency{{$key}}"
+                                                wire:model="paymentAmount.{{ $key }}.currency_id"
+                                                title="Select Currency {{ $key + 1 }}"
+                                                data-style="btn-default"
+                                                data-live-search="true"
+                                                data-icon-base="ti"
+                                                data-tick-icon="ti-check text-white"
+                                                required
+                                            >
+                                                @foreach($currencies as $index => $currency)
+                                                <option @if($status == 1) disabled @endif value="{{$currency->id}}" @selected($paymentAmount['currency_id'] == $currency->id)>       
+                                                    {{$currency->name}} 
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @error('paymentAmount.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                    </div>
+                                
+                                    @if(!$status)
+                                        <div class="col-2 mt-4">
+                                            @if($key == 0)
+                                                <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
+                                            @else
+                                                <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                
+                                </div>
+
                         </div>
-                        @error('paymentAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                        @error('paymentAmount.*.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
-
-
                     @endforeach 
-
-                    </div>
 
                     </form>
                 </div>
@@ -100,27 +117,31 @@
 
             @endif
         </div>
-
+        @script
         <script>
         document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
+            var status="{{$status}}";
             if (status=="1") {
                 $('input').prop('disabled', true);
                 $('option').prop('disabled', true);
                 $('textarea').prop('disabled', true);
-
-
-            
             }
-            triggerCleave();
         });
 
-        function submit(action)
-        {
-            window.livewire.emit(action)
-        }
+        triggerCleave()
+        $('.selectpicker').selectpicker();
+
+        Livewire.hook('morph.added', ({ el }) => {
+            $('.selectpicker').selectpicker();
+            triggerCleave()
+        })
+
+        $(document).on('change', '.currency', function() {
+            @this.set($(this).attr('wire:model'), $(this).val())
+        })
      
         </script>
+        @endscript
     </div>
 </div>
 

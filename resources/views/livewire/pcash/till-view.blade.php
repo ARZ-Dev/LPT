@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ $till->user->username ?? 'N/A' }}</td>
                         <td>{{ $till->name }}</td>
-                        <td>{{ $till->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $till->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
                             @can('till-list')
