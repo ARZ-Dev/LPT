@@ -64,18 +64,18 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="UserRole">Role</label>
                             <select
-                                wire:model.defer="role_id"
+                                wire:model.defer="role_name"
                                 id="UserRole"
                                 name="UserRole"
                                 class="form-select"
                                 aria-label="Default select example"
                             >
                                 <option value="" selected>Select Role</option>
-                                @foreach($roles as $id => $value)
-                                    <option value="{{ $id }}">{{ $value }}</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                 @endforeach
                             </select>
-                            @error('role_id') <div class="text-danger">{{ $message }}</div> @enderror
+                            @error('role_name') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="UserPhone">Phone Number</label>
@@ -134,7 +134,7 @@
                 </div>
 
             </div>
-            
+
             @if(!$status)
                 <div class="col-12 text-end mt-2">
                     <button wire:click="{{ $editing ? "update" : "store" }}" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
@@ -144,7 +144,7 @@
     </div>
 
     <script>
-        
+
         document.addEventListener('livewire:navigated', function () {
             $(document).ready(function () {
 

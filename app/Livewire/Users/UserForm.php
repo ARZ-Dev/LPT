@@ -24,7 +24,7 @@ class UserForm extends Component
     public string $last_name = "";
     public string $username = "";
     public string $email = "";
-    public $role_id;
+    public $role_name;
 
     public string $phone = "";
     public string $password = "";
@@ -40,11 +40,11 @@ class UserForm extends Component
     public function mount($id = 0, $status = 0)
     {
         $this->authorize('user-list');
-        $this->roles = Role::pluck('name', 'id');
+        $this->roles = Role::all();
         $this->status=$status;
 
         $this->users = User::all();
-    
+
 
         if ($id) {
             $this->editing = true;
@@ -55,7 +55,7 @@ class UserForm extends Component
             $this->email = $this->user->email;
 
             $this->phone = $this->user->phone;
-            $this->role_id = $this->user->roles[0]->id ?? "";
+            $this->role_name = $this->user->roles[0]->name ?? "";
 
             $this->users = User::where('id', '<>', $id)->get();
         }
@@ -68,7 +68,7 @@ class UserForm extends Component
             'last_name' => ['required', 'string'],
             'username' => ['required', Rule::unique('users', 'username')],
             'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'role_id' => ['required', 'numeric', Rule::exists('roles', 'id')],
+            'role_name' => ['required', Rule::exists('roles', 'name')],
 
             'phone' => ['required'],
             'password' => ['required', 'confirmed']
@@ -86,19 +86,19 @@ class UserForm extends Component
             'last_name' => $this->last_name,
             'username' => $this->username,
             'email' => $this->email,
-   
+
             'phone' => $this->phone,
             'password' => Hash::make($this->password)
         ]);
 
-        $user->assignRole($this->role_id);
+        $user->assignRole($this->role_name);
 
         return to_route('users')->with('success', 'User has been created successfully!');
     }
 
     public function update()
     {
-        
+
         $this->authorize('user-edit');
 
         $this->validate([
@@ -106,7 +106,7 @@ class UserForm extends Component
             'last_name' => ['required', 'string'],
             'username' => ['required', Rule::unique('users', 'username')->ignore($this->user->id)],
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->user->id)],
-            'role_id' => ['required', 'numeric', Rule::exists('roles', 'id')],
+            'role_name' => ['required', Rule::exists('roles', 'name')],
 
             'phone' => ['required'],
             'password' => ['nullable', 'confirmed']
@@ -116,13 +116,13 @@ class UserForm extends Component
         $this->user->last_name = $this->last_name;
         $this->user->username = $this->username;
         $this->user->email = $this->email;
- 
+
         $this->user->phone = $this->phone;
         if ($this->password) {
             $this->user->password = Hash::make($this->password);
         }
 
-        $this->user->syncRoles([$this->role_id]);
+        $this->user->syncRoles([$this->role_name]);
 
         $this->user->save();
 
