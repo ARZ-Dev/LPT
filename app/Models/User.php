@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function till()
     {
-        return $this->hasMany(till::class,'user_id');
+        return $this->hasMany(Till::class,'user_id');
     }
 
     public function receipt()
