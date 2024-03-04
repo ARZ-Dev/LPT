@@ -56,7 +56,7 @@
                                         @if($role->id != \App\Utils\Constants::SUPER_ADMIN_ROLE_ID)
                                             <a wire:click="edit({{ $role->id }})" href="#" data-bs-toggle="modal" data-bs-target="#saveRoleModal" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
                                             @can('role-delete')
-                                            <a wire:click="deleteConfirm('delete', {{ $role->id }})" href="#" class="text-body delete-record"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $role->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                                             @endcan
                                         @endif
                                     @endcan
@@ -167,12 +167,7 @@
     </div>
     <!--/ Add Role Modal -->
 
-    <script>
-        document.addEventListener('livewire:navigated', function () {
-            Livewire.on('dismissModal', function() {
-                $('.close-modal').click();
-            })
-
-        });
-    </script>
+    @script
+        @include('livewire.deleteConfirm')
+    @endscript
 </div>
