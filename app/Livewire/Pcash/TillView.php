@@ -19,6 +19,16 @@ class TillView extends Component
         $this->tills =  Till::with(['user'])->get();
     }
 
+    public $tills;
+
+    public function mount(){
+
+        $this->authorize('till-list');
+
+        $this->tills = Till::with(['user'])->get();
+        
+    }
+
     public function delete($id)
     {
         $this->authorize('till-delete');
