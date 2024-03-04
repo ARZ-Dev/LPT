@@ -55,10 +55,24 @@
                                         <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required></div>
 
                                         <div class="col-5">
-                                            <select class="form-select selectpicker " aria-label="Default select example" wire:model="receiptAmount.{{ $key }}.currency_id">
+                                            <select wire:model="receiptAmount.{{ $key }}.currency_id"
+                                                    aria-label="Default select example"
+                                                    id="currency-{{$key}}" 
+                                                    class="w-100 currency selectpicker"
+                                                    title="Select Currency {{ $key + 1 }}"
+                                                    data-style="btn-default"
+                                                    data-live-search="true"
+                                                    data-icon-base="ti"
+                                                    data-tick-icon="ti-check text-white"
+                                                    required
+                                                    >
                                                 <option @if($status == 1) disabled @endif  selected>Open this select menu*</option>
                                                 @foreach($currencies as $index => $currency)
-                                                    <option @if($status == 1) disabled @endif value="{{$currency->id}}">{{$currency->name}}</option>
+                                                    <option @if($status == 1) disabled @endif
+                                                            value="{{$currency->id}}" 
+                                                            @selected($receiptAmount['currency_id'] == $currency->id)>
+                                                            {{$currency->name}}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -92,18 +106,16 @@
             @endif
         </div>
 
+    @script
         <script>
         document.addEventListener('livewire:navigated', function () {
             var status={{$status}};
             if (status=="1") {
                 $('input').prop('disabled', true);
                 $('textarea').prop('disabled', true);
-
             }
-
         });
-        
-        
+
         triggerCleave()
         $('.selectpicker').selectpicker();
 
@@ -116,6 +128,8 @@
             @this.set($(this).attr('wire:model'), $(this).val())
         })
         </script>
+    @endscript
+
     </div>
 </div>
 

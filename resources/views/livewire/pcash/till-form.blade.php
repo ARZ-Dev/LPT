@@ -52,7 +52,8 @@
                                         <div wire:ignore>
                                             <select
                                                 wire:model="tillAmounts.{{ $key }}.currency_id"
-                                                id="currency-{{$key}}" class="w-100 currency selectpicker"
+                                                id="currency-{{$key}}" 
+                                                class="w-100 currency selectpicker"
                                                 title="Select Currency {{ $key + 1 }}"
                                                 data-style="btn-default"
                                                 data-live-search="true"
