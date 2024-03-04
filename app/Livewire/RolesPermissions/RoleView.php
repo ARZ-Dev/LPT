@@ -118,17 +118,6 @@ class RoleView extends Component
         ]);
     }
 
-    public function deleteConfirm($method, $id = null): void
-    {
-        $this->dispatch('swal:confirm', [
-            'type'  => 'warning',
-            'title' => 'Are you sure?',
-            'text'  => 'You won\'t be able to revert this!',
-            'id'    => $id,
-            'method' => $method,
-        ]);
-    }
-
     public function delete($id)
     {
         $this->authorize('role-delete');
@@ -155,6 +144,8 @@ class RoleView extends Component
         $data = [];
         $data['roles'] = Role::withCount('users')->get();
 
+
+        
         $this->dispatch('initializeDatatable');
 
         return view('livewire.roles-permissions.role-view', $data);
