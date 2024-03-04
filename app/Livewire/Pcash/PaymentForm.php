@@ -52,6 +52,7 @@ class PaymentForm extends Component
         $this->currencies = Currency::all();
         $this->updateSubCategories();
         
+        // dd($this->paymentAmount);
 
         if ($id) {
             $this->editing = true;
@@ -63,10 +64,11 @@ class PaymentForm extends Component
             $this->description = $this->payment->description;
 
             $this->paymentAmount = $this->payment->paymentAmount->toArray();
+
         }
-
+        
     }
-
+    
 
     protected function rules()
     {
@@ -92,7 +94,7 @@ class PaymentForm extends Component
         
     }
 
-    public function removePaymentAmount($key)
+    public function removeRow($key)
     {
         if($this->editing == true){
             $removedItemId = $this->paymentAmount[$key]['id'] ?? null;

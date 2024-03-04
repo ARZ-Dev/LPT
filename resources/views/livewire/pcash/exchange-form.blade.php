@@ -76,13 +76,13 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="description">description<span style="color: red;"></span></label>
-                            <input
+                            <textarea
                             wire:model="description"
                             type="text"
                             id="description"
                             class="form-control"
                             placeholder="description"
-                            />
+                            /></textarea>
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
            

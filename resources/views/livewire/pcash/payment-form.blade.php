@@ -49,9 +49,9 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                            @if(!$status)
+                           {{-- @if(!$status)
                                 <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Amount</button>
-                            @endif
+                            @endif --}}
                         @foreach($paymentAmount as $key => $paymentAmount)
 
                        
@@ -68,11 +68,16 @@
                                     @endforeach
                                 </select>
 
-                                @if($key !== 0)
-                                    @if(!$status)
-                                        <button type="button" class="btn btn-danger ms-2"  wire:click="removePaymentAmount({{ $key }})">Remove</button>
-                                    @endif
+                                @if(!$status)
+                                    <div class="col-2">
+                                        @if($key == 0)
+                                            <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>    
+                                        @else
+                                            <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
+                                        @endif
+                                    </div>
                                 @endif
+
                             </div>
                         </div>
                         @error('paymentAmount.*.amount') <div class="text-danger">{{ $message }}</div> @enderror

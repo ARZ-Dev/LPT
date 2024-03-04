@@ -61,17 +61,7 @@
 		</li>
 
 
-		<li class="menu-item
-            {{     request()->is('category')
-                || request()->is('currency')
-                || request()->is('till')
-                || request()->is('payment')
-                || request()->is('receipt')
-                || request()->is('transfer')
-                || request()->is('exchange')
-                || request()->is('report')
-                ? "active open" : "" }}"
-        >
+			<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'report') ? 'active open' : '' }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
@@ -80,37 +70,37 @@
 
 			<ul class="menu-sub">
 
-				<li class="menu-item {{ request()->is('category') ? "active" : "" }}">
+			<li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
 					<a href="{{ route('category') }}" class="menu-link">
 						<div data-i18n="Category">Category</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('currency') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('currency*') ? "active" : "" }}">
 					<a href="{{ route('currency') }}" class="menu-link">
 						<div data-i18n="Currency">Currency</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('till') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('till*') ? "active" : "" }}">
 					<a href="{{ route('till') }}" class="menu-link">
 						<div data-i18n="Till">Till</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('payment') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
 					<a href="{{ route('payment') }}" class="menu-link">
 						<div data-i18n="Payment">Payment</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('receipt') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('receipt*') ? "active" : "" }}">
 					<a href="{{ route('receipt') }}" class="menu-link">
 						<div data-i18n="Receipt">Receipt</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('transfer') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('transfer*') ? "active" : "" }}">
 					<a href="{{ route('transfer') }}" class="menu-link">
 						<div data-i18n="Transfer">Transfer</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('exchange') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('exchange*') ? "active" : "" }}">
 					<a href="{{ route('exchange') }}" class="menu-link">
 						<div data-i18n="Exchange">Exchange</div>
 					</a>
