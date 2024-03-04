@@ -13,13 +13,11 @@ class TillView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
-
     public $tills;
 
     public function mount(){
 
         $this->authorize('till-list');
-
         $this->tills = Till::with(['user'])->get();
         
     }

@@ -12,6 +12,13 @@ class ReceiptView extends Component
     use AuthorizesRequests;
 
     protected $listeners = ['delete'];
+    public $receipts;
+
+    public function mount(){
+        $this->authorize('receipt-list');
+        $this->receipts = Receipt::with(['user', 'receiptAmount'])->get();
+
+    }
 
 
 
@@ -29,13 +36,6 @@ class ReceiptView extends Component
 
     public function render()
     {
-        $data = [];
-
-        $receipts = Receipt::with(['user', 'receiptAmount'])->get();
-
-        $data['receipts'] = $receipts;
-        
-
-        return view('livewire.pcash.receipt-view', $data);
+        return view('livewire.pcash.receipt-view');
     }
 }
