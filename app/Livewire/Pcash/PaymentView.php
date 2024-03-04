@@ -15,7 +15,7 @@ class PaymentView extends Component
     public $payments;
 
     public function mount(){
-
+        $this->authorize('payment-list');
         $this->payments = Payment::with(['category', 'subCategory', 'paymentAmount'])->get();
 
     }

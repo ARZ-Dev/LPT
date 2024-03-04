@@ -15,6 +15,7 @@ class ReceiptView extends Component
     public $receipts;
 
     public function mount(){
+        $this->authorize('receipt-list');
         $this->receipts = Receipt::with(['user', 'receiptAmount'])->get();
 
     }

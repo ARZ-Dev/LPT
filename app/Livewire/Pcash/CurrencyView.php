@@ -15,7 +15,7 @@ class CurrencyView extends Component
     public $currencies;
 
     public function mount(){
-
+        $this->authorize('currency-list');
         $this->currencies = Currency::all();
 
     }

@@ -16,15 +16,8 @@ class TillView extends Component
     public $tills;
 
     public function mount(){
-        $this->tills =  Till::with(['user'])->get();
-    }
-
-    public $tills;
-
-    public function mount(){
 
         $this->authorize('till-list');
-
         $this->tills = Till::with(['user'])->get();
         
     }

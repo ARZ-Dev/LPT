@@ -15,7 +15,7 @@ class ExchangeView extends Component
     public $exchanges;
 
     public function mount(){
-
+        $this->authorize('exchange-list');
         $this->exchanges = Exchange::with('fromCurrency','toCurrency')->get();
 
     }

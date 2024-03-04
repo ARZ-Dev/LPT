@@ -16,7 +16,7 @@ class CategoryView extends Component
     public $categories;
 
     public function mount(){
-
+        $this->authorize('category-list');
         $this->categories = Category::all();
         
     }

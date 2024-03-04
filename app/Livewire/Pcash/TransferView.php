@@ -15,7 +15,7 @@ class TransferView extends Component
     public $transfers;
 
     public function mount(){
-
+        $this->authorize('transfers-list');
         $this->transfers = Transfer::with(['fromTill.user','toTill'])->get();
     }
 
