@@ -22,7 +22,7 @@
                         <td>{{ $payment->category->category_name }}</td>
                         <td>{{ $payment->subCategory->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
-                        <td>{{ $payment->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('payment-list')
                                 <a href="{{ route('payment.view', ['id' => $payment->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>

@@ -32,7 +32,7 @@
                         <td>{{ $exchange->result }}</td>
 
 
-                        <td>{{ $exchange->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $exchange->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('exchange-list')
                                 <a href="{{ route('exchange.view', ['id' => $exchange->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>

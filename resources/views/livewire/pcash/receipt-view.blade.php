@@ -22,7 +22,7 @@
                         <td>{{ $receipt->user->username }}</td>
                         <td>{{ $receipt->paid_by }}</td>
                         <td>{{ $receipt->description }}</td>
-                        <td>{{ $receipt->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
                             @can('receipt-list')

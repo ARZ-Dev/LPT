@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ $transfer->fromTill->user->username ?? 'N/A'}}</td>
                         <td>{{ $transfer->toTill->name ?? 'N/A' }}</td>
-                        <td>{{ $transfer->created_at->format('m-d-Y h:i a') }}</td>
+                        <td>{{ $transfer->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
                             @can('transfer-list')
