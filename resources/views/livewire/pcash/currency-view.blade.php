@@ -4,7 +4,7 @@
     <p><b>Currencies List</b></p>
     <a class="btn btn-primary h-50 mb-4" href="{{ route('currency.create') }}">Add Currency</a>
 
-    <ul class="list-group drag-and-drop-lists" id="supervisors-list">
+    <ul class="list-group drag-and-drop-lists" id="row-list">
         @foreach($currencies->sortBy('list_order') as $currency)
             <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center" ondblclick="move(this)">
                 <span class="badge badge-center rounded-pill bg-primary ">{{ $currency->symbol }}</span>
@@ -12,7 +12,7 @@
                 <div class="d-flex justify-content-start align-items-center user-name">
                     <div class="avatar-wrapper">
                         <div class="avatar avatar-sm me-3">
-                            <span class="avatar-initial rounded-circle bg-label-primary order-number">{{ $currency->list_order }}</span>
+                            <span class="avatar-initial rounded-circle bg-label-primary order-number" >{{ $currency->list_order }}</span>
                         </div>
                     </div>
                 </div>
@@ -32,29 +32,26 @@
     </ul>
 </div>
 
-<a class="btn btn-primary h-50 mt-4" wire:click="store" id="saveOrderBtn" style="color:white">Save list order</a>
-
 
     @script
         @include('livewire.deleteConfirm')
     @endscript
 
-    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script>
-        const supervisorsList = document.getElementById('supervisors-list');
-        const saveOrderBtn = document.getElementById('saveOrderBtn');
 
-        
+    @script
+    <script>
+        const rowList = document.getElementById('row-list');
+
         $(document).ready(function () {
-            if (supervisorsList) {
-                Sortable.create(supervisorsList, {
+            if (rowList) {
+                Sortable.create(rowList, {
                     animation: 150,
                     group: 'taskList',
                     onEnd: updateOrder
                 });
             }
      
-            supervisorsList.querySelectorAll('.drag-item').forEach(function (row) {
+            rowList.querySelectorAll('.drag-item').forEach(function (row) {
             row.addEventListener('click', function () {
                 const orderSpan = row.querySelector('.order-number');
                 alert("List Order: " + orderSpan.textContent);
@@ -64,9 +61,8 @@
         });
 
         function updateOrder() {
-            const supervisors = Array.from(supervisorsList.children);
+            const supervisors = Array.from(rowList.children);
             updateSupervisorsOrder(supervisors);
-
         }
         function updateSupervisorsOrder(supervisors) {
             supervisorsOrder = [];
@@ -78,11 +74,8 @@
             });
         }
 
-
     </script>
-
-
-
+ @endscript
 
 
     

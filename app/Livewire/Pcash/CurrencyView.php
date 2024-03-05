@@ -16,8 +16,6 @@ class CurrencyView extends Component
 
     public function mount(){
         $this->authorize('currency-list');
-        $this->currencies = Currency::all();
-
     }
 
     public function delete($id)
@@ -32,18 +30,27 @@ class CurrencyView extends Component
         return to_route('currency')->with('success', 'currency has been deleted successfully!');
     }
 
-    public function store(){
-        $currencies = Currency::orderBy('list_order')->get();
-    
-        foreach ($currencies as $index => $currency) {
-            $currency->list_order = $index + 1;
-            $currency->save();
+
+    // public function store(){
+    //     $currencies = Currency::orderBy('list_order')->get();
+    //     foreach ($currencies as $key => $currency) {
+    //         Currency::create([
+    //             'list_order' => $key + 1
+    //         ]);
+    //     }
+    // }
+
+    public function updatedCurrenciesOrder($newOrder)
+    {
+        foreach ($newOrder as $index => $currencyId) {
+            $currency = Currency::find($currencyId);
+            $currency->update(['list_order' => count($newOrder) - $index]);
         }
     }
 
-
     public function render()
     {
+        $this->currencies = Currency::orderBy('list_order')->get();
         return view('livewire.pcash.currency-view');
     }
 }
