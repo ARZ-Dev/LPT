@@ -12,11 +12,11 @@ class CurrencySeeder extends Seeder
     {
         $currencies = [
             [
-                'name' => 'Dollar',
+                'name' => 'USD',
                 'symbol' => '$',
                 'list_order' => '2',
 
-             
+
             ],
             [
                 'name' => 'Euro',
@@ -26,7 +26,7 @@ class CurrencySeeder extends Seeder
 
             ],
             [
-                'name' => 'Lira',
+                'name' => 'LBP',
                 'symbol' => 'L£',
                 'list_order' => '3',
 
@@ -42,7 +42,7 @@ class CurrencySeeder extends Seeder
            DB::table('currencies')->insertGetId($currency);
         }
 
-        
+
     }
 }
 
