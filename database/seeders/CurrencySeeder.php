@@ -14,16 +14,22 @@ class CurrencySeeder extends Seeder
             [
                 'name' => 'Dollar',
                 'symbol' => '$',
+                'list_order' => '2',
+
              
             ],
             [
                 'name' => 'Euro',
                 'symbol' => '€',
+                'list_order' => '1',
+
 
             ],
             [
                 'name' => 'Lira',
                 'symbol' => 'L£',
+                'list_order' => '3',
+
 
             ],
         ];

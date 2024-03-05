@@ -11,13 +11,11 @@ class CurrencyView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['delete'];
+    protected $listeners = ['delete', 'updateOrder'];
     public $currencies;
 
     public function mount(){
         $this->authorize('currency-list');
-        $this->currencies = Currency::all();
-
     }
 
     public function delete($id)
@@ -32,9 +30,24 @@ class CurrencyView extends Component
         return to_route('currency')->with('success', 'currency has been deleted successfully!');
     }
 
+    public function updateOrder($currenciesOrder)
+    {
+        foreach ($currenciesOrder as $index => $currencyId) {
+            $currency = Currency::find($currencyId);
+            $currency->update([
+                'list_order' => $index + 1,
+            ]);
+        }
+
+        $this->dispatch('swal:success', [
+            'title' => 'Success!',
+            'text'  => "Currencies order has been updated successfully!",
+        ]);
+    }
 
     public function render()
     {
+        $this->currencies = Currency::orderBy('list_order')->get();
         return view('livewire.pcash.currency-view');
     }
 }

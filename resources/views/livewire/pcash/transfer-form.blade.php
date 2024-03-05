@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="col-12 col-md-6 ">
-                        <label class="form-label" for="to_till_id">From Tills</label>
+                        <label class="form-label" for="to_till_id">To Tills</label>
                             <select wire:model="to_till_id" class="form-select selectpicker w-100" aria-label="Default select example" name="to_till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 <option @if($status == 1) disabled @endif>Open this select menu</option>
                                     @foreach($toTills as $toTill)

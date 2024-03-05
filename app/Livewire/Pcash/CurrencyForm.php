@@ -20,7 +20,7 @@ class CurrencyForm extends Component
 
     public $name;
     public $symbol;
-    
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -36,7 +36,6 @@ class CurrencyForm extends Component
 
             $this->name = $this->currency->name;
             $this->symbol = $this->currency->symbol;
-
         }
 
     }
@@ -46,7 +45,6 @@ class CurrencyForm extends Component
         $rules = [
             'name' => ['required', 'string'],
             'symbol' => ['required', 'string'],
-
         ];
 
         return $rules;
@@ -61,7 +59,9 @@ class CurrencyForm extends Component
     Currency::create([
         'name' => $this->name ,
         'symbol' => $this->symbol ,
+        'list_order' => Currency::max('list_order') + 1,
 
+  
     ]);
 
 
@@ -80,8 +80,6 @@ class CurrencyForm extends Component
         $this->currency->update([
             'name' => $this->name ,
             'symbol' => $this->symbol ,
-    
-
         ]);
 
         session()->flash('success', 'currency has been updated successfully!');
