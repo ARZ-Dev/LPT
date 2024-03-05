@@ -148,7 +148,7 @@ class TillForm extends Component
             $tillAmountsIds[] = $tillAmount->id;
         }
 
-        TillAmount::whereNotIn('id', $tillAmountsIds)->where('user_id', $this->user_id)->delete();
+        TillAmount::whereNotIn('id', $tillAmountsIds)->where('till_id', $this->till->id)->delete();
 
         session()->flash('success', 'till has been updated successfully!');
 
