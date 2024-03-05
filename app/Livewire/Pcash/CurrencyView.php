@@ -33,7 +33,12 @@ class CurrencyView extends Component
     }
 
     public function store(){
-        // dd('hey');
+        $currencies = Currency::orderBy('list_order')->get();
+    
+        foreach ($currencies as $index => $currency) {
+            $currency->list_order = $index + 1;
+            $currency->save();
+        }
     }
 
 
