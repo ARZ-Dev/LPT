@@ -1,22 +1,21 @@
 <div>
 
 <div class="col-md-12 col-12 mb-md-0 mb-4">
-    <p><b>Currencies List</b></p>
-    <a class="btn btn-primary h-50 mb-4" href="{{ route('currency.create') }}">Add Currency</a>
+    <div class="d-flex justify-content-between">
+        <h4 class="fw-semibold">Currencies List Order</h4>
+        <a class="btn btn-primary h-50 mb-4" href="{{ route('currency.create') }}">Add Currency</a>
+    </div>
 
-    <ul class="list-group drag-and-drop-lists" id="row-list">
+    <ul class="list-group drag-and-drop-lists bg-white" id="row-list">
         @foreach($currencies->sortBy('list_order') as $currency)
             <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center" ondblclick="move(this)">
                 <input type="hidden" value="{{ $currency->id }}">
-                <span class="badge badge-center rounded-pill bg-primary ">{{ $currency->symbol }}</span>
-                <span>{{ $currency->name }}</span>
-                <div class="d-flex justify-content-start align-items-center user-name">
-                    <div class="avatar-wrapper">
-                        <div class="avatar avatar-sm me-3">
-                            <span class="avatar-initial rounded-circle bg-label-primary order-number" >{{ $currency->list_order }}</span>
-                        </div>
+                <div class="avatar-wrapper">
+                    <div class="avatar avatar-sm me-3">
+                        <span class="avatar-initial rounded-circle bg-label-primary order-number" >{{ $currency->list_order }}</span>
                     </div>
                 </div>
+                <span>{{ $currency->name }} - {{ $currency->symbol }}</span>
                 <div>
                     @can('currency-list')
                         <a href="{{ route('currency.view', ['id' => $currency->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
@@ -51,14 +50,6 @@
                     onEnd: updateOrder
                 });
             }
-     
-            rowList.querySelectorAll('.drag-item').forEach(function (row) {
-                row.addEventListener('click', function () {
-                    const orderSpan = row.querySelector('.order-number');
-                    alert("List Order: " + orderSpan.textContent);
-                });
-            });
-
         });
 
         function updateOrder() {
@@ -78,7 +69,7 @@
         }
 
     </script>
- @endscript
+    @endscript
 
 
     

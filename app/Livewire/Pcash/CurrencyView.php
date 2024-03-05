@@ -38,6 +38,11 @@ class CurrencyView extends Component
                 'list_order' => $index + 1,
             ]);
         }
+
+        $this->dispatch('swal:success', [
+            'title' => 'Success!',
+            'text'  => "Currencies order has been updated successfully!",
+        ]);
     }
 
     public function render()
