@@ -11,7 +11,7 @@ class CurrencyView extends Component
 {
     use AuthorizesRequests;
 
-    protected $listeners = ['delete'];
+    protected $listeners = ['delete', 'updateOrder'];
     public $currencies;
 
     public function mount(){
@@ -30,21 +30,13 @@ class CurrencyView extends Component
         return to_route('currency')->with('success', 'currency has been deleted successfully!');
     }
 
-
-    // public function store(){
-    //     $currencies = Currency::orderBy('list_order')->get();
-    //     foreach ($currencies as $key => $currency) {
-    //         Currency::create([
-    //             'list_order' => $key + 1
-    //         ]);
-    //     }
-    // }
-
-    public function updatedCurrenciesOrder($newOrder)
+    public function updateOrder($currenciesOrder)
     {
-        foreach ($newOrder as $index => $currencyId) {
+        foreach ($currenciesOrder as $index => $currencyId) {
             $currency = Currency::find($currencyId);
-            $currency->update(['list_order' => count($newOrder) - $index]);
+            $currency->update([
+                'list_order' => $index + 1,
+            ]);
         }
     }
 
