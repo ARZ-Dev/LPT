@@ -32,6 +32,10 @@ class CurrencyView extends Component
         return to_route('currency')->with('success', 'currency has been deleted successfully!');
     }
 
+    public function store(){
+        // dd('hey');
+    }
+
 
     public function render()
     {

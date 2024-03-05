@@ -36,6 +36,7 @@
                             />
                             @error('symbol') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
+     
            
                     </form>
                 </div>
