@@ -1,5 +1,5 @@
 <div>
-  
+
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Tills List</h4>
@@ -24,13 +24,13 @@
 
                         <td>
                             @can('till-list')
-                                <a href="{{ route('till.view', ['id' => $till->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                                <a href="{{ route('till.view', ['id' => $till->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm"></i></a>
                             @endcan
                             @can('till-edit')
-                                <a href="{{ route('till.edit', $till->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('till.edit', $till->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm mx-2"></i></a>
                             @endcan
                             @can('till-delete')
-                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $till->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $till->id }}"><i class="ti ti-trash ti-sm text-danger"></i></a>
                             @endcan
                         </td>
                     </tr>

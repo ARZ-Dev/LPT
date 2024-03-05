@@ -14,10 +14,13 @@ class TillAmount extends Model
 
     protected $guarded = [];
 
- 
-
     public function till()
     {
         return $this->belongsTo(Till::class,'till_id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 }
