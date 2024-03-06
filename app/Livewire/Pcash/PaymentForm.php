@@ -78,6 +78,10 @@ class PaymentForm extends Component
             $this->paymentAmount = $this->payment->paymentAmount->toArray();
 
         }
+
+
+
+       
         
     }
     
@@ -109,9 +113,10 @@ class PaymentForm extends Component
         if($this->editing == true){
             $removedItemId = $this->paymentAmount[$key]['id'] ?? null;
             $this->deletedPaymentAmount[] = $removedItemId;
+            $this->sanitizeNumber($this->paymentAmount[$key]['amount']);
         }
 
-        unset($this->paymentAmount[$key]);
+        unset($this->paymentAmount[$key ]);
         $this->paymentAmount = array_values($this->paymentAmount);
     }
 
@@ -130,65 +135,63 @@ class PaymentForm extends Component
     }
 
 
-public function store()
-{
-    $this->authorize('payment-edit');
+    public function store()
+    {
+        $this->authorize('payment-edit');
 
-    $this->validate();
+        $this->validate();
 
-    DB::beginTransaction();
-    try {
+        DB::beginTransaction();
+        try {
 
-    $payment = Payment::create([
-        'till_id' => $this->till_id,
-        'category_id' => $this->category_id,
-        'sub_category_id' => $this->sub_category_id,
-        'description' => $this->description,
-    ]);
-
-    $paymentId = $payment->id;
-    foreach ($this->paymentAmount as $paymentAmount) {
-        PaymentAmount::create([
-            'payment_id' => $paymentId,
-            'currency_id' => $paymentAmount['currency_id'],
-            'amount' => $this->sanitizeNumber($paymentAmount['amount']),
+        $payment = Payment::create([
+            'till_id' => $this->till_id,
+            'category_id' => $this->category_id,
+            'sub_category_id' => $this->sub_category_id,
+            'description' => $this->description,
         ]);
-        
-        $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
 
-        if ($tillAmount->amount < $this->sanitizeNumber($paymentAmount['amount'])) {
-            throw new Exception("Cannot pay, payment amount does not exists");
+        $paymentId = $payment->id;
+        foreach ($this->paymentAmount as $paymentAmount) {
+            PaymentAmount::create([
+                'payment_id' => $paymentId,
+                'currency_id' => $paymentAmount['currency_id'],
+                'amount' => $this->sanitizeNumber($paymentAmount['amount']),
+            ]);
+            
+            $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
+
+            if ($tillAmount->amount < $this->sanitizeNumber($paymentAmount['amount'])) {
+                throw new Exception("Cannot pay, payment amount does not exists");
+            }
+
+            if ($tillAmount->amount > $this->sanitizeNumber( $paymentAmount['amount'])) {
+
+                $tillAmount->update([
+                    'amount' => $tillAmount->amount - $this->sanitizeNumber($paymentAmount['amount']),
+                ]);
+            }
         }
-
-        if ($tillAmount->amount > $this->sanitizeNumber( $paymentAmount['amount'])) {
-
-            $tillAmount->update([
-                'amount' => $tillAmount->amount - $this->sanitizeNumber($paymentAmount['amount']),
+        
+        session()->flash('success', 'Payment has been created successfully!');
+        
+        DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
             ]);
         }
-    }
-    
-    session()->flash('success', 'Payment has been created successfully!');
-    
-    DB::commit();
-} catch (\Exception $exception) {
-    DB::rollBack();
-    
-    return $this->dispatch('swal:error', [
-        'title' => 'Error!',
-        'text'  => $exception->getMessage(),
-    ]);
-    }
 
-    return redirect()->route('payment');
-}
+        return redirect()->route('payment');
+    }
 
 
 
     public function update()
     {
-
-        dd("Under Develpment");
         $this->authorize('payment-edit');
 
         $this->validate();
@@ -213,9 +216,12 @@ public function store()
                 $oldpaymentAmount = Payment::where('id', $this->payment_id)
                 ->with(['paymentamount' => function ($query) use ($paymentAmount) {
                     $query->where('currency_id', $paymentAmount['currency_id']);
-                }])->first();
-       
+                }])
+                ->first();
+                
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
+                $deletedPaymentAmount=PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->with('payment','payment.till','payment.till.tillAmount')->first();
+                
 
                 if ($tillAmount->amount < $this->sanitizeNumber($paymentAmount['amount'])) {
                     throw new Exception("Cannot pay, payment amount does not exists");
@@ -229,27 +235,35 @@ public function store()
                     PaymentAmount::create($data);
                 }
                 
+               
+                if($tillAmount->currency_id == $deletedPaymentAmount?->currency_id) {
+                    $updatedAmount = $tillAmount->amount + $deletedPaymentAmount->amount;
+                }
+                else {
+                    $updatedAmount = $oldpaymentAmount->paymentamount->pluck('amount')->first() + $tillAmount->amount  - $this->sanitizeNumber($paymentAmount['amount']);
+                }
+                
                 $tillAmount->update([
-                    'amount' => $oldpaymentAmount->paymentAmount->amount + $tillAmount->amount -  $this->sanitizeNumber($paymentAmount['amount'])  ,
+                    'amount' => $updatedAmount,
                 ]);
+            
             }
         }
-
             PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->delete();
 
             session()->flash('success', 'payment has been updated successfully!');
             
             DB::commit();
-        }catch (\Exception $exception) {
-            DB::rollBack();
-            $this->dispatch('swal:error', [
-                'title' => 'Error!',
-                'text'  => $exception->getMessage(),
-            ]);
-    }
+            return redirect()->route('payment');
+            }catch (\Exception $exception) {
+                DB::rollBack();
+                $this->dispatch('swal:error', [
+                    'title' => 'Error!',
+                    'text'  => $exception->getMessage(),
+                ]);
+            }
 
-        return redirect()->route('payment');
-    }
+        }
     
 
     public function updateSubCategories()
