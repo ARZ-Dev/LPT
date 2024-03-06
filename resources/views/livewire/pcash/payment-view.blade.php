@@ -9,6 +9,7 @@
             <table class="datatables-payment dataTable table border-top">
                 <thead>
                  <tr>
+                    <th>Till</th>
                     <th>Category</th>
                     <th>Sub Category</th>
                     <th>Description</th>
@@ -19,6 +20,7 @@
                 <tbody>
                 @foreach($payments as $payment)
                     <tr>
+                        <td>{{ $payment->till->name }}</td>
                         <td>{{ $payment->category->category_name }}</td>
                         <td>{{ $payment->subCategory->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>

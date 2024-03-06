@@ -15,6 +15,11 @@ class Payment extends Model
 
     protected $guarded = [];
 
+    public function till()
+    {
+        return $this->belongsTo(Till::class,'till_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class,'category_id');

@@ -27,6 +27,10 @@ class ExchangeForm extends Component
     public $description;
     public $result;
 
+    public $from_currency_list;
+    public $to_currency_list;
+
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -48,7 +52,6 @@ class ExchangeForm extends Component
             $this->rate = number_format($this->exchange->rate);
             $this->description = $this->exchange->description;
             $this->result = number_format($this->exchange->result);
-
         }
 
     }
@@ -68,13 +71,47 @@ class ExchangeForm extends Component
         return $rules;
     }
 
+    public function emptyAmountsFields(){
+        $this->amount="";
+        $this->result="";
+        $this->rate="";
+    }
 
-    public function calculateResult($type){
-        if($type == 'rate' && $this->amount>0 && $this->rate>0){
-            $this->result=$this->sanitizeNumber($this->amount)*$this->sanitizeNumber($this->rate);
-        }elseif($type == 'result' && $this->amount>0 && $this->result>0){
-            $this->rate=$this->sanitizeNumber($this->result)/$this->sanitizeNumber($this->amount);
+    public function calculateResult(){
+
+        if(!isset($this->from_currency_list) || !isset($this->to_currency_list)){
+            return;
         }
+
+        $this->amount=$this->sanitizeNumber($this->amount);
+        $this->result=$this->sanitizeNumber($this->result);
+        $this->rate=$this->sanitizeNumber($this->rate);
+        
+        if( $this->amount>0 && $this->result>0 && $this->rate==""){
+            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
+                $this->rate=round($this->result/$this->amount,2);
+            }
+            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
+                $this->rate=round($this->amount/$this->result,2);
+            }
+        }
+        else if($this->result>0 && $this->rate>0 && $this->amount==""){
+            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
+                $this->amount=$this->result/$this->rate;
+            }
+            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
+                $this->amount=$this->result*$this->rate;
+            }
+        }
+        else if($this->amount>0 && $this->rate>0){
+            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
+                $this->result=round($this->amount*$this->rate,2);
+            }
+            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
+                $this->result=round($this->amount/$this->rate,2);
+            }
+        }
+
     }
 
 
@@ -133,7 +170,10 @@ class ExchangeForm extends Component
     
 
     public function render()
-    {
+    {  
+        $this->from_currency_list = Currency::find($this->from_currency_id);
+        $this->to_currency_list = Currency::find($this->to_currency_id);
+
         return view('livewire.pcash.exchange-form');
     }
 }
