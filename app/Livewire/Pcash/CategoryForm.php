@@ -76,7 +76,7 @@ class CategoryForm extends Component
             $this->deletedSubCategory[] = $removedItemId;
         }
             unset($this->sub_category[$index]);
-            $this->sub_category = array_values($this->sub_category);
+
 
     }
     

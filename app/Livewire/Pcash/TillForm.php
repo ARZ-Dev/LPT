@@ -83,7 +83,7 @@ class TillForm extends Component
     public function removeRow($key)
     {
         unset($this->tillAmounts[$key]);
-        $this->tillAmounts = array_values($this->tillAmounts);
+
     }
 
     private function sanitizeNumber($number)

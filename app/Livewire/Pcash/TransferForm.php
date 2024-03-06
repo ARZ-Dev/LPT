@@ -85,7 +85,7 @@ class TransferForm extends Component
         }
 
         unset($this->transferAmount[$key]);
-        $this->transferAmount = array_values($this->transferAmount);
+
     }
 
     private function sanitizeNumber($number)

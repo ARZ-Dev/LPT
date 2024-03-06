@@ -108,6 +108,8 @@ class PaymentForm extends Component
         $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
     }
 
+    
+
     public function removeRow($key)
     {
         if($this->editing == true){
@@ -117,7 +119,7 @@ class PaymentForm extends Component
         }
 
         unset($this->paymentAmount[$key ]);
-        $this->paymentAmount = array_values($this->paymentAmount);
+   
     }
 
 
@@ -193,77 +195,85 @@ class PaymentForm extends Component
     public function update()
     {
         $this->authorize('payment-edit');
-
+    
         $this->validate();
-
+    
         DB::beginTransaction();
-
+    
         try {
             $this->payment->update([
-                'till_id' => $this->till_id ,
-                'category_id' => $this->category_id ,
-                'sub_category_id' => $this->sub_category_id ,
-                'description' => $this->description ,
+                'till_id' => $this->till_id,
+                'category_id' => $this->category_id,
+                'sub_category_id' => $this->sub_category_id,
+                'description' => $this->description,
             ]);
-
+    
             foreach ($this->paymentAmount as $paymentAmount) {
                 $data = [
                     'payment_id' => $this->payment->id,
                     'amount' => $this->sanitizeNumber($paymentAmount['amount']),
                     'currency_id' => $paymentAmount['currency_id'],
                 ];
-
+    
                 $oldpaymentAmount = Payment::where('id', $this->payment_id)
-                ->with(['paymentamount' => function ($query) use ($paymentAmount) {
-                    $query->where('currency_id', $paymentAmount['currency_id']);
-                }])
-                ->first();
-                
-                $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
-                $deletedPaymentAmount=PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->with('payment','payment.till','payment.till.tillAmount')->first();
-                
-
+                    ->with(['paymentamount' => function ($query) use ($paymentAmount) {
+                        $query->where('currency_id', $paymentAmount['currency_id']);
+                    }])
+                    ->first();
+    
+                $tillAmount = TillAmount::where('till_id', $this->till_id)
+                    ->where('currency_id', $paymentAmount['currency_id'])
+                    ->first();
+    
                 if ($tillAmount->amount < $this->sanitizeNumber($paymentAmount['amount'])) {
-                    throw new Exception("Cannot pay, payment amount does not exists");
+                    throw new Exception("Cannot pay, payment amount does not exist");
                 }
-        
-                if ($tillAmount->amount > $this->sanitizeNumber( $paymentAmount['amount'])) {
-
-                if (isset($paymentAmount['id'])) {
-                    PaymentAmount::updateOrCreate(['id' => $paymentAmount['id']], $data);
-                } else {
-                    PaymentAmount::create($data);
+    
+                if ($tillAmount->amount > $this->sanitizeNumber($paymentAmount['amount'])) {
+                    if (isset($paymentAmount['id'])) {
+                        PaymentAmount::updateOrCreate(['id' => $paymentAmount['id']], $data);
+                    } else {
+                        PaymentAmount::create($data);
+                    }
+    
+                    $updatedAmount = $oldpaymentAmount->paymentamount->pluck('amount')->first() + $tillAmount->amount - $this->sanitizeNumber($paymentAmount['amount']);
+                    $tillAmount->update([
+                        'amount' => $updatedAmount,
+                    ]);
                 }
-                
-               
-                if($tillAmount->currency_id == $deletedPaymentAmount?->currency_id) {
-                    $updatedAmount = $tillAmount->amount + $deletedPaymentAmount->amount;
-                }
-                else {
-                    $updatedAmount = $oldpaymentAmount->paymentamount->pluck('amount')->first() + $tillAmount->amount  - $this->sanitizeNumber($paymentAmount['amount']);
-                }
-                
-                $tillAmount->update([
-                    'amount' => $updatedAmount,
-                ]);
-            
             }
-        }
-            PaymentAmount::whereIn('id',$this->deletedPaymentAmount)->delete();
-
-            session()->flash('success', 'payment has been updated successfully!');
-            
+    
+            // Handle deleted payment amounts
+            $deletedPaymentAmounts = PaymentAmount::whereIn('id', $this->deletedPaymentAmount)->get();
+    
+            foreach ($deletedPaymentAmounts as $deletedPaymentAmount) {
+                $deletedTillAmount = TillAmount::where('till_id', $this->till_id)
+                    ->where('currency_id', $deletedPaymentAmount->currency_id)
+                    ->first();
+    
+                // Assuming $deletedTillAmount is found, update its amount
+                if ($deletedTillAmount) {
+                    $deletedTillAmount->update([
+                        'amount' => $deletedTillAmount->amount + $deletedPaymentAmount->amount,
+                    ]);
+                }
+            }
+    
+            PaymentAmount::whereIn('id', $this->deletedPaymentAmount)->delete();
+    
+            session()->flash('success', 'Payment has been updated successfully!');
+    
             DB::commit();
             return redirect()->route('payment');
-            }catch (\Exception $exception) {
-                DB::rollBack();
-                $this->dispatch('swal:error', [
-                    'title' => 'Error!',
-                    'text'  => $exception->getMessage(),
-                ]);
-            }
-
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text' => $exception->getMessage(),
+            ]);
         }
+    }
+    
     
 
     public function updateSubCategories()
