@@ -15,7 +15,7 @@
                             <label class="form-label" for="from_currency_id">from<span style="color: red;">*</span></label>
                             <div wire:ignore>
 
-                                <select wire:model="from_currency_id"  class="selectpicker w-100" title="Select From Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <select wire:model="from_currency_id" wire:change="emptyAmountsFields()"  class="selectpicker w-100" title="Select From Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
                                         <option @if($status == 1) disabled @endif  {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
                                     @endforeach
@@ -26,7 +26,7 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="to_currency_id">to<span style="color: red;">*</span></label>
                             <div wire:ignore>
-                                <select wire:model="to_currency_id"  class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <select wire:model="to_currency_id" wire:change="emptyAmountsFields()"  class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
                                         <option @if($status == 1) disabled @endif  {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
                                     @endforeach
@@ -39,7 +39,7 @@
                             <label class="form-label" for="amount">amount<span style="color: red;">*</span></label>
                             <input
                             wire:model="amount"
-                            wire:change="calculateResult('rate')"
+                            wire:change="calculateResult()"
                             type="text"
                             id="amount"
                             class="form-control cleave-input"
@@ -52,7 +52,7 @@
                             <label class="form-label" for="rate">rate<span style="color: red;">*</span></label>
                             <input
                             wire:model="rate"
-                            wire:change="calculateResult('rate')"
+                            wire:change="calculateResult()"
                             type="text"
                             id="rate"
                             class="form-control cleave-input"
@@ -65,7 +65,7 @@
                             <label class="form-label" for="rate">result<span style="color: red;">*</span></label>
                             <input
                             wire:model="result"
-                            wire:change="calculateResult('result')"
+                            wire:change="calculateResult()"
                             type="text"
                             id="result"
                             class="form-control cleave-input"

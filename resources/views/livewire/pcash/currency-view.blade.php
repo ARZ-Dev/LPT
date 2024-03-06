@@ -7,7 +7,7 @@
     </div>
 
     <ul class="list-group drag-and-drop-lists bg-white" id="row-list">
-        @foreach($currencies->sortBy('list_order') as $currency)
+        @foreach($currencies as $currency)
             <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center" ondblclick="move(this)">
                 <input type="hidden" value="{{ $currency->id }}">
                 <div class="avatar-wrapper">
