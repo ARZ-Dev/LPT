@@ -27,6 +27,10 @@ class ExchangeForm extends Component
     public $description;
     public $result;
 
+    public $from_currency_list;
+    public $to_currency_list;
+
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -37,6 +41,8 @@ class ExchangeForm extends Component
         $this->status=$status;
 
         $this->currencies = Currency::all();
+
+
 
         if ($id) {
             $this->editing = true;
@@ -68,12 +74,20 @@ class ExchangeForm extends Component
         return $rules;
     }
 
-
     public function calculateResult($type){
         if($type == 'rate' && $this->amount>0 && $this->rate>0){
-            $this->result=$this->sanitizeNumber($this->amount)*$this->sanitizeNumber($this->rate);
+            if($this->from_currency_list->list_order > $this->to_currency_list->list_order  ){
+                $this->result=$this->sanitizeNumber($this->amount)/$this->sanitizeNumber($this->rate);
+            }elseif($this->from_currency_list->list_order < $this->to_currency_list->list_order){
+                $this->result=$this->sanitizeNumber($this->amount)*$this->sanitizeNumber($this->rate);
+            }
+
         }elseif($type == 'result' && $this->amount>0 && $this->result>0){
-            $this->rate=$this->sanitizeNumber($this->result)/$this->sanitizeNumber($this->amount);
+            if($this->from_currency_list->list_order > $this->to_currency_list->list_order){
+                $this->rate=$this->sanitizeNumber($this->result)*$this->sanitizeNumber($this->amount);
+            }elseif($this->from_currency_list->list_order < $this->to_currency_list->list_order){
+                $this->rate=$this->sanitizeNumber($this->result)/$this->sanitizeNumber($this->amount);
+            }
         }
     }
 
@@ -133,7 +147,10 @@ class ExchangeForm extends Component
     
 
     public function render()
-    {
+    {  
+        $this->from_currency_list = Currency::find($this->from_currency_id);
+        $this->to_currency_list = Currency::find($this->to_currency_id);
+
         return view('livewire.pcash.exchange-form');
     }
 }
