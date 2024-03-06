@@ -187,6 +187,8 @@ public function store()
 
     public function update()
     {
+
+        dd("Under Develpment");
         $this->authorize('payment-edit');
 
         $this->validate();
