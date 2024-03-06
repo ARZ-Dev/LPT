@@ -88,7 +88,7 @@ class ReceiptForm extends Component
     public function removeRow($key)
     {
         unset($this->receiptAmount[$key]);
-        $this->receiptAmount = array_values($this->receiptAmount);
+
     }
 
 

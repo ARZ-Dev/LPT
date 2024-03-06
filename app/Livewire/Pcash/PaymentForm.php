@@ -108,6 +108,8 @@ class PaymentForm extends Component
         $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
     }
 
+    
+
     public function removeRow($key)
     {
         if($this->editing == true){
@@ -117,7 +119,7 @@ class PaymentForm extends Component
         }
 
         unset($this->paymentAmount[$key ]);
-        $this->paymentAmount = array_values($this->paymentAmount);
+   
     }
 
 
