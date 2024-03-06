@@ -6,6 +6,7 @@ use App\Models\Currency;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\User;
+use App\Utils\Constants;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -40,7 +41,7 @@ class TillForm extends Component
 
         if ($id) {
             $this->editing = true;
-            $this->till = Till::findOrFail($id);
+            $this->till = Till::with(['tillAmount' => ['currency']])->findOrFail($id);
 
             $this->user_id = $this->till->user_id;
             $this->name = $this->till->name;
@@ -49,7 +50,8 @@ class TillForm extends Component
             foreach ($this->till->tillAmount as $tillAmount) {
                 $this->tillAmounts[] = [
                     'amount' => number_format($tillAmount->amount),
-                    'currency_id' => $tillAmount->currency_id
+                    'currency_id' => $tillAmount->currency_id,
+                    'currency_name' => $tillAmount->currency?->name,
                 ];
             }
         }
@@ -146,7 +148,7 @@ class TillForm extends Component
             $tillAmountsIds[] = $tillAmount->id;
         }
 
-        TillAmount::whereNotIn('id', $tillAmountsIds)->where('user_id', $this->user_id)->delete();
+        TillAmount::whereNotIn('id', $tillAmountsIds)->where('till_id', $this->till->id)->delete();
 
         session()->flash('success', 'till has been updated successfully!');
 
@@ -158,7 +160,9 @@ class TillForm extends Component
 
     public function render()
     {
-
-        return view('livewire.pcash.till-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.tills.till-view');
+        }
+        return view('livewire.pcash.tills.till-form');
     }
 }

@@ -21,7 +21,7 @@
         $title = ucwords(str_replace('-', ' ', $title));
     @endphp
 
-    <title>lpt - {{ $title }}</title>
+    <title>LPT - {{ $title }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{url('/assets/images/favicon.ico')}}" />

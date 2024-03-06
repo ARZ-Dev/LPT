@@ -19,7 +19,7 @@ class TillView extends Component
 
         $this->authorize('till-list');
         $this->tills = Till::with(['user'])->get();
-        
+
     }
 
     public function delete($id)
@@ -37,6 +37,6 @@ class TillView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.till-view');
+        return view('livewire.pcash.tills.till-index');
     }
 }

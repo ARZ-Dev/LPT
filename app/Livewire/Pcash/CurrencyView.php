@@ -16,6 +16,7 @@ class CurrencyView extends Component
 
     public function mount(){
         $this->authorize('currency-list');
+        $this->currencies = Currency::orderBy('list_order')->OrderBy('list_order')->get();
     }
 
     public function delete($id)
@@ -39,6 +40,8 @@ class CurrencyView extends Component
             ]);
         }
 
+        $this->currencies = Currency::orderBy('list_order')->OrderBy('list_order')->get();
+
         $this->dispatch('swal:success', [
             'title' => 'Success!',
             'text'  => "Currencies order has been updated successfully!",
@@ -47,7 +50,6 @@ class CurrencyView extends Component
 
     public function render()
     {
-        $this->currencies = Currency::orderBy('list_order')->get();
         return view('livewire.pcash.currency-view');
     }
 }
