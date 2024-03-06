@@ -65,6 +65,7 @@ class PaymentForm extends Component
         $this->updateSubCategories();
         
         if ($id) {
+            $this->payment_id=$id;
             $this->editing = true;
             $this->payment = Payment::findOrFail($id);
 
@@ -191,6 +192,7 @@ public function store()
         $this->validate();
 
         DB::beginTransaction();
+
         try {
             $this->payment->update([
                 'till_id' => $this->till_id ,
@@ -202,17 +204,14 @@ public function store()
             foreach ($this->paymentAmount as $paymentAmount) {
                 $data = [
                     'payment_id' => $this->payment->id,
-                    'currency_id' => $paymentAmount['currency_id'],
                     'amount' => $this->sanitizeNumber($paymentAmount['amount']),
+                    'currency_id' => $paymentAmount['currency_id'],
                 ];
 
-                $oldpaymentAmount = Payment::where('till_id', $this->till_id)
+                $oldpaymentAmount = Payment::where('id', $this->payment_id)
                 ->with(['paymentamount' => function ($query) use ($paymentAmount) {
                     $query->where('currency_id', $paymentAmount['currency_id']);
-                }])
-                ->first();
-            
-
+                }])->first();
        
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
 
