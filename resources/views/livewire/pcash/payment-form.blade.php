@@ -11,7 +11,19 @@
                 <div class="card-body">
                     <form class="row g-3">
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="till_id">Tills<span style="color: red;">*</span></label>
+                        <select wire:model="till_id"  class="form-select selectpickerz w-100" aria-label="Default select example" name="till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                            <option>Open this select menu</option>
+                            @foreach($tills as $till)
+                                <option {{ $till->id == $till_id ? 'selected' : '' }} value='{{ $till->id }}'>{{ $till->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
                         <label class="form-label" for="category_id">Categories<span style="color: red;">*</span></label>
                         <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" name="category_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                             <option>Open this select menu</option>
@@ -22,7 +34,7 @@
                         @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label class="form-label" for="sub_category_id">Sub Category<span style="color: red;">*</span></label>
                         <select wire:model="sub_category_id" class="form-select selectpickerz w-100" aria-label="Default select example" name="sub_category_id" id="sub_category_id">
                             <option>Open this select menu</option>
