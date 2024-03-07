@@ -50,7 +50,7 @@ class PaymentForm extends Component
         $this->status=$status;
         $this->addRow();
 
-        $this->tills = Till::where('user_id',auth()->id())->get();
+        $this->tills = Till::all();
 
         $this->categories = Category::all();
         $this->currencies = Currency::all();
@@ -103,12 +103,12 @@ class PaymentForm extends Component
 
     public function removeRow($key)
     {
-        unset($this->paymentAmounts[$key ]);
+        unset($this->paymentAmounts[$key]);
     }
 
     public function store()
     {
-        $this->authorize('payment-edit');
+        $this->authorize('payment-create');
 
         $this->validate();
 
@@ -176,6 +176,7 @@ class PaymentForm extends Component
             }
 
             $this->payment->update([
+                'till_id' => $this->till_id,
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,
