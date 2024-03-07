@@ -1,5 +1,5 @@
 <div>
-  
+
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Receipts List</h4>
@@ -10,7 +10,7 @@
                 <thead>
                  <tr>
                     <th>User</th>
-                    <th>From Costumer</th>
+                    <th>From Customer</th>
                     <th>Description</th>
                     <th>Created At</th>
                     <th>Actions</th>
@@ -29,7 +29,7 @@
                                 <a href="{{ route('receipt.view', ['id' => $receipt->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('receipt-edit')
-                                <a href="{{ route('receipt.edit', $receipt->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('receipt.edit', $receipt->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
                             @can('receipt-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $receipt->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Receipt;
+use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
@@ -27,7 +28,20 @@ class ReceiptView extends Component
         $this->authorize('receipt-delete');
 
         $receipt = Receipt::with('receiptAmount')->findOrFail($id);
-        $receipt->receiptAmount()->delete();
+        foreach ($receipt->receiptAmount as $receiptAmount) {
+
+            $tillAmount = TillAmount::where('till_id', $receipt->till_id)
+                ->where('currency_id', $receiptAmount->currency_id)
+                ->first();
+
+            if ($tillAmount) {
+                $tillAmount->update([
+                    'amount' => $tillAmount->amount - $receiptAmount->amount,
+                ]);
+            }
+
+            $receiptAmount->delete();
+        }
         $receipt->delete();
 
         return to_route('receipt')->with('success', 'receipt has been deleted successfully!');

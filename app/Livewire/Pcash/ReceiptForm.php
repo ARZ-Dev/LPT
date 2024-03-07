@@ -50,7 +50,7 @@ class ReceiptForm extends Component
         $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
-        $this->tills = Till::Where('user_id',auth()->id())->get();
+        $this->tills = Till::all();
 
 
         if ($id) {
@@ -67,10 +67,10 @@ class ReceiptForm extends Component
                     'id' => $receiptAmount->id,
                     'receipt_id' => $receiptAmount->receipt_id,
                     'currency_id' => $receiptAmount->currency_id,
-                    'amount' => $this->sanitizeNumber($receiptAmount->amount),
+                    'amount' => number_format($receiptAmount->amount),
                 ];
             }
-            
+
         }
 
     }
@@ -78,15 +78,12 @@ class ReceiptForm extends Component
     protected function rules()
     {
         $rules = [
-            'till_id' => ['nullable'],
-            'user_id' => ['nullable'],
+            'till_id' => ['required'],
             'paid_by' => ['required', 'string'],
             'description' => ['nullable', 'string'],
-
             'receiptAmount' => ['array'],
-            'receiptAmount.*.receipt_id' => ['nullable'],
             'receiptAmount.*.currency_id' => ['required'],
-            'receiptAmount.*.amount' => ['required'],  
+            'receiptAmount.*.amount' => ['required'],
         ];
 
         return $rules;
@@ -94,7 +91,7 @@ class ReceiptForm extends Component
 
     public function addRow()
     {
-        $this->receiptAmount[] = ['currency_id' => '','amount' => ''];  
+        $this->receiptAmount[] = ['currency_id' => '','amount' => ''];
     }
 
     public function removeRow($key)
@@ -102,7 +99,7 @@ class ReceiptForm extends Component
         if($this->editing == true){
             $removedItemId = $this->receiptAmount[$key]['id'] ?? null;
             $this->deletedReceiptAmount[] = $removedItemId;
-            $this->sanitizeNumber($this->receiptAmount[$key]['amount']);
+            sanitizeNumber($this->receiptAmount[$key]['amount']);
         }
 
         unset($this->receiptAmount[$key ]);
@@ -110,132 +107,124 @@ class ReceiptForm extends Component
 
     }
 
-
-
-    private function sanitizeNumber($number)
+    public function store()
     {
-        $number = str_replace(',', '', $number);
-        if (substr($number, -1) === '.') {
-            $number = substr($number, 0, -1);
-        }
+        $this->authorize('receipt-create');
+        $this->validate();
 
-        return $number;
-    }
+        DB::beginTransaction();
+        try {
 
-
-    public function store(){
-
-    $this->authorize('receipt-edit');
-
-    $this->validate();
-    DB::beginTransaction();
-    try {
-
-   
-    $receipt=Receipt::create([
-        'till_id' => $this->till_id,
-        'user_id' => auth()->id(),
-        'paid_by' => $this->paid_by ,
-        'description' => $this->description ,
-    ]);
-
-    $receiptId = $receipt->id;
-    foreach ($this->receiptAmount as $receiptAmount) {
-        ReceiptAmount::create([
-            'receipt_id' => $receiptId,
-            'currency_id' => $receiptAmount['currency_id'],
-            'amount' => $this->sanitizeNumber($receiptAmount['amount']),
-        ]);
-
-        $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$receiptAmount['currency_id'])->first();
-
-            $tillAmount->update([
-                'amount' => $tillAmount->amount + $this->sanitizeNumber($receiptAmount['amount']),
+            $receipt=Receipt::create([
+                'till_id' => $this->till_id,
+                'user_id' => auth()->id(),
+                'paid_by' => $this->paid_by ,
+                'description' => $this->description ,
             ]);
-       
-    }
+
+            $receiptId = $receipt->id;
+            foreach ($this->receiptAmount as $receiptAmount) {
+                ReceiptAmount::create([
+                    'receipt_id' => $receiptId,
+                    'currency_id' => $receiptAmount['currency_id'],
+                    'amount' => sanitizeNumber($receiptAmount['amount']),
+                ]);
+
+                $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$receiptAmount['currency_id'])->first();
+
+                if ($tillAmount) {
+                    $tillAmount->update([
+                        'amount' => $tillAmount->amount + sanitizeNumber($receiptAmount['amount']),
+                    ]);
+                } else {
+                    TillAmount::create([
+                        'till_id' => $this->till_id,
+                        'currency_id' => $receiptAmount['currency_id'],
+                        'amount' => sanitizeNumber($receiptAmount['amount'])
+                    ]);
+                }
+            }
 
 
-    session()->flash('success', 'receipt has been created successfully!');
+            DB::commit();
 
-    DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => $exception->getMessage(),
             ]);
         }
 
-    return redirect()->route('receipt');
-}
+        return to_route('receipt')->with('success', 'receipt has been created successfully!');
+    }
 
 
     public function update()
     {
         $this->authorize('receipt-edit');
-
         $this->validate();
+
         DB::beginTransaction();
         try {
 
-        $this->receipt->update([
-            'till_id' => $this->till_id,
-            'user_id' => auth()->id() ,
-            'paid_by' => $this->paid_by ,
-            'description' => $this->description ,
-        ]);
+            $existingReceiptAmounts = ReceiptAmount::where('receipt_id', $this->receipt->id)->get();
+            foreach ($existingReceiptAmounts as $existingReceiptAmount) {
+                $tillAmount = TillAmount::where('till_id', $this->receipt->till_id)
+                    ->where('currency_id', $existingReceiptAmount->currency_id)
+                    ->first();
 
-        $receiptAmountsIds = [];
-        foreach ($this->receiptAmount as $receiptAmount) {
+                if ($tillAmount) {
+                    $updatedAmount = $tillAmount->amount - $existingReceiptAmount->amount;
 
-            $oldReceiptAmount = ReceiptAmount::where('receipt_id', $this->receipt->id)->where('currency_id', $receiptAmount['currency_id'])->first();
-
-            $receipt = ReceiptAmount::updateOrCreate([
-                'id' => $receiptAmount['id'] ?? 0,
-            ],[
-                'receipt_id' => $this->receipt->id,
-                'currency_id' => $receiptAmount['currency_id'],
-                'amount' => $this->sanitizeNumber($receiptAmount['amount']),
-            ]);
-
-            $receiptAmountsIds[] = $receipt->id;
-            
-            $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $receiptAmount['currency_id'])->first();
-            $updatedAmount = $tillAmount->amount - $oldReceiptAmount->amount + $this->sanitizeNumber($receiptAmount['amount']);
-
-            $tillAmount->update([
-                'amount' => $updatedAmount,
-            ]);
-
-        }
-
-        
-        $deletedReceiptAmounts = ReceiptAmount::whereIn('id', $this->deletedReceiptAmount)->get();
-
-        if(!$deletedReceiptAmounts->isEmpty() ){
-            foreach ($deletedReceiptAmounts as $deletedReceipttAmount) {
-                $deletedTillAmount = TillAmount::where('till_id', $this->till_id)
-                ->where('currency_id', $deletedReceipttAmount->currency_id)
-                ->first();
-                
-                if ($deletedTillAmount) {
-                    $deletedTillAmount->update([
-                        'amount' => $deletedTillAmount->amount - $deletedReceipttAmount->amount,
+                    $tillAmount->update([
+                        'amount' => $updatedAmount,
                     ]);
                 }
             }
-            
-           
-            ReceiptAmount::whereIn('id', $this->deletedReceiptAmount)->delete();
-        }
-        
 
-        session()->flash('success', 'receipt has been updated successfully!');
-        DB::commit();
-        return redirect()->route('receipt');
-        }catch (\Exception $exception) {
+            $this->receipt->update([
+                'till_id' => $this->till_id,
+                'paid_by' => $this->paid_by ,
+                'description' => $this->description,
+            ]);
+
+            $receiptAmountsIds = [];
+            foreach ($this->receiptAmount as $receiptAmount) {
+
+                $receipt = ReceiptAmount::updateOrCreate([
+                    'id' => $receiptAmount['id'] ?? 0,
+                ],[
+                    'receipt_id' => $this->receipt->id,
+                    'currency_id' => $receiptAmount['currency_id'],
+                    'amount' => sanitizeNumber($receiptAmount['amount']),
+                ]);
+                $receiptAmountsIds[] = $receipt->id;
+
+                $tillAmount = TillAmount::where('till_id', $this->till_id)
+                    ->where('currency_id', $receiptAmount['currency_id'])
+                    ->first();
+
+                if ($tillAmount) {
+                    $tillAmount->update([
+                        'amount' => $tillAmount->amount + sanitizeNumber($receiptAmount['amount']),
+                    ]);
+                } else {
+                    TillAmount::create([
+                        'till_id' => $this->till_id,
+                        'currency_id' => $receiptAmount['currency_id'],
+                        'amount' => sanitizeNumber($receiptAmount['amount'])
+                    ]);
+                }
+            }
+            ReceiptAmount::where('receipt_id', $this->receipt->id)->whereNotIn('id', $receiptAmountsIds)->delete();
+
+            DB::commit();
+
+            return redirect()->route('receipt')->with('success', 'receipt has been updated successfully!');
+
+        } catch (\Exception $exception) {
             DB::rollBack();
             $this->dispatch('swal:error', [
                 'title' => 'Error!',
@@ -243,7 +232,7 @@ class ReceiptForm extends Component
             ]);
         }
     }
-    
+
     public function render()
     {
 

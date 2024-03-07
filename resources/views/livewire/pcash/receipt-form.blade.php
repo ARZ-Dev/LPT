@@ -13,8 +13,7 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="till_id">Tills<span style="color: red;">*</span></label>
-                        <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" name="till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                            <option>Open this select menu</option>
+                        <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" name="till_id" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                             @foreach($tills as $till)
                                 <option {{ $till->id == $till_id ? 'selected' : '' }} value='{{ $till->id }}'>{{ $till->name }}</option>
                             @endforeach
@@ -46,7 +45,7 @@
                             name="description"
                             class="form-control"
                             placeholder="description"
-                            /></textarea>
+                            ></textarea>
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -63,13 +62,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-5">
-                          
-                                        <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required></div>
+                                            <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                            @error('receiptAmount.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                        </div>
 
                                         <div class="col-5">
                                             <select wire:model="receiptAmount.{{ $key }}.currency_id"
                                                     aria-label="Default select example"
-                                                    id="currency-{{$key}}" 
+                                                    id="currency-{{$key}}"
                                                     class="w-100 currency selectpicker"
                                                     title="Select Currency {{ $key + 1 }}"
                                                     data-style="btn-default"
@@ -78,15 +78,15 @@
                                                     data-tick-icon="ti-check text-white"
                                                     required
                                                     >
-                                                <option @if($status == 1) disabled @endif  selected>Open this select menu*</option>
                                                 @foreach($currencies as $index => $currency)
                                                     <option @if($status == 1) disabled @endif
-                                                            value="{{$currency->id}}" 
+                                                            value="{{$currency->id}}"
                                                             @selected($receiptAmount['currency_id'] == $currency->id)>
                                                             {{$currency->name}}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('receiptAmount.'.$key.'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                     @if(!$status)
@@ -100,9 +100,7 @@
                                     @endif
                                     </div>
                                 </div>
-                                @error('receiptAmount.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
-                                @error('receiptAmount.'.$key.'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
-                            @endforeach 
+                            @endforeach
                         </div>
 
                     </form>
@@ -136,7 +134,7 @@
             triggerCleave()
         })
 
-        $(document).on('change', '.currency', function() {
+        $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
         })
         </script>

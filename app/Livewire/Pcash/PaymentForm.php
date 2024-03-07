@@ -165,14 +165,17 @@ class PaymentForm extends Component
             $existingPaymentAmounts = PaymentAmount::where('payment_id', $this->payment->id)->get();
             foreach ($existingPaymentAmounts as $existingPaymentAmount) {
                 $tillAmount = TillAmount::where('till_id', $this->payment->till_id)
-                    ->where('currency_id', $existingPaymentAmount['currency_id'])
+                    ->where('currency_id', $existingPaymentAmount->currency_id)
                     ->first();
 
-                $updatedAmount = sanitizeNumber($tillAmount->amount) + sanitizeNumber($existingPaymentAmount['amount']);
+                if ($tillAmount) {
+                    $updatedAmount = $tillAmount->amount + $existingPaymentAmount->amount;
 
-                $tillAmount->update([
-                    'amount' => $updatedAmount,
-                ]);
+                    $tillAmount->update([
+                        'amount' => $updatedAmount,
+                    ]);
+                }
+
             }
 
             $this->payment->update([
