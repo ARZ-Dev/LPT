@@ -31,7 +31,7 @@ class PaymentForm extends Component
     public $sub_category_id;
     public $description;
 
-    public  $paymentAmount=[];
+    public  $paymentAmounts=[];
     public $payment_id;
     public $currency_id;
     public $amount;
@@ -71,7 +71,7 @@ class PaymentForm extends Component
             $this->sub_category_id = $this->payment->sub_category_id;
             $this->description = $this->payment->description;
 
-            $this->paymentAmount = $this->payment->paymentAmount->toArray();
+            $this->paymentAmounts = $this->payment->paymentAmount->toArray();
 
         }
  
@@ -85,10 +85,10 @@ class PaymentForm extends Component
             'sub_category_id' => ['required', 'integer'],
             'description' => ['nullable', 'string'],
 
-            'paymentAmount' => ['array'],
-            'paymentAmount.*.payment_id' => ['nullable'],
-            'paymentAmount.*.currency_id' => ['required'],
-            'paymentAmount.*.amount' => ['required'],  
+            'paymentAmounts' => ['array'],
+            'paymentAmounts.*.payment_id' => ['nullable'],
+            'paymentAmounts.*.currency_id' => ['required'],
+            'paymentAmounts.*.amount' => ['required'],  
         ];
 
         return $rules;
@@ -96,19 +96,19 @@ class PaymentForm extends Component
 
     public function addRow()
     {
-        $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
+        $this->paymentAmounts[] = ['currency_id' => '','amount' => ''];  
+
     }
 
  
     public function removeRow($key)
     {
         if($this->editing == true){
-            $removedItemId = $this->paymentAmount[$key]['id'] ?? null;
-            $this->deletedPaymentAmount[] = $removedItemId;
-            $this->sanitizeNumber($this->paymentAmount[$key]['amount']);
+            $removedItemId = $this->paymentAmounts[$key]['id'] ?? null;
+            array_push($this->deletedPaymentAmount,$removedItemId);
         }
 
-        unset($this->paymentAmount[$key ]);
+        unset($this->paymentAmounts[$key ]);
    
     }
 
@@ -140,7 +140,7 @@ class PaymentForm extends Component
         ]);
 
         $paymentId = $payment->id;
-        foreach ($this->paymentAmount as $paymentAmount) {
+        foreach ($this->paymentAmounts as $paymentAmount) {
             PaymentAmount::create([
                 'payment_id' => $paymentId,
                 'currency_id' => $paymentAmount['currency_id'],
@@ -187,16 +187,18 @@ class PaymentForm extends Component
         DB::beginTransaction();
     
         try {
+
             $this->payment->update([
-                'till_id' => $this->till_id,
+                //'till_id' => $this->till_id, disable update till
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,
             ]);
     
-            foreach ($this->paymentAmount as $paymentAmount) {
+            foreach ($this->paymentAmounts as $index=>$paymentAmount) {
+
                 $data = [
-                    'payment_id' => $this->payment->id,
+                    'payment_id' => $this->payment_id,
                     'amount' => $this->sanitizeNumber($paymentAmount['amount']),
                     'currency_id' => $paymentAmount['currency_id'],
                 ];
@@ -206,44 +208,58 @@ class PaymentForm extends Component
                         $query->where('currency_id', $paymentAmount['currency_id']);
                     }])
                     ->first();
-    
+                   
                 $tillAmount = TillAmount::where('till_id', $this->till_id)
                     ->where('currency_id', $paymentAmount['currency_id'])
                     ->first();
-    
-                if ($tillAmount->amount < $this->sanitizeNumber($paymentAmount['amount'])) {
+                
+                //This should be checked first.(--TO BE REVIEWED)
+                if ($this->sanitizeNumber($tillAmount->amount) < $this->sanitizeNumber($paymentAmount['amount'])) {
                     throw new Exception("Cannot pay, payment amount does not exist");
                 }
-    
-                if ($tillAmount->amount > $this->sanitizeNumber($paymentAmount['amount'])) {
-                    if (isset($paymentAmount['id'])) {
-                        PaymentAmount::updateOrCreate(['id' => $paymentAmount['id']], $data);
-                    } else {
-                        PaymentAmount::create($data);
+
+                if ($this->sanitizeNumber($tillAmount->amount) > $this->sanitizeNumber($paymentAmount['amount'])) {
+
+                    PaymentAmount::updateOrCreate(
+                        ['id' => @$paymentAmount['id']],
+                        $data
+                    );
+
+                    //  if($index==2){
+                    //     dd($oldpaymentAmount->paymentamount);
+                    // }
+                    
+                    if($oldpaymentAmount->paymentamount!==null){
+                        $updatedAmount = $this->sanitizeNumber($oldpaymentAmount->paymentamount[0]->amount) + $this->sanitizeNumber($tillAmount->amount) - $this->sanitizeNumber($paymentAmount['amount']);
+
+                    }else{
+                        $updatedAmount = $this->sanitizeNumber($tillAmount->amount) - $this->sanitizeNumber($paymentAmount['amount']);
                     }
-    
-                    $updatedAmount = $oldpaymentAmount->paymentamount->pluck('amount')->first() + $tillAmount->amount - $this->sanitizeNumber($paymentAmount['amount']);
+
                     $tillAmount->update([
                         'amount' => $updatedAmount,
                     ]);
+                    
                 }
+                
             }
-    
+
+            
             $deletedPaymentAmounts = PaymentAmount::whereIn('id', $this->deletedPaymentAmount)->get();
-    
+            // dd($deletedPaymentAmounts);
             foreach ($deletedPaymentAmounts as $deletedPaymentAmount) {
-                $deletedTillAmount = TillAmount::where('till_id', $this->till_id)
+                $tillAmount = TillAmount::where('till_id', $this->till_id)
                     ->where('currency_id', $deletedPaymentAmount->currency_id)
                     ->first();
     
-                if ($deletedTillAmount) {
+                if ($tillAmount) {
                     $deletedTillAmount->update([
-                        'amount' => $deletedTillAmount->amount + $deletedPaymentAmount->amount,
+                        'amount' => $tillAmount->amount + $deletedPaymentAmount->amount,
                     ]);
                 }
+
+                deletedPaymentAmount->delete();
             }
-    
-            PaymentAmount::whereIn('id', $this->deletedPaymentAmount)->delete();
     
             session()->flash('success', 'Payment has been updated successfully!');
     
