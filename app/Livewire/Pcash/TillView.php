@@ -26,9 +26,17 @@ class TillView extends Component
     {
         $this->authorize('till-delete');
 
-        $till = Till::with('fromTransfer','toTransfer')->findOrFail($id);
-        Transfer::Where('from_till_id',$till->id)->delete();
-        Transfer::Where('to_till_id',$till->id)->delete();
+        $till = Till::withCount(['fromTransfer', 'toTransfer', 'tillAmounts', 'payments', 'receipts'])->findOrFail($id);
+
+        $cannotDelete = $till->from_transfers_count || $till->to_transfers_count || $till->payments_count || $till->receipts_count;
+        if ($cannotDelete) {
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => "Cannot delete a till that has transfers, payments, or receipts!",
+            ]);
+        }
+
+        $till->tillAmounts()->delete();
         $till->delete();
 
         return to_route('till')->with('success', 'till has been deleted successfully!');

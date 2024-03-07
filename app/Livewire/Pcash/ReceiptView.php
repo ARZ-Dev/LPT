@@ -15,20 +15,18 @@ class ReceiptView extends Component
     protected $listeners = ['delete'];
     public $receipts;
 
-    public function mount(){
+    public function mount()
+    {
         $this->authorize('receipt-list');
-        $this->receipts = Receipt::with(['user', 'receiptAmount'])->get();
-
+        $this->receipts = Receipt::with(['user'])->get();
     }
-
-
 
     public function delete($id)
     {
         $this->authorize('receipt-delete');
 
-        $receipt = Receipt::with('receiptAmount')->findOrFail($id);
-        foreach ($receipt->receiptAmount as $receiptAmount) {
+        $receipt = Receipt::with('receiptAmounts')->findOrFail($id);
+        foreach ($receipt->receiptAmounts as $receiptAmount) {
 
             $tillAmount = TillAmount::where('till_id', $receipt->till_id)
                 ->where('currency_id', $receiptAmount->currency_id)
@@ -44,7 +42,7 @@ class ReceiptView extends Component
         }
         $receipt->delete();
 
-        return to_route('receipt')->with('success', 'receipt has been deleted successfully!');
+        return to_route('receipt')->with('success', 'Receipt has been deleted successfully!');
     }
 
 

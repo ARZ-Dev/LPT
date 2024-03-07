@@ -29,16 +29,16 @@ class Till extends Model
         return $this->hasMany(Transfer::class,'to_till_id');
     }
 
-    public function tillAmount()
+    public function tillAmounts()
     {
         return $this->hasMany(TillAmount::class,'till_id');
     }
 
-    public function payment()
+    public function payments()
     {
         return $this->hasMany(Payment::class,'till_id');
     }
-    public function receipt()
+    public function receipts()
     {
         return $this->hasMany(Receipt::class,'till_id');
     }

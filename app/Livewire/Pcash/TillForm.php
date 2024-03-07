@@ -18,7 +18,6 @@ class TillForm extends Component
 
     public $editing = false;
     public int $status;
-    public $roles;
     public $till;
     public $user_id;
     public $name;
@@ -35,19 +34,18 @@ class TillForm extends Component
         $this->users = User::all();
         $this->currencies = Currency::all();
 
-        $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
 
         if ($id) {
             $this->editing = true;
-            $this->till = Till::with(['tillAmount' => ['currency']])->findOrFail($id);
+            $this->till = Till::with(['tillAmounts' => ['currency']])->findOrFail($id);
 
             $this->user_id = $this->till->user_id;
             $this->name = $this->till->name;
 
             $this->tillAmounts = [];
-            foreach ($this->till->tillAmount as $tillAmount) {
+            foreach ($this->till->tillAmounts as $tillAmount) {
                 $this->tillAmounts[] = [
                     'id' => $tillAmount->id,
                     'amount' => number_format($tillAmount->amount),
@@ -61,16 +59,13 @@ class TillForm extends Component
 
     protected function rules()
     {
-        $rules = [
+        return [
             'user_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
-            'tillAmounts' => ['array'],
-            'tillAmounts.*.till_id' => ['nullable'],
+            'tillAmounts' => ['array', 'min:1'],
             'tillAmounts.*.currency_id' => ['required', 'distinct'],
             'tillAmounts.*.amount' => ['required'],
         ];
-
-        return $rules;
     }
 
     public function addRow()
@@ -84,20 +79,7 @@ class TillForm extends Component
     public function removeRow($key)
     {
         unset($this->tillAmounts[$key]);
-
     }
-
-    private function sanitizeNumber($number)
-    {
-        $number = str_replace(',', '', $number);
-        if (str_ends_with($number, '.')) {
-            $number = substr($number, 0, -1);
-        }
-
-        return $number;
-    }
-
-
 
     public function store()
     {
@@ -105,9 +87,9 @@ class TillForm extends Component
 
         $this->validate();
 
-        $till=Till::create([
-            'user_id' => $this->user_id ,
-            'name' => $this->name ,
+        $till = Till::create([
+            'user_id' => $this->user_id,
+            'name' => $this->name,
         ]);
 
         $tillId = $till->id;
@@ -115,13 +97,11 @@ class TillForm extends Component
             TillAmount::create([
                 'till_id' => $tillId,
                 'currency_id' => $tillAmount['currency_id'],
-                'amount' => $this->sanitizeNumber($tillAmount['amount']),
+                'amount' => sanitizeNumber($tillAmount['amount']),
             ]);
         }
 
-        session()->flash('success', 'till has been created successfully!');
-
-        return redirect()->route('till');
+        return to_route('till')->with('success', 'Till has been created successfully!');
     }
 
     public function update()
@@ -143,7 +123,7 @@ class TillForm extends Component
             ],[
                 'till_id' => $this->till->id,
                 'currency_id' => $tillAmount['currency_id'],
-                'amount' => $this->sanitizeNumber($tillAmount['amount']),
+                'amount' => sanitizeNumber($tillAmount['amount']),
             ]);
 
             $tillAmountsIds[] = $amount->id;
@@ -151,13 +131,8 @@ class TillForm extends Component
 
         TillAmount::where('till_id', $this->till->id)->whereNotIn('id', $tillAmountsIds)->delete();
 
-        session()->flash('success', 'till has been updated successfully!');
-
-        return redirect()->route('till');
+        return to_route('till')->with('success', 'till has been updated successfully!');
     }
-
-
-
 
     public function render()
     {

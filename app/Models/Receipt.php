@@ -19,12 +19,12 @@ class Receipt extends Model
     {
         return $this->belongsTo(Till::class,'till_id');
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
     }
-    public function receiptAmount()
+    public function receiptAmounts()
     {
         return $this->hasMany(ReceiptAmount::class,'receipt_id');
     }

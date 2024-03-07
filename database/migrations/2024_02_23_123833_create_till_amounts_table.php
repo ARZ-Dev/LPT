@@ -14,12 +14,12 @@ return new class extends Migration
             $table->foreignId('till_id')->constrained('tills')->cascadeOnDelete();
             $table->double('amount');
             $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-  
+
     public function down(): void
     {
         Schema::dropIfExists('till_amounts');

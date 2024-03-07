@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                            @foreach($receiptAmount as $key => $receiptAmount)
+                            @foreach($receiptAmounts as $key => $receiptAmount)
                                     <div wire:key="receiptAmount-{{ $key }}">
                                     <div class="row">
                                         <div class="col-5">
@@ -62,12 +62,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-5">
-                                            <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmount.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
-                                            @error('receiptAmount.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                            <input class="form-control cleave-input w-100 me-2 " wire:model="receiptAmounts.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                            @error('receiptAmounts.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                         <div class="col-5">
-                                            <select wire:model="receiptAmount.{{ $key }}.currency_id"
+                                            <select wire:model="receiptAmounts.{{ $key }}.currency_id"
                                                     aria-label="Default select example"
                                                     id="currency-{{$key}}"
                                                     class="w-100 currency selectpicker"
@@ -86,7 +86,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('receiptAmount.'.$key.'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                            @error('receiptAmounts.'.$key.'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                     @if(!$status)
