@@ -15,6 +15,11 @@ class Receipt extends Model
 
     protected $guarded = [];
 
+    public function till()
+    {
+        return $this->belongsTo(Till::class,'till_id');
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');

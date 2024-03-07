@@ -38,6 +38,10 @@ class Till extends Model
     {
         return $this->hasMany(Payment::class,'till_id');
     }
+    public function receipt()
+    {
+        return $this->hasMany(Receipt::class,'till_id');
+    }
 
     public static function reportMessage($data){
         echo 'new till <u><a href="'. route('till.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u>  '.$data['name'].'  has been created ';
