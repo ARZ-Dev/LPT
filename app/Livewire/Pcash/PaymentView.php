@@ -38,7 +38,6 @@ class PaymentView extends Component
                 ]);
             }
 
-
             $paymentAmount->delete();
         }
 

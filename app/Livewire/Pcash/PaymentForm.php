@@ -132,7 +132,7 @@ class PaymentForm extends Component
 
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
 
-                if ($tillAmount->amount < sanitizeNumber($paymentAmount['amount'])) {
+                if (!$tillAmount || ($tillAmount->amount < sanitizeNumber($paymentAmount['amount']))) {
                     throw new Exception("Cannot pay, payment amount does not exists");
                 }
 
@@ -189,7 +189,7 @@ class PaymentForm extends Component
                     ->where('currency_id', $paymentAmount['currency_id'])
                     ->first();
 
-                if (sanitizeNumber($tillAmount->amount) < sanitizeNumber($paymentAmount['amount'])) {
+                if (!$tillAmount || (sanitizeNumber($tillAmount?->amount) < sanitizeNumber($paymentAmount['amount']))) {
                     throw new Exception("Cannot pay, payment amount does not exist");
                 }
 
