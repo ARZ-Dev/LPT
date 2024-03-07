@@ -2,7 +2,7 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">Teams List</h4>
+            <h4 class="card-title mb-3">Players List</h4>
             <a class="btn btn-primary h-50" href="{{ route('players.create') }}">Add Player</a>
         </div>
         <div class="card-datatable table-responsive">
