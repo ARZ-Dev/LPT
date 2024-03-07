@@ -14,10 +14,10 @@ class PaymentView extends Component
     protected $listeners = ['delete'];
     public $payments;
 
-    public function mount(){
+    public function mount()
+    {
         $this->authorize('payment-list');
-        $this->payments = Payment::with(['category', 'subCategory', 'paymentAmount','till'])->get();
-
+        $this->payments = Payment::with(['category', 'subCategory'])->get();
     }
 
     public function delete($id)
@@ -25,7 +25,7 @@ class PaymentView extends Component
         $this->authorize('payment-delete');
 
         $payment = Payment::with('paymentAmount')->findOrFail($id);
-        $payment->paymentAmount()->delete();
+        $payment->paymentAmounts()->delete();
 
         $payment->delete();
 

@@ -49,6 +49,7 @@ class TillForm extends Component
             $this->tillAmounts = [];
             foreach ($this->till->tillAmount as $tillAmount) {
                 $this->tillAmounts[] = [
+                    'id' => $tillAmount->id,
                     'amount' => number_format($tillAmount->amount),
                     'currency_id' => $tillAmount->currency_id,
                     'currency_name' => $tillAmount->currency?->name,
@@ -137,7 +138,7 @@ class TillForm extends Component
         $tillAmountsIds = [];
         foreach ($this->tillAmounts as $tillAmount) {
 
-            $tillAmount = TillAmount::updateOrCreate([
+            $amount = TillAmount::updateOrCreate([
                 'id' => $tillAmount['id'] ?? 0,
             ],[
                 'till_id' => $this->till->id,
@@ -145,10 +146,10 @@ class TillForm extends Component
                 'amount' => $this->sanitizeNumber($tillAmount['amount']),
             ]);
 
-            $tillAmountsIds[] = $tillAmount->id;
+            $tillAmountsIds[] = $amount->id;
         }
 
-        TillAmount::whereNotIn('id', $tillAmountsIds)->where('till_id', $this->till->id)->delete();
+        TillAmount::where('till_id', $this->till->id)->whereNotIn('id', $tillAmountsIds)->delete();
 
         session()->flash('success', 'till has been updated successfully!');
 

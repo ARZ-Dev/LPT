@@ -30,7 +30,7 @@ class Payment extends Model
         return $this->belongsTo(SubCategory::class,'sub_category_id');
     }
 
-    public function paymentAmount()
+    public function paymentAmounts()
     {
         return $this->hasMany(PaymentAmount::class,'payment_id');
     }
@@ -43,5 +43,5 @@ class Payment extends Model
 
 
 
-    
+
 }
