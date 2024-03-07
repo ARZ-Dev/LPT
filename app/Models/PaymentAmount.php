@@ -13,6 +13,8 @@ class PaymentAmount extends Model
     protected $table = 'payment_amounts';
     protected $primaryKey = 'id';
 
+    protected $fillable = ['id' , 'payment_id' , 'amount' , 'currency_id'];
+
     protected $guarded = [];
 
     public function payment()
