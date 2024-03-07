@@ -11,14 +11,26 @@
                 <div class="card-body">
                     <form class="row g-3">
 
-                    <div class="col-12 col-md-12">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="till_id">Tills<span style="color: red;">*</span></label>
+                        <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" name="till_id" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                            <option>Open this select menu</option>
+                            @foreach($tills as $till)
+                                <option {{ $till->id == $till_id ? 'selected' : '' }} value='{{ $till->id }}'>{{ $till->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
                             <label class="form-label" for="paid_by">From Customer<span style="color: red;">*</span></label>
                             <input
                             wire:model.defer="paid_by"
                             type="text"
                             id="paid_by"
                             name="paid_by"
-                            class="form-control"
+                            class="form-control "
                             placeholder="From Customer"
                             />
                             @error('paid_by') <div class="text-danger">{{ $message }}</div> @enderror
