@@ -1,4 +1,4 @@
- <div>
+<div>
     <div class="row">
         <div class="col-xl">
 
@@ -13,10 +13,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-md-4 mt-3">
-                            <label class="form-label" for="till_id">Tills<span class="text-danger">*</span></label>
+                            <label class="form-label" for="till_id">Tills <span class="text-danger">*</span></label>
                             <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($tills as $till)
-                                    <option {{ $till->id == $till_id ? 'selected' : '' }} value='{{ $till->id }}'>{{ $till->name }}</option>
+                                    <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name }}</option>
                                 @endforeach
                             </select>
                             @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -24,11 +24,10 @@
 
 
                         <div class="col-12 col-md-4 mt-3">
-                            <label class="form-label" for="category_id">Categories<span class="text-danger">*</span></label>
-                            <select wire:model="category_id" wire:change="updateSubCategories" class="form-select selectpickerz w-100" aria-label="Default select example" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                                <option>Open this select menu</option>
+                            <label class="form-label" for="category_id">Category <span class="text-danger">*</span></label>
+                            <select wire:model="category_id" class="form-select selectpicker w-100" id="category_id" title="Select Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($categories as $category)
-                                    <option {{ $category->id == $category_id ? 'selected' : '' }} value='{{ $category->id }}'>{{ $category->category_name }}</option>
+                                    <option value="{{ $category->id }}" @selected($category->id == $category_id)>{{ $category->category_name }}</option>
                                 @endforeach
                             </select>
                             @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -36,11 +35,10 @@
 
 
                         <div class="col-12 col-md-4 mt-3 ">
-                            <label class="form-label" for="sub_category_id">Sub Category<span class="text-danger">*</span></label>
-                            <select wire:model="sub_category_id" class="form-select selectpickerz w-100" aria-label="Default select example" id="sub_category_id">
-                                <option>Open this select menu</option>
+                            <label class="form-label" for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
+                            <select wire:model="sub_category_id" class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($subCategories as $subCategory)
-                                    <option {{ $subCategory->id == $sub_category_id ? 'selected' : '' }} value='{{ $subCategory->id }}'>{{ $subCategory->sub_category_name }}</option>
+                                    <option value="{{ $subCategory->id }}" @selected($subCategory->id == $sub_category_id)>{{ $subCategory->sub_category_name }}</option>
                                 @endforeach
                             </select>
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -126,18 +124,9 @@
 
         </div>
     </div>
-</div>
 
-@script
+    @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status="{{$status}}";
-            if (status=="1") {
-                $('input').prop('disabled', true);
-                $('option').prop('disabled', true);
-                $('textarea').prop('disabled', true);
-            }
-        });
 
         triggerCleave()
         $('.selectpicker').selectpicker();
@@ -147,11 +136,31 @@
             triggerCleave()
         })
 
-        $(document).on('change', '.currency', function() {
+        $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
         })
 
+        $(document).on('change', '#category_id', function() {
+            $wire.dispatch('getSubCategories')
+        })
+
+        $wire.on('refreshSubCategories', function (event) {
+            let subCategories = event[0];
+            let selectedSubCategoryId = event[1] ?? null;
+            if (subCategories.length > 0) {
+                let subCategorySelector = $('#sub_category_id');
+                subCategorySelector.empty();
+                Object.entries(subCategories).forEach(([key, value]) => {
+                    let isSelected = value.id == selectedSubCategoryId ? "selected" : "";
+                    subCategorySelector.append(`<option value="${value.id}" ${isSelected}>${value.sub_category_name}</option>`)
+                })
+                subCategorySelector.selectpicker('refresh');
+            }
+        })
+
     </script>
-@endscript
+    @endscript
+</div>
+
 
 

@@ -10,6 +10,7 @@ use App\Models\SubCategory;
 use App\Models\Till;
 use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class PaymentForm extends Component
     public $tills;
 
     public $categories;
-    public $subCategories;
+    public $subCategories = [];
     public $currencies;
 
     protected $listeners = ['store', 'update'];
@@ -54,7 +55,6 @@ class PaymentForm extends Component
 
         $this->categories = Category::all();
         $this->currencies = Currency::all();
-        $this->updateSubCategories();
 
         if ($id) {
             $this->payment_id=$id;
@@ -225,14 +225,13 @@ class PaymentForm extends Component
         }
     }
 
-    public function updateSubCategories()
+    #[On('getSubCategories')]
+    public function getSubCategories()
     {
-        $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
         $this->sub_category_id = null;
-    }
-    public function updatedCategory_id()
-    {
-        $this->updateSubCategories();
+        $selectedSubCategoryId = $this->payment?->sub_category_id;
+        $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
+        $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
     public function render()
