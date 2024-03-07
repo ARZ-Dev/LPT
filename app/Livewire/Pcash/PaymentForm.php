@@ -36,16 +36,13 @@ class PaymentForm extends Component
     public $currency_id;
     public $amount;
 
-
     public $tills;
-
 
     public $categories;
     public $subCategories;
     public $currencies;
     
     public $deletedPaymentAmount=[];
-
 
     protected $listeners = ['store', 'update'];
 
@@ -59,7 +56,6 @@ class PaymentForm extends Component
 
         $this->tills = Till::Where('user_id',auth()->id())->get();
 
-        
         $this->categories = Category::all();
         $this->currencies = Currency::all();
         $this->updateSubCategories();
@@ -78,14 +74,9 @@ class PaymentForm extends Component
             $this->paymentAmount = $this->payment->paymentAmount->toArray();
 
         }
-
-
-
-       
-        
+ 
     }
-    
-
+   
     protected function rules()
     {
         $rules = [
@@ -108,8 +99,7 @@ class PaymentForm extends Component
         $this->paymentAmount[] = ['currency_id' => '','amount' => ''];  
     }
 
-    
-
+ 
     public function removeRow($key)
     {
         if($this->editing == true){
@@ -121,10 +111,6 @@ class PaymentForm extends Component
         unset($this->paymentAmount[$key ]);
    
     }
-
-
-
-
 
     private function sanitizeNumber($number)
     {
@@ -243,7 +229,6 @@ class PaymentForm extends Component
                 }
             }
     
-            // Handle deleted payment amounts
             $deletedPaymentAmounts = PaymentAmount::whereIn('id', $this->deletedPaymentAmount)->get();
     
             foreach ($deletedPaymentAmounts as $deletedPaymentAmount) {
@@ -251,7 +236,6 @@ class PaymentForm extends Component
                     ->where('currency_id', $deletedPaymentAmount->currency_id)
                     ->first();
     
-                // Assuming $deletedTillAmount is found, update its amount
                 if ($deletedTillAmount) {
                     $deletedTillAmount->update([
                         'amount' => $deletedTillAmount->amount + $deletedPaymentAmount->amount,
@@ -273,8 +257,6 @@ class PaymentForm extends Component
             ]);
         }
     }
-    
-    
 
     public function updateSubCategories()
     {
