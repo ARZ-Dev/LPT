@@ -101,6 +101,16 @@ class User extends Authenticatable
         return $this->hasMany(Exchange::class,'user_id');
     }
 
+    public function monthlyEntry()
+    {
+        return $this->hasMany(MonthlyEntry::class,'user_id');
+    }
+
+    public function monthlyEntryCreatedBy()
+    {
+        return $this->hasMany(MonthlyEntry::class,'created_by');
+    }
+
     
 
 
