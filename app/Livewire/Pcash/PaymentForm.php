@@ -154,15 +154,24 @@ class PaymentForm extends Component
                     'amount' => sanitizeNumber($paymentAmount['amount']),
                 ]);
 
+                
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
-
                 // if (!$tillAmount || ($tillAmount->amount < sanitizeNumber($paymentAmount['amount']))) {
-                //     throw new Exception("Cannot pay, payment amount does not exists");
-                // }
+                    //     throw new Exception("Cannot pay, payment amount does not exists");
+                    // }
 
-                $tillAmount->update([
-                    'amount' => $tillAmount->amount - sanitizeNumber($paymentAmount['amount']),
-                ]);
+
+                if ($tillAmount) {
+                    $tillAmount->update([
+                        'amount' => $tillAmount->amount - sanitizeNumber($paymentAmount['amount']),
+                    ]);
+                } else {
+                    $newtillAmount = new TillAmount();
+                    $newtillAmount->till_id = $this->till_id;
+                    $newtillAmount->amount = -sanitizeNumber($paymentAmount['amount']);
+                    $newtillAmount->currency_id = $paymentAmount['currency_id'];
+                    $newtillAmount->save(); 
+                }
             }
 
             DB::commit();
@@ -186,10 +195,11 @@ class PaymentForm extends Component
         DB::beginTransaction();
         try {
 
-            $path = null;
-            
-            if ($this->invoice && !is_string($this->invoice)) {
-                $path = $this->invoice->storePublicly(path: 'public/invoice');
+        
+            if ($this->invoice !== null) {
+                $path = 'public/invoice/' . $this->invoice;
+            }else{
+                $path = null;
             }
 
 
@@ -267,12 +277,11 @@ class PaymentForm extends Component
         $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
-    // #[On('deleteInvoiceFile')]
-    // public function deleteInvoiceFile()
-    // {
-    //     $this->invoice = NULL;
-    //     dd('hey');
-    // }
+    #[On('deleteInvoiceFile')]
+    public function deleteInvoiceFile()
+    {
+        $this->invoice = NULL;
+    }
     
     public function render()
     {

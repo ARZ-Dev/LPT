@@ -85,6 +85,11 @@
 						<div data-i18n="Till">Till</div>
 					</a>
 				</li>
+				<li class="menu-item {{ request()->is('monthlyEntry*') ? "active" : "" }}">
+					<a href="{{ route('monthlyEntry') }}" class="menu-link">
+						<div data-i18n="Monthly Entry">Monthly Entry</div>
+					</a>
+				</li>
 				<li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
 					<a href="{{ route('payment') }}" class="menu-link">
 						<div data-i18n="Payment">Payment</div>

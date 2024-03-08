@@ -36,11 +36,15 @@ use App\Livewire\Pcash\ExchangeView;
 
 use App\Livewire\Pcash\ReportView;
 
+use App\Livewire\Pcash\MonthlyEntryForm;
+use App\Livewire\Pcash\MonthlyEntryView;
+
 use App\Livewire\Teams\TeamView;
 use App\Livewire\Teams\TeamForm;
 
 use App\Livewire\Players\PlayerView;
 use App\Livewire\Players\PlayerForm;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -96,6 +100,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', TillForm::class)->name('till.create');
         Route::get('/edit/{id}', TillForm::class)->name('till.edit');
         Route::get('/view/{id}/{status}', TillForm::class)->name('till.view');
+    });
+
+    // |--------------------------------------------------------------------------
+    // |MonthlyEntry
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'monthlyEntry'], function() {
+        Route::get('/', MonthlyEntryView::class)->name('monthlyEntry');
+        Route::get('/create', MonthlyEntryForm::class)->name('monthlyEntry.create');
+        Route::get('/edit/{id}', MonthlyEntryForm::class)->name('monthlyEntry.edit');
+        Route::get('/view/{id}/{status}', MonthlyEntryForm::class)->name('monthlyEntry.view');
     });
 
 

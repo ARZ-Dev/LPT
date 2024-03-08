@@ -47,9 +47,6 @@ class ReportView extends Component
                     'amount'=>$entry->amount,
                     'paid_by'=>$entry->paid_by,
                     
-             
-             
-
                     'from_till_id'=>Till::find($entry->from_till_id),
                     'to_till_id'=>Till::find($entry->to_till_id),
 
