@@ -21,11 +21,11 @@
                 <tbody>
                 @foreach($payments as $payment)
                     <tr>
-                        <td>{{ $payment->till->name }}</td>
-                        <td>{{ $payment->category->category_name }}</td>
-                        <td>{{ $payment->subCategory->sub_category_name ?? 'N/A' }}</td>
+                        <td>{{ $payment->till?->name }}</td>
+                        <td>{{ $payment->category?->category_name }}</td>
+                        <td>{{ $payment->subCategory?->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
-                        <td>{{ $payment->user->username }}</td>
+                        <td>{{ $payment->user?->username }}</td>
                         <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('payment-list')
