@@ -72,6 +72,10 @@ class ExchangeForm extends Component
     }
 
     public function emptyAmountsFields(){
+        if($this->from_currency_id==$this->to_currency_id){
+            $this->to_currency_id="";
+            $this->dispatch('emptyToCurrencyId');
+        }
         $this->amount="";
         $this->result="";
         $this->rate="";
