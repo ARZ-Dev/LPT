@@ -100,6 +100,31 @@
                                         </div>
                                         @error('paymentAmounts.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
+
+                                    <div class="card mb-4 mt-5">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">
+                                                Invoice Upload
+                                                @if($this->invoice)
+                                                    - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($this->invoice)) }}" download>Download Link</a>
+                                                @endif
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12 col-md-12">
+                                                    @php
+                                                        $uploadedFile = $this->invoice ? [asset(\Illuminate\Support\Facades\Storage::url($this->invoice))] : [];
+                                                    @endphp
+                                                    <x-filepond :files="$uploadedFile" wire:model="invoice"  />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
                                     @if(!$status)
                                         <div class="col-2">
                                             @if($key == 0)

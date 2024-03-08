@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
             $table->text('description')->nullable();
+            $table->text('invoice')->nullable();
+
 
             $table->softDeletes();
             $table->timestamps();
