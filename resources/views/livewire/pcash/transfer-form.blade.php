@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-                            @foreach($transferAmount as $key => $transferAmount)
+                            @foreach($transferAmounts as $key => $transferAmount)
                                 <div wire:key="transferAmount-{{ $key }}">
 
                                     <div class="row">
@@ -46,13 +46,13 @@
 
                                     <div class="row">
                                         <div class="col-5">
-                                            <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmount.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount {{ $key + 1 }}" id="amount-{{$key}}" required>
-                                            @error('transferAmount.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                            <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmounts.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount {{ $key + 1 }}" id="amount-{{$key}}" required>
+                                            @error('transferAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                         <div class="col-5">
                                             <div wire:ignore>
                                                 <select
-                                                    wire:model="transferAmount.{{ $key }}.currency_id"
+                                                    wire:model="transferAmounts.{{ $key }}.currency_id"
 
                                                     id="currency-{{$key}}" class="w-100 currency selectpicker"
                                                     title="Select Currency {{ $key + 1 }}"
@@ -71,7 +71,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            @error('transferAmount.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                            @error('transferAmounts.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                         @if(!$status)

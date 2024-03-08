@@ -24,14 +24,13 @@ class TransferForm extends Component
     public $transfer;
 
     public $user_id;
-    public $from_till_id;
+    public int $from_till_id;
 
-    public $to_till_id;
+    public int $to_till_id;
 
-    public $transferAmount=[];
+    public $transferAmounts = [];
     public $currency_id;
     public $amount;
-    public $deletedTransferAmount = [];
     public $tills = [];
     public $currencies = [];
 
@@ -51,55 +50,48 @@ class TransferForm extends Component
 
         if ($id) {
             $this->editing = true;
-            $this->transfer = Transfer::findOrFail($id);
+            $this->transfer = Transfer::with('transferAmounts')->findOrFail($id);
             $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
-            $this->transferAmount = $this->transfer->transferAmount->toArray();
+            $this->transferAmounts = [];
+            foreach ($this->transfer->transferAmounts as $transferAmount) {
+                $this->transferAmounts[] = [
+                    'id' => $transferAmount->id,
+                    'amount' => number_format($transferAmount->amount),
+                    'currency_id' => $transferAmount->currency_id,
+                ];
+            }
         }
 
     }
 
     protected function rules()
     {
-        $rules = [
-            'user_id' => ['nullable'],
-            'from_till_id' => ['required', 'integer'],
-
-            'to_till_id' => ['required', 'integer', 'different:from_till_id'],
-            'transferAmount' => ['array'],
-            'transferAmount.*.transfer_id' => ['nullable'],
-            'transferAmount.*.currency_id' => ['required'],
-            'transferAmount.*.amount' => ['required'],
+        return [
+            'from_till_id' => ['required', 'different:to_till_id'],
+            'to_till_id' => ['required', 'different:from_till_id'],
+            'transferAmounts' => ['array'],
+            'transferAmounts.*.transfer_id' => ['nullable'],
+            'transferAmounts.*.currency_id' => ['required'],
+            'transferAmounts.*.amount' => ['required'],
         ];
-
-        return $rules;
     }
 
     public function addRow()
     {
-        $this->transferAmount[] = ['currency_id' => '','amount' => ''];
+        $this->transferAmounts[] = ['currency_id' => '','amount' => ''];
     }
 
     public function removeRow($key)
     {
-
-
-        if($this->editing == true){
-        $removedItemId = $this->transferAmount[$key]['id'] ?? null ;
-        $this->deletedTransferAmount[] = $removedItemId;
-        }
-
-        unset($this->transferAmount[$key]);
-
+        unset($this->transferAmounts[$key]);
     }
 
 
     public function store()
     {
-
         $this->authorize('transfer-create');
-
         $this->validate();
 
         DB::beginTransaction();
@@ -113,7 +105,7 @@ class TransferForm extends Component
             ]);
 
             $transferId = $transfer->id;
-            foreach ($this->transferAmount as $transferAmount) {
+            foreach ($this->transferAmounts as $transferAmount) {
                 TransferAmount::create([
                     'transfer_id' => $transferId,
                     'currency_id' => $transferAmount['currency_id'],
@@ -211,20 +203,17 @@ class TransferForm extends Component
                 'to_till_id' => $this->to_till_id ,
             ]);
 
-            foreach ($this->transferAmount as $transferAmount) {
-                $data = [
+            $transfersAmountIds = [];
+            foreach ($this->transferAmounts as $transferAmount) {
+
+                $amount = TransferAmount::updateOrCreate([
+                    'id' => $transferAmount['id'] ?? 0,
+                ],[
                     'transfer_id' => $this->transfer->id,
                     'currency_id' => $transferAmount['currency_id'],
                     'amount' => sanitizeNumber($transferAmount['amount']),
-                ];
-
-                if (isset($transferAmount['id'])) {
-                    TransferAmount::updateOrCreate(['id' => $transferAmount['id']], $data);
-                } else {
-                    TransferAmount::create($data);
-                }
-
-                TransferAmount::whereIn('id',$this->deletedTransferAmount)->delete();
+                ]);
+                $transfersAmountIds[] = $amount->id;
 
                 $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
                 $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
@@ -250,6 +239,7 @@ class TransferForm extends Component
                 }
 
             }
+            TransferAmount::where('transfer_id', $this->transfer->id)->whereNotIn('id', $transfersAmountIds)->delete();
 
             DB::commit();
         } catch (\Exception $exception) {
