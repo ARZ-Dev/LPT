@@ -13,6 +13,7 @@
                     <th>Category</th>
                     <th>Sub Category</th>
                     <th>Description</th>
+                    <th>Created By</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -24,6 +25,7 @@
                         <td>{{ $payment->category->category_name }}</td>
                         <td>{{ $payment->subCategory->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
+                        <td>{{ $payment->user->username }}</td>
                         <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('payment-list')

@@ -11,7 +11,9 @@
                  <tr>
                     <th>UserName</th>
                     <th>till name</th>
+                    <th>Created By</th>
                     <th>Created At</th>
+
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -20,7 +22,9 @@
                     <tr>
                         <td>{{ $till->user->username ?? 'N/A' }}</td>
                         <td>{{ $till->name }}</td>
+                        <td>{{ $till->user->username }}</td>
                         <td>{{ $till->created_at->format('d-m-Y h:i a') }}</td>
+
 
                         <td>
                             @can('till-list')

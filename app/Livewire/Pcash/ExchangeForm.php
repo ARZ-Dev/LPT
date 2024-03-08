@@ -20,6 +20,7 @@ class ExchangeForm extends Component
 
     public $currencies;
 
+    public $user_id;
     public $from_currency_id;
     public $to_currency_id;
     public $amount;
@@ -46,6 +47,7 @@ class ExchangeForm extends Component
             $this->editing = true;
             $this->exchange = Exchange::findOrFail($id);
 
+            $this->user_id = $this->exchange->user_id;
             $this->from_currency_id = $this->exchange->from_currency_id;
             $this->to_currency_id = $this->exchange->to_currency_id;
             $this->amount = number_format($this->exchange->amount);
@@ -59,6 +61,7 @@ class ExchangeForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'from_currency_id' => ['required', 'integer'],
             'to_currency_id' => ['required', 'integer'],
             'amount' => ['required'],
@@ -133,7 +136,9 @@ class ExchangeForm extends Component
         $this->validate();
 
         Exchange::create([
+            'user_id' => auth()->id() ,
             'from_currency_id' => $this->from_currency_id ,
+
             'to_currency_id' => $this->to_currency_id ,
             'amount' => $this->sanitizeNumber($this->amount) ,
             'rate' => $this->sanitizeNumber($this->rate) ,

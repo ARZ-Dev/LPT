@@ -26,7 +26,9 @@ class PaymentForm extends Component
 
     public $payment;
 
+    public $user_id;
     public $till_id;
+
     public $category_id;
     public $sub_category_id;
     public $description;
@@ -51,7 +53,7 @@ class PaymentForm extends Component
         $this->status=$status;
         $this->addRow();
 
-        $this->tills = Till::all();
+        $this->tills = Till::where('user_id',auth()->id())->get();
 
         $this->categories = Category::all();
         $this->currencies = Currency::all();
@@ -61,7 +63,9 @@ class PaymentForm extends Component
             $this->editing = true;
             $this->payment = Payment::findOrFail($id);
 
+            $this->user_id = $this->payment->user_id;
             $this->till_id = $this->payment->till_id;
+
             $this->category_id = $this->payment->category_id;
             $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
             $this->sub_category_id = $this->payment->sub_category_id;
@@ -82,7 +86,9 @@ class PaymentForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'till_id' => ['required', 'integer'],
+
             'category_id' => ['required', 'integer'],
             'sub_category_id' => ['required', 'integer'],
             'description' => ['nullable', 'string'],
@@ -116,7 +122,9 @@ class PaymentForm extends Component
         try {
 
             $payment = Payment::create([
+                'user_id' => auth()->id(),
                 'till_id' => $this->till_id,
+
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,

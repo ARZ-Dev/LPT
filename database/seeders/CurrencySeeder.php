@@ -12,6 +12,7 @@ class CurrencySeeder extends Seeder
     {
         $currencies = [
             [
+                'user_id'=> 2,
                 'name' => 'USD',
                 'symbol' => '$',
                 'list_order' => '2',
@@ -19,6 +20,7 @@ class CurrencySeeder extends Seeder
 
             ],
             [
+                'user_id'=> 3,
                 'name' => 'Euro',
                 'symbol' => '€',
                 'list_order' => '1',
@@ -26,6 +28,7 @@ class CurrencySeeder extends Seeder
 
             ],
             [
+                'user_id'=> 1,
                 'name' => 'LBP',
                 'symbol' => 'L£',
                 'list_order' => '3',

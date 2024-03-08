@@ -16,7 +16,7 @@
                     <th>description</th>
                     <th>result</th>
 
-
+                    <th>Created By</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -30,8 +30,7 @@
                         <td>{{ $exchange->rate }}</td>
                         <td>{{ $exchange->description }}</td>
                         <td>{{ $exchange->result }}</td>
-
-
+                        <td>{{ $exchange->user->username }}</td>
                         <td>{{ $exchange->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('exchange-list')

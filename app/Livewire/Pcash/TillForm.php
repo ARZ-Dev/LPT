@@ -19,7 +19,9 @@ class TillForm extends Component
     public $editing = false;
     public int $status;
     public $till;
+    public $created_by;
     public $user_id;
+
     public $name;
     public $tillAmounts = [];
     public $users = [];
@@ -41,7 +43,9 @@ class TillForm extends Component
             $this->editing = true;
             $this->till = Till::with(['tillAmounts' => ['currency']])->findOrFail($id);
 
+            $this->created_by = $this->till->created_by;
             $this->user_id = $this->till->user_id;
+
             $this->name = $this->till->name;
 
             $this->tillAmounts = [];
@@ -60,6 +64,7 @@ class TillForm extends Component
     protected function rules()
     {
         return [
+            'created_by' => ['nullable'],
             'user_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
             'tillAmounts' => ['array', 'min:1'],
@@ -88,7 +93,9 @@ class TillForm extends Component
         $this->validate();
 
         $till = Till::create([
+            'created_by' => auth()->id(),
             'user_id' => $this->user_id,
+
             'name' => $this->name,
         ]);
 

@@ -24,6 +24,7 @@ class Receipt extends Model
     {
         return $this->belongsTo(User::class,'user_id');
     }
+
     public function receiptAmounts()
     {
         return $this->hasMany(ReceiptAmount::class,'receipt_id');

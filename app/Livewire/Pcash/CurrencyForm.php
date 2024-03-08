@@ -18,6 +18,7 @@ class CurrencyForm extends Component
     public $currency;
     
 
+    public $user_id;
     public $name;
     public $symbol;
 
@@ -34,6 +35,7 @@ class CurrencyForm extends Component
             $this->editing = true;
             $this->currency = Currency::findOrFail($id);
 
+            $this->user_id = $this->currency->user_id;
             $this->name = $this->currency->name;
             $this->symbol = $this->currency->symbol;
         }
@@ -43,6 +45,7 @@ class CurrencyForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'name' => ['required', 'string'],
             'symbol' => ['required', 'string'],
         ];
@@ -57,6 +60,7 @@ class CurrencyForm extends Component
     $this->validate();
 
     Currency::create([
+        'user_id' => auth()->id() ,
         'name' => $this->name ,
         'symbol' => $this->symbol ,
         'list_order' => Currency::max('list_order') + 1,

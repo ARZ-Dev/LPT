@@ -23,7 +23,9 @@ class TransferForm extends Component
 
     public $transfer;
 
+    public $user_id;
     public $from_till_id;
+
     public $to_till_id;
 
     public $transferAmount=[];
@@ -50,6 +52,7 @@ class TransferForm extends Component
         if ($id) {
             $this->editing = true;
             $this->transfer = Transfer::findOrFail($id);
+            $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
             $this->transferAmount = $this->transfer->transferAmount->toArray();
@@ -60,7 +63,9 @@ class TransferForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'from_till_id' => ['required', 'integer'],
+
             'to_till_id' => ['required', 'integer', 'different:from_till_id'],
             'transferAmount' => ['array'],
             'transferAmount.*.transfer_id' => ['nullable'],
@@ -110,7 +115,9 @@ class TransferForm extends Component
         try {
 
             $transfer=Transfer::create([
+                'user_id' => auth()->id() ,
                 'from_till_id' => $this->from_till_id ,
+
                 'to_till_id' => $this->to_till_id ,
             ]);
 

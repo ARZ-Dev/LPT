@@ -12,6 +12,7 @@
                     <th>User</th>
                     <th>From Customer</th>
                     <th>Description</th>
+                    <th>Created By</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -22,6 +23,7 @@
                         <td>{{ $receipt->user->username }}</td>
                         <td>{{ $receipt->paid_by }}</td>
                         <td>{{ $receipt->description }}</td>
+                        <td>{{ $receipt->user->username }}</td>
                         <td>{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
