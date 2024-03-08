@@ -71,5 +71,37 @@ class User extends Authenticatable
         return $this->hasMany(Receipt::class,'user_id');
     }
 
+    public function category()
+    {
+        return $this->hasMany(Category::class,'user_id');
+    }
+
+    public function currency()
+    {
+        return $this->hasMany(Currency::class,'user_id');
+    }
+
+    public function tillCreatedBy()
+    {
+        return $this->hasMany(Till::class,'created_by');
+    }
+
+    public function payment()
+    {
+        return $this->hasMany(Payment::class,'user_id');
+    }
+
+    public function transfer()
+    {
+        return $this->hasMany(Transfer::class,'user_id');
+    }
+
+    public function exchnage()
+    {
+        return $this->hasMany(Exchange::class,'user_id');
+    }
+
+    
+
 
 }

@@ -15,21 +15,26 @@ use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Livewire\WithFileUploads;
 
 
 class PaymentForm extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests ,  WithFileUploads;
 
     public $editing = false;
     public int $status;
 
     public $payment;
 
+    public $user_id;
     public $till_id;
+
     public $category_id;
     public $sub_category_id;
     public $description;
+    public $invoice;
+
 
     public  $paymentAmounts = [];
     public $payment_id;
@@ -51,7 +56,7 @@ class PaymentForm extends Component
         $this->status=$status;
         $this->addRow();
 
-        $this->tills = Till::all();
+        $this->tills = Till::where('user_id',auth()->id())->get();
 
         $this->categories = Category::all();
         $this->currencies = Currency::all();
@@ -61,11 +66,15 @@ class PaymentForm extends Component
             $this->editing = true;
             $this->payment = Payment::findOrFail($id);
 
+            $this->user_id = $this->payment->user_id;
             $this->till_id = $this->payment->till_id;
+
             $this->category_id = $this->payment->category_id;
             $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
             $this->sub_category_id = $this->payment->sub_category_id;
             $this->description = $this->payment->description;
+            $this->invoice = $this->payment->invoice;
+
 
             $this->paymentAmounts = [];
             foreach ($this->payment->paymentAmounts as $paymentAmount) {
@@ -82,10 +91,14 @@ class PaymentForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'till_id' => ['required', 'integer'],
+
             'category_id' => ['required', 'integer'],
             'sub_category_id' => ['required', 'integer'],
             'description' => ['nullable', 'string'],
+            'invoice' => ['nullable'],
+
             'paymentAmounts' => ['array'],
             'paymentAmounts.*.payment_id' => ['nullable'],
             'paymentAmounts.*.currency_id' => ['required'],
@@ -115,12 +128,23 @@ class PaymentForm extends Component
         DB::beginTransaction();
         try {
 
+            $path = null;
+            if ($this->invoice && !is_string($this->invoice)) {
+                $path = $this->invoice->storePublicly(path: 'public/invoice');
+            }
+
             $payment = Payment::create([
+                'user_id' => auth()->id(),
                 'till_id' => $this->till_id,
+
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,
+                'invoice' => $path,
+
             ]);
+
+
 
             $paymentId = $payment->id;
             foreach ($this->paymentAmounts as $paymentAmount) {
@@ -162,6 +186,13 @@ class PaymentForm extends Component
         DB::beginTransaction();
         try {
 
+            $path = null;
+            
+            if ($this->invoice && !is_string($this->invoice)) {
+                $path = $this->invoice->storePublicly(path: 'public/invoice');
+            }
+
+
             $existingPaymentAmounts = PaymentAmount::where('payment_id', $this->payment->id)->get();
             foreach ($existingPaymentAmounts as $existingPaymentAmount) {
                 $tillAmount = TillAmount::where('till_id', $this->payment->till_id)
@@ -179,6 +210,8 @@ class PaymentForm extends Component
             }
 
             $this->payment->update([
+                'invoice' => $path,
+
                 'till_id' => $this->till_id,
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
@@ -234,6 +267,13 @@ class PaymentForm extends Component
         $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
+    // #[On('deleteInvoiceFile')]
+    // public function deleteInvoiceFile()
+    // {
+    //     $this->invoice = NULL;
+    //     dd('hey');
+    // }
+    
     public function render()
     {
 

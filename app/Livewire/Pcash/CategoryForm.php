@@ -19,6 +19,7 @@ class CategoryForm extends Component
     public $roles;
     public $category;
 
+    public $user_id;
     public $category_name;
 
     public $sub_category = []; 
@@ -41,6 +42,7 @@ class CategoryForm extends Component
             $this->editing = true;
             $this->category = Category::findOrFail($id);
 
+            $this->user_id = $this->category->user_id;
             $this->category_name = $this->category->category_name;
 
             $this->sub_category = $this->category->subCategory->toArray();
@@ -51,6 +53,7 @@ class CategoryForm extends Component
     protected function rules()
     {
         $rules = [
+            'user_id' => ['nullable'],
             'category_name' => ['required', 'string'],
 
             'sub_category' => ['array'],
@@ -88,7 +91,9 @@ class CategoryForm extends Component
         $this->validate();
 
         $category = Category::create([
+            'user_id' => auth()->id(),
             'category_name' => $this->category_name,
+
         ]);
 
         $categoryId = $category->id;

@@ -42,7 +42,7 @@
                         @endif
                         </div>
                     </div>
-                    @error('sub_category.*.sub_category_name') <div class="text-danger">{{ $message }}</div> @enderror
+                    @error('sub_category.'. $index .'.sub_category_name') <div class="text-danger">{{ $message }}</div> @enderror
                     @endforeach 
 
                     </form>

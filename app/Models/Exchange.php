@@ -25,6 +25,11 @@ class Exchange extends Model
         return $this->belongsto(Currency::class,'to_currency_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
     public static function reportMessage($data){
         echo 'new exchange <u><a href="'. route('exchange.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> has been created ';
     }

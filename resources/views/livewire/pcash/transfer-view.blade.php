@@ -11,7 +11,9 @@
                  <tr>
                     <th>UserName</th>
                     <th>transfer name</th>
+                    <th>Created By</th>
                     <th>Created At</th>
+
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -20,7 +22,9 @@
                     <tr>
                         <td>{{ $transfer->fromTill->user->username ?? 'N/A'}}</td>
                         <td>{{ $transfer->toTill->name ?? 'N/A' }}</td>
+                        <td>{{ $transfer->user->username }}</td>
                         <td>{{ $transfer->created_at->format('d-m-Y h:i a') }}</td>
+
 
                         <td>
                             @can('transfer-list')

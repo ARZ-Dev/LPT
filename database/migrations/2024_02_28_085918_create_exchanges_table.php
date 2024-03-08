@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('exchanges', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('from_currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->foreignId('to_currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->double('amount');
