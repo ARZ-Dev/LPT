@@ -9,7 +9,8 @@
             <table class="datatables-transfer dataTable table border-top">
                 <thead>
                 <tr>
-                    <th>User</th>
+                    <th>ID</th>
+                    <th>Created By</th>
                     <th>Transfer From</th>
                     <th>Transfer To</th>
                     <th>Created At</th>
@@ -19,6 +20,7 @@
                 <tbody>
                 @foreach($transfers as $transfer)
                     <tr>
+                        <td>{{ $transfer->id }}</td>
                         <td>{{ $transfer->user?->username }}</td>
                         <td>{{ $transfer->fromTill?->name ?? 'N/A'}}</td>
                         <td>{{ $transfer->toTill?->name ?? 'N/A' }}</td>

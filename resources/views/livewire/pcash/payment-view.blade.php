@@ -9,11 +9,12 @@
             <table class="datatables-payment dataTable table border-top">
                 <thead>
                  <tr>
+                    <th>ID</th>
+                    <th>Created By</th>
                     <th>Till</th>
                     <th>Category</th>
                     <th>Sub Category</th>
                     <th>Description</th>
-                    <th>Created By</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -21,11 +22,12 @@
                 <tbody>
                 @foreach($payments as $payment)
                     <tr>
+                        <td>{{ $payment->id }}</td>
+                        <td>{{ $payment->user?->full_name }}</td>
                         <td>{{ $payment->till?->name }}</td>
                         <td>{{ $payment->category?->category_name }}</td>
                         <td>{{ $payment->subCategory?->sub_category_name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
-                        <td>{{ $payment->user?->username }}</td>
                         <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('payment-list')

@@ -12,9 +12,20 @@
                     <form class="row g-3">
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="from_currency_id">from<span style="color: red;">*</span></label>
+                            <label class="form-label" for="till_id">Till <span class="text-danger">*</span></label>
                             <div wire:ignore>
+                                <select wire:model="till_id" class="form-select selectpicker w-100 " name="till_id" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                    @foreach($tills as $till)
+                                        <option value="{{$till->id}}" @selected($till->id == $till_id)>{{$till->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('from_till_id') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
 
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" for="from_currency_id">From Currency <span class="text-danger">*</span></label>
+                            <div wire:ignore>
                                 <select wire:model="from_currency_id" wire:change="emptyAmountsFields()"  class="selectpicker w-100" title="Select From Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
                                         <option @if($status == 1) disabled @endif  {{ $currency->id == $from_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
@@ -24,7 +35,7 @@
                             @error('from_currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="to_currency_id">to<span style="color: red;">*</span></label>
+                            <label class="form-label" for="to_currency_id">To Currency <span class="text-danger">*</span></label>
                             <div wire:ignore>
                                 <select wire:model="to_currency_id" wire:change="emptyAmountsFields()" id="to_currency_id" class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
@@ -36,56 +47,55 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="amount">amount<span style="color: red;">*</span></label>
+                            <label class="form-label" for="amount">Amount <span class="text-danger">*</span></label>
                             <input
-                            wire:model="amount"
-                            wire:change="calculateResult()"
-                            type="text"
-                            id="amount"
-                            class="form-control cleave-input"
-                            placeholder="amount"
+                                wire:model="amount"
+                                wire:keyup="calculateResult('amount')"
+                                type="text"
+                                id="amount"
+                                class="form-control cleave-input"
+                                placeholder="Amount"
                             />
                             @error('amount') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="rate">rate<span style="color: red;">*</span></label>
+                            <label class="form-label" for="rate">Rate <span class="text-danger">*</span></label>
                             <input
-                            wire:model="rate"
-                            wire:change="calculateResult()"
-                            type="text"
-                            id="rate"
-                            class="form-control cleave-input"
-                            placeholder="rate"
+                                wire:model="rate"
+                                wire:keyup="calculateResult('rate')"
+                                type="text"
+                                id="rate"
+                                class="form-control cleave-input"
+                                placeholder="Rate"
                             />
                             @error('rate') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                
+
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="rate">result<span style="color: red;">*</span></label>
+                            <label class="form-label" for="rate">Result <span class="text-danger">*</span></label>
                             <input
-                            wire:model="result"
-                            wire:change="calculateResult()"
-                            type="text"
-                            id="result"
-                            class="form-control cleave-input"
-                            placeholder="result"
-                            
+                                wire:model="result"
+                                wire:keyup="calculateResult('result')"
+                                type="text"
+                                id="result"
+                                class="form-control cleave-input"
+                                placeholder="Result"
                             />
                         </div>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label" for="description">description<span style="color: red;"></span></label>
+                        <div class="col-12 col-md-12">
+                            <label class="form-label" for="description">Description <span class="text-danger"></span></label>
                             <textarea
-                            wire:model="description"
-                            type="text"
-                            id="description"
-                            class="form-control"
-                            placeholder="description"
-                            /></textarea>
+                                wire:model="description"
+                                type="text"
+                                id="description"
+                                class="form-control"
+                                placeholder="Description"
+                            ></textarea>
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-           
+
                     </form>
                 </div>
 
@@ -100,31 +110,17 @@
         </div>
 
         @script
-            <script>
+        <script>
 
-                document.addEventListener('livewire:navigated', function () {
+            Livewire.on('emptyToCurrencyId', function () {
+                $('#to_currency_id').val("");
+                $('[data-id="to_currency_id"]').find(".filter-option-inner-inner").text("Select To Currency");
+            });
 
-                    var status={{$status}};
+            triggerCleave();
+            $('.selectpicker').selectpicker();
 
-                    if (status=="1") {
-                        $('input').prop('disabled', true);
-                        $('textarea').prop('disabled', true);
-
-                    }
-                    
-                    Livewire.on('emptyToCurrencyId', function () {
-                        $('#to_currency_id').val("");
-                        $('[data-id="to_currency_id"]').find(".filter-option-inner-inner").text("Select To Currency");
-                    });
-
-
-                });
-
-                triggerCleave();
-                
-                $('.selectpicker').selectpicker();
-
-            </script>
+        </script>
         @endscript
     </div>
 </div>

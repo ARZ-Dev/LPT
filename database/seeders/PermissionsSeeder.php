@@ -32,55 +32,63 @@ class PermissionsSeeder extends Seeder
             'category-create',
             'category-edit',
             'category-delete',
+            'category-viewAll',
 
             'currency-list',
             'currency-create',
             'currency-edit',
             'currency-delete',
+            'currency-viewAll',
 
             'till-list',
             'till-create',
             'till-edit',
             'till-delete',
+            'till-viewAll',
 
             'payment-list',
             'payment-create',
             'payment-edit',
             'payment-delete',
+            'payment-viewAll',
 
             'receipt-list',
             'receipt-create',
             'receipt-edit',
             'receipt-delete',
+            'receipt-viewAll',
 
             'transfer-list',
             'transfer-create',
             'transfer-edit',
             'transfer-delete',
+            'transfer-viewAll',
 
             'exchange-list',
             'exchange-create',
             'exchange-edit',
             'exchange-delete',
+            'exchange-viewAll',
 
             'monthlyEntry-list',
             'monthlyEntry-create',
             'monthlyEntry-edit',
             'monthlyEntry-delete',
+            'monthlyEntry-viewAll',
 
             'team-list',
             'team-create',
             'team-edit',
             'team-view',
             'team-delete',
+            'team-viewAll',
 
             'player-list',
             'player-create',
             'player-edit',
             'player-view',
             'player-delete',
-
-
+            'player-viewAll',
         ];
 
         $permissionsIds = [];

@@ -9,10 +9,10 @@
             <table class="datatables-receipt dataTable table border-top">
                 <thead>
                  <tr>
-                    <th>User</th>
+                    <th>ID</th>
+                    <th>Created By</th>
                     <th>From Customer</th>
                     <th>Description</th>
-                    <th>Created By</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -20,10 +20,10 @@
                 <tbody>
                 @foreach($receipts as $receipt)
                     <tr>
-                        <td>{{ $receipt->user->username }}</td>
+                        <td>{{ $receipt->id }}</td>
+                        <td>{{ $receipt->user?->full_name }}</td>
                         <td>{{ $receipt->paid_by }}</td>
                         <td>{{ $receipt->description }}</td>
-                        <td>{{ $receipt->user->username }}</td>
                         <td>{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>

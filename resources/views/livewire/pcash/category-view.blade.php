@@ -9,18 +9,19 @@
             <table class="datatables-category dataTable table border-top">
                 <thead>
                  <tr>
-                    <th>Category</th>
+                    <th>ID</th>
                     <th>Created By</th>
+                    <th>Category</th>
                     <th>Created At</th>
-
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($categories as $category)
                     <tr>
+                        <td>{{ $category->id }}</td>
                         <td>{{ $category->category_name }}</td>
-                        <td>{{ $category->user->username }}</td>
+                        <td>{{ $category->user?->username }}</td>
                         <td>{{ $category->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
@@ -28,7 +29,7 @@
                                 <a href="{{ route('category.view', ['id' => $category->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('category-edit')
-                                <a href="{{ route('category.edit', $category->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('category.edit', $category->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
                             @can('category-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>

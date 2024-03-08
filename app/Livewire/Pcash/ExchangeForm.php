@@ -4,6 +4,7 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
 use App\Models\Exchange;
+use App\Models\Till;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -15,11 +16,12 @@ class ExchangeForm extends Component
     public $editing = false;
     public int $status;
 
-    public $roles;
+    public $tills = [];
     public $exchange;
 
     public $currencies;
 
+    public int $till_id;
     public $user_id;
     public $from_currency_id;
     public $to_currency_id;
@@ -27,9 +29,8 @@ class ExchangeForm extends Component
     public $rate;
     public $description;
     public $result;
-
-    public $from_currency_list;
-    public $to_currency_list;
+    public $fromCurrency;
+    public $toCurrency;
 
 
     protected $listeners = ['store', 'update'];
@@ -38,7 +39,7 @@ class ExchangeForm extends Component
     {
         $this->authorize('exchange-list');
 
-        $this->roles = Role::pluck('name', 'id');
+        $this->tills = Till::all();
         $this->status=$status;
 
         $this->currencies = Currency::all();
@@ -48,12 +49,15 @@ class ExchangeForm extends Component
             $this->exchange = Exchange::findOrFail($id);
 
             $this->user_id = $this->exchange->user_id;
+            $this->till_id = $this->exchange->till_id;
             $this->from_currency_id = $this->exchange->from_currency_id;
+            $this->fromCurrency = Currency::find($this->from_currency_id);
             $this->to_currency_id = $this->exchange->to_currency_id;
+            $this->toCurrency = Currency::find($this->to_currency_id);
             $this->amount = number_format($this->exchange->amount);
             $this->rate = number_format($this->exchange->rate);
-            $this->description = $this->exchange->description;
             $this->result = number_format($this->exchange->result);
+            $this->description = $this->exchange->description;
         }
 
     }
@@ -61,21 +65,31 @@ class ExchangeForm extends Component
     protected function rules()
     {
         $rules = [
-            'user_id' => ['nullable'],
+            'till_id' => ['required'],
             'from_currency_id' => ['required', 'integer'],
             'to_currency_id' => ['required', 'integer'],
             'amount' => ['required'],
             'rate' => ['required'],
             'description' => ['nullable', 'string'],
             'result' => ['nullable'],
-
         ];
 
         return $rules;
     }
 
-    public function emptyAmountsFields(){
-        if($this->from_currency_id==$this->to_currency_id){
+    public function updatedFromCurrencyId($value)
+    {
+        $this->fromCurrency = Currency::find($value);
+    }
+
+    public function updatedToCurrencyId($value)
+    {
+        $this->toCurrency = Currency::find($value);
+    }
+
+    public function emptyAmountsFields()
+    {
+        if($this->from_currency_id == $this->to_currency_id){
             $this->to_currency_id="";
             $this->dispatch('emptyToCurrencyId');
         }
@@ -84,52 +98,32 @@ class ExchangeForm extends Component
         $this->rate="";
     }
 
-    public function calculateResult(){
-
-        if(!isset($this->from_currency_list) || !isset($this->to_currency_list)){
+    public function calculateResult($type)
+    {
+        if (!isset($this->fromCurrency, $this->toCurrency)) {
             return;
         }
 
-        $this->amount=$this->sanitizeNumber($this->amount);
-        $this->result=$this->sanitizeNumber($this->result);
-        $this->rate=$this->sanitizeNumber($this->rate);
-        
-        if( $this->amount>0 && $this->result>0 && $this->rate==""){
-            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
-                $this->rate=round($this->result/$this->amount,2);
-            }
-            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
-                $this->rate=round($this->amount/$this->result,2);
-            }
-        }
-        else if($this->result>0 && $this->rate>0 && $this->amount==""){
-            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
-                $this->amount=$this->result/$this->rate;
-            }
-            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
-                $this->amount=$this->result*$this->rate;
-            }
-        }
-        else if($this->amount>0 && $this->rate>0){
-            if($this->from_currency_list->list_order < $this->to_currency_list->list_order){
-                $this->result=round($this->amount*$this->rate,2);
-            }
-            elseif($this->from_currency_list->list_order > $this->to_currency_list->list_order){
-                $this->result=round($this->amount/$this->rate,2);
+        $amount = sanitizeNumber($this->amount);
+        $result = sanitizeNumber($this->result);
+        $rate = sanitizeNumber($this->rate);
+
+        if (($type == "rate" || $type == "amount") && $amount > 0 && $rate > 0) {
+            if ($this->fromCurrency->list_order < $this->toCurrency->list_order) {
+                $this->result = number_format($amount * $rate);
+            } else if ($this->fromCurrency->list_order > $this->toCurrency->list_order) {
+                $this->result = number_format($amount / $rate);
             }
         }
 
-    }
-
-
-    private function sanitizeNumber($number)
-    {
-        $number = str_replace(',', '', $number);
-        if (substr($number, -1) === '.') {
-            $number = substr($number, 0, -1);
+        if ($type == "result" && $result > 0 && $rate > 0) {
+            if ($this->fromCurrency->list_order < $this->toCurrency->list_order) {
+                $this->amount = number_format($result / $rate);
+            } else if ($this->fromCurrency->list_order > $this->toCurrency->list_order) {
+                $this->amount = number_format($result * $rate);
+            }
         }
 
-        return $number;
     }
 
     public function store()
@@ -140,14 +134,14 @@ class ExchangeForm extends Component
         $this->validate();
 
         Exchange::create([
-            'user_id' => auth()->id() ,
-            'from_currency_id' => $this->from_currency_id ,
-
-            'to_currency_id' => $this->to_currency_id ,
-            'amount' => $this->sanitizeNumber($this->amount) ,
-            'rate' => $this->sanitizeNumber($this->rate) ,
-            'description' => $this->description ,
-            'result' => $this->sanitizeNumber($this->result) ,
+            'user_id' => auth()->id(),
+            'till_id' => $this->till_id,
+            'from_currency_id' => $this->from_currency_id,
+            'to_currency_id' => $this->to_currency_id,
+            'amount' => sanitizeNumber($this->amount),
+            'rate' => sanitizeNumber($this->rate),
+            'description' => $this->description,
+            'result' => sanitizeNumber($this->result),
         ]);
 
         session()->flash('success', 'exchange has been created successfully!');
@@ -163,12 +157,13 @@ class ExchangeForm extends Component
         $this->validate();
 
         $this->exchange->update([
+            'till_id' => $this->till_id ,
             'from_currency_id' => $this->from_currency_id ,
             'to_currency_id' => $this->to_currency_id ,
-            'amount' => $this->sanitizeNumber($this->amount),
-            'rate' => $this->sanitizeNumber($this->rate),
+            'amount' => sanitizeNumber($this->amount),
+            'rate' => sanitizeNumber($this->rate),
             'description' => $this->description ,
-            'result' => $this->sanitizeNumber($this->result),
+            'result' => sanitizeNumber($this->result),
 
         ]);
 
@@ -176,13 +171,10 @@ class ExchangeForm extends Component
 
         return redirect()->route('exchange');
     }
-    
+
 
     public function render()
-    {  
-        $this->from_currency_list = Currency::find($this->from_currency_id);
-        $this->to_currency_list = Currency::find($this->to_currency_id);
-
+    {
         return view('livewire.pcash.exchange-form');
     }
 }

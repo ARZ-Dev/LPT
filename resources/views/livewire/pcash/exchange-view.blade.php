@@ -9,14 +9,14 @@
             <table class="datatables-exchange dataTable table border-top">
                 <thead>
                  <tr>
+                    <th>ID</th>
+                    <th>Created By</th>
                     <th>From</th>
                     <th>To</th>
                     <th>amount</th>
                     <th>rate</th>
-                    <th>description</th>
                     <th>result</th>
-
-                    <th>Created By</th>
+                    <th>description</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -24,20 +24,21 @@
                 <tbody>
                 @foreach($exchanges as $exchange)
                     <tr>
-                        <td>{{ $exchange->fromCurrency->name }}</td>
-                        <td>{{ $exchange->toCurrency->name }}</td>
-                        <td>{{ $exchange->amount }}</td>
-                        <td>{{ $exchange->rate }}</td>
+                        <td>{{ $exchange->id }}</td>
+                        <td>{{ $exchange->user?->full_name }}</td>
+                        <td>{{ $exchange->fromCurrency?->name }}</td>
+                        <td>{{ $exchange->toCurrency?->name }}</td>
+                        <td>{{ number_format($exchange->amount) }}</td>
+                        <td>{{ number_format($exchange->rate) }}</td>
+                        <td>{{ number_format($exchange->result) }}</td>
                         <td>{{ $exchange->description }}</td>
-                        <td>{{ $exchange->result }}</td>
-                        <td>{{ $exchange->user->username }}</td>
                         <td>{{ $exchange->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('exchange-list')
                                 <a href="{{ route('exchange.view', ['id' => $exchange->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('exchange-edit')
-                                <a href="{{ route('exchange.edit', $exchange->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('exchange.edit', $exchange->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
                             @can('exchange-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $exchange->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
