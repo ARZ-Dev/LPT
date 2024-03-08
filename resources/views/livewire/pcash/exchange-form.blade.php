@@ -26,7 +26,7 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="to_currency_id">to<span style="color: red;">*</span></label>
                             <div wire:ignore>
-                                <select wire:model="to_currency_id" wire:change="emptyAmountsFields()"  class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <select wire:model="to_currency_id" wire:change="emptyAmountsFields()" id="to_currency_id" class="selectpicker w-100" title="Select To Currency" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                     @foreach($currencies as $currency)
                                         <option @if($status == 1) disabled @endif  {{ $currency->id == $to_currency_id ? 'selected' : '' }} value='{{ $currency->id }}'>{{ $currency->name }}</option>
                                     @endforeach
@@ -100,21 +100,32 @@
         </div>
 
         @script
-    <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {
-                $('input').prop('disabled', true);
-                $('textarea').prop('disabled', true);
+            <script>
 
-            }
-        });
+                document.addEventListener('livewire:navigated', function () {
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
+                    var status={{$status}};
 
-    </script>
-    @endscript
+                    if (status=="1") {
+                        $('input').prop('disabled', true);
+                        $('textarea').prop('disabled', true);
+
+                    }
+                    
+                    Livewire.on('emptyToCurrencyId', function () {
+                        $('#to_currency_id').val("");
+                        $('[data-id="to_currency_id"]').find(".filter-option-inner-inner").text("Select To Currency");
+                    });
+
+
+                });
+
+                triggerCleave();
+                
+                $('.selectpicker').selectpicker();
+
+            </script>
+        @endscript
     </div>
 </div>
 
