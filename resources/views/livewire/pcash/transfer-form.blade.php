@@ -114,7 +114,7 @@
             triggerCleave()
         })
 
-        $(document).on('change', '.currency', function() {
+        $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
         })
     </script>

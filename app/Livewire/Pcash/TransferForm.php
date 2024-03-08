@@ -131,6 +131,10 @@ class TransferForm extends Component
 
 
                 $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
+                if (!$fromTill) {
+                    throw new Exception("From till amount does not exists!");
+                }
+
                 $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
 
                 if ($fromTill->amount < $this->sanitizeNumber($transferAmount['amount'])) {
@@ -160,8 +164,6 @@ class TransferForm extends Component
             }
 
 
-            session()->flash('success', 'transfer has been created successfully!');
-
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -172,7 +174,7 @@ class TransferForm extends Component
             ]);
         }
 
-        return redirect()->route('transfer');
+        return to_route('transfer')->with('success', 'transfer has been created successfully!');
     }
 
     public function update()
@@ -197,6 +199,10 @@ class TransferForm extends Component
                 $amount = $transferAmount->amount;
 
                 $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
+                if (!$fromTill) {
+                    throw new Exception("From till amount does not exists!");
+                }
+
                 $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
 
                 $fromTill->update([
@@ -257,15 +263,13 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            $this->dispatch('swal:error', [
+            return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => $exception->getMessage(),
             ]);
         }
 
-        session()->flash('success', 'transfer has been updated successfully!');
-
-        return redirect()->route('transfer');
+        return to_route('transfer')->with('success', 'transfer has been updated successfully!');
     }
 
     public function render()
