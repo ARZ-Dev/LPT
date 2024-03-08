@@ -9,19 +9,19 @@
             <table id="datatables-reportData" class="datatables-reportData dataTable table border-top">
                 <thead>
                  <tr>
+                     <th>type</th>
+                     <th>date</th>
+
                     <th>description</th>
-                    <th>section</th>
-                    <th>date</th>
+           
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($reportData as $data)
                     <tr>
-                        <td>
-                            {{  $data['model']::reportMessage($data); }}
-                        </td>
                         <td>{{ $data['section'] }}</td>
-                        <td>{{ $data['date']->format('m-d-Y h:i a') }} </td>
+                        <td>{{ $data['date']->format('m-d-Y h:i a') }}</td>
+                        <td>{{  $data['model']::reportMessage($data); }}</td>
                     </tr>
                 @endforeach
                 </tbody>
