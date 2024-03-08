@@ -73,7 +73,7 @@
                                     @php
                                         $uploadedFile = $this->invoice ? [asset(\Illuminate\Support\Facades\Storage::url($this->invoice))] : [];
                                     @endphp
-                                    <x-filepond :files="$uploadedFile" wire:model="invoice"  />
+                                    <x-filepond :files="$uploadedFile" wire:model="invoice" delete-event="deleteNationalIdFile"  />
                                 </div>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
+use App\Models\MonthlyEntry;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Carbon;
 
 class TillForm extends Component
 {
@@ -95,8 +97,21 @@ class TillForm extends Component
         $till = Till::create([
             'created_by' => auth()->id(),
             'user_id' => $this->user_id,
-
             'name' => $this->name,
+        ]);
+ 
+     
+
+        MonthlyEntry::create([
+            'user_id' =>$this->user_id,
+            'created_by' => $this->user_id,
+            'till_id' =>$till->id,
+
+            'open_date' => Carbon::now(),
+            'close_date' => null,
+            'pending' => 0,
+            'confirm' => 0,
+
         ]);
 
         $tillId = $till->id;

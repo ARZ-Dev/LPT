@@ -63,6 +63,11 @@ class PermissionsSeeder extends Seeder
             'exchange-edit',
             'exchange-delete',
 
+            'monthlyEntry-list',
+            'monthlyEntry-create',
+            'monthlyEntry-edit',
+            'monthlyEntry-delete',
+
             'team-list',
             'team-create',
             'team-edit',

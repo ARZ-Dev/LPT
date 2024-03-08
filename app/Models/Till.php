@@ -44,6 +44,10 @@ class Till extends Model
     {
         return $this->hasMany(Payment::class,'till_id');
     }
+    public function monthlyEntry()
+    {
+        return $this->hasMany(MonthlyEntry::class,'till_id');
+    }
     public function receipts()
     {
         return $this->hasMany(Receipt::class,'till_id');
