@@ -3,6 +3,7 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Exchange;
+use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
@@ -25,6 +26,21 @@ class ExchangeView extends Component
         $this->authorize('exchange-delete');
 
         $exchange = Exchange::findOrFail($id);
+
+        $fromTillAmount = TillAmount::where('till_id', $exchange->till_id)->where('currency_id', $exchange->from_currency_id)->first();
+        $toTillAmount = TillAmount::where('till_id', $exchange->till_id)->where('currency_id', $exchange->to_currency_id)->first();
+
+        if ($fromTillAmount) {
+            $fromTillAmount->update([
+                'amount' => $fromTillAmount->amount - $exchange->amount,
+            ]);
+        }
+
+        if ($toTillAmount) {
+            $toTillAmount->update([
+                'amount' => $toTillAmount->amount + $exchange->result,
+            ]);
+        }
 
         $exchange->delete();
 
