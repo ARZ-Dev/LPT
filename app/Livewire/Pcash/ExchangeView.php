@@ -10,31 +10,30 @@ use Livewire\Component;
 class ExchangeView extends Component
 {
     use AuthorizesRequests;
-    
+
     protected $listeners = ['delete'];
     public $exchanges;
 
-    public function mount(){
+    public function mount()
+    {
         $this->authorize('exchange-list');
         $this->exchanges = Exchange::with('fromCurrency','toCurrency')->get();
-
     }
 
     public function delete($id)
     {
         $this->authorize('exchange-delete');
 
-        $exchange = Exchange::with('currency')->findOrFail($id);
+        $exchange = Exchange::findOrFail($id);
 
         $exchange->delete();
 
-        return to_route('exchange')->with('success', 'exchange has been deleted successfully!');
+        return to_route('exchange')->with('success', 'Exchange has been deleted successfully!');
     }
 
 
     public function render()
     {
-
         return view('livewire.pcash.exchange-view');
     }
 }

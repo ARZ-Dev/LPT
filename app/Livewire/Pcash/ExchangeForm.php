@@ -5,7 +5,9 @@ namespace App\Livewire\Pcash;
 use App\Models\Currency;
 use App\Models\Exchange;
 use App\Models\Till;
+use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
@@ -128,48 +130,111 @@ class ExchangeForm extends Component
 
     public function store()
     {
-
-        $this->authorize('exchange-edit');
+        $this->authorize('exchange-create');
 
         $this->validate();
 
-        Exchange::create([
-            'user_id' => auth()->id(),
-            'till_id' => $this->till_id,
-            'from_currency_id' => $this->from_currency_id,
-            'to_currency_id' => $this->to_currency_id,
-            'amount' => sanitizeNumber($this->amount),
-            'rate' => sanitizeNumber($this->rate),
-            'description' => $this->description,
-            'result' => sanitizeNumber($this->result),
-        ]);
+        DB::beginTransaction();
+        try {
+            Exchange::create([
+                'user_id' => auth()->id(),
+                'till_id' => $this->till_id,
+                'from_currency_id' => $this->from_currency_id,
+                'to_currency_id' => $this->to_currency_id,
+                'amount' => sanitizeNumber($this->amount),
+                'rate' => sanitizeNumber($this->rate),
+                'description' => $this->description,
+                'result' => sanitizeNumber($this->result),
+            ]);
 
-        session()->flash('success', 'exchange has been created successfully!');
+            $this->updateTillsAmounts();
 
-        return redirect()->route('exchange');
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+
+        return to_route('exchange')->with('success', 'Exchange has been created successfully!');
     }
 
 
     public function update()
     {
         $this->authorize('exchange-edit');
-
         $this->validate();
 
-        $this->exchange->update([
-            'till_id' => $this->till_id ,
-            'from_currency_id' => $this->from_currency_id ,
-            'to_currency_id' => $this->to_currency_id ,
-            'amount' => sanitizeNumber($this->amount),
-            'rate' => sanitizeNumber($this->rate),
-            'description' => $this->description ,
-            'result' => sanitizeNumber($this->result),
+        DB::beginTransaction();
+        try {
 
+            $fromTillAmount = TillAmount::where('till_id', $this->exchange->till_id)->where('currency_id', $this->exchange->from_currency_id)->first();
+            $toTillAmount = TillAmount::where('till_id', $this->exchange->till_id)->where('currency_id', $this->exchange->to_currency_id)->first();
+            throw_if(!$fromTillAmount, new \Exception("Selected currency from does not exists in till amounts!"));
+            throw_if(!$toTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
+
+            $fromTillAmount->update([
+                'amount' => $fromTillAmount->amount - $this->exchange->amount,
+            ]);
+
+            $toTillAmount->update([
+                'amount' => $toTillAmount->amount + $this->exchange->result,
+            ]);
+
+            $this->exchange->update([
+                'till_id' => $this->till_id ,
+                'from_currency_id' => $this->from_currency_id ,
+                'to_currency_id' => $this->to_currency_id ,
+                'amount' => sanitizeNumber($this->amount),
+                'rate' => sanitizeNumber($this->rate),
+                'description' => $this->description ,
+                'result' => sanitizeNumber($this->result),
+            ]);
+
+            $this->updateTillsAmounts();
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+
+        return to_route('exchange')->with('success', 'Exchange has been updated successfully!');
+    }
+
+    /**
+     * @return void
+     * @throws \Throwable
+     */
+    public function updateTillsAmounts(): void
+    {
+        $fromTillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $this->from_currency_id)->first();
+        $toTillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $this->to_currency_id)->first();
+
+        throw_if(!$toTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
+
+        $toTillAmount->update([
+            'amount' => $toTillAmount->amount - sanitizeNumber($this->result),
         ]);
 
-        session()->flash('success', 'exchange has been updated successfully!');
-
-        return redirect()->route('exchange');
+        if ($fromTillAmount) {
+            $fromTillAmount->update([
+                'amount' => $fromTillAmount->amount + sanitizeNumber($this->amount),
+            ]);
+        } else {
+            TillAmount::create([
+                'till_id' => $this->till_id,
+                'currency_id' => $this->from_currency_id,
+                'amount' => sanitizeNumber($this->amount),
+            ]);
+        }
     }
 
 
