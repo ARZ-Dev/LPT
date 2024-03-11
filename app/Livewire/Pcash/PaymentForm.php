@@ -56,7 +56,7 @@ class PaymentForm extends Component
         $this->status=$status;
         $this->addRow();
 
-        $this->tills = Till::where('user_id',auth()->id())->get();
+        $this->tills = Till::all();
 
         $this->categories = Category::all();
         $this->currencies = Currency::all();
@@ -130,21 +130,17 @@ class PaymentForm extends Component
 
             $path = null;
             if ($this->invoice && !is_string($this->invoice)) {
-                $path = $this->invoice->storePublicly(path: 'public/invoice');
+                $path = $this->invoice->storePublicly(path: 'public/invoices');
             }
 
             $payment = Payment::create([
                 'user_id' => auth()->id(),
                 'till_id' => $this->till_id,
-
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,
                 'invoice' => $path,
-
             ]);
-
-
 
             $paymentId = $payment->id;
             foreach ($this->paymentAmounts as $paymentAmount) {
@@ -154,7 +150,7 @@ class PaymentForm extends Component
                     'amount' => sanitizeNumber($paymentAmount['amount']),
                 ]);
 
-                
+
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
                 // if (!$tillAmount || ($tillAmount->amount < sanitizeNumber($paymentAmount['amount']))) {
                     //     throw new Exception("Cannot pay, payment amount does not exists");
@@ -170,7 +166,7 @@ class PaymentForm extends Component
                     $newtillAmount->till_id = $this->till_id;
                     $newtillAmount->amount = -sanitizeNumber($paymentAmount['amount']);
                     $newtillAmount->currency_id = $paymentAmount['currency_id'];
-                    $newtillAmount->save(); 
+                    $newtillAmount->save();
                 }
             }
 
@@ -194,15 +190,6 @@ class PaymentForm extends Component
 
         DB::beginTransaction();
         try {
-
-        
-            if ($this->invoice !== null) {
-                $path = 'public/invoice/' . $this->invoice;
-            }else{
-                $path = null;
-            }
-
-
             $existingPaymentAmounts = PaymentAmount::where('payment_id', $this->payment->id)->get();
             foreach ($existingPaymentAmounts as $existingPaymentAmount) {
                 $tillAmount = TillAmount::where('till_id', $this->payment->till_id)
@@ -216,17 +203,20 @@ class PaymentForm extends Component
                         'amount' => $updatedAmount,
                     ]);
                 }
-
             }
 
-            $this->payment->update([
-                'invoice' => $path,
-
+            $data = [
                 'till_id' => $this->till_id,
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'description' => $this->description,
-            ]);
+            ];
+
+            if ($this->invoice && !is_string($this->invoice)) {
+                $data['invoice'] = $this->invoice->storePublicly(path: 'public/invoices');
+            }
+
+            $this->payment->update($data);
 
             $paymentAmountsIds = [];
             foreach ($this->paymentAmounts as $paymentAmount) {
@@ -277,12 +267,15 @@ class PaymentForm extends Component
         $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
-    #[On('deleteInvoiceFile')]
-    public function deleteInvoiceFile()
+    #[On('deleteInvoice')]
+    public function deleteInvoice()
     {
-        $this->invoice = NULL;
+        if ($this->payment) {
+            $this->payment->invoice = NULL;
+            $this->payment->save();
+        }
     }
-    
+
     public function render()
     {
 
