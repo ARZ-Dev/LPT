@@ -12,34 +12,34 @@
                     <form class="row g-3">
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="name">Category Name <span style="color: red;">*</span></label>
+                        <label class="form-label" for="name">Category Name <span class="text-danger">*</span></label>
                         <input
                         wire:model.defer="name"
                         type="text"
                         id="name"
                         name="name"
                         class="form-control "
-                        placeholder="name"
+                        placeholder="Name"
                         />
                         @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-12 col-md-6">
-                        @if(!$status)
-                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub Category</button>
-                        @endif
+
                     </div>
 
                     @foreach($sub_category as $index => $subcategory)
                     <div wire:key="subcategory-{{ $index }}">
-                        <label for="sub_category[{{ $index }}][name]">Sub-category Name <span style="color: red;">*</span> </label>
+                        <label class="form-label" for="sub_category[{{ $index }}][name]">Sub Category Name <span class="text-danger">*</span> </label>
                         <div class="d-flex flex-row">
-                        <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.name" type="text" id="sub_category[{{ $index }}][name]" name="sub_category[{{ $index }}][name]" required>
-                        @if($index !== 0)
+                            <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.name" type="text" id="sub_category[{{ $index }}][name]" name="sub_category[{{ $index }}][name]" placeholder="Sub Category Name" required>
                             @if(!$status)
-                                <button type="button" class="btn btn-danger"  wire:click="removeSubCategory({{ $index }})">Remove</button>
+                                @if($index == 0)
+                                    <button type="button" class="btn btn-success" wire:click="addRow">Add Sub Category</button>
+                                @else
+                                    <button type="button" class="btn btn-danger" wire:click="removeSubCategory({{ $index }})">Remove</button>
+                                @endif
                             @endif
-                        @endif
                         </div>
                     </div>
                     @error('sub_category.'. $index .'.name') <div class="text-danger">{{ $message }}</div> @enderror

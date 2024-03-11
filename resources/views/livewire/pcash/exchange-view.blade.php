@@ -11,12 +11,12 @@
                  <tr>
                     <th>ID</th>
                     <th>Created By</th>
+                    <th>Till</th>
                     <th>From</th>
                     <th>To</th>
                     <th>amount</th>
                     <th>rate</th>
                     <th>result</th>
-                    <th>description</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -26,12 +26,12 @@
                     <tr>
                         <td>{{ $exchange->id }}</td>
                         <td>{{ $exchange->user?->full_name }}</td>
+                        <td>{{ $exchange->till?->name }}</td>
                         <td>{{ $exchange->fromCurrency?->name }}</td>
                         <td>{{ $exchange->toCurrency?->name }}</td>
                         <td>{{ number_format($exchange->amount) }}</td>
                         <td>{{ number_format($exchange->rate) }}</td>
                         <td>{{ number_format($exchange->result) }}</td>
-                        <td>{{ $exchange->description }}</td>
                         <td>{{ $exchange->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('exchange-list')

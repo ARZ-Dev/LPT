@@ -16,33 +16,25 @@ class CurrencySeeder extends Seeder
                 'name' => 'USD',
                 'symbol' => '$',
                 'list_order' => '2',
-
-
             ],
             [
                 'user_id'=> 3,
                 'name' => 'Euro',
                 'symbol' => '€',
                 'list_order' => '1',
-
-
             ],
             [
                 'user_id'=> 1,
                 'name' => 'LBP',
                 'symbol' => 'L£',
                 'list_order' => '3',
-
-
             ],
         ];
 
-        $timestamp = Carbon::create(2011, 11, 11, 0, 0, 0);
-
         foreach ($currencies as $currency) {
-            $currency['created_at'] = $timestamp;
-            $currency['updated_at'] = $timestamp;
-           DB::table('currencies')->insertGetId($currency);
+            $currency['created_at'] = now();
+            $currency['updated_at'] = now();
+            DB::table('currencies')->insertGetId($currency);
         }
 
 

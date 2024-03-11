@@ -15,21 +15,20 @@ class TillSeeder extends Seeder
                 'created_by' => 1,
                 'user_id' => 1,
                 'name' => 'wael'
-            ], 
+            ],
             [
                 'created_by' => 1,
                 'user_id' => 2,
                 'name' => 'pico'
-            ], 
+            ],
         ];
-        $timestamp = Carbon::create(2011, 11, 11, 0, 0, 0);
         foreach ($tills as $till) {
-            $till['created_at'] = $timestamp;
-            $till['updated_at'] = $timestamp;
-           DB::table('tills')->insertGetId($till);
+            $till['created_at'] = now();
+            $till['updated_at'] = now();
+            DB::table('tills')->insertGetId($till);
         }
 
-        
+
     }
 }
 

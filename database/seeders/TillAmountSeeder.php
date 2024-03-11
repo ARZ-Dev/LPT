@@ -16,7 +16,7 @@ class TillAmountSeeder extends Seeder
                 'amount' => 100,
                 'currency_id' => 1,
 
-            ], 
+            ],
             [
                 'till_id' => 1,
                 'amount' => 50,
@@ -33,22 +33,21 @@ class TillAmountSeeder extends Seeder
                 'amount' => 50,
                 'currency_id' => 1,
 
-            ], 
+            ],
             [
                 'till_id' => 2,
                 'amount' => 500000,
                 'currency_id' => 3,
 
-            ],  
+            ],
         ];
-        $timestamp = Carbon::create(2011, 11, 11, 0, 0, 0);
         foreach ($tillAmounts as $tillAmount) {
-            $till['created_at'] = $timestamp;
-            $till['updated_at'] = $timestamp;
-           DB::table('till_amounts')->insertGetId($tillAmount);
+            $tillAmount['created_at'] = now();
+            $tillAmount['updated_at'] = now();
+            DB::table('till_amounts')->insertGetId($tillAmount);
         }
 
-        
+
     }
 }
 
