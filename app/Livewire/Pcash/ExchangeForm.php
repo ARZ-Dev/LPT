@@ -41,8 +41,12 @@ class ExchangeForm extends Component
     {
         $this->authorize('exchange-list');
 
-        $this->tills = Till::all();
-        $this->status=$status;
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
+        
+        $this->status = $status;
 
         $this->currencies = Currency::all();
 

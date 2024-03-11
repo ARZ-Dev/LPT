@@ -15,10 +15,12 @@ class CategoryView extends Component
     protected $listeners = ['delete'];
     public $categories;
 
-    public function mount(){
+    public function mount()
+    {
         $this->authorize('category-list');
-        $this->categories = Category::all();
-        
+        $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })->get();
     }
 
     public function delete($id)

@@ -38,9 +38,12 @@ class ReceiptForm extends Component
 
         $this->status = $status;
 
-        $this->users = User::all();
         $this->currencies = Currency::all();
-        $this->tills = Till::all();
+
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
 
         $this->addRow();
 

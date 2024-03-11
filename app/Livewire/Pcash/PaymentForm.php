@@ -56,9 +56,16 @@ class PaymentForm extends Component
         $this->status=$status;
         $this->addRow();
 
-        $this->tills = Till::all();
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
 
-        $this->categories = Category::all();
+        $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
+
         $this->currencies = Currency::all();
 
         if ($id) {

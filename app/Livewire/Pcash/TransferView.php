@@ -15,9 +15,14 @@ class TransferView extends Component
     protected $listeners = ['delete'];
     public $transfers;
 
-    public function mount(){
+    public function mount()
+    {
         $this->authorize('transfer-list');
-        $this->transfers = Transfer::with(['fromTill.user','toTill'])->get();
+        $this->transfers = Transfer::with(['fromTill.user','toTill'])
+            ->when(!auth()->user()->hasPermissionTo('transfer-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
     }
 
     public function delete($id)

@@ -15,11 +15,15 @@ class TillView extends Component
     protected $listeners = ['delete'];
     public $tills;
 
-    public function mount(){
-
+    public function mount()
+    {
         $this->authorize('till-list');
-        $this->tills = Till::with(['user'])->get();
 
+        $this->tills = Till::with(['user'])
+            ->when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
     }
 
     public function delete($id)

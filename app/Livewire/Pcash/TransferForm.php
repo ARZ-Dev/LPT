@@ -41,12 +41,15 @@ class TransferForm extends Component
     {
         $this->authorize('transfer-list');
 
-        $this->tills = Till::all();
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
+
         $this->currencies = Currency::all();
 
-        $this->status=$status;
+        $this->status = $status;
         $this->addRow();
-
 
         if ($id) {
             $this->editing = true;

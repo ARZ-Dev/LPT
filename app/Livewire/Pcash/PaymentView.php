@@ -18,7 +18,11 @@ class PaymentView extends Component
     public function mount()
     {
         $this->authorize('payment-list');
-        $this->payments = Payment::with(['category', 'subCategory'])->get();
+        $this->payments = Payment::with(['category', 'subCategory'])
+            ->when(!auth()->user()->hasPermissionTo('payment-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
     }
 
     public function delete($id)

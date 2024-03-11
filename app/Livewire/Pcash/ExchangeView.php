@@ -18,7 +18,11 @@ class ExchangeView extends Component
     public function mount()
     {
         $this->authorize('exchange-list');
-        $this->exchanges = Exchange::with('fromCurrency','toCurrency')->get();
+        $this->exchanges = Exchange::with('fromCurrency','toCurrency')
+            ->when(!auth()->user()->hasPermissionTo('exchange-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
     }
 
     public function delete($id)
