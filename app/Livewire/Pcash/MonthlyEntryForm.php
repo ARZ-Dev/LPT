@@ -40,6 +40,11 @@ class MonthlyEntryForm extends Component
     public $tills;
     public $tillAmounts = [];
 
+    public $monthlyEntryAmouts = [];
+
+ 
+
+
 
 
     public $currencies;
@@ -72,6 +77,10 @@ class MonthlyEntryForm extends Component
             $this->close_date = $this->monthlyEntry->close_date;
             $this->pending = $this->monthlyEntry->pending;
             $this->confirm = $this->monthlyEntry->confirm;
+
+            $this->tillAmounts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
+                $query->where('till_id', $this->till_id);
+            })->get() ;
 
 
 
@@ -120,18 +129,20 @@ class MonthlyEntryForm extends Component
     public function getTillAmounts()
     {
         $this->tillAmounts = [];
+        $this->monthlyEntryAmouts = [];
+        $this->monthlyEntryAmouts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
+            $query->where('till_id', $this->till_id);
+        })->get(); 
 
-        if (empty($this->tillAmounts)) {
+        // dd($this->monthlyEntryAmouts);
 
-            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
-            } else {
-                $this->tillAmounts = MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry_id)->with('currency')->get();
-                
-            }
-
-
-        // @todo - to get from monthly entry amount table for the last month
-    }
+            if($this->monthlyEntryAmouts->count() === 0){
+                $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+            }else{
+                $this->tillAmounts = $this->monthlyEntryAmouts;
+                }
+}
+    
 
     public function addRow()
     {
@@ -152,6 +163,7 @@ class MonthlyEntryForm extends Component
 
         $this->validate();
 
+
             $monthlyEntry = MonthlyEntry::create([
                 'user_id' => auth()->id(),
                 'created_by' => auth()->id(),
@@ -166,9 +178,8 @@ class MonthlyEntryForm extends Component
 
 
 
-            $monthlyEntry_id = $monthlyEntry->id;
+                $monthlyEntry_id = $monthlyEntry->id;
             
-        
                 foreach ($this->tillAmounts as $tillAmount) {
             
                 $monthlyEntryAmount= MonthlyEntryAmount::create([
@@ -178,11 +189,11 @@ class MonthlyEntryForm extends Component
                 ]);
            
 
-                $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$monthlyEntryAmount['currency_id'])->first();
+                // $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$monthlyEntryAmount['currency_id'])->first();
 
-                $tillAmount->update([
-                    'amount' => $tillAmount->amount - sanitizeNumber($monthlyEntryAmount['amount']),
-                ]);
+                // $tillAmount->update([
+                //     'amount' => $tillAmount->amount - sanitizeNumber($monthlyEntryAmount['amount']),
+                // ]);
             }
         
             
