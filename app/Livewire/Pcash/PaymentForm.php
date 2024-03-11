@@ -150,24 +150,7 @@ class PaymentForm extends Component
                     'amount' => sanitizeNumber($paymentAmount['amount']),
                 ]);
 
-
-                $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$paymentAmount['currency_id'])->first();
-                // if (!$tillAmount || ($tillAmount->amount < sanitizeNumber($paymentAmount['amount']))) {
-                    //     throw new Exception("Cannot pay, payment amount does not exists");
-                    // }
-
-
-                if ($tillAmount) {
-                    $tillAmount->update([
-                        'amount' => $tillAmount->amount - sanitizeNumber($paymentAmount['amount']),
-                    ]);
-                } else {
-                    $newtillAmount = new TillAmount();
-                    $newtillAmount->till_id = $this->till_id;
-                    $newtillAmount->amount = -sanitizeNumber($paymentAmount['amount']);
-                    $newtillAmount->currency_id = $paymentAmount['currency_id'];
-                    $newtillAmount->save();
-                }
+                $this->updateTillsAmounts($paymentAmount);
             }
 
             DB::commit();
@@ -221,14 +204,6 @@ class PaymentForm extends Component
             $paymentAmountsIds = [];
             foreach ($this->paymentAmounts as $paymentAmount) {
 
-                $tillAmount = TillAmount::where('till_id', $this->till_id)
-                    ->where('currency_id', $paymentAmount['currency_id'])
-                    ->first();
-
-                // if (!$tillAmount || (sanitizeNumber($tillAmount?->amount) < sanitizeNumber($paymentAmount['amount']))) {
-                //     throw new Exception("Cannot pay, payment amount does not exist");
-                // }
-
                 $amount = PaymentAmount::updateOrCreate([
                     'id' => $paymentAmount['id'] ?? 0,
                 ],[
@@ -238,11 +213,8 @@ class PaymentForm extends Component
                 ]);
                 $paymentAmountsIds[] = $amount->id;
 
-                $updatedAmount = sanitizeNumber($tillAmount->amount) - sanitizeNumber($paymentAmount['amount']);
+                $this->updateTillsAmounts($paymentAmount);
 
-                $tillAmount->update([
-                    'amount' => $updatedAmount,
-                ]);
             }
             PaymentAmount::where('payment_id', $this->payment_id)->whereNotIn('id', $paymentAmountsIds)->delete();
 
@@ -251,10 +223,32 @@ class PaymentForm extends Component
             return to_route('payment')->with('success', 'Payment has been updated successfully!');
         } catch (\Exception $exception) {
             DB::rollBack();
-            $this->dispatch('swal:error', [
+            return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text' => $exception->getMessage(),
             ]);
+        }
+    }
+
+
+    /**
+     * @param mixed $paymentAmount
+     * @return void
+     */
+    public function updateTillsAmounts(mixed $paymentAmount): void
+    {
+        $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $paymentAmount['currency_id'])->first();
+
+        if ($tillAmount) {
+            $tillAmount->update([
+                'amount' => $tillAmount->amount - sanitizeNumber($paymentAmount['amount']),
+            ]);
+        } else {
+            $newTillAmount = new TillAmount();
+            $newTillAmount->till_id = $this->till_id;
+            $newTillAmount->amount = -sanitizeNumber($paymentAmount['amount']);
+            $newTillAmount->currency_id = $paymentAmount['currency_id'];
+            $newTillAmount->save();
         }
     }
 

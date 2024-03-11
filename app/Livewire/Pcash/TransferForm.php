@@ -113,39 +113,8 @@ class TransferForm extends Component
                 ]);
 
 
-                $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-                if (!$fromTill) {
-                    throw new Exception("From till amount does not exists!");
-                }
-
-                $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-
-                if ($fromTill->amount < sanitizeNumber($transferAmount['amount'])) {
-                    throw new Exception("Cannot transfer, transferred amount does not exists");
-                }
-
-                if ($fromTill->amount > sanitizeNumber( $transferAmount['amount'])) {
-
-                    $fromTill->update([
-                        'amount' => $fromTill->amount - sanitizeNumber($transferAmount['amount']),
-                    ]);
-
-                    if (!$toTill) {
-                        TillAmount::create([
-                            'till_id' => $this->to_till_id,
-                            'currency_id' => $fromTill->currency_id,
-                            'amount' =>  sanitizeNumber($transferAmount['amount']),
-                        ]);
-
-                    } else {
-                        $toTill->update([
-                            'amount' => $toTill->amount +  sanitizeNumber($transferAmount['amount']),
-                        ]);
-                    }
-
-                }
+                $this->updateTillsAmounts($transferAmount);
             }
-
 
             DB::commit();
         } catch (\Exception $exception) {
@@ -163,20 +132,19 @@ class TransferForm extends Component
     public function update()
     {
         $this->authorize('transfer-edit');
-
         $this->validate();
 
         DB::beginTransaction();
         try {
             $transferAmounts = TransferAmount::with('transfer.fromTill', 'transfer.toTill')
-            ->whereHas('transfer.fromTill', function ($query) {
-                $query->where('id', $this->from_till_id);
-            })
-            ->whereHas('transfer.toTill', function ($query) {
-                $query->where('id', $this->to_till_id);
-            })
-            ->where('transfer_id', $this->transfer->id)
-            ->get();
+                ->whereHas('transfer.fromTill', function ($query) {
+                    $query->where('id', $this->from_till_id);
+                })
+                ->whereHas('transfer.toTill', function ($query) {
+                    $query->where('id', $this->to_till_id);
+                })
+                ->where('transfer_id', $this->transfer->id)
+                ->get();
 
             foreach ($transferAmounts as $transferAmount) {
                 $amount = $transferAmount->amount;
@@ -192,9 +160,11 @@ class TransferForm extends Component
                     'amount' => $fromTill->amount + $amount,
                 ]);
 
-                $toTill->update([
-                    'amount' => $toTill->amount - $amount,
-                ]);
+                if ($toTill) {
+                    $toTill->update([
+                        'amount' => $toTill->amount - $amount,
+                    ]);
+                }
 
             }
 
@@ -215,29 +185,7 @@ class TransferForm extends Component
                 ]);
                 $transfersAmountIds[] = $amount->id;
 
-                $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-                $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-
-                if ($fromTill->amount < sanitizeNumber($transferAmount['amount'])) {
-                    throw new Exception("Cannot transfer, transfered amount does not exists");
-                }
-
-                $fromTill->update([
-                    'amount' => $fromTill->amount - sanitizeNumber($transferAmount['amount']),
-                ]);
-
-                if (!$toTill) {
-                    TillAmount::create([
-                        'till_id' => $this->to_till_id,
-                        'currency_id' => $fromTill->currency_id,
-                        'amount' => sanitizeNumber($transferAmount['amount']),
-                    ]);
-                } else {
-                    $toTill->update([
-                        'amount' => $toTill->amount + sanitizeNumber($transferAmount['amount']),
-                    ]);
-                }
-
+                $this->updateTillsAmounts($transferAmount);
             }
             TransferAmount::where('transfer_id', $this->transfer->id)->whereNotIn('id', $transfersAmountIds)->delete();
 
@@ -251,6 +199,37 @@ class TransferForm extends Component
         }
 
         return to_route('transfer')->with('success', 'transfer has been updated successfully!');
+    }
+
+    /**
+     * @param mixed $transferAmount
+     * @return void
+     * @throws Exception
+     */
+    public function updateTillsAmounts(mixed $transferAmount): void
+    {
+        $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id', $transferAmount['currency_id'])->first();
+        if (!$fromTill || ($fromTill->amount < sanitizeNumber($transferAmount['amount']))) {
+            throw new Exception("Cannot transfer, transferred amount does not exists!");
+        }
+
+        $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id', $transferAmount['currency_id'])->first();
+
+        $fromTill->update([
+            'amount' => $fromTill->amount - sanitizeNumber($transferAmount['amount']),
+        ]);
+
+        if ($toTill) {
+            $toTill->update([
+                'amount' => $toTill->amount + sanitizeNumber($transferAmount['amount']),
+            ]);
+        } else {
+            TillAmount::create([
+                'till_id' => $this->to_till_id,
+                'currency_id' => $fromTill->currency_id,
+                'amount' => sanitizeNumber($transferAmount['amount']),
+            ]);
+        }
     }
 
     public function render()

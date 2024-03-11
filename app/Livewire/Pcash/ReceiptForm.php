@@ -113,21 +113,7 @@ class ReceiptForm extends Component
                     'amount' => sanitizeNumber($receiptAmount['amount']),
                 ]);
 
-                $tillAmount = TillAmount::where('till_id', $this->till_id)
-                    ->where('currency_id', $receiptAmount['currency_id'])
-                    ->first();
-
-                if ($tillAmount) {
-                    $tillAmount->update([
-                        'amount' => $tillAmount->amount + sanitizeNumber($receiptAmount['amount']),
-                    ]);
-                } else {
-                    TillAmount::create([
-                        'till_id' => $this->till_id,
-                        'currency_id' => $receiptAmount['currency_id'],
-                        'amount' => sanitizeNumber($receiptAmount['amount'])
-                    ]);
-                }
+                $this->updateTillsAmounts($receiptAmount);
             }
 
             DB::commit();
@@ -186,33 +172,42 @@ class ReceiptForm extends Component
                 ]);
                 $receiptAmountsIds[] = $receipt->id;
 
-                $tillAmount = TillAmount::where('till_id', $this->till_id)
-                    ->where('currency_id', $receiptAmount['currency_id'])
-                    ->first();
-
-                if ($tillAmount) {
-                    $tillAmount->update([
-                        'amount' => $tillAmount->amount + sanitizeNumber($receiptAmount['amount']),
-                    ]);
-                } else {
-                    TillAmount::create([
-                        'till_id' => $this->till_id,
-                        'currency_id' => $receiptAmount['currency_id'],
-                        'amount' => sanitizeNumber($receiptAmount['amount'])
-                    ]);
-                }
+                $this->updateTillsAmounts($receiptAmount);
             }
             ReceiptAmount::where('receipt_id', $this->receipt->id)->whereNotIn('id', $receiptAmountsIds)->delete();
 
             DB::commit();
 
-            return redirect()->route('receipt')->with('success', 'Receipt has been updated successfully!');
+            return to_route('receipt')->with('success', 'Receipt has been updated successfully!');
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            $this->dispatch('swal:error', [
+            return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * @param mixed $receiptAmount
+     * @return void
+     */
+    public function updateTillsAmounts(mixed $receiptAmount): void
+    {
+        $tillAmount = TillAmount::where('till_id', $this->till_id)
+            ->where('currency_id', $receiptAmount['currency_id'])
+            ->first();
+
+        if ($tillAmount) {
+            $tillAmount->update([
+                'amount' => $tillAmount->amount + sanitizeNumber($receiptAmount['amount']),
+            ]);
+        } else {
+            TillAmount::create([
+                'till_id' => $this->till_id,
+                'currency_id' => $receiptAmount['currency_id'],
+                'amount' => sanitizeNumber($receiptAmount['amount'])
             ]);
         }
     }
