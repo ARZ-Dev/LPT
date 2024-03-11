@@ -22,6 +22,7 @@ class TeamForm extends Component
     public string $nickname = "";
     public $levelCategoryId = null;
     public $playersIds = [];
+    public $oldPlayersIds = [];
     public $team = null;
 
     public function mount($id = 0, $status = 0)
@@ -36,6 +37,7 @@ class TeamForm extends Component
             $this->nickname = $this->team->nickname;
             $this->levelCategoryId = $this->team->level_category_id;
             $this->playersIds = $this->team->players->pluck('id')->toArray();
+            $this->oldPlayersIds = $this->playersIds;
         } else {
             $this->authorize('team-create');
         }
@@ -83,6 +85,10 @@ class TeamForm extends Component
         $this->team->update([
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
+        ]);
+
+        Player::whereIn('id', $this->oldPlayersIds)->update([
+            'current_team_id' => NULL,
         ]);
 
         Player::whereIn('id', $this->playersIds)->update([

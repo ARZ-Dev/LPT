@@ -12,6 +12,7 @@
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Current Team</th>
+                    <th>Teams</th>
                     <th>Birthdate</th>
                     <th>Phone Number</th>
                     <th>Actions</th>
@@ -23,6 +24,11 @@
                         <td>{{ $player->id }}</td>
                         <td>{{ $player->full_name }}</td>
                         <td>{{ $player->currentTeam?->nickname }}</td>
+                        <td>
+                            @foreach($player->teams as $team)
+                                <span class='badge bg-label-warning m-1'>{{ $team->nickname }}</span>
+                            @endforeach
+                        </td>
                         <td>{{ $player->birthdate }}</td>
                         <td>{{ $player->phone_number }}</td>
                         <td>
