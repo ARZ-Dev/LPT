@@ -138,10 +138,10 @@ class TransferForm extends Component
         try {
             $transferAmounts = TransferAmount::with('transfer.fromTill', 'transfer.toTill')
                 ->whereHas('transfer.fromTill', function ($query) {
-                    $query->where('id', $this->from_till_id);
+                    $query->where('id', $this->transfer->from_till_id);
                 })
                 ->whereHas('transfer.toTill', function ($query) {
-                    $query->where('id', $this->to_till_id);
+                    $query->where('id', $this->transfer->to_till_id);
                 })
                 ->where('transfer_id', $this->transfer->id)
                 ->get();
@@ -149,12 +149,12 @@ class TransferForm extends Component
             foreach ($transferAmounts as $transferAmount) {
                 $amount = $transferAmount->amount;
 
-                $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
+                $fromTill = TillAmount::where('till_id', $this->transfer->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
                 if (!$fromTill) {
                     throw new Exception("From till amount does not exists!");
                 }
 
-                $toTill = TillAmount::where('till_id', $this->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
+                $toTill = TillAmount::where('till_id', $this->transfer->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
 
                 $fromTill->update([
                     'amount' => $fromTill->amount + $amount,
@@ -165,7 +165,6 @@ class TransferForm extends Component
                         'amount' => $toTill->amount - $amount,
                     ]);
                 }
-
             }
 
             $this->transfer->update([

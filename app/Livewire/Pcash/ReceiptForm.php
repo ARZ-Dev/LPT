@@ -40,7 +40,7 @@ class ReceiptForm extends Component
 
         $this->users = User::all();
         $this->currencies = Currency::all();
-        $this->tills = Till::where('user_id',auth()->id())->get();
+        $this->tills = Till::all();
 
         $this->addRow();
 
