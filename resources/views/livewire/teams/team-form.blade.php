@@ -36,6 +36,7 @@
                                         data-style="btn-default"
                                         data-live-search="true"
                                         data-icon-base="ti"
+                                        data-size="5"
                                         data-tick-icon="ti-check text-white" required>
                                         @foreach($levelCategories as $levelCategory)
                                             <option value="{{ $levelCategory->id }}" @selected($levelCategory->id == $levelCategoryId)>{{ $levelCategory->name }}</option>
@@ -54,6 +55,7 @@
                                         title="Select Players"
                                         data-style="btn-default"
                                         multiple
+                                        data-size="5"
                                         data-selected-text-format="count > 5"
                                         data-live-search="true"
                                         data-icon-base="ti"

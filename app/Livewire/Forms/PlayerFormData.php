@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Player;
+use App\Models\PlayerTeam;
 use Illuminate\Validation\Rules\Exists;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -64,7 +65,14 @@ class PlayerFormData extends Form
             $data['national_id_upload'] = $path;
         }
 
-        Player::create($data);
+        $player = Player::create($data);
+
+        PlayerTeam::updateOrCreate([
+            'player_id' => $player->id,
+            'team_id' => $this->current_team_id,
+        ],[
+            'playing_side' => $this->playing_side,
+        ]);
     }
 
     public function update($path)
@@ -76,5 +84,12 @@ class PlayerFormData extends Form
         }
 
         $this->player->update($data);
+
+        PlayerTeam::updateOrCreate([
+            'player_id' => $this->player->id,
+            'team_id' => $this->current_team_id,
+        ],[
+            'playing_side' => $this->playing_side,
+        ]);
     }
 }
