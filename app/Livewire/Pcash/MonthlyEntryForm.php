@@ -206,6 +206,7 @@ class MonthlyEntryForm extends Component
                 $monthlyAmountIds[] = $amount->id;
 
                 if($tillAmount !== null){
+ 
                     $updatedAmount = sanitizeNumber($tillAmount->amount) - sanitizeNumber($monthlyEntryAmount['amount']);
                     $tillAmount->update([
                         'amount' => $updatedAmount,
