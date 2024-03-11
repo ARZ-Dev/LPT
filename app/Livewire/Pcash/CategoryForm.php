@@ -22,9 +22,9 @@ class CategoryForm extends Component
     public $user_id;
     public $category_name;
 
-    public $sub_category = []; 
+    public $sub_category = [];
     public $categoty_id;
-    public $sub_category_name;
+    public $name;
 
     public $deletedSubCategory = [];
 
@@ -55,10 +55,8 @@ class CategoryForm extends Component
         $rules = [
             'user_id' => ['nullable'],
             'category_name' => ['required', 'string'],
-
             'sub_category' => ['array'],
-            'sub_category.*.categoty_id' => ['nullable', 'integer'],
-            'sub_category.*.sub_category_name' => ['required', 'string'],   
+            'sub_category.*.name' => ['required', 'string'],
         ];
 
         return $rules;
@@ -68,7 +66,7 @@ class CategoryForm extends Component
     public function addRow()
     {
         $this->sub_category[] = [
-            'sub_category_name' => ''
+            'name' => ''
         ];
     }
 
@@ -82,10 +80,10 @@ class CategoryForm extends Component
 
 
     }
-    
+
 
     public function store()
-    {   
+    {
         $this->authorize('category-edit');
 
         $this->validate();
@@ -93,7 +91,6 @@ class CategoryForm extends Component
         $category = Category::create([
             'user_id' => auth()->id(),
             'category_name' => $this->category_name,
-
         ]);
 
         $categoryId = $category->id;
@@ -101,7 +98,7 @@ class CategoryForm extends Component
         foreach ($this->sub_category as $subCategory) {
             SubCategory::create([
                 'category_id' => $categoryId,
-                'sub_category_name' => $subCategory['sub_category_name'],
+                'name' => $subCategory['name'],
             ]);
         }
         session()->flash('success', 'category has been created successfully!');
@@ -123,9 +120,9 @@ class CategoryForm extends Component
         foreach ($this->sub_category as $subCategory) {
             $data = [
                 'category_id' => $this->category->id,
-                'sub_category_name' => $subCategory['sub_category_name'],
+                'name' => $subCategory['name'],
             ];
-        
+
             if (isset($subCategory['id'])) {
                 SubCategory::updateOrCreate(['id' => $subCategory['id']], $data);
             } else {
@@ -135,10 +132,10 @@ class CategoryForm extends Component
 
         Payment::whereIn('sub_category_id', $this->deletedSubCategory)->delete();
         SubCategory::whereIn('id',$this->deletedSubCategory)->delete();
- 
-    
 
-        
+
+
+
         session()->flash('success', 'Category has been updated successfully!');
 
         return redirect()->route('category');
@@ -153,7 +150,7 @@ class CategoryForm extends Component
 
         return $number;
     }
-    
+
 
     public function render()
     {

@@ -38,7 +38,7 @@
                             <label class="form-label" for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
                             <select wire:model="sub_category_id" class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($subCategories as $subCategory)
-                                    <option value="{{ $subCategory->id }}" @selected($subCategory->id == $sub_category_id)>{{ $subCategory->sub_category_name }}</option>
+                                    <option value="{{ $subCategory->id }}" @selected($subCategory->id == $sub_category_id)>{{ $subCategory->name }}</option>
                                 @endforeach
                             </select>
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
@@ -179,7 +179,7 @@
                 subCategorySelector.empty();
                 Object.entries(subCategories).forEach(([key, value]) => {
                     let isSelected = value.id == selectedSubCategoryId ? "selected" : "";
-                    subCategorySelector.append(`<option value="${value.id}" ${isSelected}>${value.sub_category_name}</option>`)
+                    subCategorySelector.append(`<option value="${value.id}" ${isSelected}>${value.name}</option>`)
                 })
                 subCategorySelector.selectpicker('refresh');
             }
