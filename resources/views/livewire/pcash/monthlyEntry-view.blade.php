@@ -52,6 +52,7 @@
 
     @script
         @include('livewire.deleteConfirm')
+
     @endscript
 
 
