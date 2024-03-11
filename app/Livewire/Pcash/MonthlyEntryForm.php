@@ -13,9 +13,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
-
-
-
 class MonthlyEntryForm extends Component
 {
     use AuthorizesRequests ;
@@ -41,7 +38,7 @@ class MonthlyEntryForm extends Component
     public $amount;
 
     public $tills;
-    public $tillAmounts;
+    public $tillAmounts = [];
 
 
 
@@ -56,11 +53,9 @@ class MonthlyEntryForm extends Component
         $this->status=$status;
         // $this->addRow();
 
-        $this->tills = Till::where('user_id',auth()->id())->get();
-
-        $tillIds = $this->tills->pluck('id')->toArray();
-        $this->tillAmounts = TillAmount::whereIn('till_id', $tillIds)->get();
-       
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+            $query->where('user_id', auth()->id());
+        })->with('tillAmounts')->get();
 
         $this->currencies = Currency::all();
 
@@ -114,14 +109,33 @@ class MonthlyEntryForm extends Component
             'monthlyEntryAmounts.*.monthlyEntry_id' => ['nullable'],
             'monthlyEntryAmounts.*.currency_id' => ['required'],
             'monthlyEntryAmounts.*.amount' => ['required'],
+            'monthlyEntryAmounts.*.closing_amount' => ['required'],
+
         ];
 
         return $rules;
     }
 
+    #[On('getTillAmounts')]
+    public function getTillAmounts()
+    {
+        $this->tillAmounts = [];
+
+        if (empty($this->tillAmounts)) {
+
+            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+            } else {
+                $this->tillAmounts = MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry_id)->with('currency')->get();
+                
+            }
+
+
+        // @todo - to get from monthly entry amount table for the last month
+    }
+
     public function addRow()
     {
-        $this->monthlyEntryAmounts[] = ['currency_id' => '','amount' => ''];
+        $this->monthlyEntryAmounts[] = ['currency_id' => '','amount' => '','closing_amount'=>''];
     }
 
 
@@ -132,6 +146,8 @@ class MonthlyEntryForm extends Component
 
     public function store()
     {
+
+
         $this->authorize('monthlyEntry-create');
 
         $this->validate();
@@ -151,12 +167,16 @@ class MonthlyEntryForm extends Component
 
 
             $monthlyEntry_id = $monthlyEntry->id;
-            foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
-                MonthlyEntryAmount::create([
+            
+        
+                foreach ($this->tillAmounts as $tillAmount) {
+            
+                $monthlyEntryAmount= MonthlyEntryAmount::create([
                     'monthly_entry_id' => $monthlyEntry_id,
-                    'currency_id' => $monthlyEntryAmount['currency_id'],
-                    'amount' => sanitizeNumber($monthlyEntryAmount['amount']),
+                    'currency_id' => $tillAmount->currency_id,
+                    'amount' => sanitizeNumber($tillAmount->amount),
                 ]);
+           
 
                 $tillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id',$monthlyEntryAmount['currency_id'])->first();
 
@@ -164,6 +184,8 @@ class MonthlyEntryForm extends Component
                     'amount' => $tillAmount->amount - sanitizeNumber($monthlyEntryAmount['amount']),
                 ]);
             }
+        
+            
 
         return to_route('monthlyEntry')->with('success', 'monthlyEntry has been created successfully!');
     }
@@ -211,6 +233,10 @@ class MonthlyEntryForm extends Component
                     'monthly_entry_id' => $this->monthlyEntry_id,
                     'amount' => sanitizeNumber($monthlyEntryAmount['amount']),
                     'currency_id' => $monthlyEntryAmount['currency_id'],
+                    'closing_amount' => $monthlyEntryAmount['closing_amount'],
+
+
+                    
                 ]);
                 $monthlyAmountIds[] = $amount->id;
 
