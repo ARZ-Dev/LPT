@@ -29,7 +29,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->is('roles') || request()->is('permissions') ? "active open" : "" }}">
+        <li class="menu-item {{ request()->is('roles') || request()->is('permissions') || request()->is('users*') ? "active open" : "" }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 			    <i class="menu-icon tf-icons ti ti-settings"></i>
@@ -50,7 +50,7 @@
                     </a>
                 </li>
 
-				<li class="menu-item">
+				<li class="menu-item {{ request()->is('users*') ? "active" : "" }}">
 					<a href="{{ route('users') }}" class="menu-link">
 						<div data-i18n="Users">Users</div>
 					</a>
@@ -121,7 +121,7 @@
 		</li>
 
         @can('team-list')
-        <li class="menu-item {{ request()->is('teams') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('teams*') ? "active" : "" }}">
             <a href="{{ route('teams') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-users"></i>
                 <div data-i18n="Teams">Teams</div>
@@ -130,7 +130,7 @@
         @endcan
 
         @can('player-list')
-            <li class="menu-item {{ request()->is('players') ? "active" : "" }}">
+            <li class="menu-item {{ request()->is('players*') ? "active" : "" }}">
                 <a href="{{ route('players') }}" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-user"></i>
                     <div data-i18n="Players">Players</div>
