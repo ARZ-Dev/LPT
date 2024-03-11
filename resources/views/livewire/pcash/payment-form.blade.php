@@ -27,7 +27,7 @@
                             <label class="form-label" for="category_id">Category <span class="text-danger">*</span></label>
                             <select wire:model="category_id" class="form-select selectpicker w-100" id="category_id" title="Select Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" @selected($category->id == $category_id)>{{ $category->category_name }}</option>
+                                    <option value="{{ $category->id }}" @selected($category->id == $category_id)>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror

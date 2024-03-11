@@ -20,7 +20,7 @@
                 @foreach($categories as $category)
                     <tr>
                         <td>{{ $category->id }}</td>
-                        <td>{{ $category->category_name }}</td>
+                        <td>{{ $category->name }}</td>
                         <td>{{ $category->user?->username }}</td>
                         <td>{{ $category->created_at->format('d-m-Y h:i a') }}</td>
 

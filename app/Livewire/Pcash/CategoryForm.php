@@ -20,12 +20,10 @@ class CategoryForm extends Component
     public $category;
 
     public $user_id;
-    public $category_name;
+    public $name;
 
     public $sub_category = [];
     public $categoty_id;
-    public $name;
-
     public $deletedSubCategory = [];
 
     protected $listeners = ['store', 'update'];
@@ -43,7 +41,7 @@ class CategoryForm extends Component
             $this->category = Category::findOrFail($id);
 
             $this->user_id = $this->category->user_id;
-            $this->category_name = $this->category->category_name;
+            $this->name = $this->category->name;
 
             $this->sub_category = $this->category->subCategory->toArray();
         }
@@ -54,7 +52,7 @@ class CategoryForm extends Component
     {
         $rules = [
             'user_id' => ['nullable'],
-            'category_name' => ['required', 'string'],
+            'name' => ['required', 'string'],
             'sub_category' => ['array'],
             'sub_category.*.name' => ['required', 'string'],
         ];
@@ -90,7 +88,7 @@ class CategoryForm extends Component
 
         $category = Category::create([
             'user_id' => auth()->id(),
-            'category_name' => $this->category_name,
+            'name' => $this->name,
         ]);
 
         $categoryId = $category->id;
@@ -114,7 +112,7 @@ class CategoryForm extends Component
         $this->validate();
 
         $this->category->update([
-            'category_name' => $this->category_name,
+            'name' => $this->name,
         ]);
 
         foreach ($this->sub_category as $subCategory) {

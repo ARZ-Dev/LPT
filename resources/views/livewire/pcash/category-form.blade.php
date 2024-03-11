@@ -4,7 +4,7 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Edit")) : "Create" }} Category</h5>
-                    <a href="{{ route('category') }}"class="btn btn-primary mb-2 text-nowrap">
+                    <a href="{{ route('category') }}" class="btn btn-primary mb-2 text-nowrap">
                         Category
                     </a>
                 </div>
@@ -12,21 +12,21 @@
                     <form class="row g-3">
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="category_name">Category Name <span style="color: red;">*</span></label>
+                        <label class="form-label" for="name">Category Name <span style="color: red;">*</span></label>
                         <input
-                        wire:model.defer="category_name"
+                        wire:model.defer="name"
                         type="text"
-                        id="category_name"
-                        name="category_name"
+                        id="name"
+                        name="name"
                         class="form-control "
-                        placeholder="category_name"
+                        placeholder="name"
                         />
-                        @error('category_name') <div class="text-danger">{{ $message }}</div> @enderror
+                        @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-12 col-md-6">
                         @if(!$status)
-                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub-category</button>
+                            <button type="button" class="btn btn-success mt-4 " wire:click="addRow">Add Sub Category</button>
                         @endif
                     </div>
 
