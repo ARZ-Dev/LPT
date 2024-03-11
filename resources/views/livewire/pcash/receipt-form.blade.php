@@ -15,7 +15,7 @@
                             <label class="form-label" for="till_id">Tills<span class="text-danger">*</span></label>
                             <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" name="till_id" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($tills as $till)
-                                    <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name }}</option>
+                                    <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                 @endforeach
                             </select>
                             @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
