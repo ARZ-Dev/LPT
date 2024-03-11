@@ -42,6 +42,11 @@ class Currency extends Model
         return $this->hasMany(Exchange::class,'to_currency_id');
     }
 
+    public function monthlyEntryAmount()
+    {
+        return $this->hasMany(MonthlyEntryAmount::class,'currency_id');
+    }
+
     public static function reportMessage($data){
         echo 'new currency <u><a href="'. route('currency.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> '.$data['name'].' has been created ';
 

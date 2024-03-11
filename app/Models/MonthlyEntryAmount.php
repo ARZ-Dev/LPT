@@ -21,4 +21,9 @@ class MonthlyEntryAmount extends Model
     {
         return $this->belongsTo(MonthlyEntry::class,'monthly_entry_id');
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id');
+    }
 }
