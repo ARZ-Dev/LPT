@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('monthly_entry_id')->constrained('monthly_entries')->cascadeOnDelete();
             $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->double('amount');
+            $table->double('closing_amount')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
