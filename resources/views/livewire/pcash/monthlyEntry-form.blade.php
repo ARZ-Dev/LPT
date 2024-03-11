@@ -53,13 +53,10 @@
                         </div>
                     @endif
 
+                     <div class="col-12 col-md-12 mt-3">
 
-
-                    <div class="col-12 col-md-12 mt-3">
-
-                        @foreach($monthlyEntryAmounts as $key => $monthlyEntryAmount)
-
-                            <div wire:key="monthlyEntryAmount-{{ $key }}">
+                        @foreach($this->tillAmounts as $key => $tillAmount)
+                            <div wire:key="tillAmount-{{ $key }}">
 
                                 <div class="row">
                                     <div class="col-5">
@@ -72,30 +69,31 @@
 
                                 <div class="row">
                                     <div class="col-5">
-                                        <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="monthlyEntryAmounts.{{ $key }}.amount" type="text" placeholder="amount" required>
-                                        @error('monthlyEntryAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
+                                        <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="tillAmount.{{ $key }}.amount" type="text" placeholder="amount" value="{{$tillAmount->amount}}" required disabled>
+                                        @error('tillAmount.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-5">
                                         <div wire:ignore>
                                             <select class="form-select selectpicker w-100 currency"
                                                 aria-label="Default select example"
                                                 id="currency{{$key}}"
-                                                wire:model="monthlyEntryAmounts.{{ $key }}.currency_id"
+                                                wire:model="tillAmount.{{ $key }}.currency_id"
                                                 title="Select Currency {{ $key + 1 }}"
                                                 data-style="btn-default"
                                                 data-live-search="true"
                                                 data-icon-base="ti"
                                                 data-tick-icon="ti-check text-white"
                                                 required
+                                                disabled
                                             >
                                                 @foreach($currencies as $index => $currency)
-                                                    <option @if($status == 1) disabled @endif value="{{$currency->id}}" @selected($monthlyEntryAmount['currency_id'] == $currency->id)>
+                                                    <option @if($status == 1) disabled @endif value="{{$currency->id}}" @selected($tillAmount['currency_id'] == $currency->id)>
                                                         {{$currency->name}}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        @error('monthlyEntryAmounts.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                        @error('tillAmount.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
 
 
@@ -103,7 +101,7 @@
 
 
 
-                                    @if(!$status)
+                                   {{-- @if(!$status)
                                         <div class="col-2">
                                             @if($key == 0)
                                                 <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
@@ -111,11 +109,11 @@
                                                 <button type="button" class="btn btn-danger ms-2" wire:click="removeRow({{ $key }})">Remove</button>
                                             @endif
                                         </div>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         @endforeach
-                    </div>
+                    </div> 
                 </div>
 
             </div>

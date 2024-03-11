@@ -41,6 +41,8 @@ class MonthlyEntryForm extends Component
     public $amount;
 
     public $tills;
+    public $tillAmounts;
+
 
 
     public $currencies;
@@ -55,6 +57,11 @@ class MonthlyEntryForm extends Component
         // $this->addRow();
 
         $this->tills = Till::where('user_id',auth()->id())->get();
+
+        $tillIds = $this->tills->pluck('id')->toArray();
+        $this->tillAmounts = TillAmount::whereIn('till_id', $tillIds)->get();
+       
+
         $this->currencies = Currency::all();
 
         if ($id) {
@@ -70,6 +77,8 @@ class MonthlyEntryForm extends Component
             $this->close_date = $this->monthlyEntry->close_date;
             $this->pending = $this->monthlyEntry->pending;
             $this->confirm = $this->monthlyEntry->confirm;
+
+
 
 
             $this->monthlyEntryAmounts = [];
