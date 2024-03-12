@@ -29,8 +29,8 @@ class MonthlyEntryForm extends Component
 
     public $open_date;
     public $close_date;
-    public $pending;
-    public $confirm;
+    // public $pending;
+    // public $confirm;
 
 
     public  $monthlyEntryAmounts = [];
@@ -66,7 +66,7 @@ class MonthlyEntryForm extends Component
 
 
 
-        $this->alreadyOpened = MonthlyEntry::whereNotNull('open_date')->where('close_date',null)->where('pending',0)->pluck('till_id')->toArray();
+        $this->alreadyOpened = MonthlyEntry::whereNotNull('open_date')->where('close_date',null)->pluck('till_id')->toArray();
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
@@ -89,8 +89,8 @@ class MonthlyEntryForm extends Component
 
             $this->open_date = $this->monthlyEntry->open_date;
             $this->close_date = $this->monthlyEntry->close_date;
-            $this->pending = $this->monthlyEntry->pending;
-            $this->confirm = $this->monthlyEntry->confirm;
+            // $this->pending = $this->monthlyEntry->pending;
+            // $this->confirm = $this->monthlyEntry->confirm;
 
 
 
@@ -121,8 +121,8 @@ class MonthlyEntryForm extends Component
             'till_id' => ['required', 'integer'],
 
 
-            'pending' => ['nullable'],
-            'confirm' => ['nullable'],
+            // 'pending' => ['nullable'],
+            // 'confirm' => ['nullable'],
 
 
             'monthlyEntryAmounts' => ['array'],
@@ -187,8 +187,8 @@ class MonthlyEntryForm extends Component
 
             'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
             'close_date' => null,
-            'pending' => 0,
-            'confirm' => 0,
+            // 'pending' => 0,
+            // 'confirm' => 0,
 
         ]);
 
@@ -219,8 +219,8 @@ class MonthlyEntryForm extends Component
             'till_id' => $this->till_id,
             'open_date' =>Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
             'close_date' => Carbon::parse($this->close_date)->startOfMonth()->toDateString(),
-            'pending' => 1,
-            'confirm' => 0,
+            // 'pending' => 1,
+            // 'confirm' => 0,
         ]);
 
         foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
