@@ -46,6 +46,8 @@ class MonthlyEntryForm extends Component
 
     public $currencies;
 
+    public $alreadyOpened ;
+
     protected $listeners = ['store', 'update'];
 
     public function mount($id = 0, $status = 0)
@@ -58,6 +60,20 @@ class MonthlyEntryForm extends Component
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
             $query->where('user_id', auth()->id());
         })->with('tillAmounts')->get();
+
+    
+        
+        $this->alreadyOpened = MonthlyEntry::whereNotNull('open_date')->where('close_date',null)->where('pending',0)->pluck('till_id')->toArray();
+        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+        ->with('tillAmounts', 'monthlyEntry')
+        ->whereHas('monthlyEntry', function ($query) {
+            $query->whereNotIN('till_id',$this->alreadyOpened);
+        })
+        ->get();
+
+        dd($this->alreadyOpened, $this->tills);
 
         $this->currencies = Currency::all();
 
@@ -80,9 +96,6 @@ class MonthlyEntryForm extends Component
             $this->tillAmounts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
                 $query->where('till_id', $this->till_id)->where('monthly_entry_id', $this->monthlyEntry_id);
             })->get() ;
-
-
-
 
             $this->monthlyEntryAmounts = [];
             foreach ($this->monthlyEntry->monthlyEntryAmounts as $monthlyEntryAmount) {
