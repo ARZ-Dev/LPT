@@ -2,6 +2,13 @@
     <div class="row">
         <div class="col-xl">
 
+       
+        @if($pending == 1)
+        <div class="alert alert-danger" role="alert">
+            On Pending
+        </div>
+        @endif
+
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Close Monthly Entry")) : "Open Monthly Entry" }} MonthlyEntry</h5>
@@ -47,7 +54,9 @@
                                 id="close_date"
                                 name="close_date"
                                 class="form-control"
-                                placeholder="close_date">
+                                placeholder="close_date"
+                                @if($pending == 1) disabled @endif
+                                >
                             </input>
                             @error('close_date') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -68,22 +77,27 @@
 
                                     @if($editing)
                                         <div class="col-4">
-                                            <label class="form-label mt-3" for="amount-{{$key}}">Monthly Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3" for="closing_amount-{{$key}}">Monthly Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
                                         </div>
                                     @endif
                                 </div>
 
                                 <div class="row">
                                     <div class="col-4">
-                                        <input class="form-control w-100 me-2" id="currency{{$key}}" type="text" placeholder="{{$tillAmount->currency->name}}" readonly disabled>
+                                        <input class="form-control w-100 me-2" id="currency-{{$key}}" type="text" placeholder="{{$tillAmount->currency->name}}"
+                                        wire:model="monthlyEntryAmounts.{{ $key }}.currency_id" readonly disabled>
                                     </div>
                                     <div class="col-4">
-                                        <input class="form-control cleave-input me-2" id="amount{{$key}}" type="text" placeholder="{{$tillAmount->amount}}" readonly disabled>
+                                        <input class="form-control cleave-input me-2" id="amount-{{$key}}" type="text" placeholder="{{$tillAmount->amount}}" readonly disabled
+                                        wire:model="monthlyEntryAmounts.{{ $key }}.amount"
+                                        >
                                     </div>
                                     @if($editing)
                                         <div class="col-4">
-                                            <input class="form-control cleave-input me-2"  type="text" >
+                                            <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="monthlyEntryAmounts.{{ $key }}.closing_amount" @if($pending == 1) disabled @endif>
                                         </div>
+                                        @error('monthlyEntryAmounts.'. $key .'.closing_amount') <div class="text-danger">{{ $message }}</div> @enderror
+
                                     @endif
                                   
                                 </div>
@@ -95,11 +109,15 @@
                 </div>
 
             </div>
+
             @if(!$status)
-            <div class="col-12 text-end mt-3">
-                <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
-            </div>
+                @if($pending == 0 || $close_date == null)
+                    <div class="col-12 text-end mt-3">
+                        <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                    </div>
+                @endif
             @endif
+
 
         </div>
     </div>
