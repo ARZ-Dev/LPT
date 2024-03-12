@@ -27,14 +27,23 @@ class CategoryView extends Component
     {
         $this->authorize('category-delete');
 
-        $category = Category::with('subCategory','payment')->findOrFail($id);
+        $category = Category::with('subCategories')
+            ->withCount('payments', 'receipts')
+            ->findOrFail($id);
 
-        $category->subCategory()->delete();
-        $category->payment()->delete();
+        $cannotDelete = $category->payments_count || $category->receipts_count;
+        if ($cannotDelete) {
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => "Cannot delete a category that has payments or receipts!",
+            ]);
+        }
+
+        $category->subCategories()->delete();
 
         $category->delete();
 
-        return to_route('category')->with('success', 'category has been deleted successfully!');
+        return to_route('category')->with('success', 'Category has been deleted successfully!');
     }
 
 

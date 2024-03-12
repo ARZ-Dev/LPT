@@ -10,24 +10,27 @@ class Category extends Model
 {
 
     use SoftDeletes;
-    
-    protected $table = 'categories';
-    protected $primaryKey = 'id';
 
+    protected $table = 'categories';
     protected $guarded = [];
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function subCategory()
+    public function subCategories()
     {
-        return $this->hasMany(SubCategory::class,'category_id');
+        return $this->hasMany(SubCategory::class);
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->hasMany(Payment::class,'category_id');
+        return $this->hasMany(Payment::class);
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class);
     }
 }

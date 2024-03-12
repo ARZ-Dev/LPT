@@ -12,7 +12,8 @@
                     <th>ID</th>
                     <th>Created By</th>
                     <th>From Customer</th>
-                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Sub Category</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -23,7 +24,8 @@
                         <td>{{ $receipt->id }}</td>
                         <td>{{ $receipt->user?->full_name }}</td>
                         <td>{{ $receipt->paid_by }}</td>
-                        <td>{{ $receipt->description }}</td>
+                        <td>{{ $receipt->category?->name }}</td>
+                        <td>{{ $receipt->subCategory?->name }}</td>
                         <td>{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>

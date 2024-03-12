@@ -5,13 +5,14 @@
             <h4 class="card-title mb-3">Categories List</h4>
             <a class="btn btn-primary h-50" href="{{ route('category.create') }}">Add Category </a>
         </div>
-        <div class="card-datatable table-responsive">
+        <div class="card-datatable table-responsive" wire:ignore>
             <table class="datatables-category dataTable table border-top">
                 <thead>
                  <tr>
                     <th>ID</th>
                     <th>Created By</th>
-                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Type</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -20,8 +21,9 @@
                 @foreach($categories as $category)
                     <tr>
                         <td>{{ $category->id }}</td>
+                        <td>{{ $category->user?->full_name }}</td>
                         <td>{{ $category->name }}</td>
-                        <td>{{ $category->user?->username }}</td>
+                        <td>{{ $category->type }}</td>
                         <td>{{ $category->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>

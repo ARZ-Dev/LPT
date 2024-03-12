@@ -3,13 +3,18 @@
 namespace App\Livewire\Pcash;
 
 
+use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Receipt;
 use App\Models\ReceiptAmount;
+use App\Models\SubCategory;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +31,13 @@ class ReceiptForm extends Component
     public $tills;
     public $till_id;
     public $user_id;
+    public $category_id;
+    public $sub_category_id;
     public $paid_by;
     public $description;
     public  $receiptAmounts = [];
+    public $categories = [];
+    public $subCategories = [];
 
     protected $listeners = ['store', 'update'];
 
@@ -45,6 +54,12 @@ class ReceiptForm extends Component
             })
             ->get();
 
+        $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->where('type', 'receipt')
+            ->get();
+
         $this->addRow();
 
         if ($id) {
@@ -52,7 +67,9 @@ class ReceiptForm extends Component
             $this->receipt = Receipt::with('receiptAmounts')->findOrFail($id);
 
             $this->till_id = $this->receipt->till_id;
-
+            $this->category_id = $this->receipt->category_id;
+            $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
+            $this->sub_category_id = $this->receipt->sub_category_id;
             $this->paid_by = $this->receipt->paid_by;
             $this->description = $this->receipt->description;
             $this->receiptAmounts = [];
@@ -68,11 +85,22 @@ class ReceiptForm extends Component
 
     }
 
+    #[On('getSubCategories')]
+    public function getSubCategories()
+    {
+        $this->sub_category_id = null;
+        $selectedSubCategoryId = $this->receipt?->sub_category_id;
+        $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
+        $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
+    }
+
     protected function rules()
     {
         return [
             'till_id' => ['required'],
-            'paid_by' => ['required', 'string'],
+            'category_id' => ['required', new Exists('categories', 'id')],
+            'sub_category_id' => ['required', new Exists('sub_categories', 'id')],
+            'paid_by' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'receiptAmounts' => ['array', 'min:1'],
             'receiptAmounts.*.currency_id' => ['required'],
@@ -104,8 +132,10 @@ class ReceiptForm extends Component
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,
                 'user_id' => auth()->id(),
-                'paid_by' => $this->paid_by ,
-                'description' => $this->description ,
+                'category_id' => $this->category_id,
+                'sub_category_id' => $this->sub_category_id,
+                'paid_by' => $this->paid_by,
+                'description' => $this->description,
             ]);
 
             $receiptId = $receipt->id;
@@ -159,7 +189,9 @@ class ReceiptForm extends Component
 
             $this->receipt->update([
                 'till_id' => $this->till_id,
-                'paid_by' => $this->paid_by ,
+                'category_id' => $this->category_id,
+                'sub_category_id' => $this->sub_category_id,
+                'paid_by' => $this->paid_by,
                 'description' => $this->description,
             ]);
 

@@ -24,7 +24,7 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="paid_by">From Customer<span class="text-danger">*</span></label>
                             <input
-                                wire:model.defer="paid_by"
+                                wire:model="paid_by"
                                 type="text"
                                 id="paid_by"
                                 name="paid_by"
@@ -34,10 +34,31 @@
                             @error('paid_by') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
+                        <div class="col-12 col-md-6 mt-3">
+                            <label class="form-label" for="category_id">Category <span class="text-danger">*</span></label>
+                            <select wire:model="category_id" class="form-select selectpicker w-100" id="category_id" title="Select Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" @selected($category->id == $category_id)>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+
+                        <div class="col-12 col-md-6 mt-3 ">
+                            <label class="form-label" for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
+                            <select wire:model="sub_category_id" class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                @foreach($subCategories as $subCategory)
+                                    <option value="{{ $subCategory->id }}" @selected($subCategory->id == $sub_category_id)>{{ $subCategory->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
                         <div class="col-12 col-md-12">
                             <label class="form-label" for="description">Description</label>
                             <textarea
-                                wire:model.defer="description"
+                                wire:model="description"
                                 type="text"
                                 id="description"
                                 name="description"
@@ -52,15 +73,15 @@
                                 <div wire:key="receiptAmount-{{ $key }}">
                                     <div class="row">
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-5">
-                                            <input id="amount-{{$key}}" class="form-control cleave-input w-100 me-2" wire:model="receiptAmounts.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="amount" required>
+                                            <input id="amount-{{$key}}" class="form-control cleave-input w-100 me-2" wire:model="receiptAmounts.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="Amount" required>
                                             @error('receiptAmounts.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
@@ -69,7 +90,7 @@
                                                 aria-label="Default select example"
                                                 id="currency-{{$key}}"
                                                 class="w-100 currency selectpicker"
-                                                title="Select Currency {{ $key + 1 }}"
+                                                title="Select Currency"
                                                 data-style="btn-default"
                                                 data-live-search="true"
                                                 data-icon-base="ti"
@@ -126,6 +147,24 @@
 
         $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
+        })
+
+        $(document).on('change', '#category_id', function() {
+            $wire.dispatch('getSubCategories')
+        })
+
+        $wire.on('refreshSubCategories', function (event) {
+            let subCategories = event[0];
+            let selectedSubCategoryId = event[1] ?? null;
+            if (subCategories.length > 0) {
+                let subCategorySelector = $('#sub_category_id');
+                subCategorySelector.empty();
+                Object.entries(subCategories).forEach(([key, value]) => {
+                    let isSelected = value.id == selectedSubCategoryId ? "selected" : "";
+                    subCategorySelector.append(`<option value="${value.id}" ${isSelected}>${value.name}</option>`)
+                })
+                subCategorySelector.selectpicker('refresh');
+            }
         })
     </script>
     @endscript

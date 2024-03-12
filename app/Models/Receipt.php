@@ -10,9 +10,6 @@ class Receipt extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'receipts';
-    protected $primaryKey = 'id';
-
     protected $guarded = [];
 
     public function till()
@@ -29,7 +26,18 @@ class Receipt extends Model
     {
         return $this->hasMany(ReceiptAmount::class,'receipt_id');
     }
-    public static function reportMessage($data){
+    public static function reportMessage($data)
+    {
         echo 'new receipt <u><a href="'. route('receipt.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> from   '.$data['paid_by'].'  has been created ';
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategory::class);
     }
 }

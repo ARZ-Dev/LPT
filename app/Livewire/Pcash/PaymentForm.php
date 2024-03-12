@@ -64,6 +64,7 @@ class PaymentForm extends Component
         $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
+            ->where('type', 'payment')
             ->get();
 
         $this->currencies = Currency::all();

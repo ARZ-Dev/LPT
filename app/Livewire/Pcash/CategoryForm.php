@@ -15,140 +15,105 @@ class CategoryForm extends Component
 
     public $editing = false;
     public int $status;
-
-    public $roles;
+    public $type;
     public $category;
-
     public $user_id;
     public $name;
-
-    public $sub_category = [];
-    public $categoty_id;
-    public $deletedSubCategory = [];
-
-    protected $listeners = ['store', 'update'];
+    public $subCategories = [];
 
     public function mount($id = 0, $status = 0)
     {
         $this->authorize('category-list');
 
-        $this->roles = Role::pluck('name', 'id');
         $this->status=$status;
         $this->addRow();
 
         if ($id) {
             $this->editing = true;
-            $this->category = Category::findOrFail($id);
+            $this->category = Category::with('subCategories')->findOrFail($id);
 
             $this->user_id = $this->category->user_id;
             $this->name = $this->category->name;
+            $this->type = $this->category->type;
 
-            $this->sub_category = $this->category->subCategory->toArray();
+            $this->subCategories = $this->category->subCategories->toArray();
         }
 
     }
 
     protected function rules()
     {
-        $rules = [
-            'user_id' => ['nullable'],
-            'name' => ['required', 'string'],
-            'sub_category' => ['array'],
-            'sub_category.*.name' => ['required', 'string'],
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'in:payment,receipt'],
+            'subCategories' => ['array'],
+            'subCategories.*.name' => ['required', 'string', 'max:255'],
         ];
-
-        return $rules;
     }
 
 
     public function addRow()
     {
-        $this->sub_category[] = [
+        $this->subCategories[] = [
             'name' => ''
         ];
     }
 
     public function removeSubCategory($index)
     {
-        if($this->editing == true){
-            $removedItemId = $this->sub_category[$index]['id'] ?? null;
-            $this->deletedSubCategory[] = $removedItemId;
-        }
-            unset($this->sub_category[$index]);
-
-
+        unset($this->subCategories[$index]);
     }
 
 
     public function store()
     {
-        $this->authorize('category-edit');
-
+        $this->authorize('category-create');
         $this->validate();
 
         $category = Category::create([
             'user_id' => auth()->id(),
             'name' => $this->name,
+            'type' => $this->type,
         ]);
 
         $categoryId = $category->id;
 
-        foreach ($this->sub_category as $subCategory) {
+        foreach ($this->subCategories as $subCategory) {
             SubCategory::create([
                 'category_id' => $categoryId,
                 'name' => $subCategory['name'],
             ]);
         }
-        session()->flash('success', 'category has been created successfully!');
 
-        return redirect()->route('category');
+        return to_route('category')->with('success', 'Category has been created successfully!');
     }
-
 
     public function update()
     {
         $this->authorize('category-edit');
-
         $this->validate();
 
         $this->category->update([
             'name' => $this->name,
+            'type' => $this->type,
         ]);
 
-        foreach ($this->sub_category as $subCategory) {
-            $data = [
+        $subCategoryIds = [];
+        foreach ($this->subCategories as $subCategory) {
+            $newSubCategory = SubCategory::updateOrCreate([
+                'id' => $subCategory['id'] ?? 0,
+            ],[
                 'category_id' => $this->category->id,
                 'name' => $subCategory['name'],
-            ];
+            ]);
 
-            if (isset($subCategory['id'])) {
-                SubCategory::updateOrCreate(['id' => $subCategory['id']], $data);
-            } else {
-                SubCategory::create($data);
-            }
+            $subCategoryIds[] = $newSubCategory->id;
         }
 
-        Payment::whereIn('sub_category_id', $this->deletedSubCategory)->delete();
-        SubCategory::whereIn('id',$this->deletedSubCategory)->delete();
+        SubCategory::where('category_id', $this->category->id)->whereNotIn('id', $subCategoryIds)->delete();
 
-
-
-
-        session()->flash('success', 'Category has been updated successfully!');
-
-        return redirect()->route('category');
+        return to_route('category')->with('success', 'Category has been updated successfully!');
     }
-
-    private function sanitizeNumber($number)
-    {
-        $number = str_replace(',', '', $number);
-        if (substr($number, -1) === '.') {
-            $number = substr($number, 0, -1);
-        }
-
-        return $number;
-    }
-
 
     public function render()
     {

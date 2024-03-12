@@ -25,14 +25,21 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-
+                        <label class="form-label" for="type">Type <span class="text-danger">*</span></label>
+                        <div wire:ignore>
+                            <select wire:model="type"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Type" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                <option value="payment" @selected($type == "payment")>Payment</option>
+                                <option value="receipt" @selected($type == "receipt")>Receipt</option>
+                            </select>
+                        </div>
+                        @error('type') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
-                    @foreach($sub_category as $index => $subcategory)
+                    @foreach($subCategories as $index => $subcategory)
                     <div wire:key="subcategory-{{ $index }}">
                         <label class="form-label" for="sub_category[{{ $index }}][name]">Sub Category Name <span class="text-danger">*</span> </label>
                         <div class="d-flex flex-row">
-                            <input class="form-control w-50 me-2" wire:model="sub_category.{{ $index }}.name" type="text" id="sub_category[{{ $index }}][name]" name="sub_category[{{ $index }}][name]" placeholder="Sub Category Name" required>
+                            <input class="form-control w-50 me-2" wire:model="subCategories.{{ $index }}.name" type="text" id="sub_category[{{ $index }}][name]" name="sub_category[{{ $index }}][name]" placeholder="Sub Category Name" required>
                             @if(!$status)
                                 @if($index == 0)
                                     <button type="button" class="btn btn-success" wire:click="addRow">Add Sub Category</button>
@@ -41,8 +48,8 @@
                                 @endif
                             @endif
                         </div>
+                        @error('subCategories.'. $index .'.name') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
-                    @error('sub_category.'. $index .'.name') <div class="text-danger">{{ $message }}</div> @enderror
                     @endforeach
 
                     </form>
@@ -59,14 +66,14 @@
             @endif
         </div>
 
+    </div>
+
+    @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
+
 
     </script>
-    </div>
+    @endscript
 </div>
 
 
