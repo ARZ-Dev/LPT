@@ -29,9 +29,9 @@
                         <td>{{ $exchange->till?->name }}</td>
                         <td>{{ $exchange->fromCurrency?->name }}</td>
                         <td>{{ $exchange->toCurrency?->name }}</td>
-                        <td>{{ number_format($exchange->amount) }}</td>
-                        <td>{{ number_format($exchange->rate) }}</td>
-                        <td>{{ number_format($exchange->result) }}</td>
+                        <td>{{ number_format($exchange->amount, 2) }}</td>
+                        <td>{{ number_format($exchange->rate, 2) }}</td>
+                        <td>{{ number_format($exchange->result, 2) }}</td>
                         <td>{{ $exchange->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('exchange-list')

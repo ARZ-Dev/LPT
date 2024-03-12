@@ -60,9 +60,9 @@ class ExchangeForm extends Component
             $this->fromCurrency = Currency::find($this->from_currency_id);
             $this->to_currency_id = $this->exchange->to_currency_id;
             $this->toCurrency = Currency::find($this->to_currency_id);
-            $this->amount = number_format($this->exchange->amount);
-            $this->rate = number_format($this->exchange->rate);
-            $this->result = number_format($this->exchange->result);
+            $this->amount = number_format($this->exchange->amount, 2);
+            $this->rate = number_format($this->exchange->rate, 2);
+            $this->result = number_format($this->exchange->result, 2);
             $this->description = $this->exchange->description;
         }
 
@@ -116,17 +116,17 @@ class ExchangeForm extends Component
 
         if (($type == "rate" || $type == "amount") && $amount > 0 && $rate > 0) {
             if ($this->fromCurrency->list_order < $this->toCurrency->list_order) {
-                $this->result = number_format($amount * $rate);
+                $this->result = number_format($amount * $rate, 2);
             } else if ($this->fromCurrency->list_order > $this->toCurrency->list_order) {
-                $this->result = number_format($amount / $rate);
+                $this->result = number_format($amount / $rate, 2);
             }
         }
 
         if ($type == "result" && $result > 0 && $rate > 0) {
             if ($this->fromCurrency->list_order < $this->toCurrency->list_order) {
-                $this->amount = number_format($result / $rate);
+                $this->amount = number_format($result / $rate, 2);
             } else if ($this->fromCurrency->list_order > $this->toCurrency->list_order) {
-                $this->amount = number_format($result * $rate);
+                $this->amount = number_format($result * $rate, 2);
             }
         }
 
@@ -236,7 +236,7 @@ class ExchangeForm extends Component
             TillAmount::create([
                 'till_id' => $this->till_id,
                 'currency_id' => $this->to_currency_id,
-                'amount' => sanitizeNumber($this->amount),
+                'amount' => sanitizeNumber($this->result),
             ]);
         }
     }
