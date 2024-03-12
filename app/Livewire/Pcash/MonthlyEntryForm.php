@@ -58,22 +58,21 @@ class MonthlyEntryForm extends Component
         // $this->addRow();
 
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
-            $query->where('user_id', auth()->id());
-        })->with('tillAmounts')->get();
+                $query->where('user_id', auth()->id());
+            })
+            ->with('tillAmounts')
+            ->get();
 
-    
-        
+
+
         $this->alreadyOpened = MonthlyEntry::whereNotNull('open_date')->where('close_date',null)->where('pending',0)->pluck('till_id')->toArray();
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
-            $query->where('user_id', auth()->id());
-        })
-        ->with('tillAmounts', 'monthlyEntry')
-        ->whereHas('monthlyEntry', function ($query) {
-            $query->whereNotIN('till_id',$this->alreadyOpened);
-        })
-        ->get();
+                $query->where('user_id', auth()->id());
+            })
+            ->with('tillAmounts', 'monthlyEntry')
+            ->whereDoesntHave('openedMonthlyEntry')
+            ->get();
 
-        dd($this->alreadyOpened, $this->tills);
 
         $this->currencies = Currency::all();
 
@@ -91,7 +90,7 @@ class MonthlyEntryForm extends Component
             $this->pending = $this->monthlyEntry->pending;
             $this->confirm = $this->monthlyEntry->confirm;
 
-        
+
 
             $this->tillAmounts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
                 $query->where('till_id', $this->till_id)->where('monthly_entry_id', $this->monthlyEntry_id);
@@ -138,7 +137,7 @@ class MonthlyEntryForm extends Component
             $rules['close_date'] = ['nullable', 'date'];
             $rules['monthlyEntryAmounts.*.closing_amount'] = ['nullable'];
         }
-        
+
 
         return $rules;
     }
@@ -150,7 +149,7 @@ class MonthlyEntryForm extends Component
         $this->monthlyEntryAmouts = [];
         $this->monthlyEntryAmouts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
             $query->where('till_id', $this->till_id);
-        })->get(); 
+        })->get();
 
 
             if($this->monthlyEntryAmouts->count() === 0){
@@ -159,7 +158,7 @@ class MonthlyEntryForm extends Component
                 $this->tillAmounts = $this->monthlyEntryAmouts;
                 }
 }
-    
+
 
     public function addRow()
     {
@@ -196,19 +195,19 @@ class MonthlyEntryForm extends Component
 
 
                 $monthlyEntry_id = $monthlyEntry->id;
-            
+
                 foreach ($this->tillAmounts as $tillAmount) {
-            
+
                  MonthlyEntryAmount::create([
                     'monthly_entry_id' => $monthlyEntry_id,
                     'currency_id' => $tillAmount->currency_id,
                     'amount' => sanitizeNumber($tillAmount->amount),
-                    
+
                 ]);
-           
+
             }
-        
-            
+
+
 
         return to_route('monthlyEntry')->with('success', 'monthlyEntry has been created successfully!');
     }
@@ -220,7 +219,7 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-edit');
         $this->validate();
 
-    
+
             $this->monthlyEntry->update([
 
                 'till_id' => $this->till_id,
@@ -241,22 +240,22 @@ class MonthlyEntryForm extends Component
                     'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
                 ]);
 
-  
+
 
                 $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
                 $updatedTillAmounts->update([
                     'amount' => $updatedTillAmounts->amount + sanitizeNumber($monthlyEntryAmount['closing_amount']),
                 ]);
             }
-            
-            
+
+
 
 
 
 
             return to_route('monthlyEntry')->with('success', 'monthlyEntry has been updated successfully!');
         }
-        
+
 
 
 

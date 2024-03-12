@@ -13,7 +13,7 @@ class Till extends Model
     protected $primaryKey = 'id';
 
     protected $guarded = [];
-    
+
 
     public function user()
     {
@@ -48,12 +48,19 @@ class Till extends Model
     {
         return $this->hasMany(MonthlyEntry::class,'till_id');
     }
+
+    public function openedMonthlyEntry()
+    {
+        return $this->hasMany(MonthlyEntry::class,'till_id')->where('close_date',null)->where('pending',0);
+    }
+
     public function receipts()
     {
         return $this->hasMany(Receipt::class,'till_id');
     }
 
-    public static function reportMessage($data){
+    public static function reportMessage($data)
+    {
         echo 'new till <u><a href="'. route('till.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u>  '.$data['name'].'  has been created ';
 
     }
