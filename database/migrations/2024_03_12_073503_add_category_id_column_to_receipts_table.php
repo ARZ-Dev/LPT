@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('receipts', function (Blueprint $table) {
-            $table->foreignId('category_id')->after('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sub_category_id')->after('category_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->nullable()->after('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('sub_category_id')->nullable()->after('category_id')->constrained()->cascadeOnDelete();
         });
     }
 
