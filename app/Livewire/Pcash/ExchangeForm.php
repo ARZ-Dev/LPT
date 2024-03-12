@@ -45,7 +45,7 @@ class ExchangeForm extends Component
                 $query->where('user_id', auth()->id());
             })
             ->get();
-        
+
         $this->status = $status;
 
         $this->currencies = Currency::all();
@@ -181,11 +181,11 @@ class ExchangeForm extends Component
             throw_if(!$toTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
 
             $fromTillAmount->update([
-                'amount' => $fromTillAmount->amount - $this->exchange->amount,
+                'amount' => $fromTillAmount->amount + $this->exchange->amount,
             ]);
 
             $toTillAmount->update([
-                'amount' => $toTillAmount->amount + $this->exchange->result,
+                'amount' => $toTillAmount->amount - $this->exchange->result,
             ]);
 
             $this->exchange->update([
@@ -222,20 +222,20 @@ class ExchangeForm extends Component
         $fromTillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $this->from_currency_id)->first();
         $toTillAmount = TillAmount::where('till_id', $this->till_id)->where('currency_id', $this->to_currency_id)->first();
 
-        throw_if(!$toTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
+        throw_if(!$fromTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
 
-        $toTillAmount->update([
-            'amount' => $toTillAmount->amount - sanitizeNumber($this->result),
+        $fromTillAmount->update([
+            'amount' => $fromTillAmount->amount - sanitizeNumber($this->amount),
         ]);
 
-        if ($fromTillAmount) {
-            $fromTillAmount->update([
-                'amount' => $fromTillAmount->amount + sanitizeNumber($this->amount),
+        if ($toTillAmount) {
+            $toTillAmount->update([
+                'amount' => $toTillAmount->amount + sanitizeNumber($this->result),
             ]);
         } else {
             TillAmount::create([
                 'till_id' => $this->till_id,
-                'currency_id' => $this->from_currency_id,
+                'currency_id' => $this->to_currency_id,
                 'amount' => sanitizeNumber($this->amount),
             ]);
         }
