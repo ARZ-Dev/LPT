@@ -46,7 +46,7 @@ class MonthlyEntryForm extends Component
 
     public $currencies;
 
-    public $alreadyOpened ;
+    public $selectedTill;
 
     protected $listeners = ['store', 'update'];
 
@@ -84,6 +84,7 @@ class MonthlyEntryForm extends Component
             $this->user_id = $this->monthlyEntry->user_id;
             $this->created_by = $this->monthlyEntry->created_by;
             $this->till_id = $this->monthlyEntry->till_id;
+            $this->selectedTill = Till::find($this->till_id);
 
             $this->open_date = $this->monthlyEntry->open_date;
             $this->close_date = $this->monthlyEntry->close_date;
@@ -151,13 +152,12 @@ class MonthlyEntryForm extends Component
             $query->where('till_id', $this->till_id);
         })->get();
 
-
-            if($this->monthlyEntryAmouts->count() === 0){
-                $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
-            }else{
-                $this->tillAmounts = $this->monthlyEntryAmouts;
-                }
-}
+        if($this->monthlyEntryAmouts->count() === 0) {
+            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+        } else {
+            $this->tillAmounts = $this->monthlyEntryAmouts;
+        }
+    }
 
 
     public function addRow()
@@ -179,35 +179,29 @@ class MonthlyEntryForm extends Component
 
         $this->validate();
 
+        $monthlyEntry = MonthlyEntry::create([
+            'user_id' => auth()->id(),
+            'created_by' => auth()->id(),
+            'till_id' => $this->till_id,
 
-            $monthlyEntry = MonthlyEntry::create([
-                'user_id' => auth()->id(),
-                'created_by' => auth()->id(),
-                'till_id' => $this->till_id,
+            'open_date' => $this->open_date,
+            'close_date' => null,
+            'pending' => 0,
+            'confirm' => 0,
 
-                'open_date' => $this->open_date,
-                'close_date' => null,
-                'pending' => 0,
-                'confirm' => 0,
+        ]);
 
-            ]);
+        $monthlyEntry_id = $monthlyEntry->id;
 
+        foreach ($this->tillAmounts as $tillAmount) {
 
+             MonthlyEntryAmount::create([
+                'monthly_entry_id' => $monthlyEntry_id,
+                'currency_id' => $tillAmount->currency_id,
+                'amount' => sanitizeNumber($tillAmount->amount),
+             ]);
 
-                $monthlyEntry_id = $monthlyEntry->id;
-
-                foreach ($this->tillAmounts as $tillAmount) {
-
-                 MonthlyEntryAmount::create([
-                    'monthly_entry_id' => $monthlyEntry_id,
-                    'currency_id' => $tillAmount->currency_id,
-                    'amount' => sanitizeNumber($tillAmount->amount),
-
-                ]);
-
-            }
-
-
+        }
 
         return to_route('monthlyEntry')->with('success', 'monthlyEntry has been created successfully!');
     }
@@ -219,46 +213,34 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-edit');
         $this->validate();
 
+        $this->monthlyEntry->update([
 
-            $this->monthlyEntry->update([
+            'till_id' => $this->till_id,
+            'open_date' => $this->open_date,
+            'close_date' => $this->close_date,
+            'pending' => 1,
+            'confirm' => 0,
+        ]);
 
-                'till_id' => $this->till_id,
-                'open_date' => $this->open_date,
-                'close_date' => $this->close_date,
-                'pending' => 1,
-                'confirm' => 0,
+        foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
+
+             MonthlyEntryAmount::updateOrCreate([
+                'id' => $monthlyEntryAmount['id'] ?? 0,
+            ],[
+                'monthly_entry_id' => $this->monthlyEntry_id,
+                'amount' => sanitizeNumber($monthlyEntryAmount['amount']),
+                'currency_id' => $monthlyEntryAmount['currency_id'],
+                'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
             ]);
 
-            foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
-
-                 MonthlyEntryAmount::updateOrCreate([
-                    'id' => $monthlyEntryAmount['id'] ?? 0,
-                ],[
-                    'monthly_entry_id' => $this->monthlyEntry_id,
-                    'amount' => sanitizeNumber($monthlyEntryAmount['amount']),
-                    'currency_id' => $monthlyEntryAmount['currency_id'],
-                    'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
-                ]);
-
-
-
-                $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
-                $updatedTillAmounts->update([
-                    'amount' => $updatedTillAmounts->amount + sanitizeNumber($monthlyEntryAmount['closing_amount']),
-                ]);
-            }
-
-
-
-
-
-
-            return to_route('monthlyEntry')->with('success', 'monthlyEntry has been updated successfully!');
+            $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
+            $updatedTillAmounts->update([
+                'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+            ]);
         }
 
-
-
-
+        return to_route('monthlyEntry')->with('success', 'monthlyEntry has been updated successfully!');
+    }
 
     public function render()
     {

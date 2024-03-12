@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
- 
+
     public function up(): void
     {
         Schema::create('monthly_entry_amounts', function (Blueprint $table) {
@@ -15,8 +15,8 @@ return new class extends Migration
             $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->double('amount');
             $table->double('closing_amount')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

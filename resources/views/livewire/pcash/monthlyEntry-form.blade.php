@@ -22,11 +22,15 @@
 
                         <div class="col-12 col-md-12 mt-3">
                             <label class="form-label" for="till_id">Tills <span class="text-danger">*</span></label>
-                            <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required wire:change="getTillAmounts" @if($editing) disabled @endif>
-                                @foreach($tills as $till)
-                                    <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name }}</option>
-                                @endforeach
-                            </select>
+                            @if($editing)
+                                <br><span class="fw-bold text-dark">{{ $selectedTill?->name }}</span>
+                            @else
+                                <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required wire:change="getTillAmounts">
+                                    @foreach($tills as $till)
+                                        <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                             @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -40,8 +44,7 @@
                             id="open_date"
                             name="open_date"
                             class="form-control"
-                            placeholder="open_date">
-                        </input>
+                            placeholder="open_date" />
                         @error('open_date') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
@@ -56,8 +59,7 @@
                                 class="form-control"
                                 placeholder="close_date"
                                 @if($pending == 1) disabled @endif
-                                >
-                            </input>
+                            />
                             @error('close_date') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     @endif
@@ -84,25 +86,18 @@
 
                                 <div class="row">
                                     <div class="col-4">
-                                        <input class="form-control w-100 me-2" id="currency-{{$key}}" type="text" placeholder="{{$tillAmount->currency->name}}"
-                                        wire:model="monthlyEntryAmounts.{{ $key }}.currency_id" readonly disabled>
+                                        <input class="form-control w-100 me-2" id="currency-{{$key}}" type="text" placeholder="{{$tillAmount->currency->name}}" readonly disabled>
                                     </div>
                                     <div class="col-4">
-                                        <input class="form-control cleave-input me-2" id="amount-{{$key}}" type="text" placeholder="{{$tillAmount->amount}}" readonly disabled
-                                        wire:model="monthlyEntryAmounts.{{ $key }}.amount"
-                                        >
+                                        <input class="form-control cleave-input me-2" id="amount-{{$key}}" type="text" placeholder="{{$tillAmount->amount}}" readonly disabled>
                                     </div>
                                     @if($editing)
                                         <div class="col-4">
                                             <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="monthlyEntryAmounts.{{ $key }}.closing_amount" @if($pending == 1) disabled @endif>
                                         </div>
                                         @error('monthlyEntryAmounts.'. $key .'.closing_amount') <div class="text-danger">{{ $message }}</div> @enderror
-
                                     @endif
-
                                 </div>
-
-
                             </div>
                         @endforeach
                     </div>
