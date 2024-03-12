@@ -224,8 +224,11 @@ class ExchangeForm extends Component
 
         throw_if(!$fromTillAmount, new \Exception("Selected currency to does not exists in till amounts!"));
 
+        $updatedAmount = $fromTillAmount->amount - sanitizeNumber($this->amount);
+        throw_if($updatedAmount < 0, new \Exception("The exchange amount does not exists in till amounts!"));
+
         $fromTillAmount->update([
-            'amount' => $fromTillAmount->amount - sanitizeNumber($this->amount),
+            'amount' => $updatedAmount,
         ]);
 
         if ($toTillAmount) {

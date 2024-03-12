@@ -54,7 +54,7 @@ class TillForm extends Component
             foreach ($this->till->tillAmounts as $tillAmount) {
                 $this->tillAmounts[] = [
                     'id' => $tillAmount->id,
-                    'amount' => number_format($tillAmount->amount),
+                    'amount' => number_format($tillAmount->amount, 2),
                     'currency_id' => $tillAmount->currency_id,
                     'currency_name' => $tillAmount->currency?->name,
                 ];
@@ -99,8 +99,8 @@ class TillForm extends Component
             'user_id' => $this->user_id,
             'name' => $this->name,
         ]);
- 
-     
+
+
 
         MonthlyEntry::create([
             'user_id' =>$this->user_id,
