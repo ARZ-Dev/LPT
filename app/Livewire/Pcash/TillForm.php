@@ -4,6 +4,7 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
 use App\Models\MonthlyEntry;
+use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\User;
@@ -102,7 +103,7 @@ class TillForm extends Component
  
      
 
-        MonthlyEntry::create([
+        $monthlyEntry = MonthlyEntry::create([
             'user_id' =>$this->user_id,
             'created_by' => $this->user_id,
             'till_id' =>$till->id,
@@ -113,9 +114,18 @@ class TillForm extends Component
             'confirm' => 0,
 
         ]);
+        $monthlyEntry_id = $monthlyEntry->id;
 
         $tillId = $till->id;
         foreach ($this->tillAmounts as $tillAmount) {
+
+            MonthlyEntryAmount::create([
+                'monthly_entry_id' => $monthlyEntry_id,
+                'currency_id' => $tillAmount['currency_id'],
+                'amount' => sanitizeNumber($tillAmount['amount']),
+                
+            ]);
+
             TillAmount::create([
                 'till_id' => $tillId,
                 'currency_id' => $tillAmount['currency_id'],
