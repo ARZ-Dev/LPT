@@ -25,10 +25,9 @@
                         <td>{{ $monthlyEntry->user->username }}</td>
                         <td>{{ $monthlyEntry->till->name }}</td>
 
-                        <td>{{ $monthlyEntry->open_date }}</td>
-                        <td>{{ $monthlyEntry->close_date }}</td>
-
-
+                        <td>{{ \Carbon\Carbon::parse($monthlyEntry->open_date)->format('Y-m') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($monthlyEntry->close_date)->format('Y-m') }}</td>
+                        
                         <td>{{ $monthlyEntry->createdby->username }}</td>
                         <td>{{ $monthlyEntry->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
@@ -39,7 +38,7 @@
                                 <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button"><i class="ti ti-circle-x ti-sm"></i></a>
                             @endcan
                             @can('monthlyEntry-delete')
-                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $monthlyEntry->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                                <!-- <a href="#" class="text-body delete-record delete-button" data-id="{{ $monthlyEntry->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a> -->
                             @endcan
                         </td>
                     </tr>
