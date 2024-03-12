@@ -51,7 +51,7 @@ class Till extends Model
 
     public function openedMonthlyEntry()
     {
-        return $this->hasMany(MonthlyEntry::class,'till_id')->where('close_date',null)->where('pending',0);
+        return $this->hasMany(MonthlyEntry::class)->whereNull('close_date');
     }
 
     public function receipts()

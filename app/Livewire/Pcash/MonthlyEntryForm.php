@@ -29,21 +29,15 @@ class MonthlyEntryForm extends Component
 
     public $open_date;
     public $close_date;
-    // public $pending;
-    // public $confirm;
-
 
     public  $monthlyEntryAmounts = [];
     public $monthlyEntry_id;
     public $currency_id;
     public $amount;
-    public $closing_amount;
 
 
     public $tills;
     public $tillAmounts = [];
-
-    public $monthlyEntryAmouts = [];
 
     public $currencies;
 
@@ -56,7 +50,6 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-list');
 
         $this->status=$status;
-        // $this->addRow();
 
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
@@ -64,9 +57,6 @@ class MonthlyEntryForm extends Component
             ->with('tillAmounts')
             ->get();
 
-
-
-        $this->alreadyOpened = MonthlyEntry::whereNotNull('open_date')->where('close_date',null)->pluck('till_id')->toArray();
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
@@ -74,8 +64,6 @@ class MonthlyEntryForm extends Component
             ->whereDoesntHave('openedMonthlyEntry')
             ->get();
 
-
-        $this->currencies = Currency::all();
 
         if ($id) {
             $this->monthlyEntry_id=$id;
@@ -89,22 +77,17 @@ class MonthlyEntryForm extends Component
 
             $this->open_date = $this->monthlyEntry->open_date;
             $this->close_date = $this->monthlyEntry->close_date;
-            // $this->pending = $this->monthlyEntry->pending;
-            // $this->confirm = $this->monthlyEntry->confirm;
-
-
 
             $this->tillAmounts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
                 $query->where('till_id', $this->till_id)->where('monthly_entry_id', $this->monthlyEntry_id);
-            })->get() ;
+            })->get();
 
             $this->monthlyEntryAmounts = [];
             foreach ($this->monthlyEntry->monthlyEntryAmounts as $monthlyEntryAmount) {
                 $this->monthlyEntryAmounts[] = [
                     'id' => $monthlyEntryAmount->id,
-                    'amount' => number_format($monthlyEntryAmount->amount),
-                    'closing_amount' => number_format($monthlyEntryAmount->closing_amount),
-
+                    'amount' => number_format($monthlyEntryAmount->amount, 2),
+                    'closing_amount' => number_format($monthlyEntryAmount->closing_amount, 2),
                     'currency_id' => $monthlyEntryAmount->currency_id,
                 ];
             }
@@ -119,12 +102,6 @@ class MonthlyEntryForm extends Component
             'user_id' => ['nullable'],
             'created_by' => ['nullable'],
             'till_id' => ['required', 'integer'],
-
-
-            // 'pending' => ['nullable'],
-            // 'confirm' => ['nullable'],
-
-
             'monthlyEntryAmounts' => ['array'],
             'monthlyEntryAmounts.*.monthlyEntry_id' => ['nullable'],
             'monthlyEntryAmounts.*.currency_id' => ['nullable'],
@@ -148,48 +125,32 @@ class MonthlyEntryForm extends Component
     public function getTillAmounts()
     {
         $this->tillAmounts = [];
-        $this->monthlyEntryAmouts = [];
-        $this->monthlyEntryAmouts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
-            $query->where('till_id', $this->till_id);
-        })->get();
+        $this->monthlyEntryAmounts = [];
 
-        if($this->monthlyEntryAmouts->count() === 0) {
-            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+        $monthlyEntry = MonthlyEntry::where('till_id', $this->till_id)
+            ->with('monthlyEntryAmounts')
+            ->first();
+
+        $this->monthlyEntryAmounts = $monthlyEntry?->monthlyEntryAmounts ?? [];
+
+        if(count($this->monthlyEntryAmounts)) {
+            $this->tillAmounts = $this->monthlyEntryAmounts;
         } else {
-            $this->tillAmounts = $this->monthlyEntryAmouts;
+            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
         }
-    }
-
-
-    public function addRow()
-    {
-        $this->monthlyEntryAmounts[] = ['currency_id' => '','amount' => '','closing_amount'=>''];
-    }
-
-
-    public function removeRow($key)
-    {
-        unset($this->monthlyEntryAmounts[$key]);
     }
 
     public function store()
     {
-
-
         $this->authorize('monthlyEntry-create');
-
         $this->validate();
 
         $monthlyEntry = MonthlyEntry::create([
             'user_id' => auth()->id(),
             'created_by' => auth()->id(),
             'till_id' => $this->till_id,
-
             'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
             'close_date' => null,
-            // 'pending' => 0,
-            // 'confirm' => 0,
-
         ]);
 
         $monthlyEntry_id = $monthlyEntry->id;
@@ -215,12 +176,9 @@ class MonthlyEntryForm extends Component
         $this->validate();
 
         $this->monthlyEntry->update([
-
             'till_id' => $this->till_id,
-            'open_date' =>Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
+            'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
             'close_date' => Carbon::parse($this->close_date)->startOfMonth()->toDateString(),
-            // 'pending' => 1,
-            // 'confirm' => 0,
         ]);
 
         foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
@@ -235,7 +193,7 @@ class MonthlyEntryForm extends Component
             ]);
 
             $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
-            
+
             $updatedTillAmounts->update([
                 'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
             ]);
