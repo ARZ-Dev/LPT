@@ -14,18 +14,14 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->foreignId('till_id')->constrained('tills')->cascadeOnDelete();
-
             $table->date('open_date')->nullable();
             $table->date('close_date')->nullable();
-            $table->boolean('pending')->nullable();
-            $table->boolean('confirm')->nullable();
-
             $table->softDeletes();
             $table->timestamps();
         });
     }
 
- 
+
     public function down(): void
     {
         Schema::dropIfExists('monthly_entries');

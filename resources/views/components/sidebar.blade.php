@@ -87,7 +87,7 @@
 				</li>
 				<li class="menu-item {{ request()->is('monthlyEntry*') ? "active" : "" }}">
 					<a href="{{ route('monthlyEntry') }}" class="menu-link">
-						<div data-i18n="Monthly Entry">Monthly Entry</div>
+						<div data-i18n="Monthly O/C">Monthly O/C</div>
 					</a>
 				</li>
 				<li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
@@ -112,7 +112,7 @@
 				</li>
 				<li class="menu-item {{ request()->is('report') ? "active" : "" }}">
 					<a href="{{ route('report') }}" class="menu-link">
-						<div data-i18n="Report">Report</div>
+						<div data-i18n="Petty Cash">Petty Cash</div>
 					</a>
 				</li>
 
