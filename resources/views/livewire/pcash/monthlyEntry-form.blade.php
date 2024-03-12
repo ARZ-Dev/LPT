@@ -3,11 +3,11 @@
         <div class="col-xl">
 
 
-        @if($pending == 1)
-        <div class="alert alert-danger" role="alert">
+ 
+        <!-- <div class="alert alert-danger" role="alert">
             On Pending
-        </div>
-        @endif
+        </div> -->
+
 
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -58,7 +58,7 @@
                                 name="close_date"
                                 class="form-control"
                                 placeholder="close_date"
-                                @if($pending == 1) disabled @endif
+                  
                             />
                             @error('close_date') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -93,7 +93,7 @@
                                     </div>
                                     @if($editing)
                                         <div class="col-4">
-                                            <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="monthlyEntryAmounts.{{ $key }}.closing_amount" @if($pending == 1) disabled @endif>
+                                            <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="monthlyEntryAmounts.{{ $key }}.closing_amount" >
                                         </div>
                                         @error('monthlyEntryAmounts.'. $key .'.closing_amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     @endif
@@ -106,7 +106,7 @@
             </div>
 
             @if(!$status)
-                @if($pending == 0 || $close_date == null)
+                @if( $close_date == null)
                     <div class="col-12 text-end mt-3">
                         <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
                     </div>
