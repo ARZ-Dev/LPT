@@ -87,7 +87,7 @@
 				</li>
 				<li class="menu-item {{ request()->is('monthlyEntry*') ? "active" : "" }}">
 					<a href="{{ route('monthlyEntry') }}" class="menu-link">
-						<div data-i18n="Monthly O/C">Monthly O/C</div>
+						<div data-i18n="Monthly Opening/Closing">Monthly Opening/Closing</div>
 					</a>
 				</li>
 				<li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
