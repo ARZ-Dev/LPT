@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use Carbon\Carbon;
 
 class MonthlyEntryForm extends Component
 {
@@ -184,7 +185,7 @@ class MonthlyEntryForm extends Component
             'created_by' => auth()->id(),
             'till_id' => $this->till_id,
 
-            'open_date' => $this->open_date,
+            'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
             'close_date' => null,
             'pending' => 0,
             'confirm' => 0,
@@ -216,8 +217,8 @@ class MonthlyEntryForm extends Component
         $this->monthlyEntry->update([
 
             'till_id' => $this->till_id,
-            'open_date' => $this->open_date,
-            'close_date' => $this->close_date,
+            'open_date' =>Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
+            'close_date' => Carbon::parse($this->close_date)->startOfMonth()->toDateString(),
             'pending' => 1,
             'confirm' => 0,
         ]);
@@ -234,6 +235,7 @@ class MonthlyEntryForm extends Component
             ]);
 
             $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
+            
             $updatedTillAmounts->update([
                 'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
             ]);

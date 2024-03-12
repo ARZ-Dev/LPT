@@ -40,7 +40,7 @@
                         <label class="form-label" for="open_date">open_date</label>
                         <input
                             wire:model.defer="open_date"
-                            type="date"
+                            type="month"
                             id="open_date"
                             name="open_date"
                             class="form-control"
@@ -53,7 +53,7 @@
                             <label class="form-label" for="close_date">close_date</label>
                             <input
                                 wire:model.defer="close_date"
-                                type="date"
+                                type="month"
                                 id="close_date"
                                 name="close_date"
                                 class="form-control"
