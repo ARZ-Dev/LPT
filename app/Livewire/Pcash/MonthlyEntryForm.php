@@ -9,6 +9,8 @@ use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
 use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -64,6 +66,7 @@ class MonthlyEntryForm extends Component
             ->whereDoesntHave('openedMonthlyEntry')
             ->get();
 
+        $this->open_date = now()->startOfMonth()->format('Y-m');
 
         if ($id) {
             $this->monthlyEntry_id=$id;
@@ -76,11 +79,9 @@ class MonthlyEntryForm extends Component
             $this->selectedTill = Till::find($this->till_id);
 
             $this->open_date = $this->monthlyEntry->open_date;
-            $this->close_date = $this->monthlyEntry->close_date;
+            $this->close_date = $this->monthlyEntry->close_date ?? Carbon::parse($this->monthlyEntry->open_date)->endOfMonth()->format("Y-m");
 
-            $this->tillAmounts = MonthlyEntryAmount::with(['currency', 'monthlyEntry'])->whereHas('monthlyEntry', function ($query) {
-                $query->where('till_id', $this->till_id)->where('monthly_entry_id', $this->monthlyEntry_id);
-            })->get();
+            $this->getTillAmounts();
 
             $this->monthlyEntryAmounts = [];
             foreach ($this->monthlyEntry->monthlyEntryAmounts as $monthlyEntryAmount) {
@@ -99,8 +100,6 @@ class MonthlyEntryForm extends Component
     protected function rules()
     {
         $rules = [
-            'user_id' => ['nullable'],
-            'created_by' => ['nullable'],
             'till_id' => ['required', 'integer'],
             'monthlyEntryAmounts' => ['array'],
             'monthlyEntryAmounts.*.monthlyEntry_id' => ['nullable'],
@@ -108,13 +107,10 @@ class MonthlyEntryForm extends Component
             'monthlyEntryAmounts.*.amount' => ['nullable'],
         ];
         if ($this->editing) {
-            $rules['open_date'] = ['nullable', 'date'];
-            $rules['close_date'] = ['required', 'date'];
+            $rules['close_date'] = ['required', 'date', 'after_or_equal:open_date'];
             $rules['monthlyEntryAmounts.*.closing_amount'] = ['required'];
         } else {
             $rules['open_date'] = ['required', 'date'];
-            $rules['close_date'] = ['nullable', 'date'];
-            $rules['monthlyEntryAmounts.*.closing_amount'] = ['nullable'];
         }
 
 
@@ -124,20 +120,7 @@ class MonthlyEntryForm extends Component
     #[On('getTillAmounts')]
     public function getTillAmounts()
     {
-        $this->tillAmounts = [];
-        $this->monthlyEntryAmounts = [];
-
-        $monthlyEntry = MonthlyEntry::where('till_id', $this->till_id)
-            ->with('monthlyEntryAmounts')
-            ->first();
-
-        $this->monthlyEntryAmounts = $monthlyEntry?->monthlyEntryAmounts ?? [];
-
-        if(count($this->monthlyEntryAmounts)) {
-            $this->tillAmounts = $this->monthlyEntryAmounts;
-        } else {
-            $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
-        }
+        $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
     }
 
     public function store()
@@ -145,66 +128,101 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-create');
         $this->validate();
 
-        $monthlyEntry = MonthlyEntry::create([
-            'user_id' => auth()->id(),
-            'created_by' => auth()->id(),
-            'till_id' => $this->till_id,
-            'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
-            'close_date' => null,
-        ]);
+        DB::beginTransaction();
+        try {
 
-        $monthlyEntry_id = $monthlyEntry->id;
+            // check if there is an existing monthly entry for the selected month
+            $openDate = Carbon::parse($this->open_date)->startOfMonth();
+            $existingMonthlyEntry = MonthlyEntry::where('till_id', $this->till_id)->where('open_date', $openDate->toDateString())->first();
+            throw_if($existingMonthlyEntry, new \Exception("Cannot open the same month twice for the same till!"));
 
-        foreach ($this->tillAmounts as $tillAmount) {
+            $monthlyEntry = MonthlyEntry::create([
+                'user_id' => auth()->id(),
+                'created_by' => auth()->id(),
+                'till_id' => $this->till_id,
+                'open_date' => $openDate->toDateString(),
+            ]);
 
-             MonthlyEntryAmount::create([
-                'monthly_entry_id' => $monthlyEntry_id,
-                'currency_id' => $tillAmount->currency_id,
-                'amount' => sanitizeNumber($tillAmount->amount),
-             ]);
+            foreach ($this->tillAmounts as $tillAmount) {
+                 MonthlyEntryAmount::create([
+                    'monthly_entry_id' => $monthlyEntry->id,
+                    'currency_id' => $tillAmount->currency_id,
+                    'amount' => sanitizeNumber($tillAmount->amount),
+                    'closing_amount' => sanitizeNumber($tillAmount->amount),
+                 ]);
+            }
 
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
         }
 
         return to_route('monthlyEntry')->with('success', 'monthlyEntry has been created successfully!');
     }
-
-
 
     public function update()
     {
         $this->authorize('monthlyEntry-edit');
         $this->validate();
 
-        $this->monthlyEntry->update([
-            'till_id' => $this->till_id,
-            'open_date' => Carbon::parse($this->open_date)->startOfMonth()->toDateString(),
-            'close_date' => Carbon::parse($this->close_date)->startOfMonth()->toDateString(),
-        ]);
+        DB::beginTransaction();
+        try {
 
-        foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
+            // check if there is an existing monthly entry for the selected month
+            $closeDate = Carbon::parse($this->close_date)->endOfMonth();
+            $existingMonthlyEntry = MonthlyEntry::where('till_id', $this->till_id)->where('close_date', $closeDate->toDateString())->first();
+            throw_if($existingMonthlyEntry, new \Exception("Cannot close the same month twice for the same till!"));
 
-             MonthlyEntryAmount::updateOrCreate([
-                'id' => $monthlyEntryAmount['id'] ?? 0,
-            ],[
-                'monthly_entry_id' => $this->monthlyEntry_id,
-                'amount' => sanitizeNumber($monthlyEntryAmount['amount']),
-                'currency_id' => $monthlyEntryAmount['currency_id'],
-                'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+            $this->monthlyEntry->update([
+                'close_date' => $closeDate->toDateString(),
             ]);
 
-            $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
+            // open a new monthly entry for the next month
+            $newMonthlyEntry = MonthlyEntry::create([
+                'user_id' => auth()->id(),
+                'created_by' => auth()->id(),
+                'till_id' => $this->till_id,
+                'open_date' => $closeDate->addDay()->toDateString(),
+            ]);
 
-            $updatedTillAmounts->update([
-                'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+            foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
+                MonthlyEntryAmount::whereKey($monthlyEntryAmount['id'])->update([
+                    'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+                ]);
+
+                $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
+
+                $updatedTillAmounts->update([
+                    'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+                ]);
+
+                // open a new monthly entry for the next month
+                MonthlyEntryAmount::create([
+                    'monthly_entry_id' => $newMonthlyEntry->id,
+                    'currency_id' => $monthlyEntryAmount['currency_id'],
+                    'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+                    'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+                ]);
+            }
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
             ]);
         }
 
-        return to_route('monthlyEntry')->with('success', 'monthlyEntry has been updated successfully!');
+        return to_route('monthlyEntry')->with('success', 'Monthly entry has been closed successfully!');
     }
 
     public function render()
     {
-
         return view('livewire.pcash.monthlyEntry-form');
     }
 }

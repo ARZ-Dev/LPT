@@ -12,8 +12,8 @@
                     <th>ID</th>
                     <th>created by</th>
                     <th>till</th>
-                    <th>open date</th>
-                    <th>close date</th>
+                    <th>open month</th>
+                    <th>close month</th>
                     <th>created at</th>
                     <th>Actions</th>
                 </tr>

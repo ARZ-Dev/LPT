@@ -101,33 +101,24 @@ class TillForm extends Component
             'name' => $this->name,
         ]);
 
-
-
         $monthlyEntry = MonthlyEntry::create([
             'user_id' =>$this->user_id,
-            'created_by' => $this->user_id,
-            'till_id' =>$till->id,
-
-            'open_date' => Carbon::now(),
-            'close_date' => null,
-            'pending' => 0,
-            'confirm' => 0,
-
+            'created_by' => auth()->id(),
+            'till_id' => $till->id,
+            'open_date' => Carbon::now()->startOfMonth(),
         ]);
-        $monthlyEntry_id = $monthlyEntry->id;
 
-        $tillId = $till->id;
         foreach ($this->tillAmounts as $tillAmount) {
 
             MonthlyEntryAmount::create([
-                'monthly_entry_id' => $monthlyEntry_id,
+                'monthly_entry_id' => $monthlyEntry->id,
                 'currency_id' => $tillAmount['currency_id'],
                 'amount' => sanitizeNumber($tillAmount['amount']),
-                
+                'closing_amount' => sanitizeNumber($tillAmount['amount']),
             ]);
 
             TillAmount::create([
-                'till_id' => $tillId,
+                'till_id' => $till->id,
                 'currency_id' => $tillAmount['currency_id'],
                 'amount' => sanitizeNumber($tillAmount['amount']),
             ]);
@@ -143,8 +134,7 @@ class TillForm extends Component
         $this->validate();
 
         $this->till->update([
-            'user_id' => $this->user_id ,
-            'name' => $this->name ,
+            'name' => $this->name,
         ]);
 
         $tillAmountsIds = [];

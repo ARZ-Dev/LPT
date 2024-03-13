@@ -61,7 +61,7 @@
 		</li>
 
 
-			<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'report') ? 'active open' : '' }}">
+			<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'report', 'monthlyEntry*') ? 'active open' : '' }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>

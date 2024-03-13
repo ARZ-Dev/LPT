@@ -12,9 +12,9 @@
                     <div class="row">
 
                         <div class="col-12 col-md-6 mt-3">
-                            <label class="form-label" for="till_id">Tills</label>
+                            <label class="form-label" for="till_id">Till</label>
                             @if($editing)
-                                <br><span class="fw-bold text-dark">{{ $selectedTill?->name }}</span>
+                                <input class="form-control me-2" id="till_id" type="text" value="{{ $selectedTill->name }}" disabled readonly />
                             @else
                                 <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required wire:change="getTillAmounts">
                                     @foreach($tills as $till)
@@ -28,7 +28,7 @@
 
                         <div class="col-12 col-md-6 mt-3">
                             @if($this->editing == false)
-                                <label class="form-label" for="open_date">Open Date</label>
+                                <label class="form-label" for="open_date">Open Month</label>
                                 <input
                                     wire:model.defer="open_date"
                                     type="month"
@@ -39,7 +39,7 @@
                                 />
                                 @error('open_date') <div class="text-danger">{{ $message }}</div> @enderror
                             @else
-                                <label class="form-label" for="close_date">Close Date</label>
+                                <label class="form-label" for="close_date">Close Month</label>
                                 <input
                                     wire:model.defer="close_date"
                                     type="month"
@@ -68,7 +68,7 @@
                                     @forelse($tillAmounts as $key => $tillAmount)
                                         <tr>
                                             <td class="ps-4 text-center text-dark">
-                                                {{ $tillAmount->currency->name }}
+                                                {{ $tillAmount->currency?->name }}
                                             </td>
                                             <td class="ps-4 text-center text-dark">
                                                 {{ number_format($tillAmount->amount, 2) }}
@@ -93,11 +93,9 @@
         </div>
 
         @if(!$status)
-            @if( $close_date == null)
-                <div class="col-12 text-end mt-3">
-                    <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                </div>
-            @endif
+            <div class="col-12 text-end mt-3">
+                <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+            </div>
         @endif
     </div>
 
