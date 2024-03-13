@@ -56,6 +56,6 @@ class TransferView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.transfer-view');
+        return view('livewire.pcash.transfer.transfer-index');
     }
 }

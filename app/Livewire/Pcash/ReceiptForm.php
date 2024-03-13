@@ -19,6 +19,9 @@ use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use App\Utils\Constants;
+
+
 class ReceiptForm extends Component
 {
     use AuthorizesRequests;
@@ -56,9 +59,7 @@ class ReceiptForm extends Component
 
         $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
-            })
-            ->where('type', 'receipt')
-            ->get();
+            })->get();
 
         $this->addRow();
 
@@ -224,10 +225,7 @@ class ReceiptForm extends Component
         }
     }
 
-    /**
-     * @param mixed $receiptAmount
-     * @return void
-     */
+
     public function updateTillsAmounts(mixed $receiptAmount): void
     {
         $tillAmount = TillAmount::where('till_id', $this->till_id)
@@ -249,6 +247,10 @@ class ReceiptForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.receipt-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.receipt.receipt-view');
+        }
+            return view('livewire.pcash.receipt.receipt-form');
+        }
     }
-}
+

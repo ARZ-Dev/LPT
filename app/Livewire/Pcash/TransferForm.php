@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use App\Utils\Constants;
+
 
 class TransferForm extends Component
 {
@@ -203,11 +205,7 @@ class TransferForm extends Component
         return to_route('transfer')->with('success', 'transfer has been updated successfully!');
     }
 
-    /**
-     * @param mixed $transferAmount
-     * @return void
-     * @throws Exception
-     */
+
     public function updateTillsAmounts(mixed $transferAmount): void
     {
         $fromTill = TillAmount::where('till_id', $this->from_till_id)->where('currency_id', $transferAmount['currency_id'])->first();
@@ -236,6 +234,10 @@ class TransferForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.transfer-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.transfer.transfer-view');
+        }
+            return view('livewire.pcash.transfer.transfer-form');
+        }
     }
-}
+

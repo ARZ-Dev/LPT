@@ -47,6 +47,6 @@ class MonthlyEntryView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.monthlyEntry-view');
+        return view('livewire.pcash.monthlyEntry.monthlyEntry-index');
     }
 }

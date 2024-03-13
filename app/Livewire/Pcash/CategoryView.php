@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Payment;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+
 use Livewire\Component;
 
 class CategoryView extends Component
@@ -49,6 +50,6 @@ class CategoryView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.category-view');
+        return view('livewire.pcash.category.category-index');
     }
 }

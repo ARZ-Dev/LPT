@@ -52,6 +52,6 @@ class ReceiptView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.receipt-view');
+        return view('livewire.pcash.receipt.receipt-index');
     }
 }

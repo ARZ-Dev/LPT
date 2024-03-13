@@ -53,6 +53,6 @@ class PaymentView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.payment-view');
+        return view('livewire.pcash.payment.payment-index');
     }
 }

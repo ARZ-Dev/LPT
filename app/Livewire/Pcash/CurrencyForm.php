@@ -6,6 +6,7 @@ use App\Models\Currency;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use App\Utils\Constants;
 
 class CurrencyForm extends Component
 {
@@ -33,7 +34,7 @@ class CurrencyForm extends Component
 
         if ($id) {
             $this->editing = true;
-            $this->currency = Currency::findOrFail($id);
+            $this->currency = Currency::With('user')->findOrFail($id);
 
             $this->user_id = $this->currency->user_id;
             $this->name = $this->currency->name;
@@ -94,6 +95,10 @@ class CurrencyForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.currency-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.currency.currency-view');
+        }
+            return view('livewire.pcash.currency.currency-form');
     }
 }
+

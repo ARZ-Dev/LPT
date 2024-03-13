@@ -16,6 +16,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Livewire\WithFileUploads;
+use App\Utils\Constants;
+
 
 
 class PaymentForm extends Component
@@ -281,6 +283,12 @@ class PaymentForm extends Component
     public function render()
     {
 
-        return view('livewire.pcash.payment-form');
+        
+
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.payment.payment-view');
+        }
+            return view('livewire.pcash.payment.payment-form');
+        }
     }
-}
+

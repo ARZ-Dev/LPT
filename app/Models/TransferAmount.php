@@ -19,4 +19,9 @@ class TransferAmount extends Model
     {
         return $this->belongsTo(Transfer::class,'transfer_id');
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class,'currency_id');
+    }
 }
