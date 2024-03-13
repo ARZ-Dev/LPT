@@ -15,6 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
+use App\Utils\Constants;
 
 class MonthlyEntryForm extends Component
 {
@@ -65,7 +66,7 @@ class MonthlyEntryForm extends Component
         if ($id) {
             $this->monthlyEntry_id=$id;
             $this->editing = true;
-            $this->monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts')->findOrFail($id);
+            $this->monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts','user','till.tillAmounts')->findOrFail($id);
 
             $this->user_id = $this->monthlyEntry->user_id;
             $this->created_by = $this->monthlyEntry->created_by;
@@ -217,6 +218,9 @@ class MonthlyEntryForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.monthlyEntry-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.monthlyEntry.monthlyEntry-view');
+        }
+            return view('livewire.pcash.monthlyEntry.monthlyEntry-form');   
     }
 }

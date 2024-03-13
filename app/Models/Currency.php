@@ -31,6 +31,10 @@ class Currency extends Model
     {
         return $this->hasMany(ReceiptAmount::class,'currency_id');
     }
+    public function transferAmount()
+    {
+        return $this->hasMany(TransferAmount::class,'currency_id');
+    }
 
     public function exchangeTo()
     {

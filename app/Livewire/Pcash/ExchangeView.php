@@ -54,6 +54,6 @@ class ExchangeView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.exchange-view');
+        return view('livewire.pcash.exchange.exchange-index');
     }
 }

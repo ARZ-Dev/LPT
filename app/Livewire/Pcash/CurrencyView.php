@@ -50,6 +50,6 @@ class CurrencyView extends Component
 
     public function render()
     {
-        return view('livewire.pcash.currency-view');
+        return view('livewire.pcash.currency.currency-index');
     }
 }

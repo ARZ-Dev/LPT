@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use App\Utils\Constants;
+
 
 class ExchangeForm extends Component
 {
@@ -247,6 +249,10 @@ class ExchangeForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.exchange-form');
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.exchange.exchange-view');
+        }
+            return view('livewire.pcash.exchange.exchange-form');
+        }
     }
-}
+

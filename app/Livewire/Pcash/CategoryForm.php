@@ -8,6 +8,7 @@ use App\Models\SubCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use App\Utils\Constants;
 
 class CategoryForm extends Component
 {
@@ -30,7 +31,9 @@ class CategoryForm extends Component
 
         if ($id) {
             $this->editing = true;
-            $this->category = Category::with('subCategories')->findOrFail($id);
+            $this->category = Category::with('subCategories','user')->findOrFail($id);
+
+
 
             $this->user_id = $this->category->user_id;
             $this->name = $this->category->name;
@@ -117,6 +120,12 @@ class CategoryForm extends Component
 
     public function render()
     {
-        return view('livewire.pcash.category-form');
+
+
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.pcash.category.category-view');
+        }
+        return view('livewire.pcash.category.category-form');
     }
-}
+    }
+
