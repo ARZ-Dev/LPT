@@ -67,12 +67,14 @@ class PlayerFormData extends Form
 
         $player = Player::create($data);
 
-        PlayerTeam::updateOrCreate([
-            'player_id' => $player->id,
-            'team_id' => $this->current_team_id,
-        ],[
-            'playing_side' => $this->playing_side,
-        ]);
+        if ($this->current_team_id) {
+            PlayerTeam::updateOrCreate([
+                'player_id' => $player->id,
+                'team_id' => $this->current_team_id,
+            ],[
+                'playing_side' => $this->playing_side,
+            ]);
+        }
     }
 
     public function update($path)
@@ -85,11 +87,13 @@ class PlayerFormData extends Form
 
         $this->player->update($data);
 
-        PlayerTeam::updateOrCreate([
-            'player_id' => $this->player->id,
-            'team_id' => $this->current_team_id,
-        ],[
-            'playing_side' => $this->playing_side,
-        ]);
+        if ($this->current_team_id) {
+            PlayerTeam::updateOrCreate([
+                'player_id' => $this->player->id,
+                'team_id' => $this->current_team_id,
+            ],[
+                'playing_side' => $this->playing_side,
+            ]);
+        }
     }
 }
