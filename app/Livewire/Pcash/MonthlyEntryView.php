@@ -18,7 +18,13 @@ class MonthlyEntryView extends Component
     public function mount()
     {
         $this->authorize('monthlyEntry-list');
-        $this->monthlyEntries = MonthlyEntry::all();
+        // $this->monthlyEntries = MonthlyEntry::all();
+        $this->monthlyEntries = MonthlyEntry::with(['monthlyEntryAmounts'])
+        ->when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+        ->get();
+    
     }
 
     public function delete($id)
@@ -26,6 +32,9 @@ class MonthlyEntryView extends Component
         $this->authorize('monthlyEntry-delete');
 
         $monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts')->findOrFail($id);
+
+
+
         foreach ($monthlyEntry->monthlyEntryAmounts as $monthlyEntryAmount) {
 
             $tillAmount = TillAmount::where('till_id', $monthlyEntry->till_id)->where('currency_id', $monthlyEntryAmount->currency_id)->first();
