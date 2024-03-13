@@ -3,7 +3,7 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Currency #{{ $payment->id }}</h5>
+                    <h5 class="mb-0">View Payemnt #{{ $payment->id }}</h5>
                     <a href="{{ route('payment') }}" class="btn btn-primary mb-2 text-nowrap">
                         Currency
                     </a>
@@ -45,11 +45,15 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Currency: {{$paymentAmount->currency?->name}}</span><br>
-                                        <span class="text-dark">Amount : {{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency?->symbol}}</span><br>
-                     
-
+                                        <span class="fw-bold text-dark">Currency: </span>
+                                        <span class="text-dark">{{$paymentAmount->currency?->name}} </span><br>
                                     </div>
+                                    <div class="col-12 m-2">
+                                        <span class="fw-bold text-dark">Amount :</span>
+                                        <span class="text-dark">{{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency?->symbol}}</span><br>
+                                    </div>
+
+                                     
                                 </div>
                             </div>
                         </div>
