@@ -32,6 +32,6 @@ class TeamView extends Component
 
     public function render()
     {
-        return view('livewire.teams.team-view');
+        return view('livewire.teams.team-index');
     }
 }

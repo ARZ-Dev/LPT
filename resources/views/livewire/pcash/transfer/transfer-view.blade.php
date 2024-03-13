@@ -39,8 +39,7 @@
                                 <div class="row">
                                     <div class="col-12 m-2">
                                         <span class="fw-bold text-dark">Currency: {{$transferAmount->currency->name}}</span><br>
-                                        <span class="text-dark">Monthly Entry Amounts : {{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span><br>
-                                        <span class="text-dark">Closing Amounts : {{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span>
+                                        <span class="text-dark">Amount : {{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span><br>
 
                                     </div>
                                 </div>

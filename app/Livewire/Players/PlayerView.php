@@ -28,6 +28,6 @@ class PlayerView extends Component
 
     public function render()
     {
-        return view('livewire.players.player-view');
+        return view('livewire.players.player-index');
     }
 }
