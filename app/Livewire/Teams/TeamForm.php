@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
 use Livewire\Component;
+use App\Utils\Constants;
+
 
 class TeamForm extends Component
 {
@@ -110,6 +112,11 @@ class TeamForm extends Component
 
     public function render()
     {
-        return view('livewire.teams.team-form');
+        
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.teams.team-view');
+        }
+            return view('livewire.teams.team-form');
+        }
     }
-}
+

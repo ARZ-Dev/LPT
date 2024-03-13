@@ -31,4 +31,9 @@ class Player extends Model
     {
         return $this->belongsToMany(Team::class);
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class,'country_id');
+    }
 }

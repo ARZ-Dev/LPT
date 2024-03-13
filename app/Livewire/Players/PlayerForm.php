@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Utils\Constants;
+
 
 class PlayerForm extends Component
 {
@@ -81,6 +83,11 @@ class PlayerForm extends Component
 
     public function render()
     {
-        return view('livewire.players.player-form');
+    
+        if ($this->status == Constants::VIEW_STATUS) {
+            return view('livewire.players.player-view');
+        }
+            return view('livewire.players.player-form');
+        }
     }
-}
+

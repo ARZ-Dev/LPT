@@ -1,56 +1,84 @@
 <div>
-    <!-- Users List Table -->
-    <div class="card">
-        <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">Players List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('players.create') }}">Add Player</a>
-        </div>
-        <div class="card-datatable table-responsive">
-            <table class="datatables-players dataTable table border-top">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Current Team</th>
-                    <th>Teams</th>
-                    <th>Birthdate</th>
-                    <th>Phone Number</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($players as $player)
-                    <tr>
-                        <td>{{ $player->id }}</td>
-                        <td>{{ $player->full_name }}</td>
-                        <td>{{ $player->currentTeam?->nickname }}</td>
-                        <td>
-                            @foreach($player->teams as $team)
-                                <span class='badge bg-label-warning m-1'>{{ $team->nickname }}</span>
-                            @endforeach
-                        </td>
-                        <td>{{ $player->birthdate }}</td>
-                        <td>{{ $player->phone_number }}</td>
-                        <td>
-                            @can('player-edit')
-                                <a href="{{ route('players.edit', $player->id) }}" class="text-body edit-player-button"><i class="ti ti-edit ti-sm me-2"></i></a>
-                            @endcan
-                            @can('player-delete')
-                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $player->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
-                            @endcan
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+    <div class="row">
+        <div class="col-xl">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">View Team #{{ $player->id }}</h5>
+                    <a href="{{ route('players') }}" class="btn btn-primary mb-2 text-nowrap">
+                        Currency
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <span class="fw-bold text-dark">Player Name:</span>
+                            <span class="text-dark" >{{ $player->first_name }} {{ $player->middle_name }} {{ $player->last_name }} </span>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <span class="fw-bold text-dark">Current Team:</span>
+                            <span class="text-dark" >{{ $player->currentTeam->nickname }} </span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Birthdate:</span>
+                            <span class="text-dark" >{{ $player->birthdate }}</span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Email:</span>
+                            <span class="text-dark" >{{ $player->email }}</span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Phone Number:</span>
+                            <span class="text-dark" >{{ $player->phone_number }}</span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Country:</span>
+                            <span class="text-dark" >{{ $player->country->name }}</span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Nickname:</span>
+                            <span class="text-dark" >{{ $player->nickname }}</span>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Playing Side:</span>
+                            <span class="text-dark" >{{ $player->playing_side }}</span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
 
         </div>
     </div>
 
     @script
-    @include('livewire.deleteConfirm')
+    <script>
+        document.addEventListener('livewire:navigated', function () {
+            var status={{$status}};
+            if (status=="1") {$('input').prop('disabled', true);}
+        });
+
+        triggerCleave()
+        $('.selectpicker').selectpicker();
+
+        Livewire.hook('morph.added', ({ el }) => {
+            $('.selectpicker').selectpicker();
+            triggerCleave()
+        })
+
+        $(document).on('change', '.currency', function() {
+            @this.set($(this).attr('wire:model'), $(this).val())
+        })
+    </script>
     @endscript
-
-
 </div>
-

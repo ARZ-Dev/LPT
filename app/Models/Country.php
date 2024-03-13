@@ -11,4 +11,9 @@ class Country extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function player()
+    {
+        return $this->hasMany(Player::class,'country_id');
+    }
 }
