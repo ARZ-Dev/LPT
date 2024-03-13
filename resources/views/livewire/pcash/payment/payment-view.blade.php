@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $payment->user->full_name }} / {{ $payment->user->username }}</span>
+                            <span class="text-dark" id="user">{{ $payment->user?->full_name }} / {{ $payment->user?->username }}</span>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -21,11 +21,11 @@
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Category:</span>
-                            <span class="text-dark" id="category">{{ $payment->category->name }}</span>
+                            <span class="text-dark" id="category">{{ $payment->category?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Sub Category:</span>
-                            <span class="text-dark" id="sub_category">{{ $payment->subCategory->name }}</span>
+                            <span class="text-dark" id="sub_category">{{ $payment->subCategory?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Description:</span>
@@ -45,9 +45,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Currency: {{$paymentAmount->currency->name}}</span><br>
-                                        <span class="text-dark">Monthly Entry Amounts : {{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency->symbol}}</span><br>
-                                        <span class="text-dark">Closing Amounts : {{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency->symbol}}</span>
+                                        <span class="fw-bold text-dark">Currency: {{$paymentAmount->currency?->name}}</span><br>
+                                        <span class="text-dark">Monthly Entry Amounts : {{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency?->symbol}}</span><br>
+                                        <span class="text-dark">Closing Amounts : {{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency?->symbol}}</span>
 
                                     </div>
                                 </div>
