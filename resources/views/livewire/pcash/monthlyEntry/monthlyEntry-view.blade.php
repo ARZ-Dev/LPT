@@ -3,29 +3,24 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Monthly Entry #{{ $monthlyEntry->id }}</h5>
+                    <h5 class="mb-0">View Monthly Opening/Closing #{{ $monthlyEntry->id }}</h5>
                     <a href="{{ route('monthlyEntry') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Monthly Entry
+                        Monthly Opening/Closing
                     </a>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
+                    <div class="row mt-5">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $monthlyEntry->user->full_name }} / {{ $monthlyEntry->user->username }}</span>
+                            <span class="text-dark" id="user">{{ $monthlyEntry->user?->full_name }} / {{ $monthlyEntry->user?->username }}</span>
                         </div>
-
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">Till Name:</span>
-                            <span class="text-dark" id="tillname">{{ $monthlyEntry->till->name }}</span>
+                            <span class="text-dark" id="tillname">{{ $monthlyEntry->till?->name }} / {{ $monthlyEntry->till?->user?->full_name }}</span>
                         </div>
-                        <div class="col-12 col-md-6 mt-5">
-                            <span class="fw-bold text-dark">Open Date:</span>
-                            <span class="text-dark" id="open_date">{{ $monthlyEntry->open_date }}</span>
-                        </div>
-                        <div class="col-12 col-md-6 mt-5">
-                            <span class="fw-bold text-dark">Close Date:</span>
-                            <span class="text-dark" id="close_date">{{ $monthlyEntry->close_date }}</span>
+                        <div class="col-12 col-md-4">
+                            <span class="fw-bold text-dark">Month:</span>
+                            <span class="text-dark" id="open_date">{{ Carbon\Carbon::parse($monthlyEntry->open_date)->format('M Y') }}</span>
                         </div>
                     </div>
                 </div>
@@ -36,7 +31,7 @@
                     <div class="col-12 col-md-4">
                         <div class="card mb-4">
                             <div class="card-header">
-                                <h5 class="mb-0">Monthly Entry Amount {{ $key + 1 }}</h5>
+                                <h5 class="mb-0">Monthly Amount {{ $key + 1 }}</h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -47,13 +42,13 @@
                                 </div>
 
                                 <div class="col-12 m-2">
-                                    <span class="fw-bold text-dark">Monthly Entry Amounts : </span>
-                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount) }} {{$monthlyEntryAmount->currency->symbol}}</span>
+                                    <span class="fw-bold text-dark">Opening Amount: </span>
+                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}</span>
                                 </div>
 
                                 <div class="col-12 m-2">
-                                    <span class="fw-bold text-dark">Closing Amounts :</span>
-                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount) }}</span>
+                                    <span class="fw-bold text-dark">Closing Amount:</span>
+                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}</span>
                                 </div>
 
                                 </div>

@@ -115,7 +115,17 @@ class MonthlyEntryForm extends Component
     #[On('getTillAmounts')]
     public function getTillAmounts()
     {
-        $this->tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+        $this->tillAmounts = [];
+        $tillAmounts = TillAmount::where('till_id', $this->till_id)->with('currency')->get();
+        foreach ($tillAmounts as $tillAmount) {
+            $this->tillAmounts[] = [
+                'id' => $tillAmount->id,
+                'currency' => $tillAmount->currency,
+                'currency_id' => $tillAmount->currency_id,
+                'amount' => number_format($tillAmount->amount, 2),
+                'closing_amount' => number_format($tillAmount->amount, 2)
+            ];
+        }
     }
 
     public function store()
@@ -141,9 +151,9 @@ class MonthlyEntryForm extends Component
             foreach ($this->tillAmounts as $tillAmount) {
                  MonthlyEntryAmount::create([
                     'monthly_entry_id' => $monthlyEntry->id,
-                    'currency_id' => $tillAmount->currency_id,
-                    'amount' => sanitizeNumber($tillAmount->amount),
-                    'closing_amount' => sanitizeNumber($tillAmount->amount),
+                    'currency_id' => $tillAmount['currency_id'],
+                    'amount' => sanitizeNumber($tillAmount['amount']),
+                    'closing_amount' => sanitizeNumber($tillAmount['amount']),
                  ]);
             }
 
@@ -184,25 +194,34 @@ class MonthlyEntryForm extends Component
                 'open_date' => $closeDate->addDay()->toDateString(),
             ]);
 
-            foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
-                MonthlyEntryAmount::whereKey($monthlyEntryAmount['id'])->update([
-                    'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+            $monthlyEntryAmountsIds = [];
+            foreach ($this->tillAmounts as $tillAmount) {
+                $amount = MonthlyEntryAmount::updateOrCreate([
+                    'monthly_entry_id' => $this->monthlyEntry->id,
+                    'currency_id' => $tillAmount['currency_id'],
+                ],[
+                    'amount' => sanitizeNumber($tillAmount['amount']),
+                    'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                 ]);
+                $monthlyEntryAmountsIds[] = $amount->id;
 
-                $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $monthlyEntryAmount['currency_id'])->first();
+                $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $tillAmount['currency_id'])->first();
 
-                $updatedTillAmounts->update([
-                    'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
-                ]);
+                if ($updatedTillAmounts) {
+                    $updatedTillAmounts->update([
+                        'amount' => sanitizeNumber($tillAmount['closing_amount']),
+                    ]);
+                }
 
                 // opening a new monthly entry amounts for the next month
                 MonthlyEntryAmount::create([
                     'monthly_entry_id' => $newMonthlyEntry->id,
-                    'currency_id' => $monthlyEntryAmount['currency_id'],
-                    'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
-                    'closing_amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
+                    'currency_id' => $tillAmount['currency_id'],
+                    'amount' => sanitizeNumber($tillAmount['closing_amount']),
+                    'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                 ]);
             }
+            MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry->id)->whereNotIn('id', $monthlyEntryAmountsIds)->delete();
 
             DB::commit();
         } catch (\Exception $exception) {
@@ -221,6 +240,6 @@ class MonthlyEntryForm extends Component
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.monthlyEntry.monthlyEntry-view');
         }
-            return view('livewire.pcash.monthlyEntry.monthlyEntry-form');   
+        return view('livewire.pcash.monthlyEntry.monthlyEntry-form');
     }
 }

@@ -101,7 +101,7 @@ class TillForm extends Component
             'name' => $this->name,
         ]);
 
-        $monthlyEntry = MonthlyEntry::create([
+        MonthlyEntry::create([
             'user_id' =>$this->user_id,
             'created_by' => auth()->id(),
             'till_id' => $till->id,
@@ -109,13 +109,6 @@ class TillForm extends Component
         ]);
 
         foreach ($this->tillAmounts as $tillAmount) {
-
-            MonthlyEntryAmount::create([
-                'monthly_entry_id' => $monthlyEntry->id,
-                'currency_id' => $tillAmount['currency_id'],
-                'amount' => sanitizeNumber($tillAmount['amount']),
-                'closing_amount' => sanitizeNumber($tillAmount['amount']),
-            ]);
 
             TillAmount::create([
                 'till_id' => $till->id,

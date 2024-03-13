@@ -68,14 +68,14 @@
                                     @forelse($tillAmounts as $key => $tillAmount)
                                         <tr>
                                             <td class="ps-4 text-center text-dark">
-                                                {{ $tillAmount->currency?->name }}
+                                                {{ $tillAmount['currency']['name'] }}
                                             </td>
                                             <td class="ps-4 text-center text-dark">
-                                                {{ number_format($tillAmount->amount, 2) }}
+                                                {{ $tillAmount['amount'] }}
                                             </td>
                                             @if($editing)
                                                 <td class="ps-4 text-center">
-                                                    <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="monthlyEntryAmounts.{{ $key }}.closing_amount" />
+                                                    <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="tillAmounts.{{ $key }}.closing_amount" />
                                                 </td>
                                             @endif
                                         </tr>
