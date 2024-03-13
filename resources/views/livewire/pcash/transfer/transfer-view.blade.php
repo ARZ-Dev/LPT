@@ -3,9 +3,9 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Currency #{{ $transfer->id }}</h5>
+                    <h5 class="mb-0">View Transfer #{{ $transfer->id }}</h5>
                     <a href="{{ route('transfer') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Currency
+                        Transfer
                     </a>
                 </div>
                 <div class="card-body">
