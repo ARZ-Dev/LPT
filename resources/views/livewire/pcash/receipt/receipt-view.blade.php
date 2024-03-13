@@ -21,11 +21,11 @@
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Category:</span>
-                            <span class="text-dark" id="category">{{ $receipt->category->name }}</span>
+                            <span class="text-dark" id="category">{{ $receipt->category?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Sub Category:</span>
-                            <span class="text-dark" id="sub_category">{{ $receipt->subCategory->name }}</span>
+                            <span class="text-dark" id="sub_category">{{ $receipt->subCategory?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Description:</span>
