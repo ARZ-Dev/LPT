@@ -14,11 +14,11 @@
                         <div class="col-12 col-md-6 mt-3">
                             <label class="form-label" for="till_id">Till</label>
                             @if($editing)
-                                <input class="form-control me-2" id="till_id" type="text" value="{{ $selectedTill->name }}" disabled readonly />
+                                <input class="form-control me-2" id="till_id" type="text" value="{{ $selectedTill->name . " / " . $selectedTill->user?->full_name }}" disabled readonly />
                             @else
                                 <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required wire:change="getTillAmounts">
                                     @foreach($tills as $till)
-                                        <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name }}</option>
+                                        <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                     @endforeach
                                 </select>
                                 @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror

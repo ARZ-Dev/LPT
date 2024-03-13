@@ -14,7 +14,6 @@ class Till extends Model
 
     protected $guarded = [];
 
-
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
@@ -44,12 +43,12 @@ class Till extends Model
     {
         return $this->hasMany(Payment::class,'till_id');
     }
-    public function monthlyEntry()
+    public function monthlyEntries()
     {
         return $this->hasMany(MonthlyEntry::class,'till_id');
     }
 
-    public function openedMonthlyEntry()
+    public function openedMonthlyEntries()
     {
         return $this->hasMany(MonthlyEntry::class)->whereNull('close_date');
     }

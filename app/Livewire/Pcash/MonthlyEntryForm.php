@@ -56,14 +56,8 @@ class MonthlyEntryForm extends Component
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->with('tillAmounts')
-            ->get();
-
-        $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
-                $query->where('user_id', auth()->id());
-            })
-            ->with('tillAmounts', 'monthlyEntry')
-            ->whereDoesntHave('openedMonthlyEntry')
+            ->with('tillAmounts', 'monthlyEntries', 'user')
+            ->whereDoesntHave('openedMonthlyEntries')
             ->get();
 
         $this->open_date = now()->startOfMonth()->format('Y-m');
@@ -71,12 +65,12 @@ class MonthlyEntryForm extends Component
         if ($id) {
             $this->monthlyEntry_id=$id;
             $this->editing = true;
-            $this->monthlyEntry = MonthlyEntry::findOrFail($id);
+            $this->monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts')->findOrFail($id);
 
             $this->user_id = $this->monthlyEntry->user_id;
             $this->created_by = $this->monthlyEntry->created_by;
             $this->till_id = $this->monthlyEntry->till_id;
-            $this->selectedTill = Till::find($this->till_id);
+            $this->selectedTill = Till::with('user')->findOrFail($this->till_id);
 
             $this->open_date = $this->monthlyEntry->open_date;
             $this->close_date = $this->monthlyEntry->close_date ?? Carbon::parse($this->monthlyEntry->open_date)->endOfMonth()->format("Y-m");
@@ -181,7 +175,7 @@ class MonthlyEntryForm extends Component
                 'close_date' => $closeDate->toDateString(),
             ]);
 
-            // open a new monthly entry for the next month
+            // opening a new monthly entry for the next month
             $newMonthlyEntry = MonthlyEntry::create([
                 'user_id' => auth()->id(),
                 'created_by' => auth()->id(),
@@ -200,7 +194,7 @@ class MonthlyEntryForm extends Component
                     'amount' => sanitizeNumber($monthlyEntryAmount['closing_amount']),
                 ]);
 
-                // open a new monthly entry for the next month
+                // opening a new monthly entry amounts for the next month
                 MonthlyEntryAmount::create([
                     'monthly_entry_id' => $newMonthlyEntry->id,
                     'currency_id' => $monthlyEntryAmount['currency_id'],
