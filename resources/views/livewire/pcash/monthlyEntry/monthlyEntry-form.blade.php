@@ -76,6 +76,7 @@
                                             @if($editing)
                                                 <td class="ps-4 text-center">
                                                     <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="tillAmounts.{{ $key }}.closing_amount" />
+                                                    @error('tillAmounts.' . $key . '.closing_amount') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </td>
                                             @endif
                                         </tr>

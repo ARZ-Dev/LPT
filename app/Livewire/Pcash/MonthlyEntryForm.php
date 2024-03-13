@@ -103,7 +103,7 @@ class MonthlyEntryForm extends Component
         ];
         if ($this->editing) {
             $rules['close_date'] = ['required', 'date', 'after_or_equal:open_date'];
-            $rules['monthlyEntryAmounts.*.closing_amount'] = ['required'];
+            $rules['tillAmounts.*.closing_amount'] = ['required'];
         } else {
             $rules['open_date'] = ['required', 'date'];
         }
