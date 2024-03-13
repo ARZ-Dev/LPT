@@ -12,28 +12,34 @@
                     <th>ID</th>
                     <th>created by</th>
                     <th>till</th>
-                    <th>open month</th>
-                    <th>close month</th>
+                    <th>Month</th>
+                    <th>Status</th>
                     <th>created at</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($monthlyEntries as $monthlyEntry)
-                    <tr>
+                    <tr class="{{ $monthlyEntry->allAmountsClosed() ? "" : "bg-label-danger" }}">
                         <td>{{ $monthlyEntry->id }}</td>
                         <td>{{ $monthlyEntry->user?->full_name }}</td>
                         <td>{{ $monthlyEntry->till?->name }}</td>
                         <td>{{ $monthlyEntry->open_date ? \Carbon\Carbon::parse($monthlyEntry->open_date)->format('M Y') : "" }}</td>
-                        <td>{{ $monthlyEntry->close_date ? \Carbon\Carbon::parse($monthlyEntry->close_date)->format('M Y') : "" }}</td>
+                        <td>
+                            <span class="badge bg-label-{{ $monthlyEntry->close_date ? "info" : "warning" }}">
+                                {{ $monthlyEntry->close_date ? "Closed" : "Pending" }}
+                            </span>
+                        </td>
                         <td>{{ $monthlyEntry->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
                             @can('monthlyEntry-list')
-                                <a href="{{ route('monthlyEntry.view', ['id' => $monthlyEntry->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                                <a href="{{ route('monthlyEntry.view', ['id' => $monthlyEntry->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('monthlyEntry-edit')
                                 @if(!$monthlyEntry->close_date)
-                                    <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button"><i class="ti ti-circle-x ti-sm"></i></a>
+                                    <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Close">
+                                        <i class="ti ti-calendar-off ti-sm"></i>
+                                    </a>
                                 @endif
                             @endcan
                         </td>

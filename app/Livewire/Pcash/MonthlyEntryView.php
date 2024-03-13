@@ -18,13 +18,12 @@ class MonthlyEntryView extends Component
     public function mount()
     {
         $this->authorize('monthlyEntry-list');
-        // $this->monthlyEntries = MonthlyEntry::all();
         $this->monthlyEntries = MonthlyEntry::with(['monthlyEntryAmounts'])
-        ->when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
-            $query->where('user_id', auth()->id());
-        })
-        ->get();
-    
+            ->when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
+
     }
 
     public function delete($id)

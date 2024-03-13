@@ -34,4 +34,16 @@ class MonthlyEntry extends Model
     {
         return $this->hasMany(MonthlyEntryAmount::class,'monthly_entry_id');
     }
+
+    public function allAmountsClosed()
+    {
+        if ($this->close_date) {
+            foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
+                if ($monthlyEntryAmount->amount != $monthlyEntryAmount->closing_amount) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
