@@ -71,11 +71,16 @@
                                                 {{ $tillAmount['currency']['name'] }}
                                             </td>
                                             <td class="ps-4 text-center text-dark">
-                                                {{ $tillAmount['amount'] }}
+                                                <span id="amount-{{ $key }}">{{ $tillAmount['amount'] }}</span>
                                             </td>
                                             @if($editing)
                                                 <td class="ps-4 text-center">
-                                                    <input class="form-control cleave-input me-2" id="closing_amount-{{$key}}" type="text" wire:model="tillAmounts.{{ $key }}.closing_amount" />
+                                                    <div class="input-group input-group-merge">
+                                                        <input class="form-control cleave-input border-success closing-amounts" id="closing-amount-{{$key}}" data-key="{{ $key }}" type="text" wire:model="tillAmounts.{{ $key }}.closing_amount" />
+                                                        <span id="closing-amount-span-{{ $key }}" class="input-group-text border-success">
+                                                            <i id="closing-amount-icon-{{ $key }}" class="ti ti-check text-success"></i>
+                                                        </span>
+                                                    </div>
                                                     @error('tillAmounts.' . $key . '.closing_amount') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </td>
                                             @endif
@@ -117,7 +122,42 @@
             $wire.dispatch('getTillAmounts')
         })
 
+        $(document).on('input', '.closing-amounts', function () {
+            let key = $(this).data('key');
+            let amount = $(`#amount-${key}`).text();
+            let closingAmount = $(this).val();
+            let spanTextSelector = $(`#closing-amount-span-${key}`);
+            let iconSelector = $(`#closing-amount-icon-${key}`)
 
+            amount = parseFloat(amount.replace(/,/g, ""));
+            closingAmount = parseFloat(closingAmount.replace(/,/g, ""));
+
+            if (amount == closingAmount) {
+                $(this).removeClass('border-danger')
+                $(this).addClass('border-success')
+
+                spanTextSelector.removeClass('border-danger')
+                spanTextSelector.addClass('border-success')
+
+                iconSelector.removeClass('ti-alert-circle')
+                iconSelector.removeClass('text-danger')
+
+                iconSelector.addClass('ti-check')
+                iconSelector.addClass('text-success')
+            } else {
+                $(this).removeClass('border-success')
+                $(this).addClass('border-danger')
+
+                spanTextSelector.removeClass('border-success')
+                spanTextSelector.addClass('border-danger')
+
+                iconSelector.removeClass('ti-check')
+                iconSelector.removeClass('text-success')
+
+                iconSelector.addClass('ti-alert-circle')
+                iconSelector.addClass('text-danger')
+            }
+        })
 
     </script>
     @endscript
