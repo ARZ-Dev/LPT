@@ -3,9 +3,9 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Currency #{{ $monthlyEntry->id }}</h5>
+                    <h5 class="mb-0">View Monthly Entry #{{ $monthlyEntry->id }}</h5>
                     <a href="{{ route('monthlyEntry') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Currency
+                        Monthly Entry
                     </a>
                 </div>
                 <div class="card-body">
@@ -40,12 +40,22 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Currency: {{$monthlyEntryAmount->currency->name}}</span><br>
-                                        <span class="text-dark">Monthly Entry Amounts : {{ number_format($monthlyEntryAmount->amount) }} {{$monthlyEntryAmount->currency->symbol}}</span><br>
-                                        <span class="text-dark">Closing Amounts : {{ number_format($monthlyEntryAmount->amount) }} {{$monthlyEntryAmount->currency->symbol}}</span>
 
-                                    </div>
+                                <div class="col-12 m-2">
+                                    <span class="fw-bold text-dark">Currency:</span>
+                                    <span class="text-dark">{{$monthlyEntryAmount->currency->name}}</span>
+                                </div>
+
+                                <div class="col-12 m-2">
+                                    <span class="fw-bold text-dark">Monthly Entry Amounts : </span>
+                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount) }} {{$monthlyEntryAmount->currency->symbol}}</span>
+                                </div>
+
+                                <div class="col-12 m-2">
+                                    <span class="fw-bold text-dark">Closing Amounts :</span>
+                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount) }}</span>
+                                </div>
+
                                 </div>
                             </div>
                         </div>

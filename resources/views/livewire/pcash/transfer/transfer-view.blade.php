@@ -38,11 +38,14 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Currency: {{$transferAmount->currency->name}}</span><br>
-                                        <span class="text-dark">Amount : {{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span><br>
-                                
-
+                                        <span class="fw-bold text-dark">Currency:</span>
+                                        <span class="text-dark">{{$transferAmount->currency->name}}</span>
                                     </div>
+                                    <div class="col-12 m-2">
+                                        <span class="fw-bold text-dark">Amount :</span>
+                                        <span class="text-dark">{{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span>
+                                    </div>
+                                   
                                 </div>
                             </div>
                         </div>
