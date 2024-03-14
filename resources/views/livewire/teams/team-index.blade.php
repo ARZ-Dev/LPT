@@ -26,7 +26,7 @@
                                 <a href="{{ route('teams.view', ['id' => $team->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('team-edit')
-                                <a href="{{ route('teams.edit', $team->id) }}" class="text-body edit-team-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('teams.edit', $team->id) }}" class="text-body edit-team-button"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
                             @can('team-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $team->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>

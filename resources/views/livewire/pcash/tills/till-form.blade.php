@@ -16,7 +16,7 @@
                             <div wire:ignore>
                                 <select wire:model="user_id" id="user_id" class="selectpicker w-100" title="Select User" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                     @foreach($users as $user)
-                                    <option @if($status == 1) disabled @endif value="{{ $user->id }}" @selected($user->id == $user_id)>{{$user->full_name}}</option>
+                                        <option @if($status == 1) disabled @endif value="{{ $user->id }}" @selected($user->id == $user_id)>{{$user->full_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -30,7 +30,6 @@
                         </div>
 
                         <div class="col-12 col-md-12">
-
 
                             @foreach($tillAmounts as $key => $tillAmount)
                             <div wire:key="till-amount-{{ $key }}">
@@ -52,7 +51,7 @@
                                         <div wire:ignore>
                                             <select
                                                 wire:model="tillAmounts.{{ $key }}.currency_id"
-                                                id="currency-{{$key}}" 
+                                                id="currency-{{$key}}"
                                                 class="w-100 currency selectpicker"
                                                 title="Select Currency {{ $key + 1 }}"
                                                 data-style="btn-default"

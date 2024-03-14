@@ -12,6 +12,7 @@
                      <th class="text-nowrap">ID</th>
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
+                     <th class="text-nowrap">Till</th>
                      <th class="text-nowrap">Description</th>
                      <th class="text-nowrap">To / From</th>
                      <th class="text-nowrap">Cat / Sub Cat</th>
@@ -29,6 +30,7 @@
                         <td class="text-nowrap">{{ ucfirst($data['section'][0]) }} #{{ $data['id'] }}</td>
                         <td class="text-nowrap">{{ $data['date']->format('m-d-Y h:i a') }}</td>
                         <td class="text-nowrap">{{ $data['user']->username }}</td>
+                        <td class="text-nowrap">{{ $data['till']?->name }} / {{ $data['till_user']?->full_name }}</td>
                         <td class="text-nowrap">{{ $data['description'] }}</td>
                         <td class="text-nowrap">{{ $data['paid_by'] }}</td>
                         <td class="text-nowrap">
@@ -38,18 +40,18 @@
                         </td>
                         @foreach($currencies as $currency)
                             <td>
-                                @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
-                                    {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
+                                @if(isset($data['amounts'][$data['till_id']][$currency->id]['debit']) && !empty($data['amounts'][$data['till_id']][$currency->id]['debit']))
+                                    {{ number_format($data['amounts'][$data['till_id']][$currency->id]['debit'], 2) }}
                                 @endif
                             </td>
                             <td>
-                                @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
-                                    {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
+                                @if(isset($data['amounts'][$data['till_id']][$currency->id]['credit']) && !empty($data['amounts'][$data['till_id']][$currency->id]['credit']))
+                                    {{ number_format($data['amounts'][$data['till_id']][$currency->id]['credit'], 2) }}
                                 @endif
                             </td>
                             <td>
-                                @if(isset($data['amounts'][$currency->id]['balance']) && !empty($data['amounts'][$currency->id]['balance']))
-                                    {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
+                                @if(isset($data['amounts'][$data['till_id']][$currency->id]['balance']))
+                                    {{ number_format($data['amounts'][$data['till_id']][$currency->id]['balance'], 2) }}
                                 @endif
                             </td>
                         @endforeach

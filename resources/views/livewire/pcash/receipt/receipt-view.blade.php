@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="col-12 m-2">
                                         <span class="fw-bold text-dark">Amount :</span>
-                                        <span class="text-dark">{{ number_format($receiptAmount->amount) }} {{$receiptAmount->currency?->symbol}}</span>
+                                        <span class="text-dark">{{ number_format($receiptAmount->amount, 2) }} {{$receiptAmount->currency?->symbol}}</span>
                                     </div>
 
                                 </div>

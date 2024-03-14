@@ -34,29 +34,31 @@ class ReportView extends Component
 
         $this->reportData = collect();
 
+        $amounts = [];
         foreach ($tables as $section => $model) {
 
-            $entries = $model::all();
+            $entries = $model::with(['user'])->get();
 
-            $amounts = [];
             foreach ($entries as $entry) {
 
                 if ($section == "payment") {
                     foreach ($entry->paymentAmounts as $paymentAmount) {
-                        $amounts[$paymentAmount->currency_id] = [
+                        $balance = ($amounts[$entry->till_id][$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
+                        $amounts[$entry->till_id][$paymentAmount->currency_id] = [
                             'debit' => 0,
                             'credit' => $paymentAmount->amount,
-                            'balance' => 0,
+                            'balance' => $balance,
                         ];
                     }
                 } else if ($section == "transfer") {
 
                 } else if ($section == "receipt") {
                     foreach ($entry->receiptAmounts as $receiptAmount) {
-                        $amounts[$receiptAmount->currency_id] = [
+                        $balance = ($amounts[$entry->till_id][$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
+                        $amounts[$entry->till_id][$receiptAmount->currency_id] = [
                             'debit' => $receiptAmount->amount,
                             'credit' => 0,
-                            'balance' => 0,
+                            'balance' => $balance,
                         ];
                     }
                 } else if ($section == "exchange") {
@@ -70,13 +72,14 @@ class ReportView extends Component
                     'name' => $entry->name,
                     'amount' => $entry->amount,
                     'paid_by' => $entry->paid_by,
-                    'from_till_id' => Till::find($entry->from_till_id),
-                    'to_till_id' => Till::find($entry->to_till_id),
                     'date' => $entry->created_at,
                     'category' => Category::find($entry->category_id),
                     'sub_category' => SubCategory::find($entry->sub_category_id),
                     'description' => $entry->description,
                     'amounts' => $amounts,
+                    'till_id' => $entry->till_id,
+                    'till' => $entry->till,
+                    'till_user' => $entry->till?->user,
                 ]);
             }
         }

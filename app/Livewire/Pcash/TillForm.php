@@ -58,6 +58,7 @@ class TillForm extends Component
                     'amount' => number_format($tillAmount->amount, 2),
                     'currency_id' => $tillAmount->currency_id,
                     'currency_name' => $tillAmount->currency?->name,
+                    'currency' => $tillAmount->currency,
                 ];
             }
         }

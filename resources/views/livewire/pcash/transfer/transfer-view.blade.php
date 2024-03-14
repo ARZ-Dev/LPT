@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Transfer #{{ $transfer->id }}</h5>
                     <a href="{{ route('transfer') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Transfer
+                        Transfers
                     </a>
                 </div>
                 <div class="card-body">
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="col-12 m-2">
                                         <span class="fw-bold text-dark">Amount :</span>
-                                        <span class="text-dark">{{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span>
+                                        <span class="text-dark">{{ number_format($transferAmount->amount, 2) }} {{$transferAmount->currency->symbol}}</span>
                                     </div>
 
                                 </div>
@@ -58,22 +58,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>

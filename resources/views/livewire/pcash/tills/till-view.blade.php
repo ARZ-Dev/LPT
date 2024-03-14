@@ -32,13 +32,13 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Amount:</span>
-                                        <span class="text-dark">{{ $tillAmount['amount'] }}</span>
+                                        <span class="fw-bold text-dark">Currency:</span>
+                                        <span class="text-dark">{{ $tillAmount['currency_name'] }}</span>
                                     </div>
 
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">Currency:</span>
-                                        <span class="text-dark">{{ $tillAmount['currency_name'] }}</span>
+                                        <span class="fw-bold text-dark">Amount:</span>
+                                        <span class="text-dark">{{ $tillAmount['amount'] }} {{ $tillAmount['currency']?->symbol }}</span>
                                     </div>
                                 </div>
                             </div>
