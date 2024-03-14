@@ -48,7 +48,11 @@
 
                                 <div class="col-12 m-2">
                                     <span class="fw-bold text-dark">Closing Amount:</span>
-                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}</span>
+                                    <span class="text-dark">
+                                        @if($monthlyEntryAmount->closing_amount)
+                                            {{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}
+                                        @endif
+                                    </span>
                                 </div>
 
                                 </div>

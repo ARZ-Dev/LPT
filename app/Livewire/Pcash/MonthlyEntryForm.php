@@ -153,7 +153,6 @@ class MonthlyEntryForm extends Component
                     'monthly_entry_id' => $monthlyEntry->id,
                     'currency_id' => $tillAmount['currency_id'],
                     'amount' => sanitizeNumber($tillAmount['amount']),
-                    'closing_amount' => sanitizeNumber($tillAmount['amount']),
                  ]);
             }
 
@@ -196,14 +195,22 @@ class MonthlyEntryForm extends Component
 
             $monthlyEntryAmountsIds = [];
             foreach ($this->tillAmounts as $tillAmount) {
-                $amount = MonthlyEntryAmount::updateOrCreate([
-                    'monthly_entry_id' => $this->monthlyEntry->id,
-                    'currency_id' => $tillAmount['currency_id'],
-                ],[
-                    'amount' => sanitizeNumber($tillAmount['amount']),
-                    'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
-                ]);
-                $monthlyEntryAmountsIds[] = $amount->id;
+
+                $monthlyEntryAmount = MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry->id)->where('currency_id', $tillAmount['currency_id'])->first();
+                if ($monthlyEntryAmount) {
+                    $monthlyEntryAmount->update([
+                        'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
+                    ]);
+                } else {
+                    $monthlyEntryAmount = MonthlyEntryAmount::create([
+                        'monthly_entry_id' => $this->monthlyEntry->id,
+                        'currency_id' => $tillAmount['currency_id'],
+                        'amount' => sanitizeNumber($tillAmount['amount']),
+                        'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
+                    ]);
+                }
+                $monthlyEntryAmountsIds[] = $monthlyEntryAmount->id;
+
 
                 $updatedTillAmounts = TillAmount::where('till_id', $this->till_id)->where('currency_id', $tillAmount['currency_id'])->first();
 
@@ -218,7 +225,6 @@ class MonthlyEntryForm extends Component
                     'monthly_entry_id' => $newMonthlyEntry->id,
                     'currency_id' => $tillAmount['currency_id'],
                     'amount' => sanitizeNumber($tillAmount['closing_amount']),
-                    'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                 ]);
             }
             MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry->id)->whereNotIn('id', $monthlyEntryAmountsIds)->delete();
