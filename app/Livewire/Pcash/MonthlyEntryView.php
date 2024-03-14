@@ -22,7 +22,7 @@ class MonthlyEntryView extends Component
             ->when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
 
     }
 

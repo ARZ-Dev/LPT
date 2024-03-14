@@ -22,7 +22,7 @@ class ReceiptView extends Component
             ->when(!auth()->user()->hasPermissionTo('receipt-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($id)
