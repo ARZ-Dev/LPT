@@ -17,7 +17,7 @@
 
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">Till Name:</span>
-                            <span class="text-dark" id="tillname">{{ $payment->till->name }}</span>
+                            <span class="text-dark" id="tillname">{{ $payment->till->name }} / {{ $payment->till?->user?->full_name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Category:</span>
@@ -53,7 +53,7 @@
                                         <span class="text-dark">{{ number_format($paymentAmount->amount) }} {{$paymentAmount->currency?->symbol}}</span><br>
                                     </div>
 
-                                     
+
                                 </div>
                             </div>
                         </div>

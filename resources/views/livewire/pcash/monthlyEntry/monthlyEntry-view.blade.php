@@ -38,7 +38,7 @@
 
                                 <div class="col-12 m-2">
                                     <span class="fw-bold text-dark">Currency:</span>
-                                    <span class="text-dark">{{$monthlyEntryAmount->currency->name}}</span>
+                                    <span class="text-dark">{{ $monthlyEntryAmount->currency->name }}</span>
                                 </div>
 
                                 <div class="col-12 m-2">

@@ -3,9 +3,9 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Currency #{{ $receipt->id }}</h5>
+                    <h5 class="mb-0">View Receipt #{{ $receipt->id }}</h5>
                     <a href="{{ route('receipt') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Currency
+                        Receipts
                     </a>
                 </div>
                 <div class="card-body">
@@ -17,7 +17,7 @@
 
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">Till Name:</span>
-                            <span class="text-dark" id="tillname">{{ $receipt->till?->name }}</span>
+                            <span class="text-dark" id="till_name">{{ $receipt->till?->name }} / {{ $receipt->till?->user?->full_name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Category:</span>
@@ -56,7 +56,7 @@
                                         <span class="fw-bold text-dark">Amount :</span>
                                         <span class="text-dark">{{ number_format($receiptAmount->amount) }} {{$receiptAmount->currency?->symbol}}</span>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>

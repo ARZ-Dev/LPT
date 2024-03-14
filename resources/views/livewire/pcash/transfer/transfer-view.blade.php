@@ -17,11 +17,11 @@
 
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">From Till:</span>
-                            <span class="text-dark" id="tillname">{{ $transfer->fromTill->name }}</span>
+                            <span class="text-dark" id="from_till_name">{{ $transfer->fromTill?->name }} / {{ $transfer->fromTill?->user?->full_name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">To Till:</span>
-                            <span class="text-dark" id="tillname">{{ $transfer->ToTill->name }}</span>
+                            <span class="text-dark" id="to_till_name">{{ $transfer->ToTill?->name }} / {{ $transfer->toTill?->user?->full_name }}</span>
                         </div>
 
                     </div>
@@ -45,7 +45,7 @@
                                         <span class="fw-bold text-dark">Amount :</span>
                                         <span class="text-dark">{{ number_format($transferAmount->amount) }} {{$transferAmount->currency->symbol}}</span>
                                     </div>
-                                   
+
                                 </div>
                             </div>
                         </div>

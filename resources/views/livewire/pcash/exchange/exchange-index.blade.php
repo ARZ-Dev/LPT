@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $exchange->id }}</td>
                         <td>{{ $exchange->user?->full_name }}</td>
-                        <td>{{ $exchange->till?->name }}</td>
+                        <td>{{ $exchange->till?->name }} / {{ $exchange->till?->user?->full_name }}</td>
                         <td>{{ $exchange->fromCurrency?->name }}</td>
                         <td>{{ $exchange->toCurrency?->name }}</td>
                         <td>{{ number_format($exchange->amount, 2) }}</td>

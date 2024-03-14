@@ -23,7 +23,7 @@
                     <tr class="{{ $monthlyEntry->allAmountsClosed() ? "" : "bg-label-danger" }}">
                         <td>{{ $monthlyEntry->id }}</td>
                         <td>{{ $monthlyEntry->user?->full_name }}</td>
-                        <td>{{ $monthlyEntry->till?->name }}</td>
+                        <td>{{ $monthlyEntry->till?->name }} / {{ $monthlyEntry->till?->user?->full_name }}</td>
                         <td>{{ $monthlyEntry->open_date ? \Carbon\Carbon::parse($monthlyEntry->open_date)->format('M Y') : "" }}</td>
                         <td>
                             <span class="badge bg-label-{{ $monthlyEntry->close_date ? "info" : "warning" }}">

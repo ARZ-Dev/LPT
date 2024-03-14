@@ -11,6 +11,7 @@
                  <tr>
                     <th>ID</th>
                     <th>Created By</th>
+                    <th>Till</th>
                     <th>From Customer</th>
                     <th>Category</th>
                     <th>Sub Category</th>
@@ -23,6 +24,7 @@
                     <tr>
                         <td>{{ $receipt->id }}</td>
                         <td>{{ $receipt->user?->full_name }}</td>
+                        <td>{{ $receipt->till?->name }} / {{ $receipt->till?->user?->full_name }}</td>
                         <td>{{ $receipt->paid_by }}</td>
                         <td>{{ $receipt->category?->name }}</td>
                         <td>{{ $receipt->subCategory?->name }}</td>

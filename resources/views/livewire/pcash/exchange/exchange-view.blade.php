@@ -12,20 +12,20 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $exchange->user->full_name }}</span>
+                            <span class="text-dark" id="user">{{ $exchange->user?->full_name }}</span>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">Till Name:</span>
-                            <span class="text-dark" id="symbol">{{ $exchange->till->name }}</span>
+                            <span class="text-dark" id="symbol">{{ $exchange->till?->name }} / {{ $exchange->till?->user?->full_name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">From:</span>
-                            <span class="text-dark" id="name">{{ $exchange->fromCurrency->name }} / {{ $exchange->fromCurrency->symbol }}</span>
+                            <span class="text-dark" id="name">{{ $exchange->fromCurrency?->name }} / {{ $exchange->fromCurrency?->symbol }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">To:</span>
-                            <span class="text-dark" id="name">{{ $exchange->toCurrency->name }} / {{ $exchange->toCurrency->symbol }}</span>
+                            <span class="text-dark" id="name">{{ $exchange->toCurrency?->name }} / {{ $exchange->toCurrency?->symbol }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Amount:</span>

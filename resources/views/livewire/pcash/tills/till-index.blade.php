@@ -20,8 +20,8 @@
                 @foreach($tills as $till)
                     <tr>
                         <td>{{ $till->id }}</td>
-                        <td>{{ $till->user?->full_name ?? 'N/A' }}</td>
-                        <td>{{ $till->name }}</td>
+                        <td>{{ $till->createdBy?->full_name }}</td>
+                        <td>{{ $till->name }} / {{ $till->user?->full_name }}</td>
                         <td>{{ $till->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>

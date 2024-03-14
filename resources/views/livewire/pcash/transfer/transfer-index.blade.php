@@ -22,8 +22,8 @@
                     <tr>
                         <td>{{ $transfer->id }}</td>
                         <td>{{ $transfer->user?->username }}</td>
-                        <td>{{ $transfer->fromTill?->name ?? 'N/A'}}</td>
-                        <td>{{ $transfer->toTill?->name ?? 'N/A' }}</td>
+                        <td>{{ $transfer->fromTill?->name }} / {{ $transfer->fromTill?->user?->full_name }}</td>
+                        <td>{{ $transfer->toTill?->name  }} / {{ $transfer->toTill?->user?->full_name  }}</td>
                         <td>{{ $transfer->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>

@@ -24,7 +24,7 @@
                     <tr>
                         <td>{{ $payment->id }}</td>
                         <td>{{ $payment->user?->full_name }}</td>
-                        <td>{{ $payment->till?->name }}</td>
+                        <td>{{ $payment->till?->name }} / {{ $payment->till?->user?->full_name }}</td>
                         <td>{{ $payment->category?->name }}</td>
                         <td>{{ $payment->subCategory?->name ?? 'N/A' }}</td>
                         <td>{{ $payment->description }}</td>
