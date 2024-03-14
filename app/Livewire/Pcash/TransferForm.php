@@ -27,8 +27,9 @@ class TransferForm extends Component
 
     public $user_id;
     public int $from_till_id;
-
     public int $to_till_id;
+    public  $description;
+
 
     public $transferAmounts = [];
     public $currency_id;
@@ -59,6 +60,8 @@ class TransferForm extends Component
             $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
+            $this->description = $this->transfer->description;
+
             $this->transferAmounts = [];
             foreach ($this->transfer->transferAmounts as $transferAmount) {
                 $this->transferAmounts[] = [
@@ -76,6 +79,8 @@ class TransferForm extends Component
         return [
             'from_till_id' => ['required', 'different:to_till_id'],
             'to_till_id' => ['required', 'different:from_till_id'],
+            'description' => ['nullable'],
+
             'transferAmounts' => ['array'],
             'transferAmounts.*.transfer_id' => ['nullable'],
             'transferAmounts.*.currency_id' => ['required'],
@@ -107,6 +112,8 @@ class TransferForm extends Component
                 'from_till_id' => $this->from_till_id ,
 
                 'to_till_id' => $this->to_till_id ,
+                'description' => $this->description ,
+
             ]);
 
             $transferId = $transfer->id;
@@ -175,6 +182,8 @@ class TransferForm extends Component
             $this->transfer->update([
                 'from_till_id' => $this->from_till_id ,
                 'to_till_id' => $this->to_till_id ,
+                'description' => $this->description ,
+
             ]);
 
             $transfersAmountIds = [];

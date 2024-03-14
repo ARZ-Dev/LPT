@@ -32,6 +32,21 @@
                         </div>
 
                         <div class="col-12 col-md-12">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea
+                                wire:model="description"
+                                type="text"
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                placeholder="description"
+                            ></textarea>
+                            @error('description') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+         
+
+
+                        <div class="col-12 col-md-12">
                             @foreach($transferAmounts as $key => $transferAmount)
                                 <div wire:key="transferAmount-{{ $key }}">
 

@@ -32,21 +32,7 @@ class MonthlyEntryView extends Component
 
         $monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts')->findOrFail($id);
 
-
-
-        foreach ($monthlyEntry->monthlyEntryAmounts as $monthlyEntryAmount) {
-
-            $tillAmount = TillAmount::where('till_id', $monthlyEntry->till_id)->where('currency_id', $monthlyEntryAmount->currency_id)->first();
-
-            if ($tillAmount) {
-                $tillAmount->update([
-                    'amount' => $tillAmount->amount + $monthlyEntryAmount->amount,
-                ]);
-            }
-
-            $monthlyEntryAmount->delete();
-        }
-
+        $monthlyEntry->monthlyEntryAmounts()->delete();
         $monthlyEntry->delete();
 
         return to_route('monthlyEntry')->with('success', 'MonthlyEntry has been deleted successfully!');
@@ -58,3 +44,6 @@ class MonthlyEntryView extends Component
         return view('livewire.pcash.monthlyEntry.monthlyEntry-index');
     }
 }
+
+
+
