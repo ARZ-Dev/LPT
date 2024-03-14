@@ -20,15 +20,16 @@ class ReportView extends Component
     use AuthorizesRequests;
 
     public $reportData;
+    public $currencies = [];
 
-    public function mount(){
+    public function mount()
+    {
+        $this->currencies = Currency::all();
         $tables = [
-            'currencies' => Currency::class,
-            'tills' => Till::class,
-            'payments' => Payment::class,
-            'receipts' => Receipt::class,
-            'transfers' => Transfer::class,
-            'exchanges' => Exchange::class,
+            'payment' => Payment::class,
+            'receipt' => Receipt::class,
+            'transfer' => Transfer::class,
+            'exchange' => Exchange::class,
         ];
 
         $this->reportData = collect();
@@ -36,21 +37,46 @@ class ReportView extends Component
         foreach ($tables as $section => $model) {
 
             $entries = $model::all();
-            
+
+            $amounts = [];
             foreach ($entries as $entry) {
+
+                if ($section == "payment") {
+                    foreach ($entry->paymentAmounts as $paymentAmount) {
+                        $amounts[$paymentAmount->currency_id] = [
+                            'debit' => 0,
+                            'credit' => $paymentAmount->amount,
+                            'balance' => 0,
+                        ];
+                    }
+                } else if ($section == "transfer") {
+
+                } else if ($section == "receipt") {
+                    foreach ($entry->receiptAmounts as $receiptAmount) {
+                        $amounts[$receiptAmount->currency_id] = [
+                            'debit' => $receiptAmount->amount,
+                            'credit' => 0,
+                            'balance' => 0,
+                        ];
+                    }
+                } else if ($section == "exchange") {
+
+                }
                 $this->reportData->push([
+                    'id' => $entry->id,
                     'model' => $model,
                     'section' => $section,
-                    'id' => $entry->id,
-                    'user'=> User::find($entry->user_id),
+                    'user' => User::find($entry->user_id),
                     'name' => $entry->name,
-                    'amount'=>$entry->amount,
-                    'paid_by'=>$entry->paid_by,
-                    
-                    'from_till_id'=>Till::find($entry->from_till_id),
-                    'to_till_id'=>Till::find($entry->to_till_id),
-
+                    'amount' => $entry->amount,
+                    'paid_by' => $entry->paid_by,
+                    'from_till_id' => Till::find($entry->from_till_id),
+                    'to_till_id' => Till::find($entry->to_till_id),
                     'date' => $entry->created_at,
+                    'category' => Category::find($entry->category_id),
+                    'sub_category' => SubCategory::find($entry->sub_category_id),
+                    'description' => $entry->description,
+                    'amounts' => $amounts,
                 ]);
             }
         }

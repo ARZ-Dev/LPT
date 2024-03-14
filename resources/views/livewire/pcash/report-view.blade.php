@@ -9,17 +9,51 @@
             <table id="datatables-reportData" class="datatables-reportData dataTable table border-top">
                 <thead>
                  <tr>
-                     <th>type</th>
-                     <th>date</th>
-                     <th>description</th>
+                     <th class="text-nowrap">ID</th>
+                     <th class="text-nowrap">Date</th>
+                     <th class="text-nowrap">Created By</th>
+                     <th class="text-nowrap">Description</th>
+                     <th class="text-nowrap">To / From</th>
+                     <th class="text-nowrap">Cat / Sub Cat</th>
+                     @foreach($currencies as $currency)
+                         <th class="text-nowrap">Debit {{ $currency->name }}</th>
+                         <th class="text-nowrap">Credit {{ $currency->name }}</th>
+                         <th class="text-nowrap">Balance {{ $currency->name }}</th>
+                     @endforeach
+                     <th>Action</th>
                  </tr>
                 </thead>
                 <tbody>
                 @foreach($reportData as $data)
                     <tr>
-                        <td>{{ $data['section'] }}</td>
-                        <td>{{ $data['date']->format('m-d-Y h:i a') }}</td>
-                        <td>{{ $data['model']::reportMessage($data) }}</td>
+                        <td class="text-nowrap">{{ ucfirst($data['section'][0]) }} #{{ $data['id'] }}</td>
+                        <td class="text-nowrap">{{ $data['date']->format('m-d-Y h:i a') }}</td>
+                        <td class="text-nowrap">{{ $data['user']->username }}</td>
+                        <td class="text-nowrap">{{ $data['description'] }}</td>
+                        <td class="text-nowrap">{{ $data['paid_by'] }}</td>
+                        <td class="text-nowrap">
+                            @if($data['category'])
+                                {{ $data['category']->name }} / {{ $data['sub_category']?->name }}
+                            @endif
+                        </td>
+                        @foreach($currencies as $currency)
+                            <td>
+                                @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
+                                    {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
+                                    {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($data['amounts'][$currency->id]['balance']) && !empty($data['amounts'][$currency->id]['balance']))
+                                    {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
+                                @endif
+                            </td>
+                        @endforeach
+                        <td>Action</td>
                     </tr>
                 @endforeach
                 </tbody>
