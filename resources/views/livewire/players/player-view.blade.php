@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Team #{{ $player->id }}</h5>
                     <a href="{{ route('players') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Currency
+                        Players
                     </a>
                 </div>
                 <div class="card-body">
@@ -63,22 +63,8 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
 
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>
