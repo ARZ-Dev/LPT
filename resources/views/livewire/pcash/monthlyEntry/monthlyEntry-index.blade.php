@@ -37,7 +37,7 @@
                             @endcan
                             @can('monthlyEntry-edit')
                                 @if(!$monthlyEntry->close_date)
-                                    <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Close">
+                                    <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Close Month">
                                         <i class="ti ti-calendar-off ti-sm"></i>
                                     </a>
                                 @endif
