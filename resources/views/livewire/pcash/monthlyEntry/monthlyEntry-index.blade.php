@@ -42,6 +42,9 @@
                                     </a>
                                 @endif
                             @endcan
+                            @can('monthlyEntry-delete')
+                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $monthlyEntry->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
