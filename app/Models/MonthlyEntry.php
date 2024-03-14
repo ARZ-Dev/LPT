@@ -39,7 +39,7 @@ class MonthlyEntry extends Model
     {
         if ($this->close_date) {
             foreach ($this->monthlyEntryAmounts as $monthlyEntryAmount) {
-                if ($monthlyEntryAmount->amount != $monthlyEntryAmount->closing_amount) {
+                if ($monthlyEntryAmount->till_amount != $monthlyEntryAmount->closing_amount) {
                     return false;
                 }
             }

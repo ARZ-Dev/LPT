@@ -47,11 +47,20 @@
                                 </div>
 
                                 <div class="col-12 m-2">
+                                    <span class="fw-bold text-dark">Till Amount When Closed:</span>
+                                    <span class="text-dark">
+                                        @if($monthlyEntryAmount->till_amount)
+                                            {{ number_format($monthlyEntryAmount->till_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <div class="col-12 m-2">
                                     <span class="fw-bold text-dark">Closing Amount:</span>
                                     <span class="text-dark">
-                                        @if($monthlyEntryAmount->closing_amount)
+                                    @if($monthlyEntryAmount->closing_amount)
                                             {{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}
-                                        @endif
+                                    @endif
                                     </span>
                                 </div>
 

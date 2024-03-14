@@ -199,6 +199,7 @@ class MonthlyEntryForm extends Component
                 $monthlyEntryAmount = MonthlyEntryAmount::where('monthly_entry_id', $this->monthlyEntry->id)->where('currency_id', $tillAmount['currency_id'])->first();
                 if ($monthlyEntryAmount) {
                     $monthlyEntryAmount->update([
+                        'till_amount' => sanitizeNumber($tillAmount['amount']),
                         'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                     ]);
                 } else {
@@ -206,6 +207,7 @@ class MonthlyEntryForm extends Component
                         'monthly_entry_id' => $this->monthlyEntry->id,
                         'currency_id' => $tillAmount['currency_id'],
                         'amount' => sanitizeNumber($tillAmount['amount']),
+                        'till_amount' => sanitizeNumber($tillAmount['amount']),
                         'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                     ]);
                 }
