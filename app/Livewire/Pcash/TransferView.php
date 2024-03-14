@@ -22,7 +22,7 @@ class TransferView extends Component
             ->when(!auth()->user()->hasPermissionTo('transfer-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($id)
