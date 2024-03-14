@@ -23,7 +23,7 @@ class TillView extends Component
             ->when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($id)

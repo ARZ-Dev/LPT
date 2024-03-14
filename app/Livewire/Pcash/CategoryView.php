@@ -21,7 +21,7 @@ class CategoryView extends Component
         $this->authorize('category-list');
         $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
-            })->get();
+            })->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($id)

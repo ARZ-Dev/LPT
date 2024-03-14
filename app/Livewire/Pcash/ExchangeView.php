@@ -22,7 +22,7 @@ class ExchangeView extends Component
             ->when(!auth()->user()->hasPermissionTo('exchange-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($id)
