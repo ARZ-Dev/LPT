@@ -25,6 +25,7 @@ class PlayerForm extends Component
     public $countries = [];
     public $nationalIdFile;
     public $player;
+    public bool $submitting = false;
 
     public function mount($id = 0, $status = 0)
     {
@@ -46,6 +47,12 @@ class PlayerForm extends Component
     public function store()
     {
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
 
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {

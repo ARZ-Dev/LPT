@@ -26,6 +26,7 @@ class TeamForm extends Component
     public $playersIds = [];
     public $oldPlayersIds = [];
     public $team = null;
+    public bool $submitting = false;
 
     public function mount($id = 0, $status = 0)
     {
@@ -57,6 +58,11 @@ class TeamForm extends Component
     public function store()
     {
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         $team = Team::create([
             'nickname' => $this->nickname,
