@@ -29,6 +29,8 @@ class TillForm extends Component
     public $tillAmounts = [];
     public $users = [];
     public $currencies = [];
+    public bool $submitting = false;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -95,6 +97,11 @@ class TillForm extends Component
         $this->authorize('till-edit');
 
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         $till = Till::create([
             'created_by' => auth()->id(),

@@ -22,6 +22,8 @@ class CurrencyForm extends Component
     public $user_id;
     public $name;
     public $symbol;
+    public bool $submitting = false;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -59,6 +61,11 @@ class CurrencyForm extends Component
     $this->authorize('currency-edit');
 
     $this->validate();
+
+    if($this->submitting) {
+        return;
+    }
+    $this->submitting = true;
 
     Currency::create([
         'user_id' => auth()->id() ,

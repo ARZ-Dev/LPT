@@ -45,6 +45,8 @@ class MonthlyEntryForm extends Component
     public $currencies;
 
     public $selectedTill;
+    public bool $submitting = false;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -133,8 +135,14 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-create');
         $this->validate();
 
+
         DB::beginTransaction();
         try {
+            
+            if($this->submitting) {
+                return;
+            }
+            $this->submitting = true;
 
             // check if there is an existing monthly entry for the selected month
             $openDate = Carbon::parse($this->open_date)->startOfMonth();

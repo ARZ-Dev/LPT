@@ -41,6 +41,8 @@ class ReceiptForm extends Component
     public  $receiptAmounts = [];
     public $categories = [];
     public $subCategories = [];
+    public bool $submitting = false;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -129,6 +131,11 @@ class ReceiptForm extends Component
 
         DB::beginTransaction();
         try {
+
+            if($this->submitting) {
+                return;
+            }
+            $this->submitting = true;
 
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,

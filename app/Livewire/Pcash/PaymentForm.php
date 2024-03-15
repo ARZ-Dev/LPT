@@ -48,6 +48,8 @@ class PaymentForm extends Component
     public $categories;
     public $subCategories = [];
     public $currencies;
+    public bool $submitting = false;
+
 
     protected $listeners = ['store', 'update'];
 
@@ -134,6 +136,11 @@ class PaymentForm extends Component
         $this->authorize('payment-create');
 
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {
