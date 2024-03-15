@@ -35,6 +35,8 @@ class ExchangeForm extends Component
     public $result;
     public $fromCurrency;
     public $toCurrency;
+    public bool $submitting = false;
+
 
 
     protected $listeners = ['store', 'update'];
@@ -139,6 +141,11 @@ class ExchangeForm extends Component
         $this->authorize('exchange-create');
 
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {

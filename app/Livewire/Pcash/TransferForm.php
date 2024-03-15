@@ -36,6 +36,8 @@ class TransferForm extends Component
     public $amount;
     public $tills = [];
     public $currencies = [];
+    public bool $submitting = false;
+
 
 
     protected $listeners = ['store', 'update'];
@@ -106,6 +108,11 @@ class TransferForm extends Component
 
         DB::beginTransaction();
         try {
+
+            if($this->submitting) {
+                return;
+            }
+            $this->submitting = true;
 
             $transfer=Transfer::create([
                 'user_id' => auth()->id() ,
