@@ -19,12 +19,33 @@ class ReportView extends Component
 {
     use AuthorizesRequests;
 
-    public $reportData;
+    public $reportData = [];
     public $currencies = [];
+    public $tills = [];
+    public int $tillId;
+    public bool $filterByDate = false;
+    public $startDate;
+    public $endDate;
 
     public function mount()
     {
+        $this->tills = Till::all();
         $this->currencies = Currency::all();
+        $this->startDate = now()->startOfMonth()->format("Y-m-d");
+        $this->endDate = now()->endOfMonth()->format("Y-m-d");
+    }
+
+    public function rules()
+    {
+        return [
+            'tillId' => ['required']
+        ];
+    }
+
+    public function getReportData()
+    {
+        $this->validate();
+
         $tables = [
             'payment' => Payment::class,
             'receipt' => Receipt::class,
@@ -37,33 +58,52 @@ class ReportView extends Component
         $amounts = [];
         foreach ($tables as $section => $model) {
 
-            $entries = $model::with(['user'])->get();
+            $entries = $model::with(['user'])
+                ->when($section == "transfer", function ($query) {
+                    $query->where('from_till_id', $this->tillId)->orWhere('to_till_id', $this->tillId);
+                })
+                ->when($section != "transfer", function ($query) {
+                    $query->where('till_id', $this->tillId);
+                })
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->orderBy('created_at')
+                ->get();
 
             foreach ($entries as $entry) {
 
-                if ($section == "payment") {
-                    foreach ($entry->paymentAmounts as $paymentAmount) {
-                        $balance = ($amounts[$entry->till_id][$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
-                        $amounts[$entry->till_id][$paymentAmount->currency_id] = [
-                            'debit' => 0,
-                            'credit' => $paymentAmount->amount,
-                            'balance' => $balance,
-                        ];
-                    }
-                } else if ($section == "transfer") {
+                switch ($section) {
+                    case "payment":
+                        foreach ($entry->paymentAmounts as $paymentAmount) {
+                            $balance = ($amounts[$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
+                            $amounts[$paymentAmount->currency_id] = [
+                                'debit' => 0,
+                                'credit' => $paymentAmount->amount,
+                                'balance' => $balance,
+                            ];
+                        }
+                        break;
+                        
+                    case "receipt":
+                        foreach ($entry->receiptAmounts as $receiptAmount) {
+                            $balance = ($amounts[$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
+                            $amounts[$receiptAmount->currency_id] = [
+                                'debit' => $receiptAmount->amount,
+                                'credit' => 0,
+                                'balance' => $balance,
+                            ];
+                        }
+                        break;
 
-                } else if ($section == "receipt") {
-                    foreach ($entry->receiptAmounts as $receiptAmount) {
-                        $balance = ($amounts[$entry->till_id][$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
-                        $amounts[$entry->till_id][$receiptAmount->currency_id] = [
-                            'debit' => $receiptAmount->amount,
-                            'credit' => 0,
-                            'balance' => $balance,
-                        ];
-                    }
-                } else if ($section == "exchange") {
-
+                    case "exchange":
+                        // @todo - exchange amounts calculation
+                        break;
+                    case "transfer":
+                        // @todo - transfer amounts calculation
+                        break;
                 }
+
                 $this->reportData->push([
                     'id' => $entry->id,
                     'model' => $model,
