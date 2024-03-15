@@ -37,7 +37,17 @@
                 </div>
             </div>
         </div>
-        <div class="card-datatable table-responsive">
+        <div wire:loading>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <span>Loading data...</span>
+            </div>
+        </div>
+        <div wire:loading.remove class="card-datatable table-responsive">
             <table id="report-data-table" class="datatables-reportData table border-top">
                 <thead>
                  <tr>
