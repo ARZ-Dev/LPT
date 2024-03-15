@@ -45,7 +45,7 @@
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
                      <th class="text-nowrap">Description</th>
-                     <th class="text-nowrap">To / From</th>
+                     <th class="text-nowrap">From / To</th>
                      <th class="text-nowrap">Cat / Sub Cat</th>
                      @foreach($currencies as $key => $currency)
                          <th class="text-nowrap">Debit {{ $currency->name }}</th>
@@ -57,11 +57,15 @@
                 <tbody>
                     @forelse($reportData as $data)
                         <tr>
-                            <td class="text-nowrap">{{ ucfirst($data['section'][0]) }} #{{ $data['id'] }}</td>
+                            <td class="text-nowrap">{{ $data['section_id'] }}</td>
                             <td class="text-nowrap">{{ $data['date']->format('m-d-Y h:i a') }}</td>
                             <td class="text-nowrap">{{ $data['user']->username }}</td>
                             <td class="text-nowrap">{{ $data['description'] }}</td>
-                            <td class="text-nowrap">{{ $data['paid_by'] }}</td>
+                            <td class="text-nowrap">
+                                @if($data['from_till'])
+                                    {{ $data['from_till']?->name }} / {{ $data['to_till']?->name }}
+                                @endif
+                            </td>
                             <td class="text-nowrap">
                                 @if($data['category'])
                                     {{ $data['category']->name }} / {{ $data['sub_category']?->name }}
