@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="card-datatable table-responsive">
-            <table id="datatables-reportData" class="datatables-reportData table border-top">
+            <table id="report-data-table" class="datatables-reportData table border-top">
                 <thead>
                  <tr>
                      <th class="text-nowrap">ID</th>
@@ -46,7 +46,7 @@
                      <th class="text-nowrap">Created By</th>
                      <th class="text-nowrap">Description</th>
                      <th class="text-nowrap">From / To</th>
-                     <th class="text-nowrap">Cat / Sub Cat</th>
+                     <th class="text-nowrap">Ctg / Sub Ctg</th>
                      @foreach($currencies as $key => $currency)
                          <th class="text-nowrap">Debit {{ $currency->name }}</th>
                          <th class="text-nowrap">Credit {{ $currency->name }}</th>
@@ -57,7 +57,11 @@
                 <tbody>
                     @forelse($reportData as $data)
                         <tr>
-                            <td class="text-nowrap">{{ $data['section_id'] }}</td>
+                            <td class="text-nowrap">
+                                <a href="{{ $data['url'] }}" target="_blank">
+                                    {{ $data['section_id'] }}
+                                </a>
+                            </td>
                             <td class="text-nowrap">{{ $data['date']->format('m-d-Y h:i a') }}</td>
                             <td class="text-nowrap">{{ $data['user']->username }}</td>
                             <td class="text-nowrap">{{ $data['description'] }}</td>
@@ -99,9 +103,17 @@
 
         </div>
     </div>
+
+    @script
     <script>
 
-    </script>
+        Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
+            succeed(({ status, json }) => {
+                $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
+            })
+        })
 
+    </script>
+    @endscript
 </div>
 

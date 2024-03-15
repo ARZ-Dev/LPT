@@ -12,6 +12,8 @@ use App\Models\SubCategory;
 use App\Models\Till;
 use App\Models\Transfer;
 use App\Models\User;
+use App\Utils\Constants;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Livewire\Component;
@@ -86,7 +88,12 @@ class ReportView extends Component
             })
             ->get();
 
-        $data = $payments->merge($receipts)->merge($transfers)->merge($exchanges)->merge($monthlyEntries);
+        $data = collect()
+            ->concat($payments)
+            ->concat($receipts)
+            ->concat($transfers)
+            ->concat($exchanges)
+            ->concat($monthlyEntries);
         $data = $data->sortBy('created_at');
 
         $amounts = [];
@@ -94,8 +101,18 @@ class ReportView extends Component
         foreach ($data as $entry) {
 
             $section = "";
+            $sectionId = "";
+            $url = "";
             if ($entry instanceof MonthlyEntry) {
-                $section = "Monthly Entry";
+                $section = "Monthly Opening";
+                if ($entry->close_date) {
+                    $sectionId = Carbon::parse($entry->close_date)->format('M Y') . " Closing";
+                } else {
+                    $sectionId = Carbon::parse($entry->open_date)->format('M Y') . " Opening";
+                }
+
+                $url = route('monthlyEntry.view', [$entry->id, Constants::VIEW_STATUS]);
+
 
                 $currenciesIds = $entry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
                 $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
@@ -114,6 +131,8 @@ class ReportView extends Component
 
             } else if ($entry instanceof Payment) {
                 $section = "Payment";
+                $sectionId = "Payment #" . $entry->id;
+                $url = route('payment.view', [$entry->id, Constants::VIEW_STATUS]);
 
                 $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
                 $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
@@ -132,6 +151,8 @@ class ReportView extends Component
 
             } else if ($entry instanceof Receipt) {
                 $section = "Receipt";
+                $sectionId = "Receipt #" . $entry->id;
+                $url = route('receipt.view', [$entry->id, Constants::VIEW_STATUS]);
 
                 $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
                 $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
@@ -150,6 +171,8 @@ class ReportView extends Component
 
             } else if ($entry instanceof Transfer) {
                 $section = "Transfer";
+                $sectionId = "Transfer #" . $entry->id;
+                $url = route('transfer.view', [$entry->id, Constants::VIEW_STATUS]);
 
                 $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
                 $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
@@ -172,6 +195,8 @@ class ReportView extends Component
 
             } else if ($entry instanceof Exchange) {
                 $section = "Exchange";
+                $sectionId = "Exchange #" . $entry->id;
+                $url = route('exchange.view', [$entry->id, Constants::VIEW_STATUS]);
 
                 $amounts[$entry->from_currency_id] = [
                     'debit' => 0,
@@ -188,7 +213,8 @@ class ReportView extends Component
             $this->reportData->push([
                 'id' => $entry->id,
                 'section' => $section,
-                'section_id' => $section[0] . " #" . $entry->id,
+                'section_id' => $sectionId,
+                'url' => $url,
                 'user' => User::find($entry->user_id),
                 'name' => $entry->name,
                 'amount' => $entry->amount,
