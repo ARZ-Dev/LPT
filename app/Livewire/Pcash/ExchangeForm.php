@@ -181,6 +181,11 @@ class ExchangeForm extends Component
         $this->authorize('exchange-edit');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         DB::beginTransaction();
         try {
 

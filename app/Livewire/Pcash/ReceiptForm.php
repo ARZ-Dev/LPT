@@ -129,13 +129,14 @@ class ReceiptForm extends Component
         $this->authorize('receipt-create');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         DB::beginTransaction();
         try {
 
-            if($this->submitting) {
-                return;
-            }
-            $this->submitting = true;
 
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,
@@ -176,6 +177,11 @@ class ReceiptForm extends Component
     {
         $this->authorize('receipt-edit');
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {

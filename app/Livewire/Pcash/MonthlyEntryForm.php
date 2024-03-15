@@ -135,14 +135,13 @@ class MonthlyEntryForm extends Component
         $this->authorize('monthlyEntry-create');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {
-            
-            if($this->submitting) {
-                return;
-            }
-            $this->submitting = true;
 
             // check if there is an existing monthly entry for the selected month
             $openDate = Carbon::parse($this->open_date)->startOfMonth();
@@ -180,6 +179,11 @@ class MonthlyEntryForm extends Component
     {
         $this->authorize('monthlyEntry-edit');
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {

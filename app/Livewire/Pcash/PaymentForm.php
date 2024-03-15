@@ -188,6 +188,11 @@ class PaymentForm extends Component
         $this->authorize('payment-edit');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         DB::beginTransaction();
         try {
             $existingPaymentAmounts = PaymentAmount::where('payment_id', $this->payment->id)->get();
@@ -290,7 +295,7 @@ class PaymentForm extends Component
     public function render()
     {
 
-        
+
 
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.payment.payment-view');

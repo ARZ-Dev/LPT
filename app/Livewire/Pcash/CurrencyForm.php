@@ -17,7 +17,7 @@ class CurrencyForm extends Component
 
     public $roles;
     public $currency;
-    
+
 
     public $user_id;
     public $name;
@@ -73,7 +73,7 @@ class CurrencyForm extends Component
         'symbol' => $this->symbol ,
         'list_order' => Currency::max('list_order') + 1,
 
-  
+
     ]);
 
 
@@ -89,6 +89,11 @@ class CurrencyForm extends Component
 
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         $this->currency->update([
             'name' => $this->name ,
             'symbol' => $this->symbol ,
@@ -98,7 +103,7 @@ class CurrencyForm extends Component
 
         return redirect()->route('currency');
     }
-    
+
 
     public function render()
     {

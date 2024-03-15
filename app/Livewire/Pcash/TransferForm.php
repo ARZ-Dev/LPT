@@ -106,13 +106,14 @@ class TransferForm extends Component
         $this->authorize('transfer-create');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         DB::beginTransaction();
         try {
 
-            if($this->submitting) {
-                return;
-            }
-            $this->submitting = true;
 
             $transfer=Transfer::create([
                 'user_id' => auth()->id() ,
@@ -152,6 +153,11 @@ class TransferForm extends Component
     {
         $this->authorize('transfer-edit');
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         DB::beginTransaction();
         try {

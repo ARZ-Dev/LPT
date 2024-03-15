@@ -134,6 +134,11 @@ class TillForm extends Component
 
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         $this->till->update([
             'name' => $this->name,
         ]);

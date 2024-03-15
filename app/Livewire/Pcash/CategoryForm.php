@@ -103,6 +103,11 @@ class CategoryForm extends Component
         $this->authorize('category-edit');
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         $this->category->update([
             'name' => $this->name,
             'type' => $this->type,
