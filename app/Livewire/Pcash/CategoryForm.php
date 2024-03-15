@@ -21,6 +21,8 @@ class CategoryForm extends Component
     public $user_id;
     public $name;
     public $subCategories = [];
+    public bool $submitting = false;
+
 
     public function mount($id = 0, $status = 0)
     {
@@ -72,6 +74,11 @@ class CategoryForm extends Component
     {
         $this->authorize('category-create');
         $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
 
         $category = Category::create([
             'user_id' => auth()->id(),

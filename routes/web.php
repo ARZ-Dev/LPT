@@ -8,7 +8,7 @@ use App\Livewire\DashboardView;
 use App\Livewire\Users\UserView;
 use App\Livewire\Users\UserForm;
 
-
+    
 use App\Livewire\RolesPermissions\PermissionView;
 use App\Livewire\RolesPermissions\RoleView;
 use App\Http\Controllers\DashboardController;
