@@ -47,28 +47,30 @@ class ReportView extends Component
     {
         $this->validate();
 
-        $monthlyEntries = MonthlyEntry::with(['user', 'monthlyEntryAmounts'])
+        $monthlyEntries = MonthlyEntry::with([
+                'user', 'monthlyEntryAmounts', 'till' => ['user']
+            ])
             ->where('till_id', $this->tillId)
             ->when($this->filterByDate, function ($query) {
                 $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
             })
             ->get();
 
-        $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory'])
+        $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory', 'till' => ['user']])
             ->where('till_id', $this->tillId)
             ->when($this->filterByDate, function ($query) {
                 $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
             })
             ->get();
 
-        $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory'])
+        $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory', 'till' => ['user']])
             ->where('till_id', $this->tillId)
             ->when($this->filterByDate, function ($query) {
                 $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
             })
             ->get();
 
-        $transfers = Transfer::with(['user', 'transferAmounts'])
+        $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
             ->where(function ($query) {
                 $query->where('from_till_id', $this->tillId)->orWhere('to_till_id', $this->tillId);
             })
@@ -77,7 +79,7 @@ class ReportView extends Component
             })
             ->get();
 
-        $exchanges = Exchange::with(['user'])
+        $exchanges = Exchange::with(['user', 'till' => ['user']])
             ->where('till_id', $this->tillId)
             ->when($this->filterByDate, function ($query) {
                 $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
