@@ -77,7 +77,7 @@
                             <td class="text-nowrap">{{ $data['description'] }}</td>
                             <td class="text-nowrap">
                                 @if($data['from_till'])
-                                    {{ $data['from_till']?->name }} / {{ $data['to_till']?->name }}
+                                    {{ $data['from_till']?->name }} / {{ $data['from_till']->user?->full_name }} To {{ $data['to_till']?->name }} / {{ $data['to_till']->user?->full_name }}
                                 @endif
                             </td>
                             <td class="text-nowrap">

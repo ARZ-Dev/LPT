@@ -32,7 +32,11 @@ class ReportView extends Component
 
     public function mount()
     {
-        $this->tills = Till::all();
+        $this->tills = Till::with(['user'])
+            ->when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
         $this->currencies = Currency::all();
         $this->startDate = now()->startOfMonth()->format("Y-m-d");
         $this->endDate = now()->endOfMonth()->format("Y-m-d");
