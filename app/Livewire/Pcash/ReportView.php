@@ -16,6 +16,7 @@ use App\Utils\Constants;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 
 class ReportView extends Component
@@ -45,7 +46,9 @@ class ReportView extends Component
     public function rules()
     {
         return [
-            'tillId' => ['required']
+            'tillId' => ['required'],
+            'startDate' => [new RequiredIf($this->filterByDate), 'date'],
+            'endDate' => [new RequiredIf($this->filterByDate), 'date', 'after_or_equal:startDate'],
         ];
     }
 

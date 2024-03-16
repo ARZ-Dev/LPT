@@ -19,7 +19,7 @@
                             </div>
                             @error('tillId') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-12 col-sm-6 col-lg-2">
+                        <div class="col-12 col-sm-6 col-lg-1">
                             <label class="form-label" for="filterByDate">Filter By Date:</label>
                             <div class="form-check form-switch m-2">
                                 <input wire:model.live="filterByDate" wire:change="getReportData" class="form-check-input" type="checkbox" id="filterByDate">
@@ -28,10 +28,12 @@
                         <div class="col-12 col-sm-6 col-lg-3 {{ $filterByDate ? "" : "d-none" }}">
                             <label class="form-label">Start Date:</label>
                             <input wire:model="startDate" wire:change="getReportData" type="date" class="form-control dt-input">
+                            @error('startDate') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12 col-sm-6 col-lg-3 {{ $filterByDate ? "" : "d-none" }}">
                             <label class="form-label">End Date:</label>
                             <input wire:model="endDate" wire:change="getReportData" type="date" class="form-control dt-input">
+                            @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
                 </div>
