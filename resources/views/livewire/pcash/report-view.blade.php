@@ -105,7 +105,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ 6 + (count($currencies) * 3) }}" class="text-center">No data available.</td>
+                            <td colspan="18" class="text-center">No data available.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -119,7 +119,7 @@
 
         Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
             succeed(({ status, json }) => {
-                // $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
+                $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
             })
         })
 
