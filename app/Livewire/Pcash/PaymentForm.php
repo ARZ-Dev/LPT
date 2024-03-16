@@ -173,6 +173,7 @@ class PaymentForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
 
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
@@ -245,6 +246,8 @@ class PaymentForm extends Component
             return to_route('payment')->with('success', 'Payment has been updated successfully!');
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text' => $exception->getMessage(),

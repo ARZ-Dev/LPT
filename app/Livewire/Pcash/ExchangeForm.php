@@ -165,6 +165,7 @@ class ExchangeForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
 
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
@@ -217,6 +218,7 @@ class ExchangeForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
 
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',

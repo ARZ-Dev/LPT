@@ -139,6 +139,7 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
 
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
@@ -218,6 +219,8 @@ class TransferForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => $exception->getMessage(),

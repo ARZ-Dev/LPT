@@ -29,15 +29,15 @@
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Amount:</span>
-                            <span class="text-dark" id="name">{{ $exchange->amount }}</span>
+                            <span class="text-dark" id="name">{{ number_format($exchange->amount, 2) }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Rate:</span>
-                            <span class="text-dark" id="name">{{ $exchange->rate }}</span>
+                            <span class="text-dark" id="name">{{ number_format($exchange->rate, 2) }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Result:</span>
-                            <span class="text-dark" id="name">{{ $exchange->result }}</span>
+                            <span class="text-dark" id="name">{{ number_format($exchange->result, 2) }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Description:</span>

@@ -10,18 +10,22 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">User:</span>
                             <span class="text-dark" id="user">{{ $transfer->user->full_name }} / {{ $transfer->user->username }}</span>
                         </div>
 
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">From Till:</span>
                             <span class="text-dark" id="from_till_name">{{ $transfer->fromTill?->name }} / {{ $transfer->fromTill?->user?->full_name }}</span>
                         </div>
-                        <div class="col-12 col-md-6 mt-5">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">To Till:</span>
                             <span class="text-dark" id="to_till_name">{{ $transfer->ToTill?->name }} / {{ $transfer->toTill?->user?->full_name }}</span>
+                        </div>
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Description:</span>
+                            <span class="text-dark" id="to_till_name">{{ $transfer->description }}</span>
                         </div>
 
                     </div>

@@ -162,6 +162,7 @@ class ReceiptForm extends Component
 
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
 
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
@@ -231,6 +232,8 @@ class ReceiptForm extends Component
 
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text' => $exception->getMessage(),
