@@ -47,7 +47,7 @@
                 <span>Loading data...</span>
             </div>
         </div>
-        <div wire:loading.remove class="card-datatable table-responsive">
+        <div class="card-datatable table-responsive">
             <table id="report-data-table" class="datatables-reportData table border-top">
                 <thead>
                  <tr>
