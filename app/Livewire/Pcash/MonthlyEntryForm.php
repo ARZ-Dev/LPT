@@ -64,6 +64,11 @@ class MonthlyEntryForm extends Component
             ->whereDoesntHave('openedMonthlyEntries')
             ->get();
 
+        if(count($this->tills) == 1){
+            $this->till_id = $this->tills[0]->id;
+            $this->getTillAmounts();
+        }
+
         $this->open_date = now()->startOfMonth()->format('Y-m');
 
         if ($id) {
