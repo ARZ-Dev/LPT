@@ -4,6 +4,7 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
 use App\Models\MonthlyEntry;
+use App\Models\MonthlyEntryAction;
 use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
 use App\Models\TillAmount;
@@ -109,11 +110,16 @@ class TillForm extends Component
             'name' => $this->name,
         ]);
 
-        MonthlyEntry::create([
+        $monthlyEntry = MonthlyEntry::create([
             'user_id' =>$this->user_id,
             'created_by' => auth()->id(),
             'till_id' => $till->id,
             'open_date' => Carbon::now()->startOfMonth(),
+        ]);
+
+        MonthlyEntryAction::create([
+            'monthly_entry_id' => $monthlyEntry->id,
+            'action' => 'opening',
         ]);
 
         foreach ($this->tillAmounts as $tillAmount) {
