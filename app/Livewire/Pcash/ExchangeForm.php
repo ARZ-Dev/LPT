@@ -50,6 +50,8 @@ class ExchangeForm extends Component
             })
             ->get();
 
+
+
         $this->status = $status;
 
         $this->currencies = Currency::all();
@@ -68,6 +70,10 @@ class ExchangeForm extends Component
             $this->rate = number_format($this->exchange->rate, 2);
             $this->result = number_format($this->exchange->result, 2);
             $this->description = $this->exchange->description;
+        }else{
+            if(count($this->tills) == 1){
+                $this->till_id = $this->tills[0]->id;
+            }
         }
 
     }

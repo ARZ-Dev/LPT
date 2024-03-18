@@ -97,7 +97,21 @@ class PaymentForm extends Component
                     'currency_id' => $paymentAmount->currency_id,
                 ];
             }
+        }else{
+            if(count($this->tills) == 1){
+                $this->till_id = $this->tills[0]->id;
+            }
+
+            if(count($this->categories) == 1){
+                $this->category_id = $this->categories[0]->id;
+                $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
+                if(count($this->subCategories) == 1){
+                    $this->sub_category_id = $this->subCategories[0]->id;
+                }
+            }
         }
+
+        
 
     }
 
