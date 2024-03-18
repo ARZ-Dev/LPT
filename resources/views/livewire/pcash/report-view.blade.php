@@ -127,7 +127,7 @@
 
         Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
             succeed(({ status, json }) => {
-                $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
+                // $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
             })
         })
 
