@@ -11,8 +11,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-md-4">
-                            <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $transfer->user->full_name }} / {{ $transfer->user->username }}</span>
+                            <span class="fw-bold text-dark">Created By:</span>
+                            <span class="text-dark" id="user">{{ $transfer->user?->full_name }} / {{ $transfer->user?->username }}</span>
                         </div>
 
                         <div class="col-12 col-md-4">

@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <span class="fw-bold text-dark">User:</span>
+                            <span class="fw-bold text-dark">Created By:</span>
                             <span class="text-dark" id="user">{{ $exchange->user?->full_name }}</span>
                         </div>
 
