@@ -8,7 +8,7 @@ use App\Livewire\DashboardView;
 use App\Livewire\Users\UserView;
 use App\Livewire\Users\UserForm;
 
-    
+
 use App\Livewire\RolesPermissions\PermissionView;
 use App\Livewire\RolesPermissions\RoleView;
 use App\Http\Controllers\DashboardController;
@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
     // |MonthlyEntry
     // |--------------------------------------------------------------------------
 
-    Route::group(['prefix' => 'monthlyEntry'], function() {
+    Route::group(['prefix' => 'monthly-actions'], function() {
         Route::get('/', MonthlyEntryView::class)->name('monthlyEntry');
         Route::get('/create', MonthlyEntryForm::class)->name('monthlyEntry.create');
         Route::get('/edit/{id}', MonthlyEntryForm::class)->name('monthlyEntry.edit');
@@ -162,7 +162,7 @@ Route::middleware('auth')->group(function () {
     // |Report
     // |--------------------------------------------------------------------------
 
-    Route::group(['prefix' => 'report'], function() {
+    Route::group(['prefix' => 'petty-cash-report'], function() {
         Route::get('/', ReportView::class)->name('report');
 
     });

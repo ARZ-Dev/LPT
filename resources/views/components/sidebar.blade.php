@@ -112,7 +112,7 @@
 				</li>
 				<li class="menu-item {{ request()->is('report') ? "active" : "" }}">
 					<a href="{{ route('report') }}" class="menu-link">
-						<div data-i18n="Petty Cash">Petty Cash</div>
+						<div data-i18n="Petty Cash Report">Petty Cash Report</div>
 					</a>
 				</li>
 

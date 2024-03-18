@@ -2,7 +2,7 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title mb-3">Petty Cash</h4>
+            <h4 class="card-title mb-3">Petty Cash Report</h4>
         </div>
         <div class="card-body">
             <div class="row">
@@ -56,6 +56,7 @@
                      <th class="text-nowrap">ID</th>
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
+                     <th class="text-nowrap">Paid By</th>
                      <th class="text-nowrap">Description</th>
                      <th class="text-nowrap">From / To</th>
                      <th class="text-nowrap">Ctg / Sub Ctg</th>
@@ -79,6 +80,9 @@
                             </td>
                             <td class="text-nowrap">
                                 {{ $data['user']->username }}
+                            </td>
+                            <td class="text-nowrap">
+                                {{ $data['paid_by'] }}
                             </td>
                             <td class="text-nowrap">
                                 {{ $data['description'] }}
