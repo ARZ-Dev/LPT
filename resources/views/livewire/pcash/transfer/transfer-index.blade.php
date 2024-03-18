@@ -3,7 +3,9 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Transfers List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('transfer.create') }}">Add Transfer</a>
+            @can('transfer-create')
+                <a class="btn btn-primary h-50" href="{{ route('transfer.create') }}">Add Transfer</a>
+            @endcan
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-transfer dataTable table border-top">

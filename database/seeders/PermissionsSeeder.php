@@ -18,6 +18,7 @@ class PermissionsSeeder extends Seeder
             'user-create',
             'user-edit',
             'user-view',
+            'user-viewAll',
             'user-delete',
 
             // Roles Page

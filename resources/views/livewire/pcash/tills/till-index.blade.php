@@ -3,7 +3,9 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Tills List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('till.create') }}">Add Till</a>
+            @can('till-create')
+                <a class="btn btn-primary h-50" href="{{ route('till.create') }}">Add Till</a>
+            @endcan
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-till dataTable table border-top">

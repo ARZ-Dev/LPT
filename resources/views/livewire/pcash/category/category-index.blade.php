@@ -3,7 +3,9 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Categories List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('category.create') }}">Add Category </a>
+            @can('category-create')
+                <a class="btn btn-primary h-50" href="{{ route('category.create') }}">Add Category </a>
+            @endcan
         </div>
         <div class="card-datatable table-responsive" wire:ignore>
             <table class="datatables-category dataTable table border-top">

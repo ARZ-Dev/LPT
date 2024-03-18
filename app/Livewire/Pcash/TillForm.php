@@ -39,7 +39,10 @@ class TillForm extends Component
     {
         $this->authorize('till-list');
 
-        $this->users = User::all();
+        $this->users = User::when(!auth()->user()->hasPermissionTo('user-viewAll'), function ($query) {
+                $query->where('id', auth()->id());
+            })
+            ->get();
         $this->currencies = Currency::all();
 
         $this->status=$status;
@@ -63,6 +66,10 @@ class TillForm extends Component
                     'currency_name' => $tillAmount->currency?->name,
                     'currency' => $tillAmount->currency,
                 ];
+            }
+        } else {
+            if (count($this->users) == 1) {
+                $this->user_id = $this->users[0]->id;
             }
         }
 

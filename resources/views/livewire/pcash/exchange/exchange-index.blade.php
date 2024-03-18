@@ -3,7 +3,9 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Exchanges List</h4>
+            @can('exchange-create')
             <a class="btn btn-primary h-50" href="{{ route('exchange.create') }}">Add Exchange</a>
+            @endcan
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-exchange dataTable table border-top">
