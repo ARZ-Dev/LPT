@@ -72,6 +72,10 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount->currency_id,
                 ];
             }
+        }else{
+            if(count($this->tills) == 1){
+                $this->from_till_id = $this->tills[0]->id;
+            }
         }
 
     }
