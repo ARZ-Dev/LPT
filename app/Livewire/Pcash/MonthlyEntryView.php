@@ -35,7 +35,7 @@ class MonthlyEntryView extends Component
         $monthlyEntry->monthlyEntryAmounts()->delete();
         $monthlyEntry->delete();
 
-        return to_route('monthlyEntry')->with('success', 'MonthlyEntry has been deleted successfully!');
+        return to_route('monthlyEntry')->with('success', 'Month has been deleted successfully!');
     }
 
 
