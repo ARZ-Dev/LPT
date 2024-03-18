@@ -120,29 +120,22 @@ class ReportView extends Component
 
                 $url = route('monthlyEntry.view', [$entry->id, Constants::VIEW_STATUS]);
 
-
-                $currenciesIds = $entry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
-                $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
                 foreach ($entry->monthlyEntryAmounts as $monthlyEntryAmount) {
-                    $balance = ($amounts[$monthlyEntryAmount->currency_id]['balance'] ?? 0) + ($entry->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount);
                     $amounts[$monthlyEntryAmount->currency_id] = [
-                        'debit' => ($entry->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount),
+                        'debit' => 0,
                         'credit' => 0,
-                        'balance' => $balance,
+                        'balance' => $entry->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
                     ];
                 }
-                foreach ($otherCurrenciesIds as $otherCurrencyId) {
-                    $amounts[$otherCurrencyId]['debit'] = 0;
-                    $amounts[$otherCurrencyId]['credit'] = 0;
-                }
+
+                $currenciesIds = $entry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
+                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
 
             } else if ($entry instanceof Payment) {
                 $section = "Payment";
                 $sectionId = "Payment #" . $entry->id;
                 $url = route('payment.view', [$entry->id, Constants::VIEW_STATUS]);
 
-                $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
-                $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
                 foreach ($entry->paymentAmounts as $paymentAmount) {
                     $balance = ($amounts[$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
                     $amounts[$paymentAmount->currency_id] = [
@@ -151,18 +144,15 @@ class ReportView extends Component
                         'balance' => $balance,
                     ];
                 }
-                foreach ($otherCurrenciesIds as $otherCurrencyId) {
-                    $amounts[$otherCurrencyId]['debit'] = 0;
-                    $amounts[$otherCurrencyId]['credit'] = 0;
-                }
+
+                $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
+                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
 
             } else if ($entry instanceof Receipt) {
                 $section = "Receipt";
                 $sectionId = "Receipt #" . $entry->id;
                 $url = route('receipt.view', [$entry->id, Constants::VIEW_STATUS]);
 
-                $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
-                $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
                 foreach ($entry->receiptAmounts as $receiptAmount) {
                     $balance = ($amounts[$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
                     $amounts[$receiptAmount->currency_id] = [
@@ -171,18 +161,15 @@ class ReportView extends Component
                         'balance' => $balance,
                     ];
                 }
-                foreach ($otherCurrenciesIds as $otherCurrencyId) {
-                    $amounts[$otherCurrencyId]['debit'] = 0;
-                    $amounts[$otherCurrencyId]['credit'] = 0;
-                }
+
+                $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
+                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
 
             } else if ($entry instanceof Transfer) {
                 $section = "Transfer";
                 $sectionId = "Transfer #" . $entry->id;
                 $url = route('transfer.view', [$entry->id, Constants::VIEW_STATUS]);
 
-                $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
-                $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
                 foreach ($entry->transferAmounts as $transferAmount) {
                     if ($entry->from_till_id == $this->tillId) {
                         $balance = ($amounts[$transferAmount->currency_id]['balance'] ?? 0) - $transferAmount->amount;
@@ -195,10 +182,9 @@ class ReportView extends Component
                         'balance' => $balance,
                     ];
                 }
-                foreach ($otherCurrenciesIds as $otherCurrencyId) {
-                    $amounts[$otherCurrencyId]['debit'] = 0;
-                    $amounts[$otherCurrencyId]['credit'] = 0;
-                }
+
+                $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
+                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
 
             } else if ($entry instanceof Exchange) {
                 $section = "Exchange";
@@ -215,6 +201,9 @@ class ReportView extends Component
                     'credit' => 0,
                     'balance' => ($amounts[$entry->to_currency_id]['balance'] ?? 0) + $entry->result,
                 ];
+
+                $currenciesIds = [$entry->from_currency_id, $entry->to_currency_id];
+                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
             }
 
             $this->reportData->push([
@@ -222,7 +211,7 @@ class ReportView extends Component
                 'section' => $section,
                 'section_id' => $sectionId,
                 'url' => $url,
-                'user' => User::find($entry->user_id),
+                'user' => $entry->user,
                 'name' => $entry->name,
                 'amount' => $entry->amount,
                 'paid_by' => $entry->paid_by,
@@ -243,5 +232,20 @@ class ReportView extends Component
     public function render()
     {
         return view('livewire.pcash.report-view');
+    }
+
+    /**
+     * @param $amounts
+     * @param $currenciesIds
+     * @return array
+     */
+    public function clearOtherCurrencies($amounts, $currenciesIds): array
+    {
+        $otherCurrenciesIds = array_diff($this->currencies->pluck('id')->toArray(), $currenciesIds);
+        foreach ($otherCurrenciesIds as $otherCurrencyId) {
+            $amounts[$otherCurrencyId]['debit'] = 0;
+            $amounts[$otherCurrencyId]['credit'] = 0;
+        }
+        return $amounts;
     }
 }
