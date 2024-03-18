@@ -61,7 +61,9 @@ class ReceiptForm extends Component
 
         $this->categories = Category::when(!auth()->user()->hasPermissionTo('category-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
-            })->get();
+            })
+            ->where('type', 'receipt')
+            ->get();
 
         $this->addRow();
 
