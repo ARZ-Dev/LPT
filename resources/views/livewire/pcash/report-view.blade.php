@@ -68,18 +68,24 @@
                 </thead>
                 <tbody>
                     @forelse($reportData as $data)
-                        <tr>
+                        <tr class="{{ $data['bg_color'] }}">
                             <td class="text-nowrap">
                                 <a href="{{ $data['url'] }}" target="_blank">
                                     {{ $data['section_id'] }}
                                 </a>
                             </td>
-                            <td class="text-nowrap">{{ $data['date']->format('m-d-Y h:i a') }}</td>
-                            <td class="text-nowrap">{{ $data['user']->username }}</td>
-                            <td class="text-nowrap">{{ $data['description'] }}</td>
+                            <td class="text-nowrap">
+                                {{ $data['date']->format('d-m-Y h:i a') }}
+                            </td>
+                            <td class="text-nowrap">
+                                {{ $data['user']->username }}
+                            </td>
+                            <td class="text-nowrap">
+                                {{ $data['description'] }}
+                            </td>
                             <td class="text-nowrap">
                                 @if($data['from_till'])
-                                    {{ $data['from_till']?->name }} / {{ $data['from_till']->user?->full_name }} To {{ $data['to_till']?->name }} / {{ $data['to_till']->user?->full_name }}
+                                    {{ $data['from_till']->name }} / {{ $data['from_till']->user?->full_name }} To {{ $data['to_till']?->name }} / {{ $data['to_till']->user?->full_name }}
                                 @endif
                             </td>
                             <td class="text-nowrap">
@@ -107,24 +113,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-nowrap">No data available.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td colspan="{{ 6 + (count($currencies) * 3) }}" class="text-center">No data available</td>
                         </tr>
                     @endforelse
                 </tbody>

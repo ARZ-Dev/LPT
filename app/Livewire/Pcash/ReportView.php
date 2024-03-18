@@ -5,6 +5,7 @@ namespace App\Livewire\Pcash;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Exchange;
+use App\Models\MonthlyEntryAction;
 use App\Models\MonthlyEntry;
 use App\Models\Payment;
 use App\Models\Receipt;
@@ -56,10 +57,12 @@ class ReportView extends Component
     {
         $this->validate();
 
-        $monthlyEntries = MonthlyEntry::with([
-                'user', 'monthlyEntryAmounts', 'till' => ['user']
+        $monthlyActions = MonthlyEntryAction::with([
+                'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
             ])
-            ->where('till_id', $this->tillId)
+            ->whereHas('monthlyEntry', function ($query) {
+                $query->where('till_id', $this->tillId);
+            })
             ->when($this->filterByDate, function ($query) {
                 $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
             })
@@ -100,7 +103,7 @@ class ReportView extends Component
             ->concat($receipts)
             ->concat($transfers)
             ->concat($exchanges)
-            ->concat($monthlyEntries);
+            ->concat($monthlyActions);
         $data = $data->sortBy('created_at');
 
         $amounts = [];
@@ -110,25 +113,23 @@ class ReportView extends Component
             $section = "";
             $sectionId = "";
             $url = "";
-            if ($entry instanceof MonthlyEntry) {
-                $section = "Monthly Opening";
-                if ($entry->close_date) {
-                    $sectionId = Carbon::parse($entry->close_date)->format('M Y') . " Closing";
-                } else {
-                    $sectionId = Carbon::parse($entry->open_date)->format('M Y') . " Opening";
-                }
+            $bgColor = "";
+            if ($entry instanceof MonthlyEntryAction) {
+                $bgColor = "bg-light";
+                $section = "Monthly " . ucfirst($entry->action);
+                $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
 
-                $url = route('monthlyEntry.view', [$entry->id, Constants::VIEW_STATUS]);
+                $url = route('monthlyEntry.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
 
-                foreach ($entry->monthlyEntryAmounts as $monthlyEntryAmount) {
+                foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
                     $amounts[$monthlyEntryAmount->currency_id] = [
                         'debit' => 0,
                         'credit' => 0,
-                        'balance' => $entry->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
+                        'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
                     ];
                 }
 
-                $currenciesIds = $entry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
+                $currenciesIds = $entry->monthlyEntry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
                 $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
 
             } else if ($entry instanceof Payment) {
@@ -211,20 +212,16 @@ class ReportView extends Component
                 'section' => $section,
                 'section_id' => $sectionId,
                 'url' => $url,
-                'user' => $entry->user,
-                'name' => $entry->name,
-                'amount' => $entry->amount,
+                'user' => $entry->user ?? $entry->monthlyEntry?->user,
                 'paid_by' => $entry->paid_by,
                 'date' => $entry->created_at,
                 'category' => $entry->category,
                 'sub_category' => $entry->subCategory,
                 'description' => $entry->description,
                 'amounts' => $amounts,
-                'till_id' => $entry->till_id,
-                'till' => $entry->till,
-                'till_user' => $entry->till?->user,
                 'from_till' => $entry->fromTill,
                 'to_till' => $entry->toTill,
+                'bg_color' => $bgColor,
             ]);
         }
     }

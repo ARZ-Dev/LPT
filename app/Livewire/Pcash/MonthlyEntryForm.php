@@ -4,6 +4,7 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\MonthlyEntryAction;
 use App\Models\MonthlyEntry;
 use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
@@ -155,6 +156,11 @@ class MonthlyEntryForm extends Component
                 'open_date' => $openDate->toDateString(),
             ]);
 
+            MonthlyEntryAction::create([
+                'monthly_entry_id' => $monthlyEntry->id,
+                'action' => 'opening',
+            ]);
+
             foreach ($this->tillAmounts as $tillAmount) {
                  MonthlyEntryAmount::create([
                     'monthly_entry_id' => $monthlyEntry->id,
@@ -197,12 +203,23 @@ class MonthlyEntryForm extends Component
                 'close_date' => $closeDate->toDateString(),
             ]);
 
+            MonthlyEntryAction::create([
+                'monthly_entry_id' => $this->monthlyEntry->id,
+                'action' => 'closing',
+            ]);
+
             // opening a new monthly entry for the next month
             $newMonthlyEntry = MonthlyEntry::create([
                 'user_id' => auth()->id(),
                 'created_by' => auth()->id(),
                 'till_id' => $this->till_id,
                 'open_date' => $closeDate->addDay()->toDateString(),
+            ]);
+
+            MonthlyEntryAction::create([
+                'monthly_entry_id' => $newMonthlyEntry->id,
+                'action' => 'opening',
+                'created_at' => now()->addMinute(),
             ]);
 
             $monthlyEntryAmountsIds = [];

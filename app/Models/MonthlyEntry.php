@@ -46,4 +46,9 @@ class MonthlyEntry extends Model
         }
         return true;
     }
+
+    public function actions()
+    {
+        return $this->hasMany(MonthlyEntryAction::class);
+    }
 }
