@@ -5,7 +5,7 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Close")) : "Open" }} Monthly Entry</h5>
-                    <a href="{{ route('monthly-openings-closings') }}" class="btn btn-primary mb-2 text-nowrap">Monthly Entries</a>
+                    <a href="{{ route('monthly-openings-closings') }}" class="btn btn-primary mb-2 text-nowrap">Monthly Openings/Closings</a>
                 </div>
 
                 <div class="card-body">
@@ -14,7 +14,7 @@
                         <div class="col-12 col-md-6 mt-3">
                             <label class="form-label" for="till_id">Till</label>
                             @if($editing)
-                                <input class="form-control me-2" id="till_id" type="text" value="{{ $selectedTill->name . " / " . $selectedTill->user?->full_name }}" disabled readonly />
+                                <input class="form-control" id="till_id" type="text" value="{{ $selectedTill->name . " / " . $selectedTill->user?->full_name }}" disabled readonly />
                             @else
                                 <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required wire:change="getTillAmounts">
                                     @foreach($tills as $till)
