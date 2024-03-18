@@ -35,7 +35,7 @@ class PlayerForm extends Component
 
         if ($id) {
             $this->authorize('player-edit');
-            $this->player = Player::findOrFail($id);
+            $this->player = Player::with(['teams' => ['levelCategory']])->findOrFail($id);
             $this->form->setPlayer($this->player);
             $this->editing = true;
         } else {
@@ -68,6 +68,11 @@ class PlayerForm extends Component
     {
         $this->validate();
 
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
             $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
@@ -90,7 +95,7 @@ class PlayerForm extends Component
 
     public function render()
     {
-    
+
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.players.player-view');
         }
