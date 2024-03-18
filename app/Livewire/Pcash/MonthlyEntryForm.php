@@ -178,7 +178,7 @@ class MonthlyEntryForm extends Component
             ]);
         }
 
-        return to_route('monthlyEntry')->with('success', 'Month has been opened successfully!');
+        return to_route('monthly-openings-closings')->with('success', 'Month has been opened successfully!');
     }
 
     public function update()
@@ -269,7 +269,7 @@ class MonthlyEntryForm extends Component
             ]);
         }
 
-        return to_route('monthlyEntry')->with('success', 'Month has been closed successfully!');
+        return to_route('monthly-openings-closings')->with('success', 'Month has been closed successfully!');
     }
 
     public function render()

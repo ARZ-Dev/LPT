@@ -27,7 +27,7 @@
                         <td>{{ $transfer->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
-                            @can('transfer-list')
+                            @can('transfer-view')
                                 <a href="{{ route('transfer.view', ['id' => $transfer->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('transfer-edit')

@@ -32,7 +32,7 @@
                         <td>{{ $player->birthdate }}</td>
                         <td>{{ $player->phone_number }}</td>
                         <td>
-                            @can('player-list')
+                            @can('player-view')
                                 <a href="{{ route('players.view', ['id' => $player->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('player-edit')

@@ -119,7 +119,7 @@ class ReportView extends Component
                 $section = "Monthly " . ucfirst($entry->action);
                 $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
 
-                $url = route('monthlyEntry.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
+                $url = route('monthly-openings-closings.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
 
                 foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
                     $amounts[$monthlyEntryAmount->currency_id] = [

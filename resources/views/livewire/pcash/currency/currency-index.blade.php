@@ -17,7 +17,7 @@
                 </div>
                 <span>{{ $currency->name }} - {{ $currency->symbol }}</span>
                 <div>
-                    @can('currency-list')
+                    @can('currency-view')
                         <a href="{{ route('currency.view', ['id' => $currency->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                     @endcan
                     @can('currency-edit')
@@ -72,6 +72,6 @@
     @endscript
 
 
-    
+
 </div>
 

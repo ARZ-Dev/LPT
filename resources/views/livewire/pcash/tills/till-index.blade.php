@@ -25,7 +25,7 @@
                         <td>{{ $till->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
-                            @can('till-list')
+                            @can('till-view')
                                 <a href="{{ route('till.view', ['id' => $till->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm"></i></a>
                             @endcan
                             @can('till-edit')

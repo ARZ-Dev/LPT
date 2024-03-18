@@ -30,7 +30,7 @@
                         <td>{{ $payment->description }}</td>
                         <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
-                            @can('payment-list')
+                            @can('payment-view')
                                 <a href="{{ route('payment.view', ['id' => $payment->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('payment-edit')

@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Monthly Entries List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('monthlyEntry.create') }}">Open Monthly Entry</a>
+            <a class="btn btn-primary h-50" href="{{ route('monthly-openings-closings.create') }}">Open Monthly Entry</a>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-monthlyEntry dataTable table border-top">
@@ -32,12 +32,12 @@
                         </td>
                         <td>{{ $monthlyEntry->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
-                            @can('monthlyEntry-list')
-                                <a href="{{ route('monthlyEntry.view', ['id' => $monthlyEntry->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                            @can('monthlyEntry-view')
+                                <a href="{{ route('monthly-openings-closings.view', ['id' => $monthlyEntry->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('monthlyEntry-edit')
                                 @if(!$monthlyEntry->close_date)
-                                    <a href="{{ route('monthlyEntry.edit', $monthlyEntry->id) }}" class="text-body edit-user-button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Close Month">
+                                    <a href="{{ route('monthly-openings-closings.edit', $monthlyEntry->id) }}" class="text-body edit-user-button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Close Month">
                                         <i class="ti ti-calendar-off ti-sm"></i>
                                     </a>
                                 @endif

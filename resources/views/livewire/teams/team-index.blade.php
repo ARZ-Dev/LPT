@@ -22,7 +22,7 @@
                         <td>{{ $team->nickname }}</td>
                         <td>{{ $team->levelCategory?->name }}</td>
                         <td>
-                            @can('team-list')
+                            @can('team-view')
                                 <a href="{{ route('teams.view', ['id' => $team->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('team-edit')

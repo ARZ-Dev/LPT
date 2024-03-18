@@ -4,7 +4,7 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Monthly Opening/Closing #{{ $monthlyEntry->id }}</h5>
-                    <a href="{{ route('monthlyEntry') }}" class="btn btn-primary mb-2 text-nowrap">
+                    <a href="{{ route('monthly-openings-closings') }}" class="btn btn-primary mb-2 text-nowrap">
                         Monthly Opening/Closing
                     </a>
                 </div>

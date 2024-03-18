@@ -61,7 +61,7 @@
 		</li>
 
 
-			<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'report', 'monthlyEntry*') ? 'active open' : '' }}">
+			<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'petty-cash-report', 'monthly-openings-closings*') ? 'active open' : '' }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
@@ -85,8 +85,8 @@
 						<div data-i18n="Till">Till</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('monthlyEntry*') ? "active" : "" }}">
-					<a href="{{ route('monthlyEntry') }}" class="menu-link">
+				<li class="menu-item {{ request()->is('monthly-openings-closings*') ? "active" : "" }}">
+					<a href="{{ route('monthly-openings-closings') }}" class="menu-link">
 						<div data-i18n="Monthly Opening/Closing">Monthly Opening/Closing</div>
 					</a>
 				</li>
@@ -110,8 +110,8 @@
 						<div data-i18n="Exchange">Exchange</div>
 					</a>
 				</li>
-				<li class="menu-item {{ request()->is('report') ? "active" : "" }}">
-					<a href="{{ route('report') }}" class="menu-link">
+				<li class="menu-item {{ request()->is('petty-cash-report') ? "active" : "" }}">
+					<a href="{{ route('petty-cash-report') }}" class="menu-link">
 						<div data-i18n="Petty Cash Report">Petty Cash Report</div>
 					</a>
 				</li>

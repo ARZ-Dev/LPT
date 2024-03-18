@@ -27,7 +27,7 @@
                         <td>{{ $category->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
-                            @can('category-list')
+                            @can('category-view')
                                 <a href="{{ route('category.view', ['id' => $category->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('category-edit')

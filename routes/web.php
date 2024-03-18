@@ -103,19 +103,19 @@ Route::middleware('auth')->group(function () {
     });
 
     // |--------------------------------------------------------------------------
-    // |MonthlyEntry
+    // | Monthly Openings / Closings
     // |--------------------------------------------------------------------------
 
-    Route::group(['prefix' => 'monthly-actions'], function() {
-        Route::get('/', MonthlyEntryView::class)->name('monthlyEntry');
-        Route::get('/create', MonthlyEntryForm::class)->name('monthlyEntry.create');
-        Route::get('/edit/{id}', MonthlyEntryForm::class)->name('monthlyEntry.edit');
-        Route::get('/view/{id}/{status}', MonthlyEntryForm::class)->name('monthlyEntry.view');
+    Route::group(['prefix' => 'monthly-openings-closings'], function() {
+        Route::get('/', MonthlyEntryView::class)->name('monthly-openings-closings');
+        Route::get('/create', MonthlyEntryForm::class)->name('monthly-openings-closings.create');
+        Route::get('/close/{id}', MonthlyEntryForm::class)->name('monthly-openings-closings.edit');
+        Route::get('/view/{id}/{status}', MonthlyEntryForm::class)->name('monthly-openings-closings.view');
     });
 
 
     // |--------------------------------------------------------------------------
-    // |Payment
+    // | Payment
     // |--------------------------------------------------------------------------
 
     Route::group(['prefix' => 'payment'], function() {
@@ -163,7 +163,7 @@ Route::middleware('auth')->group(function () {
     // |--------------------------------------------------------------------------
 
     Route::group(['prefix' => 'petty-cash-report'], function() {
-        Route::get('/', ReportView::class)->name('report');
+        Route::get('/', ReportView::class)->name('petty-cash-report');
 
     });
 
