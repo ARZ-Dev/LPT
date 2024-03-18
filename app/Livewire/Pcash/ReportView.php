@@ -39,9 +39,15 @@ class ReportView extends Component
                 $query->where('user_id', auth()->id());
             })
             ->get();
+
         $this->currencies = Currency::all();
         $this->startDate = now()->startOfMonth()->format("Y-m-d");
         $this->endDate = now()->endOfMonth()->format("Y-m-d");
+
+        if (count($this->tills) == 1) {
+            $this->tillId = $this->tills[0]->id;
+            $this->getReportData();
+        }
     }
 
     public function rules()

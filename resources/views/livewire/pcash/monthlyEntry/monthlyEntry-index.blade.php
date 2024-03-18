@@ -2,8 +2,8 @@
 
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">Monthly Entries List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('monthly-openings-closings.create') }}">Open Monthly Entry</a>
+            <h4 class="card-title mb-3">Monthly Openings/Closings</h4>
+            <a class="btn btn-primary h-50" href="{{ route('monthly-openings-closings.create') }}">Open Month</a>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-monthlyEntry dataTable table border-top">
