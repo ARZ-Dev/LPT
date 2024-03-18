@@ -128,8 +128,8 @@
                                         </td>
                                     </tr>
                                     @foreach($filteredPermissions as $key => $permissions)
-                                    <tr>
-                                        <td class="text-nowrap fw-semibold">{{ ucfirst($key) }} Management</td>
+                                    <tr class="{{ $loop->iteration % 2 == 0 ? "bg-light" : "" }}">
+                                        <td class="text-nowrap fw-semibold text-center">{{ ucfirst($key) }} Management</td>
                                         <td>
                                             <div class="d-flex">
                                                 @foreach($permissions as $permission)
