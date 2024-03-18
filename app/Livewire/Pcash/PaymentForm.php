@@ -4,6 +4,7 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\MonthlyEntry;
 use App\Models\Payment;
 use App\Models\PaymentAmount;
 use App\Models\SubCategory;
@@ -144,6 +145,8 @@ class PaymentForm extends Component
 
         DB::beginTransaction();
         try {
+
+            checkMonthlyOpening($this->till_id);
 
             $path = null;
             if ($this->invoice && !is_string($this->invoice)) {

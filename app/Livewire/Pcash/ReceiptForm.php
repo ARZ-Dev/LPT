@@ -137,6 +137,7 @@ class ReceiptForm extends Component
         DB::beginTransaction();
         try {
 
+            checkMonthlyOpening($this->till_id);
 
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,

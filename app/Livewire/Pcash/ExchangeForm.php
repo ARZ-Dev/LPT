@@ -149,6 +149,9 @@ class ExchangeForm extends Component
 
         DB::beginTransaction();
         try {
+
+            checkMonthlyOpening($this->till_id);
+
             Exchange::create([
                 'user_id' => auth()->id(),
                 'till_id' => $this->till_id,

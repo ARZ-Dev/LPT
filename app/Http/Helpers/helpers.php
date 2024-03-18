@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\MonthlyEntry;
+
 function sanitizeNumber($number)
 {
     $number = str_replace(',', '', $number);
@@ -8,4 +10,11 @@ function sanitizeNumber($number)
     }
 
     return $number;
+}
+
+function checkMonthlyOpening($tillId)
+{
+    $currentMonth = now()->startOfMonth()->toDateString();
+    $monthlyEntry = MonthlyEntry::where('till_id', $tillId)->where('open_date', $currentMonth)->whereNull('close_date')->first();
+    throw_if(!$monthlyEntry, new Exception("No monthly opening found in the current month for the selected till!"));
 }

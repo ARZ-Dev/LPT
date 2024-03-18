@@ -114,6 +114,8 @@ class TransferForm extends Component
         DB::beginTransaction();
         try {
 
+            checkMonthlyOpening($this->from_till_id);
+            checkMonthlyOpening($this->to_till_id);
 
             $transfer=Transfer::create([
                 'user_id' => auth()->id() ,
