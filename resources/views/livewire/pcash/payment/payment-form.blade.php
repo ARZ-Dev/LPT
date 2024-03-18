@@ -66,16 +66,16 @@
 
                                 <div class="row">
                                     <div class="col-5">
-                                        <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-5">
-                                        <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                        <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-5">
-                                        <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="paymentAmounts.{{ $key }}.amount" type="text" placeholder="amount" required>
+                                        <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="paymentAmounts.{{ $key }}.amount" type="text" placeholder="Amount" required>
                                         @error('paymentAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-5">
@@ -84,7 +84,7 @@
                                                 aria-label="Default select example"
                                                 id="currency{{$key}}"
                                                 wire:model="paymentAmounts.{{ $key }}.currency_id"
-                                                title="Select Currency {{ $key + 1 }}"
+                                                title="Select Currency"
                                                 data-style="btn-default"
                                                 data-live-search="true"
                                                 data-icon-base="ti"
@@ -100,11 +100,6 @@
                                         </div>
                                         @error('paymentAmounts.'. $key .'.currency_id') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
-
-
-
-
-
 
                                     @if(!$status)
                                         <div class="col-2">

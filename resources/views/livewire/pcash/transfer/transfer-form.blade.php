@@ -43,7 +43,7 @@
                             ></textarea>
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-         
+
 
 
                         <div class="col-12 col-md-12">
@@ -52,16 +52,16 @@
 
                                     <div class="row">
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency {{ $key + 1 }} <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-5">
-                                            <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmounts.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount {{ $key + 1 }}" id="amount-{{$key}}" required>
+                                            <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmounts.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount" id="amount-{{$key}}" required>
                                             @error('transferAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                         <div class="col-5">
@@ -70,7 +70,7 @@
                                                     wire:model="transferAmounts.{{ $key }}.currency_id"
 
                                                     id="currency-{{$key}}" class="w-100 currency selectpicker"
-                                                    title="Select Currency {{ $key + 1 }}"
+                                                    title="Select Currency"
                                                     data-style="btn-default"
                                                     data-live-search="true"
                                                     data-icon-base="ti"
