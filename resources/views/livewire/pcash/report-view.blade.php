@@ -56,7 +56,7 @@
                      <th class="text-nowrap">ID</th>
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
-                     <th class="text-nowrap">Paid By</th>
+                     <th class="text-nowrap">Paid By / To</th>
                      <th class="text-nowrap">Description</th>
                      <th class="text-nowrap">From / To</th>
                      <th class="text-nowrap">Ctg / Sub Ctg</th>
@@ -68,6 +68,9 @@
                  </tr>
                 </thead>
                 <tbody>
+                    @php($totalDebits = [])
+                    @php($totalCredits = [])
+                    @php($balances = [])
                     @forelse($reportData as $data)
                         <tr class="{{ $data['bg_color'] }}">
                             <td class="text-nowrap">
@@ -100,16 +103,25 @@
                             @foreach($currencies as $currency)
                                 <td>
                                     @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
+
+                                        @php($totalDebits[$currency->id] = ($totalDebits[$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
+
                                         {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
                                     @endif
                                 </td>
                                 <td>
                                     @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
+
+                                        @php($totalCredits[$currency->id] = ($totalCredits[$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
+
                                         {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
                                     @endif
                                 </td>
                                 <td>
                                     @if(isset($data['amounts'][$currency->id]['balance']))
+
+                                        @php($balances[$currency->id] = $data['amounts'][$currency->id]['balance'])
+
                                         {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
                                     @endif
                                 </td>
@@ -117,10 +129,20 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ 6 + (count($currencies) * 3) }}" class="text-center">No data available</td>
+                            <td colspan="{{ 7 + (count($currencies) * 3) }}" class="text-center">No data available</td>
                         </tr>
                     @endforelse
                 </tbody>
+                <tfoot>
+                    <tr class="bg-label-facebook">
+                        <th colspan="7" class="text-center">Totals</th>
+                        @foreach($currencies as $currency)
+                            <th>{{ number_format($totalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                            <th>{{ number_format($totalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                            <th>{{ number_format($balances[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                        @endforeach
+                    </tr>
+                </tfoot>
             </table>
 
         </div>

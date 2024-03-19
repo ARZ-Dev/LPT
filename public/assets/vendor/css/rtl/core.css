@@ -6701,7 +6701,6 @@ a.invert-bg-dark:hover, a.invert-bg-dark:focus {
   }
 }
 .table th {
-  text-transform: lowercase;
   font-size: 0.8125rem;
   letter-spacing: 1px;
   padding-top: 0.88rem;
@@ -23436,7 +23435,7 @@ a.bg-vimeo:hover, a.bg-vimeo:focus {
 }
 .clear{
   clear:both !important;
-  
+
 }
 
 
