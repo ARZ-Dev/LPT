@@ -16,9 +16,9 @@
                     <th>Till</th>
                     <th>From</th>
                     <th>To</th>
-                    <th>amount</th>
-                    <th>rate</th>
-                    <th>result</th>
+                    <th>Amount</th>
+                    <th>Rate</th>
+                    <th>Result</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>

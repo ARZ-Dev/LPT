@@ -34,6 +34,8 @@ class ReportView extends Component
 
     public function mount()
     {
+        $this->authorize('pettyCashSummary-view');
+
         $this->tills = Till::with(['user'])
             ->when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());

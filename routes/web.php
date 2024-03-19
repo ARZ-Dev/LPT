@@ -162,8 +162,8 @@ Route::middleware('auth')->group(function () {
     // |Report
     // |--------------------------------------------------------------------------
 
-    Route::group(['prefix' => 'petty-cash-report'], function() {
-        Route::get('/', ReportView::class)->name('petty-cash-report');
+    Route::group(['prefix' => 'petty-cash-summary'], function() {
+        Route::get('/', ReportView::class)->name('petty-cash-summary');
 
     });
 

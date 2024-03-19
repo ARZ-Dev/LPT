@@ -10,11 +10,11 @@
                 <thead>
                  <tr>
                     <th>ID</th>
-                    <th>created by</th>
-                    <th>till</th>
+                    <th>Created By</th>
+                    <th>Till</th>
                     <th>Month</th>
                     <th>Status</th>
-                    <th>created at</th>
+                    <th>Created At</th>
                     <th>Actions</th>
                 </tr>
                 </thead>

@@ -67,7 +67,7 @@
         @endcanany
 
         @canany(['category-list', 'currency-list', 'till-list', 'payment-list', 'receipt-list', 'transfer-list', 'exchange-list', 'monthlyEntry-list'])
-        <li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'petty-cash-report', 'monthly-openings-closings*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'petty-cash-summary', 'monthly-openings-closings*') ? 'active open' : '' }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
@@ -140,11 +140,13 @@
 				</li>
                 @endcan
 
-				<li class="menu-item {{ request()->is('petty-cash-report') ? "active" : "" }}">
-					<a href="{{ route('petty-cash-report') }}" class="menu-link">
-						<div data-i18n="Petty Cash Report">Petty Cash Report</div>
+                @can('pettyCashSummary-view')
+				<li class="menu-item {{ request()->is('petty-cash-summary') ? "active" : "" }}">
+					<a href="{{ route('petty-cash-summary') }}" class="menu-link">
+						<div data-i18n="Summary">Summary</div>
 					</a>
 				</li>
+                @endcan
 
 			</ul>
 

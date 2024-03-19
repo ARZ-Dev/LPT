@@ -2,7 +2,7 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title mb-3">Petty Cash Report</h4>
+            <h4 class="card-title mb-3">Summary</h4>
         </div>
         <div class="card-body">
             <div class="row">

@@ -86,6 +86,8 @@ class PermissionsSeeder extends Seeder
             'monthlyEntry-delete',
             'monthlyEntry-viewAll',
 
+            'pettyCashSummary-view',
+
             'team-list',
             'team-create',
             'team-edit',
