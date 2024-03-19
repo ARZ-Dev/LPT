@@ -112,6 +112,8 @@ class ReportView extends Component
             ->concat($monthlyActions);
         $data = $data->sortBy('created_at');
 
+        $usedCurrenciesIds = [];
+
         $amounts = [];
         $this->reportData = collect();
         foreach ($data as $entry) {
@@ -133,6 +135,10 @@ class ReportView extends Component
                         'credit' => 0,
                         'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
                     ];
+
+                    if (!in_array($monthlyEntryAmount->currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $monthlyEntryAmount->currency_id;
+                    }
                 }
 
                 $currenciesIds = $entry->monthlyEntry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
@@ -150,6 +156,10 @@ class ReportView extends Component
                         'credit' => $paymentAmount->amount,
                         'balance' => $balance,
                     ];
+
+                    if (!in_array($paymentAmount->currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $paymentAmount->currency_id;
+                    }
                 }
 
                 $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
@@ -167,6 +177,10 @@ class ReportView extends Component
                         'credit' => 0,
                         'balance' => $balance,
                     ];
+
+                    if (!in_array($receiptAmount->currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $receiptAmount->currency_id;
+                    }
                 }
 
                 $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
@@ -188,6 +202,10 @@ class ReportView extends Component
                         'credit' => $entry->from_till_id == $this->tillId ? $transferAmount->amount : 0,
                         'balance' => $balance,
                     ];
+
+                    if (!in_array($transferAmount->currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $transferAmount->currency_id;
+                    }
                 }
 
                 $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
@@ -209,9 +227,18 @@ class ReportView extends Component
                     'balance' => ($amounts[$entry->to_currency_id]['balance'] ?? 0) + $entry->result,
                 ];
 
+                if (!in_array($entry->from_currency_id, $usedCurrenciesIds)) {
+                    $usedCurrenciesIds[] = $entry->from_currency_id;
+                }
+                if (!in_array($entry->to_currency_id, $usedCurrenciesIds)) {
+                    $usedCurrenciesIds[] = $entry->to_currency_id;
+                }
+
                 $currenciesIds = [$entry->from_currency_id, $entry->to_currency_id];
                 $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
             }
+
+            $this->currencies = Currency::find($usedCurrenciesIds);
 
             $this->reportData->push([
                 'id' => $entry->id,
