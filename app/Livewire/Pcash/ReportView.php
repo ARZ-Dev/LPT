@@ -220,6 +220,7 @@ class ReportView extends Component
                 'url' => $url,
                 'user' => $entry->user ?? $entry->monthlyEntry?->user,
                 'paid_by' => $entry->paid_by,
+                'paid_to' => $entry->paid_to,
                 'date' => $entry->created_at,
                 'category' => $entry->category,
                 'sub_category' => $entry->subCategory,

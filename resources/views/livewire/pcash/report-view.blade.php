@@ -85,7 +85,7 @@
                                 {{ $data['user']->username }}
                             </td>
                             <td class="text-nowrap">
-                                {{ $data['paid_by'] }}
+                                {{ $data['paid_by'] ?? $data['paid_to'] }}
                             </td>
                             <td class="text-nowrap">
                                 {{ $data['description'] }}
@@ -137,9 +137,9 @@
                     <tr class="bg-label-facebook">
                         <th colspan="7" class="text-center">Totals</th>
                         @foreach($currencies as $currency)
-                            <th>{{ number_format($totalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                            <th>{{ number_format($totalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                            <th>{{ number_format($balances[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                            <th class="text-nowrap">{{ number_format($totalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                            <th class="text-nowrap">{{ number_format($totalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                            <th class="text-nowrap">{{ number_format($balances[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                         @endforeach
                     </tr>
                 </tfoot>
