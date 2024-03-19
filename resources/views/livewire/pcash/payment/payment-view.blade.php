@@ -28,6 +28,10 @@
                             <span class="text-dark" id="sub_category">{{ $payment->subCategory?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Paid To:</span>
+                            <span class="text-dark" id="paid_to">{{ $payment->paid_to }}</span>
+                        </div>
+                        <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Description:</span>
                             <span class="text-dark" id="description">{{ $payment->description }}</span>
                         </div>
