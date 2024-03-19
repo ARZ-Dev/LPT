@@ -172,17 +172,6 @@ class TillForm extends Component
                 'amount' => sanitizeNumber($tillAmount['amount']),
             ]);
 
-            if ($amount->wasRecentlyCreated) {
-                $monthlyEntry = MonthlyEntry::where('till_id', $this->till->id)->latest()->first();
-                if ($monthlyEntry) {
-                    MonthlyEntryAmount::create([
-                        'monthly_entry_id' => $monthlyEntry->id,
-                        'currency_id' => $tillAmount['currency_id'],
-                        'amount' => sanitizeNumber($tillAmount['amount']),
-                    ]);
-                }
-            }
-
             $tillAmountsIds[] = $amount->id;
         }
 

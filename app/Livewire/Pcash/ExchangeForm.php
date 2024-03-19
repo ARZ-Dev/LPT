@@ -4,8 +4,6 @@ namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
 use App\Models\Exchange;
-use App\Models\MonthlyEntry;
-use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
 use App\Models\TillAmount;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -268,15 +266,6 @@ class ExchangeForm extends Component
                 'currency_id' => $this->to_currency_id,
                 'amount' => sanitizeNumber($this->result),
             ]);
-
-            $monthlyEntry = MonthlyEntry::where('till_id', $this->till_id)->latest()->first();
-            if ($monthlyEntry) {
-                MonthlyEntryAmount::create([
-                    'monthly_entry_id' => $monthlyEntry->id,
-                    'currency_id' => $this->to_currency_id,
-                    'amount' => sanitizeNumber($this->result),
-                ]);
-            }
         }
     }
 
@@ -286,7 +275,7 @@ class ExchangeForm extends Component
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.exchange.exchange-view');
         }
-            return view('livewire.pcash.exchange.exchange-form');
-        }
+        return view('livewire.pcash.exchange.exchange-form');
     }
+}
 

@@ -240,7 +240,7 @@ class MonthlyEntryForm extends Component
                     $monthlyEntryAmount = MonthlyEntryAmount::create([
                         'monthly_entry_id' => $this->monthlyEntry->id,
                         'currency_id' => $tillAmount['currency_id'],
-                        'amount' => sanitizeNumber($tillAmount['amount']),
+                        'amount' => 0,
                         'till_amount' => sanitizeNumber($tillAmount['amount']),
                         'closing_amount' => sanitizeNumber($tillAmount['closing_amount']),
                     ]);
