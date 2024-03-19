@@ -3,6 +3,8 @@
 namespace App\Livewire\Pcash;
 
 use App\Models\Currency;
+use App\Models\MonthlyEntry;
+use App\Models\MonthlyEntryAmount;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\Transfer;
@@ -260,6 +262,15 @@ class TransferForm extends Component
                 'currency_id' => $fromTill->currency_id,
                 'amount' => sanitizeNumber($transferAmount['amount']),
             ]);
+
+            $monthlyEntry = MonthlyEntry::where('till_id', $this->to_till_id)->latest()->first();
+            if ($monthlyEntry) {
+                MonthlyEntryAmount::create([
+                    'monthly_entry_id' => $monthlyEntry->id,
+                    'currency_id' => $fromTill->currency_id,
+                    'amount' => sanitizeNumber($transferAmount['amount']),
+                ]);
+            }
         }
     }
 
@@ -268,7 +279,7 @@ class TransferForm extends Component
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.transfer.transfer-view');
         }
-            return view('livewire.pcash.transfer.transfer-form');
-        }
+        return view('livewire.pcash.transfer.transfer-form');
     }
+}
 
