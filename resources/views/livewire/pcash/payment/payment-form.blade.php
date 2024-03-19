@@ -43,9 +43,21 @@
                             </select>
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
+
+                    <div class="col-6 col-md-6 mt-3">
+                        <label class="form-label" for="paid_to">Paid To</label>
+                        <input
+                            wire:model.defer="paid_to"
+                            type="text"
+                            id="paid_to"
+                            name="paid_to"
+                            class="form-control"
+                            placeholder="Paid To"/>
+                        
+                        @error('paid_to') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-12 col-md-12 mt-3">
+                    <div class="col-6 col-md-6 mt-3">
                         <label class="form-label" for="description">Description</label>
                         <textarea
                             wire:model.defer="description"
@@ -53,10 +65,14 @@
                             id="description"
                             name="description"
                             class="form-control"
-                            placeholder="description">
+                            placeholder="description"
+                            rows="1"
+                            >
                         </textarea>
                         @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+                    </div>
+
 
                     <div class="col-12 col-md-12 mt-3">
 
