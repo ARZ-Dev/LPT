@@ -158,6 +158,7 @@ class TillForm extends Component
         $this->submitting = true;
 
         $this->till->update([
+            'user_id' => $this->user_id,
             'name' => $this->name,
         ]);
 
