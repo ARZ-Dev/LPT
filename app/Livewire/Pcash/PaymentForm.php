@@ -35,6 +35,7 @@ class PaymentForm extends Component
 
     public $category_id;
     public $sub_category_id;
+    public $paid_to;
     public $description;
     public $invoice;
 
@@ -85,6 +86,7 @@ class PaymentForm extends Component
             $this->category_id = $this->payment->category_id;
             $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
             $this->sub_category_id = $this->payment->sub_category_id;
+            $this->paid_to = $this->payment->paid_to;
             $this->description = $this->payment->description;
             $this->invoice = $this->payment->invoice;
 
@@ -125,6 +127,7 @@ class PaymentForm extends Component
 
             'category_id' => ['required', 'integer'],
             'sub_category_id' => ['required', 'integer'],
+            'paid_to' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'invoice' => ['nullable'],
 
@@ -174,6 +177,7 @@ class PaymentForm extends Component
                 'till_id' => $this->till_id,
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
+                'paid_to' => $this->paid_to,
                 'description' => $this->description,
                 'invoice' => $path,
             ]);
@@ -234,6 +238,8 @@ class PaymentForm extends Component
                 'till_id' => $this->till_id,
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
+                'paid_to' => $this->paid_to,
+                'paid_to' => $this->paid_to,
                 'description' => $this->description,
             ];
 

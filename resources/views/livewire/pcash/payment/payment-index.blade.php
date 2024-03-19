@@ -16,6 +16,7 @@
                     <th>Till</th>
                     <th>Category</th>
                     <th>Sub Category</th>
+                    <th>Paid To</th>
                     <th>Description</th>
                     <th>Created At</th>
                     <th>Actions</th>
@@ -29,6 +30,7 @@
                         <td>{{ $payment->till?->name }} / {{ $payment->till?->user?->full_name }}</td>
                         <td>{{ $payment->category?->name }}</td>
                         <td>{{ $payment->subCategory?->name ?? 'N/A' }}</td>
+                        <td>{{ $payment->paid_to }}</td>
                         <td>{{ $payment->description }}</td>
                         <td>{{ $payment->created_at->format('d-m-Y h:i a') }}</td>
                         <td>
