@@ -66,6 +66,7 @@ class ReportView extends Component
         $this->validate();
 
         $this->reportData = [];
+        $usedCurrenciesIds = [];
 
         foreach ($this->tillIds as $tillId) {
 
@@ -118,7 +119,6 @@ class ReportView extends Component
                 ->concat($monthlyActions);
             $data = $data->sortBy('created_at');
 
-            $usedCurrenciesIds = [];
 
             $amounts = [];
             foreach ($data as $entry) {
