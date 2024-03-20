@@ -27,7 +27,7 @@ class ReportView extends Component
     public $reportData = [];
     public $currencies = [];
     public $tills = [];
-    public int $tillId;
+    public array $tillIds = [];
     public bool $filterByDate = false;
     public $startDate;
     public $endDate;
@@ -47,7 +47,7 @@ class ReportView extends Component
         $this->endDate = now()->endOfMonth()->format("Y-m-d");
 
         if (count($this->tills) == 1) {
-            $this->tillId = $this->tills[0]->id;
+            $this->tillIds = [$this->tills[0]->id];
             $this->getReportData();
         }
     }
@@ -55,7 +55,7 @@ class ReportView extends Component
     public function rules()
     {
         return [
-            'tillId' => ['required'],
+            'tillIds' => ['required', 'array', 'min:1'],
             'startDate' => [new RequiredIf($this->filterByDate), 'date'],
             'endDate' => [new RequiredIf($this->filterByDate), 'date', 'after_or_equal:startDate'],
         ];
@@ -65,200 +65,211 @@ class ReportView extends Component
     {
         $this->validate();
 
-        $monthlyActions = MonthlyEntryAction::with([
-                'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
-            ])
-            ->whereHas('monthlyEntry', function ($query) {
-                $query->where('till_id', $this->tillId);
-            })
-            ->when($this->filterByDate, function ($query) {
-                $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
-            })
-            ->get();
+        $this->reportData = [];
 
-        $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory', 'till' => ['user']])
-            ->where('till_id', $this->tillId)
-            ->when($this->filterByDate, function ($query) {
-                $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
-            })
-            ->get();
+        foreach ($this->tillIds as $tillId) {
 
-        $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory', 'till' => ['user']])
-            ->where('till_id', $this->tillId)
-            ->when($this->filterByDate, function ($query) {
-                $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
-            })
-            ->get();
+            $monthlyActions = MonthlyEntryAction::with([
+                    'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
+                ])
+                ->whereHas('monthlyEntry', function ($query) use ($tillId) {
+                    $query->where('till_id', $tillId);
+                })
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->get();
 
-        $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
-            ->where(function ($query) {
-                $query->where('from_till_id', $this->tillId)->orWhere('to_till_id', $this->tillId);
-            })
-            ->when($this->filterByDate, function ($query) {
-                $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
-            })
-            ->get();
+            $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory', 'till' => ['user']])
+                ->where('till_id', $tillId)
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->get();
 
-        $exchanges = Exchange::with(['user', 'till' => ['user']])
-            ->where('till_id', $this->tillId)
-            ->when($this->filterByDate, function ($query) {
-                $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
-            })
-            ->get();
+            $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory', 'till' => ['user']])
+                ->where('till_id', $tillId)
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->get();
 
-        $data = collect()
-            ->concat($payments)
-            ->concat($receipts)
-            ->concat($transfers)
-            ->concat($exchanges)
-            ->concat($monthlyActions);
-        $data = $data->sortBy('created_at');
+            $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
+                ->where(function ($query) use ($tillId) {
+                    $query->where('from_till_id', $tillId)->orWhere('to_till_id', $tillId);
+                })
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->get();
 
-        $usedCurrenciesIds = [];
+            $exchanges = Exchange::with(['user', 'till' => ['user']])
+                ->where('till_id', $tillId)
+                ->when($this->filterByDate, function ($query) {
+                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                })
+                ->get();
 
-        $amounts = [];
-        $this->reportData = collect();
-        foreach ($data as $entry) {
+            $data = collect()
+                ->concat($payments)
+                ->concat($receipts)
+                ->concat($transfers)
+                ->concat($exchanges)
+                ->concat($monthlyActions);
+            $data = $data->sortBy('created_at');
 
-            $section = "";
-            $sectionId = "";
-            $url = "";
-            $bgColor = "";
-            if ($entry instanceof MonthlyEntryAction) {
-                $bgColor = "bg-light";
-                $section = "Monthly " . ucfirst($entry->action);
-                $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
+            $usedCurrenciesIds = [];
 
-                $url = route('monthly-openings-closings.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
+            $amounts = [];
+            foreach ($data as $entry) {
 
-                foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
-                    $amounts[$monthlyEntryAmount->currency_id] = [
+                $section = "";
+                $sectionId = "";
+                $url = "";
+                $bgColor = "";
+                if ($entry instanceof MonthlyEntryAction) {
+                    $bgColor = "bg-light";
+                    $section = "Monthly " . ucfirst($entry->action);
+                    $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
+
+                    $url = route('monthly-openings-closings.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
+
+                    foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
+                        $amounts[$monthlyEntryAmount->currency_id] = [
+                            'debit' => 0,
+                            'credit' => 0,
+                            'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
+                        ];
+
+                        if (!in_array($monthlyEntryAmount->currency_id, $usedCurrenciesIds)) {
+                            $usedCurrenciesIds[] = $monthlyEntryAmount->currency_id;
+                        }
+                    }
+
+                    $currenciesIds = $entry->monthlyEntry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
+                    $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
+
+                } else if ($entry instanceof Payment) {
+                    $section = "Payment";
+                    $sectionId = "Payment #" . $entry->id;
+                    $url = route('payment.view', [$entry->id, Constants::VIEW_STATUS]);
+
+                    foreach ($entry->paymentAmounts as $paymentAmount) {
+                        $balance = ($amounts[$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
+                        $amounts[$paymentAmount->currency_id] = [
+                            'debit' => 0,
+                            'credit' => $paymentAmount->amount,
+                            'balance' => $balance,
+                        ];
+
+                        if (!in_array($paymentAmount->currency_id, $usedCurrenciesIds)) {
+                            $usedCurrenciesIds[] = $paymentAmount->currency_id;
+                        }
+                    }
+
+                    $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
+                    $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
+
+                } else if ($entry instanceof Receipt) {
+                    $section = "Receipt";
+                    $sectionId = "Receipt #" . $entry->id;
+                    $url = route('receipt.view', [$entry->id, Constants::VIEW_STATUS]);
+
+                    foreach ($entry->receiptAmounts as $receiptAmount) {
+                        $balance = ($amounts[$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
+                        $amounts[$receiptAmount->currency_id] = [
+                            'debit' => $receiptAmount->amount,
+                            'credit' => 0,
+                            'balance' => $balance,
+                        ];
+
+                        if (!in_array($receiptAmount->currency_id, $usedCurrenciesIds)) {
+                            $usedCurrenciesIds[] = $receiptAmount->currency_id;
+                        }
+                    }
+
+                    $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
+                    $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
+
+                } else if ($entry instanceof Transfer) {
+                    $section = "Transfer";
+                    $sectionId = "Transfer #" . $entry->id;
+                    $url = route('transfer.view', [$entry->id, Constants::VIEW_STATUS]);
+
+                    foreach ($entry->transferAmounts as $transferAmount) {
+                        if ($entry->from_till_id == $tillId) {
+                            $balance = ($amounts[$transferAmount->currency_id]['balance'] ?? 0) - $transferAmount->amount;
+                        } else {
+                            $balance = ($amounts[$transferAmount->currency_id]['balance'] ?? 0) + $transferAmount->amount;
+                        }
+                        $amounts[$transferAmount->currency_id] = [
+                            'debit' => $entry->from_till_id == $tillId ? 0 : $transferAmount->amount,
+                            'credit' => $entry->from_till_id == $tillId ? $transferAmount->amount : 0,
+                            'balance' => $balance,
+                        ];
+
+                        if (!in_array($transferAmount->currency_id, $usedCurrenciesIds)) {
+                            $usedCurrenciesIds[] = $transferAmount->currency_id;
+                        }
+                    }
+
+                    $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
+                    $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
+
+                } else if ($entry instanceof Exchange) {
+                    $section = "Exchange";
+                    $sectionId = "Exchange #" . $entry->id;
+                    $url = route('exchange.view', [$entry->id, Constants::VIEW_STATUS]);
+
+                    $amounts[$entry->from_currency_id] = [
                         'debit' => 0,
+                        'credit' => $entry->amount,
+                        'balance' => ($amounts[$entry->from_currency_id]['balance'] ?? 0) - $entry->amount,
+                    ];
+                    $amounts[$entry->to_currency_id] = [
+                        'debit' => $entry->result,
                         'credit' => 0,
-                        'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
+                        'balance' => ($amounts[$entry->to_currency_id]['balance'] ?? 0) + $entry->result,
                     ];
 
-                    if (!in_array($monthlyEntryAmount->currency_id, $usedCurrenciesIds)) {
-                        $usedCurrenciesIds[] = $monthlyEntryAmount->currency_id;
+                    if (!in_array($entry->from_currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $entry->from_currency_id;
                     }
+                    if (!in_array($entry->to_currency_id, $usedCurrenciesIds)) {
+                        $usedCurrenciesIds[] = $entry->to_currency_id;
+                    }
+
+                    $currenciesIds = [$entry->from_currency_id, $entry->to_currency_id];
+                    $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
                 }
 
-                $currenciesIds = $entry->monthlyEntry->monthlyEntryAmounts()->pluck('currency_id')->toArray();
-                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
+                $this->currencies = Currency::find($usedCurrenciesIds);
 
-            } else if ($entry instanceof Payment) {
-                $section = "Payment";
-                $sectionId = "Payment #" . $entry->id;
-                $url = route('payment.view', [$entry->id, Constants::VIEW_STATUS]);
-
-                foreach ($entry->paymentAmounts as $paymentAmount) {
-                    $balance = ($amounts[$paymentAmount->currency_id]['balance'] ?? 0) - $paymentAmount->amount;
-                    $amounts[$paymentAmount->currency_id] = [
-                        'debit' => 0,
-                        'credit' => $paymentAmount->amount,
-                        'balance' => $balance,
-                    ];
-
-                    if (!in_array($paymentAmount->currency_id, $usedCurrenciesIds)) {
-                        $usedCurrenciesIds[] = $paymentAmount->currency_id;
-                    }
-                }
-
-                $currenciesIds = $entry->paymentAmounts()->pluck('currency_id')->toArray();
-                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
-
-            } else if ($entry instanceof Receipt) {
-                $section = "Receipt";
-                $sectionId = "Receipt #" . $entry->id;
-                $url = route('receipt.view', [$entry->id, Constants::VIEW_STATUS]);
-
-                foreach ($entry->receiptAmounts as $receiptAmount) {
-                    $balance = ($amounts[$receiptAmount->currency_id]['balance'] ?? 0) + $receiptAmount->amount;
-                    $amounts[$receiptAmount->currency_id] = [
-                        'debit' => $receiptAmount->amount,
-                        'credit' => 0,
-                        'balance' => $balance,
-                    ];
-
-                    if (!in_array($receiptAmount->currency_id, $usedCurrenciesIds)) {
-                        $usedCurrenciesIds[] = $receiptAmount->currency_id;
-                    }
-                }
-
-                $currenciesIds = $entry->receiptAmounts()->pluck('currency_id')->toArray();
-                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
-
-            } else if ($entry instanceof Transfer) {
-                $section = "Transfer";
-                $sectionId = "Transfer #" . $entry->id;
-                $url = route('transfer.view', [$entry->id, Constants::VIEW_STATUS]);
-
-                foreach ($entry->transferAmounts as $transferAmount) {
-                    if ($entry->from_till_id == $this->tillId) {
-                        $balance = ($amounts[$transferAmount->currency_id]['balance'] ?? 0) - $transferAmount->amount;
-                    } else {
-                        $balance = ($amounts[$transferAmount->currency_id]['balance'] ?? 0) + $transferAmount->amount;
-                    }
-                    $amounts[$transferAmount->currency_id] = [
-                        'debit' => $entry->from_till_id == $this->tillId ? 0 : $transferAmount->amount,
-                        'credit' => $entry->from_till_id == $this->tillId ? $transferAmount->amount : 0,
-                        'balance' => $balance,
-                    ];
-
-                    if (!in_array($transferAmount->currency_id, $usedCurrenciesIds)) {
-                        $usedCurrenciesIds[] = $transferAmount->currency_id;
-                    }
-                }
-
-                $currenciesIds = $entry->transferAmounts()->pluck('currency_id')->toArray();
-                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
-
-            } else if ($entry instanceof Exchange) {
-                $section = "Exchange";
-                $sectionId = "Exchange #" . $entry->id;
-                $url = route('exchange.view', [$entry->id, Constants::VIEW_STATUS]);
-
-                $amounts[$entry->from_currency_id] = [
-                    'debit' => 0,
-                    'credit' => $entry->amount,
-                    'balance' => ($amounts[$entry->from_currency_id]['balance'] ?? 0) - $entry->amount,
-                ];
-                $amounts[$entry->to_currency_id] = [
-                    'debit' => $entry->result,
-                    'credit' => 0,
-                    'balance' => ($amounts[$entry->to_currency_id]['balance'] ?? 0) + $entry->result,
+                $newEntry = [
+                    'id' => $entry->id,
+                    'section' => $section,
+                    'section_id' => $sectionId,
+                    'url' => $url,
+                    'user' => $entry->user ?? $entry->monthlyEntry?->user,
+                    'paid_by' => $entry->paid_by,
+                    'paid_to' => $entry->paid_to,
+                    'date' => $entry->created_at,
+                    'category' => $entry->category,
+                    'sub_category' => $entry->subCategory,
+                    'description' => $entry->description,
+                    'amounts' => $amounts,
+                    'from_till' => $entry->fromTill,
+                    'to_till' => $entry->toTill,
+                    'bg_color' => $bgColor,
+                    'till' => Till::with('user')->find($tillId),
                 ];
 
-                if (!in_array($entry->from_currency_id, $usedCurrenciesIds)) {
-                    $usedCurrenciesIds[] = $entry->from_currency_id;
+                if (isset($this->reportData[$tillId])) {
+                    $this->reportData[$tillId][] = $newEntry;
+                } else {
+                    $this->reportData[$tillId] = [$newEntry];
                 }
-                if (!in_array($entry->to_currency_id, $usedCurrenciesIds)) {
-                    $usedCurrenciesIds[] = $entry->to_currency_id;
-                }
-
-                $currenciesIds = [$entry->from_currency_id, $entry->to_currency_id];
-                $amounts = $this->clearOtherCurrencies($amounts, $currenciesIds);
             }
-
-            $this->currencies = Currency::find($usedCurrenciesIds);
-
-            $this->reportData->push([
-                'id' => $entry->id,
-                'section' => $section,
-                'section_id' => $sectionId,
-                'url' => $url,
-                'user' => $entry->user ?? $entry->monthlyEntry?->user,
-                'paid_by' => $entry->paid_by,
-                'paid_to' => $entry->paid_to,
-                'date' => $entry->created_at,
-                'category' => $entry->category,
-                'sub_category' => $entry->subCategory,
-                'description' => $entry->description,
-                'amounts' => $amounts,
-                'from_till' => $entry->fromTill,
-                'to_till' => $entry->toTill,
-                'bg_color' => $bgColor,
-            ]);
         }
     }
 

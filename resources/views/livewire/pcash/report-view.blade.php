@@ -11,9 +11,9 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label">Till:</label>
                             <div wire:ignore>
-                                <select wire:model="tillId" wire:change="getReportData" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                <select wire:model="tillIds" wire:change="getReportData" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required multiple>
                                     @foreach($tills as $till)
-                                        <option value="{{ $till->id }}" @selected($till->id == $tillId)>{{ $till->name . " / " . $till->user?->full_name }}</option>
+                                        <option value="{{ $till->id }}" @selected(in_array($till->id, $tillIds))>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -54,6 +54,7 @@
                 <thead>
                  <tr>
                      <th class="text-nowrap">ID</th>
+                     <th class="text-nowrap">Till</th>
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
                      <th class="text-nowrap">Paid By / To</th>
@@ -68,81 +69,85 @@
                  </tr>
                 </thead>
                 <tbody>
-                    @php($totalDebits = [])
-                    @php($totalCredits = [])
-                    @php($balances = [])
-                    @forelse($reportData as $data)
-                        <tr class="{{ $data['bg_color'] }}">
-                            <td class="text-nowrap">
-                                <a href="{{ $data['url'] }}" target="_blank">
-                                    {{ $data['section_id'] }}
-                                </a>
-                            </td>
-                            <td class="text-nowrap">
-                                {{ $data['date']->format('d-m-Y h:i a') }}
-                            </td>
-                            <td class="text-nowrap">
-                                {{ $data['user']->username }}
-                            </td>
-                            <td class="text-nowrap">
-                                {{ $data['paid_by'] ?? $data['paid_to'] }}
-                            </td>
-                            <td class="text-nowrap">
-                                {{ $data['description'] }}
-                            </td>
-                            <td class="text-nowrap">
-                                @if($data['from_till'])
-                                    {{ $data['from_till']->name }} / {{ $data['from_till']->user?->full_name }} To {{ $data['to_till']?->name }} / {{ $data['to_till']->user?->full_name }}
-                                @endif
-                            </td>
-                            <td class="text-nowrap">
-                                @if($data['category'])
-                                    {{ $data['category']->name }} / {{ $data['sub_category']?->name }}
-                                @endif
-                            </td>
+                    @foreach($tillIds as $tillId)
+                        @php($totalDebits = [])
+                        @php($totalCredits = [])
+                        @php($balances = [])
+                        @forelse($reportData[$tillId] as $data)
+                            <tr class="{{ $data['bg_color'] }}">
+                                <td class="text-nowrap">
+                                    <a href="{{ $data['url'] }}" target="_blank">
+                                        {{ $data['section_id'] }}
+                                    </a>
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $data['till']?->name }} / {{ $data['till']?->user?->full_name }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $data['date']->format('d-m-Y H:i') }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $data['user']->username }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $data['paid_by'] ?? $data['paid_to'] }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ $data['description'] }}
+                                </td>
+                                <td class="text-nowrap">
+                                    @if($data['from_till'])
+                                        {{ $data['from_till']->name }} / {{ $data['from_till']->user?->full_name }} To {{ $data['to_till']?->name }} / {{ $data['to_till']->user?->full_name }}
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if($data['category'])
+                                        {{ $data['category']->name }} / {{ $data['sub_category']?->name }}
+                                    @endif
+                                </td>
+                                @foreach($currencies as $currency)
+                                    <td>
+                                        @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
+
+                                            @php($totalDebits[$tillId][$currency->id] = ($totalDebits[$tillId][$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
+
+                                            {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
+
+                                            @php($totalCredits[$tillId][$currency->id] = ($totalCredits[$tillId][$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
+
+                                            {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(isset($data['amounts'][$currency->id]['balance']))
+
+                                            @php($balances[$tillId][$currency->id] = $data['amounts'][$currency->id]['balance'])
+
+                                            {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="{{ 8 + (count($currencies) * 3) }}" class="text-center">No data available</td>
+                            </tr>
+                        @endforelse
+
+                        <tr class="bg-label-success">
+                            <th colspan="8" class="text-center">Totals</th>
                             @foreach($currencies as $currency)
-                                <td>
-                                    @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
-
-                                        @php($totalDebits[$currency->id] = ($totalDebits[$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
-
-                                        {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
-
-                                        @php($totalCredits[$currency->id] = ($totalCredits[$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
-
-                                        {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if(isset($data['amounts'][$currency->id]['balance']))
-
-                                        @php($balances[$currency->id] = $data['amounts'][$currency->id]['balance'])
-
-                                        {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
-                                    @endif
-                                </td>
+                                <th class="text-nowrap">{{ number_format($totalDebits[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                                <th class="text-nowrap">{{ number_format($totalCredits[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                                <th class="text-nowrap">{{ number_format($balances[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                             @endforeach
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="{{ 7 + (count($currencies) * 3) }}" class="text-center">No data available</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
-                <tfoot>
-                    <tr class="bg-label-facebook">
-                        <th colspan="7" class="text-center">Totals</th>
-                        @foreach($currencies as $currency)
-                            <th class="text-nowrap">{{ number_format($totalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                            <th class="text-nowrap">{{ number_format($totalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                            <th class="text-nowrap">{{ number_format($balances[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                        @endforeach
-                    </tr>
-                </tfoot>
             </table>
 
         </div>
