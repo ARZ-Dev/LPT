@@ -8,10 +8,22 @@
             <div class="row">
                 <div class="col-12">
                     <div class="row g-3">
-                        <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-5">
                             <label class="form-label">Till:</label>
                             <div wire:ignore>
-                                <select wire:model="tillIds" wire:change="getReportData" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required multiple>
+                                <select wire:model="tillIds"
+                                        wire:change="getReportData"
+                                        class="form-select selectpicker w-100"
+                                        aria-label="Default select example"
+                                        title="Select Till"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-tick-icon="ti-check text-white"
+                                        data-selected-text-format="count > 3"
+                                        required
+                                        multiple
+                                >
                                     @foreach($tills as $till)
                                         <option value="{{ $till->id }}" @selected(in_array($till->id, $tillIds))>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                     @endforeach
