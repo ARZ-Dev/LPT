@@ -85,7 +85,7 @@
                         @php($totalDebits = [])
                         @php($totalCredits = [])
                         @php($balances = [])
-                        @forelse($reportData[$tillId] as $data)
+                        @forelse($reportData[$tillId] ?? [] as $data)
                             <tr class="{{ $data['bg_color'] }}">
                                 <td class="text-nowrap">
                                     <a href="{{ $data['url'] }}" target="_blank">
