@@ -15,6 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TillForm extends Component
 {
@@ -37,6 +38,15 @@ class TillForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
+
+        $user = Auth::user();
+        if ($id !== 0) {
+            $authTill = Till::findOrFail($id);
+            if ($authTill->user_id !== $user->id) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+
         $this->authorize('till-list');
 
         $this->users = User::when(!auth()->user()->hasPermissionTo('user-viewAll'), function ($query) {
@@ -102,7 +112,7 @@ class TillForm extends Component
 
     public function store()
     {
-        $this->authorize('till-edit');
+        $this->authorize('till-create');
 
         $this->validate();
 
