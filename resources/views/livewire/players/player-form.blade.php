@@ -177,6 +177,14 @@
                                 - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload)) }}" download>Download Link</a>
                             @endif
                         </h5>
+
+                        <h6>
+                            @error('nationalIdFile')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </h6>
                     </div>
                     <div class="card-body">
                         <div class="row">

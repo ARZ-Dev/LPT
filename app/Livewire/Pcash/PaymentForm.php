@@ -129,7 +129,7 @@ class PaymentForm extends Component
             'sub_category_id' => ['required', 'integer'],
             'paid_to' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'invoice' => ['nullable'],
+            'invoice' => ['nullable', 'file', 'max:2048'],
 
             'paymentAmounts' => ['array'],
             'paymentAmounts.*.payment_id' => ['nullable'],

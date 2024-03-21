@@ -53,7 +53,6 @@ class PlayerForm extends Component
         }
         $this->submitting = true;
 
-
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
             $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
@@ -99,7 +98,7 @@ class PlayerForm extends Component
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.players.player-view');
         }
-            return view('livewire.players.player-form');
-        }
+        return view('livewire.players.player-form');
     }
+}
 

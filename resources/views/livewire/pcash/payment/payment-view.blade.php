@@ -64,10 +64,10 @@
             </div>
 
             @if($this->invoice)
-                <div class="card mb-4 mt-2">
+                <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
-                            Invoice Upload - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($this->invoice)) }}" download>Download Link</a>
+                            Uploaded Invoice - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($this->invoice)) }}" download>Download Link</a>
                         </h5>
                     </div>
                     <div class="card-body">
