@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $category->user->full_name }}</span>
+                            <span class="text-dark" id="user">{{ $category->user?->full_name }}</span>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -32,8 +32,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <span class="fw-bold text-dark">{{$subCategory->name}}</span>
-                                        <span class="text-dark"></span>
+                                        <span class="fw-bold text-dark">Name:</span>
+                                        <span class="text-dark">{{$subCategory->name}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -46,22 +46,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>

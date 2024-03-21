@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col-12 m-2">
                                         <span class="fw-bold text-dark">Amount :</span>
-                                        <span class="text-dark">{{ number_format($transferAmount->amount, 2) }} {{$transferAmount->currency->symbol}}</span>
+                                        <span class="text-dark">{{ number_format($transferAmount->amount, 2) }} {{$transferAmount->currency?->symbol}}</span>
                                     </div>
 
                                 </div>

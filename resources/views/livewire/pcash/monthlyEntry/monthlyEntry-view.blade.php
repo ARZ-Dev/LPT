@@ -38,19 +38,19 @@
 
                                 <div class="col-12 m-2">
                                     <span class="fw-bold text-dark">Currency:</span>
-                                    <span class="text-dark">{{ $monthlyEntryAmount->currency->name }}</span>
+                                    <span class="text-dark">{{ $monthlyEntryAmount->currency?->name }}</span>
                                 </div>
 
                                 <div class="col-12 m-2">
                                     <span class="fw-bold text-dark">Opening Amount: </span>
-                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}</span>
+                                    <span class="text-dark">{{ number_format($monthlyEntryAmount->amount, 2) }} {{ $monthlyEntryAmount->currency?->symbol }}</span>
                                 </div>
 
                                 @if($monthlyEntryAmount->till_amount)
                                 <div class="col-12 m-2">
                                     <span class="fw-bold {{ $monthlyEntryAmount->till_amount != $monthlyEntryAmount->closing_amount ? "text-danger" : "text-dark" }}">Till Amount When Closed:</span>
                                     <span class="{{ $monthlyEntryAmount->till_amount != $monthlyEntryAmount->closing_amount ? "text-danger" : "text-dark" }}">
-                                            {{ number_format($monthlyEntryAmount->till_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}
+                                            {{ number_format($monthlyEntryAmount->till_amount, 2) }} {{ $monthlyEntryAmount->currency?->symbol }}
                                     </span>
                                 </div>
                                 @endif
@@ -59,7 +59,7 @@
                                 <div class="col-12 m-2">
                                     <span class="fw-bold {{ $monthlyEntryAmount->till_amount != $monthlyEntryAmount->closing_amount ? "text-danger" : "text-dark" }}">Closing Amount:</span>
                                     <span class="{{ $monthlyEntryAmount->till_amount != $monthlyEntryAmount->closing_amount ? "text-danger" : "text-dark" }}">
-                                            {{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency->symbol }}
+                                            {{ number_format($monthlyEntryAmount->closing_amount, 2) }} {{ $monthlyEntryAmount->currency?->symbol }}
                                     </span>
                                 </div>
                                 @endif
@@ -76,22 +76,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>

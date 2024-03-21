@@ -17,7 +17,7 @@
 
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">Level Category:</span>
-                            <span class="text-dark" >{{ $team->levelCategory->name }}</span>
+                            <span class="text-dark" >{{ $team->levelCategory?->name }}</span>
                         </div>
                     </div>
                 </div>

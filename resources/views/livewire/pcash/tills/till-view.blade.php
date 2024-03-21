@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <span class="fw-bold text-dark">Created By:</span>
-                            <span class="text-dark" id="user">{{ $till->createdBy->full_name }}</span>
+                            <span class="text-dark" id="user">{{ $till->createdBy?->full_name }}</span>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -51,22 +51,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>

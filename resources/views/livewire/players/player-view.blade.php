@@ -37,7 +37,7 @@
 
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Country:</span>
-                            <span class="text-dark" >{{ $player->country->name }}</span>
+                            <span class="text-dark" >{{ $player->country?->name }}</span>
                         </div>
 
                         <div class="col-12 col-md-6 mt-5">
@@ -88,6 +88,26 @@
                     </div>
                 </div>
             </div>
+
+            @if($player->national_id_upload)
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            National ID Upload - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload)) }}" download>Download Link</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                @php
+                                    $uploadedFile = [asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload))];
+                                @endphp
+                                <x-filepond :files="$uploadedFile" wire:model="nationalIdFile" delete-event="deleteNationalIdFile" allow-remove="false" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
 
         </div>
