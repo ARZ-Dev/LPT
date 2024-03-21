@@ -1,14 +1,12 @@
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
-
-<div class=" text-center">
-		<img id="logoImage" src="{{ asset('assets/images/login/Racket-and-ball-Tennis-Logo-by-yahyaanasatokillah.png') }}" style="height:100%;width:230px;">
-</div>
-
-	<div class="app-brand  demo">
+	<div class="app-brand demo">
 		<a href="{{url('dashboard')}}" class="app-brand-link">
-			<span class="app-brand-logo demo"></span>
+			<span class="app-brand-logo demo">
+                @include('logo')
+            </span>
+            <span class="app-brand-text demo menu-text fw-bold">LPT</span>
 		</a>
 
 		<a id="toggleButton" href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">

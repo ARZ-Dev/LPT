@@ -23,9 +23,9 @@
                         </div>
 
                         <div class="col-12 col-md-6 mt-3">
-                            <label class="form-label" for="paid_to">Paid To</label>
+                            <label class="form-label" for="paid_to">Paid To <span class="text-danger">*</span></label>
                             <input
-                                wire:model.defer="paid_to"
+                                wire:model="paid_to"
                                 type="text"
                                 id="paid_to"
                                 name="paid_to"
@@ -34,8 +34,6 @@
 
                             @error('paid_to') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-
-
 
                         <div class="col-12 col-md-6 mt-3">
                             <label class="form-label" for="category_id">Category <span class="text-danger">*</span></label>
@@ -47,7 +45,6 @@
                             @error('category_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-
                         <div class="col-12 col-md-6 mt-3 ">
                             <label class="form-label" for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
                             <select wire:model="sub_category_id" class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
@@ -58,21 +55,19 @@
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-
-
-                    <div class="col-12 col-md-12 mt-3">
-                        <label class="form-label" for="description">Description</label>
-                        <textarea
-                            wire:model.defer="description"
-                            type="text"
-                            id="description"
-                            name="description"
-                            class="form-control"
-                            placeholder="description"
+                        <div class="col-12 col-md-12 mt-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea
+                                wire:model.defer="description"
+                                type="text"
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                placeholder="description"
                             >
-                        </textarea>
-                        @error('description') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
+                            </textarea>
+                            @error('description') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
                     </div>
 
 
