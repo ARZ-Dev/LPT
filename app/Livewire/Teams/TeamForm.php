@@ -34,7 +34,12 @@ class TeamForm extends Component
         $this->players = Player::all();
 
         if ($id) {
-            $this->authorize('team-edit');
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('team-view');
+            } else {
+                $this->authorize('team-edit');
+            }
+
             $this->team = Team::with('players')->findOrFail($id);
             $this->editing = true;
             $this->nickname = $this->team->nickname;
@@ -118,7 +123,7 @@ class TeamForm extends Component
 
     public function render()
     {
-        
+
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.teams.team-view');
         }

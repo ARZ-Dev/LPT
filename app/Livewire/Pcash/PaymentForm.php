@@ -75,7 +75,11 @@ class PaymentForm extends Component
         $this->currencies = Currency::all();
 
         if ($id) {
-            $this->authorize('payment-edit');
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('payment-view');
+            } else {
+                $this->authorize('payment-edit');
+            }
 
 
             $this->payment_id=$id;
@@ -105,6 +109,7 @@ class PaymentForm extends Component
             }
         } else {
             $this->authorize('payment-create');
+
             if (count($this->tills) == 1) {
                 $this->till_id = $this->tills[0]->id;
             }

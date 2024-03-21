@@ -44,8 +44,6 @@ class TransferForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->authorize('transfer-list');
-
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
@@ -57,6 +55,13 @@ class TransferForm extends Component
         $this->addRow();
 
         if ($id) {
+
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('transfer-view');
+            } else {
+                $this->authorize('transfer-edit');
+            }
+
             $this->editing = true;
             $this->transfer = Transfer::with('transferAmounts')->findOrFail($id);
             $this->user_id = $this->transfer->user_id;
@@ -72,7 +77,9 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount->currency_id,
                 ];
             }
-        }else{
+        } else {
+            $this->authorize('transfer-create');
+
             if(count($this->tills) == 1){
                 $this->from_till_id = $this->tills[0]->id;
             }
