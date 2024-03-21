@@ -57,7 +57,6 @@ class PaymentForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->authorize('payment-list');
 
         $this->status=$status;
         $this->addRow();
@@ -76,9 +75,14 @@ class PaymentForm extends Component
         $this->currencies = Currency::all();
 
         if ($id) {
+            $this->authorize('payment-edit');
+
+
             $this->payment_id=$id;
             $this->editing = true;
             $this->payment = Payment::findOrFail($id);
+
+            $this->authorize('view',$this->payment);
 
             $this->user_id = $this->payment->user_id;
             $this->till_id = $this->payment->till_id;
@@ -100,6 +104,7 @@ class PaymentForm extends Component
                 ];
             }
         } else {
+            $this->authorize('payment-create');
             if (count($this->tills) == 1) {
                 $this->till_id = $this->tills[0]->id;
             }

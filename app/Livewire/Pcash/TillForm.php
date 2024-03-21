@@ -15,6 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TillForm extends Component
 {
@@ -110,7 +111,7 @@ class TillForm extends Component
 
     public function store()
     {
-        $this->authorize('till-edit');
+        $this->authorize('till-create');
 
         $this->validate();
 
