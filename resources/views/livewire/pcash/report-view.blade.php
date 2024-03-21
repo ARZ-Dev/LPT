@@ -62,11 +62,10 @@
             </div>
         </div>
         <div wire:loading.remove class="card-datatable table-responsive">
-            <table id="report-data-table" class="datatables-reportData table border-top">
+            <table id="report-data-table" class="datatables-reportData table table-hover border-top">
                 <thead>
                  <tr>
                      <th class="text-nowrap">ID</th>
-                     <th class="text-nowrap">Till</th>
                      <th class="text-nowrap">Date</th>
                      <th class="text-nowrap">Created By</th>
                      <th class="text-nowrap">Paid By / To</th>
@@ -81,19 +80,42 @@
                  </tr>
                 </thead>
                 <tbody>
-                    @foreach($tillIds as $tillId)
+                    @php($grandTotalDebits = [])
+                    @php($grandTotalCredits = [])
+                    @foreach($selectedTills as $till)
                         @php($totalDebits = [])
                         @php($totalCredits = [])
                         @php($balances = [])
-                        @forelse($reportData[$tillId] ?? [] as $data)
+
+                        <tr class="bg-label-linkedin">
+                            <td colspan="7" class="text-center">
+                                {{ $till->name }} / {{ $till->user?->full_name }}
+                            </td>
+                            @foreach($currencies as $currency)
+                                <td colspan="3"></td>
+                            @endforeach
+                        </tr>
+
+                        @if($filterByDate)
+                            <tr class="bg-label-warning">
+                                <th colspan="7" class="text-center">Totals Before {{ $startDate }}</th>
+                                @foreach($currencies as $currency)
+                                    @php($grandTotalDebits[$currency->id] = ($grandTotalDebits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['debit'] ?? 0))
+                                    @php($grandTotalCredits[$currency->id] = ($grandTotalCredits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['credit'] ?? 0))
+
+                                    <th class="text-nowrap">{{ number_format($totalsBefore[$till->id][$currency->id]['debit'] ?? 0, 2) }} {{ $currency->name }}</th>
+                                    <th class="text-nowrap">{{ number_format($totalsBefore[$till->id][$currency->id]['credit'] ?? 0, 2) }} {{ $currency->name }}</th>
+                                    <th class="text-nowrap">{{ number_format($totalsBefore[$till->id][$currency->id]['balance'] ?? 0, 2) }} {{ $currency->name }}</th>
+                                @endforeach
+                            </tr>
+                        @endif
+
+                        @forelse($reportData[$till->id] ?? [] as $data)
                             <tr class="{{ $data['bg_color'] }}">
                                 <td class="text-nowrap">
                                     <a href="{{ $data['url'] }}" target="_blank">
                                         {{ $data['section_id'] }}
                                     </a>
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ $data['till']?->name }} / {{ $data['till']?->user?->full_name }}
                                 </td>
                                 <td class="text-nowrap">
                                     {{ $data['date']->format('d-m-Y H:i') }}
@@ -121,7 +143,7 @@
                                     <td>
                                         @if(isset($data['amounts'][$currency->id]['debit']) && !empty($data['amounts'][$currency->id]['debit']))
 
-                                            @php($totalDebits[$tillId][$currency->id] = ($totalDebits[$tillId][$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
+                                            @php($totalDebits[$till->id][$currency->id] = ($totalDebits[$till->id][$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
 
                                             {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
                                         @endif
@@ -129,7 +151,7 @@
                                     <td>
                                         @if(isset($data['amounts'][$currency->id]['credit']) && !empty($data['amounts'][$currency->id]['credit']))
 
-                                            @php($totalCredits[$tillId][$currency->id] = ($totalCredits[$tillId][$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
+                                            @php($totalCredits[$till->id][$currency->id] = ($totalCredits[$till->id][$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
 
                                             {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
                                         @endif
@@ -137,7 +159,7 @@
                                     <td>
                                         @if(isset($data['amounts'][$currency->id]['balance']))
 
-                                            @php($balances[$tillId][$currency->id] = $data['amounts'][$currency->id]['balance'])
+                                            @php($balances[$till->id][$currency->id] = $data['amounts'][$currency->id]['balance'])
 
                                             {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
                                         @endif
@@ -146,20 +168,33 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ 8 + (count($currencies) * 3) }}" class="text-center">No data available</td>
+                                <td colspan="{{ 7 + (count($currencies) * 3) }}" class="text-center">No data available</td>
                             </tr>
                         @endforelse
 
                         <tr class="bg-label-success">
-                            <th colspan="8" class="text-center">Totals</th>
+                            <th colspan="7" class="text-center">Totals</th>
                             @foreach($currencies as $currency)
-                                <th class="text-nowrap">{{ number_format($totalDebits[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                                <th class="text-nowrap">{{ number_format($totalCredits[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                                <th class="text-nowrap">{{ number_format($balances[$tillId][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                                @php($grandTotalDebits[$currency->id] = ($grandTotalDebits[$currency->id] ?? 0) + ($totalDebits[$till->id][$currency->id] ?? 0))
+                                @php($grandTotalCredits[$currency->id] = ($grandTotalCredits[$currency->id] ?? 0) + ($totalCredits[$till->id][$currency->id] ?? 0))
+
+                                <th class="text-nowrap">{{ number_format($totalDebits[$till->id][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                                <th class="text-nowrap">{{ number_format($totalCredits[$till->id][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                                <th class="text-nowrap">{{ number_format($balances[$till->id][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                             @endforeach
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                <tr class="bg-label-danger">
+                    <th colspan="7" class="text-center">Grand Totals</th>
+                    @foreach($currencies as $currency)
+                        <th class="text-nowrap">{{ number_format($grandTotalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                        <th class="text-nowrap">{{ number_format($grandTotalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
+                        <th class="text-nowrap"></th>
+                    @endforeach
+                </tr>
+                </tfoot>
             </table>
 
         </div>

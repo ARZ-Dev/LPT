@@ -28,9 +28,11 @@ class ReportView extends Component
     public $currencies = [];
     public $tills = [];
     public array $tillIds = [];
+    public $selectedTills = [];
     public bool $filterByDate = false;
     public $startDate;
     public $endDate;
+    public array $totalsBefore = [];
 
     public function mount()
     {
@@ -67,6 +69,8 @@ class ReportView extends Component
 
         $this->reportData = [];
         $usedCurrenciesIds = [];
+        $this->reset('totalsBefore');
+        $this->selectedTills = Till::with(['user'])->find($this->tillIds);
 
         foreach ($this->tillIds as $tillId) {
 
@@ -119,6 +123,7 @@ class ReportView extends Component
                 ->concat($monthlyActions);
             $data = $data->sortBy('created_at');
 
+            $this->getTotalsBefore($tillId);
 
             $amounts = [];
             foreach ($data as $entry) {
@@ -271,11 +276,98 @@ class ReportView extends Component
                 }
             }
         }
+
+
     }
 
-    public function render()
+    public function getTotalsBefore($tillId)
     {
-        return view('livewire.pcash.report-view');
+        $monthlyActions = MonthlyEntryAction::with([
+                'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
+            ])
+            ->whereHas('monthlyEntry', function ($query) use ($tillId) {
+                $query->where('till_id', $tillId);
+            })
+            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->get();
+
+        $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory', 'till' => ['user']])
+            ->where('till_id', $tillId)
+            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->get();
+
+        $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory', 'till' => ['user']])
+            ->where('till_id', $tillId)
+            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->get();
+
+        $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
+            ->where(function ($query) use ($tillId) {
+                $query->where('from_till_id', $tillId)->orWhere('to_till_id', $tillId);
+            })
+            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->get();
+
+        $exchanges = Exchange::with(['user', 'till' => ['user']])
+            ->where('till_id', $tillId)
+            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->get();
+
+        $data = collect()
+            ->concat($payments)
+            ->concat($receipts)
+            ->concat($transfers)
+            ->concat($exchanges)
+            ->concat($monthlyActions);
+        $data = $data->sortBy('created_at');
+
+
+        foreach ($data as $entry) {
+
+            switch (true) {
+                case $entry instanceof MonthlyEntryAction:
+                    foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
+                        $balance = $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount;
+                        $this->updateTotals($tillId, $monthlyEntryAmount->currency_id, 0, 0, $balance);
+                    }
+                    break;
+
+                case $entry instanceof Payment:
+                    foreach ($entry->paymentAmounts as $paymentAmount) {
+                        $this->updateTotals($tillId, $paymentAmount->currency_id, 0, $paymentAmount->amount, -$paymentAmount->amount);
+                    }
+                    break;
+
+                case $entry instanceof Receipt:
+                    foreach ($entry->receiptAmounts as $receiptAmount) {
+                        $this->updateTotals($tillId, $receiptAmount->currency_id, $receiptAmount->amount, 0, $receiptAmount->amount);
+                    }
+                    break;
+
+                case $entry instanceof Transfer:
+                    foreach ($entry->transferAmounts as $transferAmount) {
+                        if ($entry->from_till_id == $tillId) {
+                            $this->updateTotals($tillId, $transferAmount->currency_id, 0, $transferAmount->amount, -$transferAmount->amount);
+                        } elseif ($entry->to_till_id == $tillId) {
+                            $this->updateTotals($tillId, $transferAmount->currency_id, $transferAmount->amount, 0, $transferAmount->amount);
+                        }
+                    }
+                    break;
+
+                case $entry instanceof Exchange:
+                    $this->updateTotals($tillId, $entry->from_currency_id, 0, $entry->amount, -$entry->amount);
+                    $this->updateTotals($tillId, $entry->to_currency_id, $entry->amount, 0, $entry->amount);
+                    break;
+            }
+
+        }
+    }
+
+    private function updateTotals($tillId, $currencyId, $debit = 0, $credit = 0, $balance = 0)
+    {
+        $this->totalsBefore[$tillId][$currencyId]['debit'] = ($this->totalsBefore[$tillId][$currencyId]['debit'] ?? 0) + $debit;
+        $this->totalsBefore[$tillId][$currencyId]['credit'] = ($this->totalsBefore[$tillId][$currencyId]['credit'] ?? 0) + $credit;
+        $this->totalsBefore[$tillId][$currencyId]['balance'] = ($this->totalsBefore[$tillId][$currencyId]['balance'] ?? 0) + $balance;
     }
 
     /**
@@ -291,5 +383,10 @@ class ReportView extends Component
             $amounts[$otherCurrencyId]['credit'] = 0;
         }
         return $amounts;
+    }
+
+    public function render()
+    {
+        return view('livewire.pcash.report-view');
     }
 }
