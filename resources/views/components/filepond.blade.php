@@ -14,7 +14,13 @@
             const filePondContainer = document.querySelector('.filePondContainer');
             const fileInput = filePondContainer.querySelector('.fileInput');
 
-            const pond = FilePond.create(fileInput);
+            let options = {};
+
+            @if($attributes['allow-remove'] == "false")
+                options.allowRemove = false;
+            @endif
+
+            const pond = FilePond.create(fileInput, options);
 
             let files = [];
             let uploadedFiles = @json($files);

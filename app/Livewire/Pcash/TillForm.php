@@ -48,8 +48,12 @@ class TillForm extends Component
         $this->addRow();
 
         if ($id) {
+            $this->authorize('till-edit');
+
             $this->editing = true;
             $this->till = Till::with(['tillAmounts' => ['currency']])->findOrFail($id);
+
+            $this->authorize('view', $this->till);
 
             $this->created_by = $this->till->created_by;
             $this->user_id = $this->till->user_id;
@@ -67,6 +71,8 @@ class TillForm extends Component
                 ];
             }
         } else {
+            $this->authorize('till-create');
+
             if (count($this->users) == 1) {
                 $this->user_id = $this->users[0]->id;
             }

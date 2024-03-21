@@ -48,11 +48,14 @@ class PlayerForm extends Component
     {
         $this->validate();
 
+        $this->validate([
+            'nationalIdFile' => ['nullable', 'file', 'max:2048']
+        ]);
+
         if($this->submitting) {
             return;
         }
         $this->submitting = true;
-
 
         $path = null;
         if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
@@ -67,6 +70,10 @@ class PlayerForm extends Component
     public function update()
     {
         $this->validate();
+
+        $this->validate([
+            'nationalIdFile' => ['nullable', 'file', 'max:2048']
+        ]);
 
         if($this->submitting) {
             return;
@@ -99,7 +106,7 @@ class PlayerForm extends Component
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.players.player-view');
         }
-            return view('livewire.players.player-form');
-        }
+        return view('livewire.players.player-form');
     }
+}
 

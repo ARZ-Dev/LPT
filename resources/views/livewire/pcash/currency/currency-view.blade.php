@@ -9,17 +9,16 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
+                    <div class="row mt-5">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">User:</span>
-                            <span class="text-dark" id="user">{{ $currency->user->full_name }}</span>
+                            <span class="text-dark" id="user">{{ $currency->user?->full_name }}</span>
                         </div>
-
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">Symbol:</span>
                             <span class="text-dark" id="symbol">{{ $currency->symbol }}</span>
                         </div>
-                        <div class="col-12 col-md-6 mt-5">
+                        <div class="col-12 col-md-4">
                             <span class="fw-bold text-dark">Name:</span>
                             <span class="text-dark" id="name">{{ $currency->name }}</span>
                         </div>
@@ -32,22 +31,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>

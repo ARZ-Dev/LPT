@@ -31,7 +31,7 @@
                                 name="paid_to"
                                 class="form-control"
                                 placeholder="Paid To"/>
-                            
+
                             @error('paid_to') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -144,6 +144,13 @@
                             - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($this->invoice)) }}" download>Download Link</a>
                         @endif
                     </h5>
+                    <h6>
+                        @error('invoice')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </h6>
                 </div>
                 <div class="card-body">
                     <div class="row">

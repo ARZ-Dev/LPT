@@ -9,13 +9,13 @@
                 <div class="col-12">
                     <div class="row g-3">
                         <div class="col-12 col-sm-6 col-lg-5">
-                            <label class="form-label">Till:</label>
+                            <label class="form-label">Tills:</label>
                             <div wire:ignore>
                                 <select wire:model="tillIds"
                                         wire:change="getReportData"
                                         class="form-select selectpicker w-100"
                                         aria-label="Default select example"
-                                        title="Select Till"
+                                        title="Select Tills"
                                         data-style="btn-default"
                                         data-live-search="true"
                                         data-icon-base="ti"
@@ -85,7 +85,7 @@
                         @php($totalDebits = [])
                         @php($totalCredits = [])
                         @php($balances = [])
-                        @forelse($reportData[$tillId] as $data)
+                        @forelse($reportData[$tillId] ?? [] as $data)
                             <tr class="{{ $data['bg_color'] }}">
                                 <td class="text-nowrap">
                                     <a href="{{ $data['url'] }}" target="_blank">

@@ -28,12 +28,12 @@
                             <span class="text-dark" id="sub_category">{{ $receipt->subCategory?->name }}</span>
                         </div>
                         <div class="col-12 col-md-6 mt-5">
-                            <span class="fw-bold text-dark">Description:</span>
-                            <span class="text-dark" id="description">{{ $receipt->description }}</span>
-                        </div>
-                        <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Paid By:</span>
                             <span class="text-dark" id="sub_category">{{ $receipt->paid_by }}</span>
+                        </div>
+                        <div class="col-12 col-md-6 mt-5">
+                            <span class="fw-bold text-dark">Description:</span>
+                            <span class="text-dark" id="description">{{ $receipt->description }}</span>
                         </div>
                     </div>
                 </div>
@@ -69,22 +69,7 @@
 
     @script
     <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
 
-        triggerCleave()
-        $('.selectpicker').selectpicker();
-
-        Livewire.hook('morph.added', ({ el }) => {
-            $('.selectpicker').selectpicker();
-            triggerCleave()
-        })
-
-        $(document).on('change', '.currency', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
-        })
     </script>
     @endscript
 </div>
