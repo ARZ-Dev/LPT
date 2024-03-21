@@ -48,6 +48,10 @@ class PlayerForm extends Component
     {
         $this->validate();
 
+        $this->validate([
+            'nationalIdFile' => ['nullable', 'file', 'max:2048']
+        ]);
+
         if($this->submitting) {
             return;
         }
@@ -66,6 +70,10 @@ class PlayerForm extends Component
     public function update()
     {
         $this->validate();
+
+        $this->validate([
+            'nationalIdFile' => ['nullable', 'file', 'max:2048']
+        ]);
 
         if($this->submitting) {
             return;
