@@ -38,22 +38,6 @@ class TillForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-
-
-        $user = Auth::user();
-        $viewAllPermission = $user->hasPermissionTo('till-viewAll');
-        if (!$viewAllPermission) {
-            if ($id !== 0) {
-                $authTill = Till::findOrFail($id);
-                if ($authTill->user_id !== $user->id) {
-                    abort(403, 'Unauthorized action.');
-                }
-            }
-        }
-
-        $post = Till::find($id);
-        $this->authorize('till-list',$post);
-
         $this->users = User::when(!auth()->user()->hasPermissionTo('user-viewAll'), function ($query) {
                 $query->where('id', auth()->id());
             })
