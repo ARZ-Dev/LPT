@@ -53,8 +53,6 @@ class MonthlyEntryForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->authorize('monthlyEntry-list');
-
         $this->status=$status;
 
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
@@ -72,6 +70,13 @@ class MonthlyEntryForm extends Component
         $this->open_date = now()->startOfMonth()->format('Y-m');
 
         if ($id) {
+
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('monthlyEntry-view');
+            } else {
+                $this->authorize('monthlyEntry-edit');
+            }
+
             $this->monthlyEntry_id=$id;
             $this->editing = true;
             $this->monthlyEntry = MonthlyEntry::with('monthlyEntryAmounts','user','till.tillAmounts')->findOrFail($id);
@@ -96,6 +101,8 @@ class MonthlyEntryForm extends Component
                 ];
             }
 
+        } else {
+            $this->authorize('monthlyEntry-create');
         }
 
     }

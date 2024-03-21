@@ -47,7 +47,11 @@ class TillForm extends Component
         $this->addRow();
 
         if ($id) {
-            $this->authorize('till-edit');
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('till-view');
+            } else {
+                $this->authorize('till-edit');
+            }
 
             $this->editing = true;
             $this->till = Till::with(['tillAmounts' => ['currency']])->findOrFail($id);
