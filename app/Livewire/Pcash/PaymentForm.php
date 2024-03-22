@@ -137,7 +137,7 @@ class PaymentForm extends Component
             'description' => ['nullable', 'string'],
             'invoice' => ['nullable', 'file', 'max:2048'],
             'paymentAmounts' => ['array', 'required', 'min:1'],
-            'paymentAmounts.*.currency_id' => ['required'],
+            'paymentAmounts.*.currency_id' => ['required', 'distinct'],
             'paymentAmounts.*.amount' => ['required'],
         ];
 
