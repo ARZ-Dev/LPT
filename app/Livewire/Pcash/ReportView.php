@@ -133,7 +133,7 @@ class ReportView extends Component
                 $url = "";
                 $bgColor = "";
                 if ($entry instanceof MonthlyEntryAction) {
-                    $bgColor = "bg-light";
+                    $bgColor = "bg-lighter";
                     $section = "Monthly " . ucfirst($entry->action);
                     $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
 
