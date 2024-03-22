@@ -54,14 +54,22 @@ class TransferForm extends Component
 
         if ($id) {
 
-            if ($status && $status == Constants::VIEW_STATUS) {
-                $this->authorize('transfer-view');
-            } else {
-                $this->authorize('transfer-edit');
-            }
-
             $this->editing = true;
             $this->transfer = Transfer::with('transferAmounts')->findOrFail($id);
+
+            if ($status) {
+                if ($status == Constants::VIEW_STATUS) {
+                    $this->authorize('transfer-view');
+                } else {
+                    $this->authorize('transfer-confirm');
+                }
+            } else {
+                $this->authorize('transfer-edit');
+
+                abort_if($this->transfer->status == 1, 403);
+            }
+
+
             $this->authorize('view',$this->transfer);
             $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;

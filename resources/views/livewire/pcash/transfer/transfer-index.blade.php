@@ -38,16 +38,16 @@
                             @can('transfer-view')
                                 <a href="{{ route('transfer.view', ['id' => $transfer->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
-                            @can('transfer-confirm')
-                                @if(!$transfer->status)
-                                    <a href="{{ route('transfer.confirm', ['id' => $transfer->id, 'status' => \App\Utils\Constants::CONFIRM_STATUS]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Confirm">
-                                        <i class="ti ti-check ti-sm me-2"></i>
-                                    </a>
-                                @endif
-                            @endcan
-                            @can('transfer-edit')
-                                <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
-                            @endcan
+                            @if(!$transfer->status)
+                                @can('transfer-confirm')
+                                        <a href="{{ route('transfer.confirm', ['id' => $transfer->id, 'status' => \App\Utils\Constants::CONFIRM_STATUS]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Confirm">
+                                            <i class="ti ti-check ti-sm me-2"></i>
+                                        </a>
+                                @endcan
+                                @can('transfer-edit')
+                                    <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
+                                @endcan
+                            @endif
                             @can('transfer-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $transfer->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                             @endcan
