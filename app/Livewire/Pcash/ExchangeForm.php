@@ -62,7 +62,7 @@ class ExchangeForm extends Component
 
             $this->editing = true;
             $this->exchange = Exchange::findOrFail($id);
-
+            $this->authorize('view',$this->exchange);
             $this->user_id = $this->exchange->user_id;
             $this->till_id = $this->exchange->till_id;
             $this->from_currency_id = $this->exchange->from_currency_id;
