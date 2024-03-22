@@ -66,15 +66,17 @@ class ReceiptForm extends Component
         $this->addRow();
 
         if ($id) {
-
             if ($status && $status == Constants::VIEW_STATUS) {
                 $this->authorize('receipt-view');
             } else {
                 $this->authorize('receipt-edit');
             }
 
+
             $this->editing = true;
             $this->receipt = Receipt::with('receiptAmounts')->findOrFail($id);
+            $this->authorize('view',$this->receipt);
+
 
             $this->till_id = $this->receipt->till_id;
             $this->category_id = $this->receipt->category_id;
