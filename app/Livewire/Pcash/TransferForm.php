@@ -11,6 +11,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use App\Utils\Constants;
@@ -22,24 +23,18 @@ class TransferForm extends Component
 
     public $editing = false;
     public int $status;
-
     public $transfer;
-
     public $to_tills;
     public $user_id;
     public int $from_till_id;
     public int $to_till_id;
     public  $description;
-
-
     public $transferAmounts = [];
     public $currency_id;
     public $amount;
     public $tills = [];
     public $currencies = [];
     public bool $submitting = false;
-
-
 
     protected $listeners = ['store', 'update'];
 
@@ -64,7 +59,7 @@ class TransferForm extends Component
             } else {
                 $this->authorize('transfer-edit');
             }
-            
+
             $this->editing = true;
             $this->transfer = Transfer::with('transferAmounts')->findOrFail($id);
             $this->authorize('view',$this->transfer);
@@ -81,9 +76,9 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount->currency_id,
                 ];
             }
-        }else{
+        } else {
             $this->authorize('transfer-create');
-            if(count($this->tills) == 1){
+            if (count($this->tills) == 1) {
                 $this->from_till_id = $this->tills[0]->id;
             }
         }
@@ -96,7 +91,6 @@ class TransferForm extends Component
             'from_till_id' => ['required', 'different:to_till_id'],
             'to_till_id' => ['required', 'different:from_till_id'],
             'description' => ['nullable'],
-
             'transferAmounts' => ['array'],
             'transferAmounts.*.transfer_id' => ['nullable'],
             'transferAmounts.*.currency_id' => ['required', 'distinct'],
@@ -113,7 +107,6 @@ class TransferForm extends Component
     {
         unset($this->transferAmounts[$key]);
     }
-
 
     public function store()
     {
@@ -134,10 +127,8 @@ class TransferForm extends Component
             $transfer=Transfer::create([
                 'user_id' => auth()->id() ,
                 'from_till_id' => $this->from_till_id ,
-
                 'to_till_id' => $this->to_till_id ,
                 'description' => $this->description ,
-
             ]);
 
             $transferId = $transfer->id;
@@ -147,7 +138,6 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount['currency_id'],
                     'amount' => sanitizeNumber($transferAmount['amount']),
                 ]);
-
 
                 $this->updateTillsAmounts($transferAmount);
             }
@@ -210,10 +200,9 @@ class TransferForm extends Component
             }
 
             $this->transfer->update([
-                'from_till_id' => $this->from_till_id ,
-                'to_till_id' => $this->to_till_id ,
-                'description' => $this->description ,
-
+                'from_till_id' => $this->from_till_id,
+                'to_till_id' => $this->to_till_id,
+                'description' => $this->description,
             ]);
 
             $transfersAmountIds = [];
@@ -270,6 +259,26 @@ class TransferForm extends Component
                 'currency_id' => $fromTill->currency_id,
                 'amount' => sanitizeNumber($transferAmount['amount']),
             ]);
+        }
+    }
+
+    #[On('getAvailableAmounts')]
+    public function getAvailableAmounts()
+    {
+        if (isset($this->from_till_id)) {
+            $till = Till::with('tillAmounts')->find($this->from_till_id);
+            $availableAmounts = [];
+            foreach ($till?->tillAmounts ?? [] as $tillAmount) {
+                if ($this->transfer && $this->transfer->from_till_id == $till?->id) {
+                    $transferAmount = $this->transfer->transferAmounts->where('currency_id', $tillAmount->currency_id)->first()?->amount ?? 0;
+                    $amount = $tillAmount->amount + $transferAmount;
+                } else {
+                    $amount = $tillAmount->amount;
+                }
+                $availableAmounts[$tillAmount->currency_id] = number_format($amount, 2);
+            }
+
+            $this->dispatch('setAvailableAmounts', $availableAmounts);
         }
     }
 

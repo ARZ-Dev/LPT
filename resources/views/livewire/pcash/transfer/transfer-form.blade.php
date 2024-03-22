@@ -13,11 +13,13 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="from_till_id">From Till</label>
-                            <select wire:model="from_till_id" class="form-select selectpicker w-100 " name="from_till_id" title="Select From Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                                @foreach($tills as $till)
-                                    <option value="{{$till->id}}" @selected($till->id == $from_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+                                <select wire:model="from_till_id" id="from_till_id" class="form-select selectpicker w-100 " name="from_till_id" title="Select From Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                    @foreach($tills as $till)
+                                        <option value="{{$till->id}}" @selected($till->id == $from_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @error('from_till_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -51,8 +53,9 @@
                                 <div wire:key="transferAmount-{{ $key }}">
 
                                     <div class="row">
-                                        <div class="col-5">
+                                        <div class="col-5 d-flex justify-content-between">
                                             <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
+                                            <span class="form-label mt-3 available-amounts" wire:ignore id="amount-available-{{ $key }}"></span>
                                         </div>
                                         <div class="col-5">
                                             <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
@@ -68,13 +71,13 @@
                                             <div wire:ignore>
                                                 <select
                                                     wire:model="transferAmounts.{{ $key }}.currency_id"
-
                                                     id="currency-{{$key}}" class="w-100 currency selectpicker"
                                                     title="Select Currency"
                                                     data-style="btn-default"
                                                     data-live-search="true"
                                                     data-icon-base="ti"
                                                     data-tick-icon="ti-check text-white"
+                                                    data-key="{{ $key }}"
                                                     required
                                                 >
                                                     @foreach($currencies as $currency)
@@ -131,6 +134,36 @@
 
         $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
+        })
+
+        $(document).ready(function () {
+            $('#from_till_id').change();
+        })
+
+        $(document).on('change', '#from_till_id', function() {
+            $wire.dispatch('getAvailableAmounts');
+        })
+
+        let availableAmounts = [];
+        $wire.on('setAvailableAmounts', function (event) {
+            availableAmounts = event[0];
+            $('.currency').change();
+        })
+
+        $(document).on('change', '.currency', function() {
+            if ($(this).val()) {
+                let key = $(this).data('key');
+                let availableAmountSelector = $('#amount-available-' + key);
+                availableAmountSelector.text("");
+                availableAmountSelector.removeClass("text-danger");
+
+                if (availableAmounts[$(this).val()] !== undefined) {
+                    availableAmountSelector.text("Available Amount: " + availableAmounts[$(this).val()])
+                } else {
+                    availableAmountSelector.addClass("text-danger")
+                    availableAmountSelector.text("Currency does not exists in till!");
+                }
+            }
         })
     </script>
     @endscript

@@ -204,17 +204,17 @@
         })
 
         $(document).on('change', '.currency', function() {
-            let key = $(this).data('key');
-            let availableAmountSelector = $('#amount-available-' + key);
-            availableAmountSelector.text("");
-            availableAmountSelector.removeClass("text-danger");
-
             if ($(this).val()) {
+                let key = $(this).data('key');
+                let availableAmountSelector = $('#amount-available-' + key);
+                availableAmountSelector.text("");
+                availableAmountSelector.removeClass("text-danger");
+
                 if (availableAmounts[$(this).val()] !== undefined) {
                     availableAmountSelector.text("Available Amount: " + availableAmounts[$(this).val()])
                 } else {
                     availableAmountSelector.addClass("text-danger")
-                    availableAmountSelector.text("Currency amount does not exists!");
+                    availableAmountSelector.text("Currency does not exists in till!");
                 }
             }
         })
