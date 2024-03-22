@@ -68,8 +68,12 @@ class ReceiptForm extends Component
         $this->addRow();
 
         if ($id) {
+            $this->authorize('receipt-edit');
+
             $this->editing = true;
             $this->receipt = Receipt::with('receiptAmounts')->findOrFail($id);
+            $this->authorize('view',$this->receipt);
+
 
             $this->till_id = $this->receipt->till_id;
             $this->category_id = $this->receipt->category_id;
@@ -87,6 +91,7 @@ class ReceiptForm extends Component
                 ];
             }
         } else {
+            $this->authorize('receipt-create');
             if (count($this->tills) == 1) {
                 $this->till_id = $this->tills[0]->id;
             }
