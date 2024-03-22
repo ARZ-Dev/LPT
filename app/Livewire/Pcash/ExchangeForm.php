@@ -43,20 +43,23 @@ class ExchangeForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->authorize('exchange-list');
-
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })
             ->get();
-
-
 
         $this->status = $status;
 
         $this->currencies = Currency::all();
 
         if ($id) {
+
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('exchange-view');
+            } else {
+                $this->authorize('exchange-edit');
+            }
+
             $this->editing = true;
             $this->exchange = Exchange::findOrFail($id);
 
@@ -70,7 +73,10 @@ class ExchangeForm extends Component
             $this->rate = number_format($this->exchange->rate, 2);
             $this->result = number_format($this->exchange->result, 2);
             $this->description = $this->exchange->description;
-        }else{
+        } else {
+
+            $this->authorize('exchange-create');
+
             if(count($this->tills) == 1){
                 $this->till_id = $this->tills[0]->id;
             }

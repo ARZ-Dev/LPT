@@ -34,7 +34,13 @@ class PlayerForm extends Component
         $this->status = $status;
 
         if ($id) {
-            $this->authorize('player-edit');
+
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('player-view');
+            } else {
+                $this->authorize('player-edit');
+            }
+
             $this->player = Player::with(['teams' => ['levelCategory']])->findOrFail($id);
             $this->form->setPlayer($this->player);
             $this->editing = true;

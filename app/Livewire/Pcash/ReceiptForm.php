@@ -48,8 +48,6 @@ class ReceiptForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->authorize('receipt-list');
-
         $this->status = $status;
 
         $this->currencies = Currency::all();
@@ -68,7 +66,12 @@ class ReceiptForm extends Component
         $this->addRow();
 
         if ($id) {
-            $this->authorize('receipt-edit');
+            if ($status && $status == Constants::VIEW_STATUS) {
+                $this->authorize('receipt-view');
+            } else {
+                $this->authorize('receipt-edit');
+            }
+
 
             $this->editing = true;
             $this->receipt = Receipt::with('receiptAmounts')->findOrFail($id);
@@ -92,6 +95,7 @@ class ReceiptForm extends Component
             }
         } else {
             $this->authorize('receipt-create');
+
             if (count($this->tills) == 1) {
                 $this->till_id = $this->tills[0]->id;
             }
