@@ -25,6 +25,7 @@ class TransferForm extends Component
 
     public $transfer;
 
+    public $to_tills;
     public $user_id;
     public int $from_till_id;
     public int $to_till_id;
@@ -49,6 +50,8 @@ class TransferForm extends Component
             })
             ->get();
 
+        $this->to_tills = Till::all();
+
         $this->currencies = Currency::all();
 
         $this->status = $status;
@@ -61,9 +64,10 @@ class TransferForm extends Component
             } else {
                 $this->authorize('transfer-edit');
             }
-
+            
             $this->editing = true;
             $this->transfer = Transfer::with('transferAmounts')->findOrFail($id);
+            $this->authorize('view',$this->transfer);
             $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;
@@ -77,9 +81,8 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount->currency_id,
                 ];
             }
-        } else {
+        }else{
             $this->authorize('transfer-create');
-
             if(count($this->tills) == 1){
                 $this->from_till_id = $this->tills[0]->id;
             }
