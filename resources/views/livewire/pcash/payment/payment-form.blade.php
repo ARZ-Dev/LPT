@@ -14,11 +14,13 @@
                     <div class="row">
                         <div class="col-12 col-md-6 mt-3">
                             <label class="form-label" for="till_id">Tills <span class="text-danger">*</span></label>
-                            <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
-                                @foreach($tills as $till)
-                                    <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+                                <select wire:model="till_id" id="till_id" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                    @foreach($tills as $till)
+                                        <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @error('till_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
@@ -78,8 +80,11 @@
                             <div wire:key="paymentAmount-{{ $key }}">
 
                                 <div class="row">
-                                    <div class="col-5">
-                                        <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
+                                    <div class="col-5 d-flex justify-content-between">
+                                        <label class="form-label mt-3" for="amount-{{$key}}">
+                                            Amount <span class="text-danger">*</span>
+                                        </label>
+                                        <span class="form-label mt-3 available-amounts" wire:ignore id="amount-available-{{ $key }}"></span>
                                     </div>
                                     <div class="col-5">
                                         <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
@@ -102,6 +107,7 @@
                                                 data-live-search="true"
                                                 data-icon-base="ti"
                                                 data-tick-icon="ti-check text-white"
+                                                data-key="{{ $key }}"
                                                 required
                                             >
                                                 @foreach($currencies as $index => $currency)
@@ -179,8 +185,38 @@
             triggerCleave()
         })
 
+        $(document).ready(function () {
+            $('#till_id').change();
+        })
+
         $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
+        })
+
+        $(document).on('change', '#till_id', function() {
+            $wire.dispatch('getAvailableAmounts');
+        })
+
+        let availableAmounts = [];
+        $wire.on('setAvailableAmounts', function (event) {
+            availableAmounts = event[0];
+            $('.currency').change();
+        })
+
+        $(document).on('change', '.currency', function() {
+            let key = $(this).data('key');
+            let availableAmountSelector = $('#amount-available-' + key);
+            availableAmountSelector.text("");
+            availableAmountSelector.removeClass("text-danger");
+
+            if ($(this).val()) {
+                if (availableAmounts[$(this).val()] !== undefined) {
+                    availableAmountSelector.text("Available Amount: " + availableAmounts[$(this).val()])
+                } else {
+                    availableAmountSelector.addClass("text-danger")
+                    availableAmountSelector.text("Currency amount does not exists!");
+                }
+            }
         })
 
         $(document).on('change', '#category_id', function() {

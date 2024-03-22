@@ -107,6 +107,7 @@ class PaymentForm extends Component
                     'currency_id' => $paymentAmount->currency_id,
                 ];
             }
+
         } else {
             $this->authorize('payment-create');
 
@@ -124,25 +125,18 @@ class PaymentForm extends Component
             }
 
         }
-
-
-
     }
 
     protected function rules()
     {
         $rules = [
-            'user_id' => ['nullable'],
             'till_id' => ['required', 'integer'],
-
             'category_id' => ['required', 'integer'],
             'sub_category_id' => ['required', 'integer'],
-            'paid_to' => ['nullable', 'string'],
+            'paid_to' => ['required', 'string'],
             'description' => ['nullable', 'string'],
             'invoice' => ['nullable', 'file', 'max:2048'],
-
-            'paymentAmounts' => ['array'],
-            'paymentAmounts.*.payment_id' => ['nullable'],
+            'paymentAmounts' => ['array', 'required', 'min:1'],
             'paymentAmounts.*.currency_id' => ['required'],
             'paymentAmounts.*.amount' => ['required'],
         ];
@@ -249,7 +243,6 @@ class PaymentForm extends Component
                 'category_id' => $this->category_id,
                 'sub_category_id' => $this->sub_category_id,
                 'paid_to' => $this->paid_to,
-                'paid_to' => $this->paid_to,
                 'description' => $this->description,
             ];
 
@@ -338,15 +331,30 @@ class PaymentForm extends Component
         }
     }
 
+    #[On('getAvailableAmounts')]
+    public function getAvailableAmounts()
+    {
+        $till = Till::with('tillAmounts')->find($this->till_id);
+        $availableAmounts = [];
+        foreach ($till?->tillAmounts ?? [] as $tillAmount) {
+            if ($this->payment && $this->payment->till_id == $till?->id) {
+                $paymentAmount = $this->payment->paymentAmounts->where('currency_id', $tillAmount->currency_id)->first()?->amount ?? 0;
+                $amount = $tillAmount->amount + $paymentAmount;
+            } else {
+                $amount = $tillAmount->amount;
+            }
+            $availableAmounts[$tillAmount->currency_id] = number_format($amount, 2);
+        }
+
+        $this->dispatch('setAvailableAmounts', $availableAmounts);
+    }
+
     public function render()
     {
-
-
-
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.payment.payment-view');
         }
-            return view('livewire.pcash.payment.payment-form');
-        }
+        return view('livewire.pcash.payment.payment-form');
     }
+}
 
