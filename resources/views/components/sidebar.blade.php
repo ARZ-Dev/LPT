@@ -4,7 +4,6 @@
 	<div class="app-brand demo">
 		<a href="{{url('dashboard')}}" class="app-brand-link">
 			<span class="app-brand-logo demo">
-                @include('logo')
             </span>
             <span class="app-brand-text demo menu-text fw-bold">LPT</span>
 		</a>
