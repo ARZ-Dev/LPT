@@ -100,6 +100,7 @@ class ReportView extends Component
                 ->get();
 
             $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
+                ->where('status', 1)
                 ->where(function ($query) use ($tillId) {
                     $query->where('from_till_id', $tillId)->orWhere('to_till_id', $tillId);
                 })

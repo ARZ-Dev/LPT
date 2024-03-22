@@ -3,7 +3,7 @@
         <div class="col-xl">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">View Transfer #{{ $transfer->id }}</h5>
+                    <h5 class="mb-0">{{ $status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "View" }} Transfer #{{ $transfer->id }}</h5>
                     <a href="{{ route('transfer') }}" class="btn btn-primary mb-2 text-nowrap">
                         Transfers
                     </a>
@@ -56,6 +56,12 @@
                     </div>
             @endforeach
             </div>
+
+            @if($status == \App\Utils\Constants::CONFIRM_STATUS)
+                <div class="col-12 text-end mt-2">
+                    <button wire:click="confirm"  type="button" class="btn btn-primary me-sm-3 me-1">Confirm</button>
+                </div>
+            @endif
 
         </div>
     </div>

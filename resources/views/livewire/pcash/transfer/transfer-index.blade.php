@@ -15,6 +15,7 @@
                     <th>Created By</th>
                     <th>Transfer From</th>
                     <th>Transfer To</th>
+                    <th>Status</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -26,14 +27,26 @@
                         <td>{{ $transfer->user?->username }}</td>
                         <td>{{ $transfer->fromTill?->name }} / {{ $transfer->fromTill?->user?->full_name }}</td>
                         <td>{{ $transfer->toTill?->name  }} / {{ $transfer->toTill?->user?->full_name  }}</td>
+                        <td>
+                            <span class="badge bg-label-{{ $transfer->status == 1 ? "success" : "warning" }}">
+                                {{ $transfer->status == 1 ? ("Confirmed At ". Carbon\Carbon::parse($transfer->status_updated_at)->format('m-d-Y H:i')) : "Pending" }}
+                            </span>
+                        </td>
                         <td>{{ $transfer->created_at->format('d-m-Y h:i a') }}</td>
 
                         <td>
                             @can('transfer-view')
-                                <a href="{{ route('transfer.view', ['id' => $transfer->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                                <a href="{{ route('transfer.view', ['id' => $transfer->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body"><i class="ti ti-eye ti-sm me-2"></i></a>
+                            @endcan
+                            @can('transfer-confirm')
+                                @if(!$transfer->status)
+                                    <a href="{{ route('transfer.confirm', ['id' => $transfer->id, 'status' => \App\Utils\Constants::CONFIRM_STATUS]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Confirm">
+                                        <i class="ti ti-check ti-sm me-2"></i>
+                                    </a>
+                                @endif
                             @endcan
                             @can('transfer-edit')
-                                <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body edit-user-button"><i class="ti ti-edit ti-sm"></i></a>
+                                <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
                             @can('transfer-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $transfer->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>

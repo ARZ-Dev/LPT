@@ -69,6 +69,7 @@ class PermissionsSeeder extends Seeder
             'transfer-create',
             'transfer-edit',
             'transfer-view',
+            'transfer-confirm',
             'transfer-delete',
             'transfer-viewAll',
 

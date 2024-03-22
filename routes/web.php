@@ -145,6 +145,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', TransferForm::class)->name('transfer.create');
         Route::get('/edit/{id}', TransferForm::class)->name('transfer.edit');
         Route::get('/view/{id}/{status}', TransferForm::class)->name('transfer.view');
+        Route::get('/confirm/{id}/{status}', TransferForm::class)->name('transfer.confirm');
     });
 
     // |--------------------------------------------------------------------------

@@ -138,8 +138,6 @@ class TransferForm extends Component
                     'currency_id' => $transferAmount['currency_id'],
                     'amount' => sanitizeNumber($transferAmount['amount']),
                 ]);
-
-                $this->updateTillsAmounts($transferAmount);
             }
 
             DB::commit();
@@ -168,36 +166,6 @@ class TransferForm extends Component
 
         DB::beginTransaction();
         try {
-            $transferAmounts = TransferAmount::with('transfer.fromTill', 'transfer.toTill')
-                ->whereHas('transfer.fromTill', function ($query) {
-                    $query->where('id', $this->transfer->from_till_id);
-                })
-                ->whereHas('transfer.toTill', function ($query) {
-                    $query->where('id', $this->transfer->to_till_id);
-                })
-                ->where('transfer_id', $this->transfer->id)
-                ->get();
-
-            foreach ($transferAmounts as $transferAmount) {
-                $amount = $transferAmount->amount;
-
-                $fromTill = TillAmount::where('till_id', $this->transfer->from_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-                if (!$fromTill) {
-                    throw new Exception("From till amount does not exists!");
-                }
-
-                $toTill = TillAmount::where('till_id', $this->transfer->to_till_id)->where('currency_id',$transferAmount['currency_id'])->first();
-
-                $fromTill->update([
-                    'amount' => $fromTill->amount + $amount,
-                ]);
-
-                if ($toTill) {
-                    $toTill->update([
-                        'amount' => $toTill->amount - $amount,
-                    ]);
-                }
-            }
 
             $this->transfer->update([
                 'from_till_id' => $this->from_till_id,
@@ -216,8 +184,6 @@ class TransferForm extends Component
                     'amount' => sanitizeNumber($transferAmount['amount']),
                 ]);
                 $transfersAmountIds[] = $amount->id;
-
-                $this->updateTillsAmounts($transferAmount);
             }
             TransferAmount::where('transfer_id', $this->transfer->id)->whereNotIn('id', $transfersAmountIds)->delete();
 
@@ -233,6 +199,47 @@ class TransferForm extends Component
         }
 
         return to_route('transfer')->with('success', 'transfer has been updated successfully!');
+    }
+
+    public function confirm()
+    {
+        $this->authorize('transfer-confirm');
+        $this->validate();
+
+        if($this->submitting) {
+            return;
+        }
+        $this->submitting = true;
+
+        DB::beginTransaction();
+        try {
+
+            checkMonthlyOpening($this->from_till_id);
+            checkMonthlyOpening($this->to_till_id);
+
+            throw_if($this->transfer->status == 1, new Exception("Transfer is already confirmed!"));
+
+            $this->transfer->update([
+                'status' => 1,
+                'status_updated_at' => now(),
+            ]);
+
+            foreach ($this->transferAmounts as $transferAmount) {
+                $this->updateTillsAmounts($transferAmount);
+            }
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->submitting = false;
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+
+        return to_route('transfer')->with('success', 'Transfer has been confirmed successfully!');
     }
 
 
@@ -284,7 +291,7 @@ class TransferForm extends Component
 
     public function render()
     {
-        if ($this->status == Constants::VIEW_STATUS) {
+        if ($this->status == Constants::VIEW_STATUS || $this->status == Constants::CONFIRM_STATUS) {
             return view('livewire.pcash.transfer.transfer-view');
         }
         return view('livewire.pcash.transfer.transfer-form');
