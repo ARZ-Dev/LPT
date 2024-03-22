@@ -139,7 +139,7 @@ class ReceiptForm extends Component
             'paid_by' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'receiptAmounts' => ['array', 'min:1'],
-            'receiptAmounts.*.currency_id' => ['required'],
+            'receiptAmounts.*.currency_id' => ['required', 'distinct'],
             'receiptAmounts.*.amount' => ['required'],
         ];
     }

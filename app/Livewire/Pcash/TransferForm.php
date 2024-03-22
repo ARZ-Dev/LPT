@@ -96,7 +96,7 @@ class TransferForm extends Component
 
             'transferAmounts' => ['array'],
             'transferAmounts.*.transfer_id' => ['nullable'],
-            'transferAmounts.*.currency_id' => ['required'],
+            'transferAmounts.*.currency_id' => ['required', 'distinct'],
             'transferAmounts.*.amount' => ['required'],
         ];
     }
