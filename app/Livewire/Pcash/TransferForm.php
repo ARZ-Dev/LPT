@@ -35,6 +35,8 @@ class TransferForm extends Component
     public $tills = [];
     public $currencies = [];
     public bool $submitting = false;
+    public array $userTillsIds = [];
+    public bool $isSuperAdmin = false;
 
     protected $listeners = ['store', 'update'];
 
@@ -46,6 +48,9 @@ class TransferForm extends Component
             ->get();
 
         $this->to_tills = Till::all();
+
+        $this->userTillsIds = auth()->user()->tills()->pluck('id')->toArray();
+        $this->isSuperAdmin = auth()->user()->hasRole('Super Admin');
 
         $this->currencies = Currency::all();
 
@@ -61,7 +66,7 @@ class TransferForm extends Component
                 if ($status == Constants::VIEW_STATUS) {
                     $this->authorize('transfer-view');
                 } else {
-                    $this->authorize('transfer-confirm');
+                    abort_if(!in_array($this->transfer->to_till_id, $this->userTillsIds) && !$this->isSuperAdmin, 403);
                 }
             } else {
                 $this->authorize('transfer-edit');
@@ -211,7 +216,6 @@ class TransferForm extends Component
 
     public function confirm()
     {
-        $this->authorize('transfer-confirm');
         $this->validate();
 
         if($this->submitting) {

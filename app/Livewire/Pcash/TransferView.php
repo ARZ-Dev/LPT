@@ -14,15 +14,25 @@ class TransferView extends Component
 
     protected $listeners = ['delete'];
     public $transfers;
+    public array $tillsIds = [];
+    public bool $isSuperAdmin = false;
 
     public function mount()
     {
         $this->authorize('transfer-list');
+
+        $this->tillsIds = auth()->user()->tills()->pluck('id')->toArray();
+        $this->isSuperAdmin = auth()->user()->hasRole('Super Admin');
+
         $this->transfers = Transfer::with(['fromTill.user','toTill'])
             ->when(!auth()->user()->hasPermissionTo('transfer-viewAll'), function ($query) {
-                $query->where('user_id', auth()->id());
+                $query->where('user_id', auth()->id())
+                    ->orWhereIn('from_till_id', $this->tillsIds)
+                    ->orWhereIn('to_till_id', $this->tillsIds);
             })
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
+
     }
 
     public function delete($id)

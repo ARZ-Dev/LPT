@@ -39,11 +39,11 @@
                                 <a href="{{ route('transfer.view', ['id' => $transfer->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @if(!$transfer->status)
-                                @can('transfer-confirm')
-                                        <a href="{{ route('transfer.confirm', ['id' => $transfer->id, 'status' => \App\Utils\Constants::CONFIRM_STATUS]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Confirm">
-                                            <i class="ti ti-check ti-sm me-2"></i>
-                                        </a>
-                                @endcan
+                                @if(in_array($transfer->to_till_id, $tillsIds) || $isSuperAdmin)
+                                    <a href="{{ route('transfer.confirm', ['id' => $transfer->id, 'status' => \App\Utils\Constants::CONFIRM_STATUS]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Confirm">
+                                        <i class="ti ti-check ti-sm me-2"></i>
+                                    </a>
+                                @endif
                                 @can('transfer-edit')
                                     <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
                                 @endcan

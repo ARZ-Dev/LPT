@@ -61,57 +61,54 @@ class User extends Authenticatable
         return "{$this->first_name} {$this->last_name}";
     }
 
-    public function till()
+    public function tills()
     {
-        return $this->hasMany(Till::class,'user_id');
+        return $this->hasMany(Till::class);
     }
 
-    public function receipt()
+    public function receipts()
     {
-        return $this->hasMany(Receipt::class,'user_id');
+        return $this->hasMany(Receipt::class);
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->hasMany(Category::class,'user_id');
+        return $this->hasMany(Category::class);
     }
 
-    public function currency()
+    public function currencies()
     {
-        return $this->hasMany(Currency::class,'user_id');
+        return $this->hasMany(Currency::class);
     }
 
-    public function tillCreatedBy()
+    public function tillsCreatedBy()
     {
         return $this->hasMany(Till::class,'created_by');
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->hasMany(Payment::class,'user_id');
+        return $this->hasMany(Payment::class);
     }
 
-    public function transfer()
+    public function transfers()
     {
-        return $this->hasMany(Transfer::class,'user_id');
+        return $this->hasMany(Transfer::class);
     }
 
-    public function exchnage()
+    public function exchanges()
     {
-        return $this->hasMany(Exchange::class,'user_id');
+        return $this->hasMany(Exchange::class);
     }
 
-    public function monthlyEntry()
+    public function monthlyEntries()
     {
-        return $this->hasMany(MonthlyEntry::class,'user_id');
+        return $this->hasMany(MonthlyEntry::class);
     }
 
-    public function monthlyEntryCreatedBy()
+    public function monthlyEntriesCreatedBy()
     {
         return $this->hasMany(MonthlyEntry::class,'created_by');
     }
-
-    
-
 
 }
