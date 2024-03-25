@@ -14,9 +14,20 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="from_till_id">From Till <span class="text-danger">*</span></label>
                                 <div wire:ignore>
-                                    <select wire:model="from_till_id" id="from_till_id" class="form-select selectpicker w-100 " name="from_till_id" title="Select From Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                    <select
+                                        wire:model="from_till_id"
+                                        id="from_till_id"
+                                        class="form-select selectpicker w-100"
+                                        name="from_till_id"
+                                        title="Select From Till"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-tick-icon="ti-check text-white"
+                                        required
+                                    >
                                         @foreach($tills as $till)
-                                            <option value="{{$till->id}}" @selected($till->id == $from_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
+                                            <option value="{{ $till->id }}" @selected($till->id == $from_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -26,9 +37,20 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="to_till_id">To Till <span class="text-danger">*</span></label>
                                 <div wire:ignore>
-                                    <select wire:model="to_till_id" class="form-select selectpicker w-100" name="to_till_id" title="Select To Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                    <select
+                                        wire:model="to_till_id"
+                                        id="to_till_id"
+                                        class="form-select selectpicker w-100"
+                                        name="to_till_id"
+                                        title="Select To Till"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-tick-icon="ti-check text-white"
+                                        required
+                                    >
                                         @foreach($to_tills as $till)
-                                            <option value="{{$till->id}}" @selected($till->id == $to_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
+                                            <option value="{{ $till->id }}" @selected($till->id == $to_till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
