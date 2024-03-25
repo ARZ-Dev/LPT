@@ -142,7 +142,7 @@ class ReportView extends Component
 
                     foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
                         $amounts[$monthlyEntryAmount->currency_id] = [
-                            'debit' => 0,
+                            'debit' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
                             'credit' => 0,
                             'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
                         ];
@@ -328,8 +328,8 @@ class ReportView extends Component
             switch (true) {
                 case $entry instanceof MonthlyEntryAction:
                     foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
-                        $balance = $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount;
-                        $this->updateTotals($tillId, $monthlyEntryAmount->currency_id, 0, 0, $balance);
+                        $amount = $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount;
+                        $this->updateTotals($tillId, $monthlyEntryAmount->currency_id, $amount, 0, $amount);
                     }
                     break;
 
