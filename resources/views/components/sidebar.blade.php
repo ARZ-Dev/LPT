@@ -68,94 +68,82 @@
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
-				<div data-i18n="Petty Cash">Petty Cash</div>
+				<div data-i18n="Petty Cash Summary">Petty Cash Summary</div>
 			</a>
 
-			<ul class="menu-sub">
+            <ul class="menu-sub">
+                @can('category-list')
+                    <li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
+                        <a href="{{ route('category') }}" class="menu-link">
+                            <div data-i18n="Category">Category</div>
+                        </a>
+                    </li>
+                @endcan
 
-				<li class="menu-item {{ request()->is('category*', 'currency*', 'till*', 'payment*', 'receipt*', 'transfer*', 'exchange*', 'petty-cash-summary', 'monthly-openings-closings*') ? "active open" : "" }}">
-					<a href="javascript:void(0);" class="menu-link menu-toggle">
-						<div data-i18n="Summary">Summary</div>
-					</a>
+                @can('currency-list')
+                    <li class="menu-item {{ request()->is('currency*') ? "active" : "" }}">
+                        <a href="{{ route('currency') }}" class="menu-link">
+                            <div data-i18n="Currency">Currency</div>
+                        </a>
+                    </li>
+                @endcan
 
-                    <ul class="menu-sub">
-                        @can('category-list')
-                            <li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
-                                <a href="{{ route('category') }}" class="menu-link">
-                                    <div data-i18n="Category">Category</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('till-list')
+                    <li class="menu-item {{ request()->is('till*') ? "active" : "" }}">
+                        <a href="{{ route('till') }}" class="menu-link">
+                            <div data-i18n="Till">Till</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('currency-list')
-                            <li class="menu-item {{ request()->is('currency*') ? "active" : "" }}">
-                                <a href="{{ route('currency') }}" class="menu-link">
-                                    <div data-i18n="Currency">Currency</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('monthlyEntry-list')
+                    <li class="menu-item {{ request()->is('monthly-openings-closings*') ? "active" : "" }}">
+                        <a href="{{ route('monthly-openings-closings') }}" class="menu-link">
+                            <div data-i18n="Monthly Opening/Closing">Monthly Opening/Closing</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('till-list')
-                            <li class="menu-item {{ request()->is('till*') ? "active" : "" }}">
-                                <a href="{{ route('till') }}" class="menu-link">
-                                    <div data-i18n="Till">Till</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('payment-list')
+                    <li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
+                        <a href="{{ route('payment') }}" class="menu-link">
+                            <div data-i18n="Payment">Payment</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('monthlyEntry-list')
-                            <li class="menu-item {{ request()->is('monthly-openings-closings*') ? "active" : "" }}">
-                                <a href="{{ route('monthly-openings-closings') }}" class="menu-link">
-                                    <div data-i18n="Monthly Opening/Closing">Monthly Opening/Closing</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('receipt-list')
+                    <li class="menu-item {{ request()->is('receipt*') ? "active" : "" }}">
+                        <a href="{{ route('receipt') }}" class="menu-link">
+                            <div data-i18n="Receipt">Receipt</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('payment-list')
-                            <li class="menu-item {{ request()->is('payment*') ? "active" : "" }}">
-                                <a href="{{ route('payment') }}" class="menu-link">
-                                    <div data-i18n="Payment">Payment</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('transfer-list')
+                    <li class="menu-item {{ request()->is('transfer*') ? "active" : "" }}">
+                        <a href="{{ route('transfer') }}" class="menu-link">
+                            <div data-i18n="Transfer">Transfer</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('receipt-list')
-                            <li class="menu-item {{ request()->is('receipt*') ? "active" : "" }}">
-                                <a href="{{ route('receipt') }}" class="menu-link">
-                                    <div data-i18n="Receipt">Receipt</div>
-                                </a>
-                            </li>
-                        @endcan
+                @can('exchange-list')
+                    <li class="menu-item {{ request()->is('exchange*') ? "active" : "" }}">
+                        <a href="{{ route('exchange') }}" class="menu-link">
+                            <div data-i18n="Exchange">Exchange</div>
+                        </a>
+                    </li>
+                @endcan
 
-                        @can('transfer-list')
-                            <li class="menu-item {{ request()->is('transfer*') ? "active" : "" }}">
-                                <a href="{{ route('transfer') }}" class="menu-link">
-                                    <div data-i18n="Transfer">Transfer</div>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('exchange-list')
-                            <li class="menu-item {{ request()->is('exchange*') ? "active" : "" }}">
-                                <a href="{{ route('exchange') }}" class="menu-link">
-                                    <div data-i18n="Exchange">Exchange</div>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('pettyCashSummary-view')
-                            <li class="menu-item {{ request()->is('petty-cash-summary*') ? "active" : "" }}">
-                                <a href="{{ route('petty-cash-summary') }}" class="menu-link">
-                                    <div data-i18n="Summary">Summary</div>
-                                </a>
-                            </li>
-                        @endcan
-                    </ul>
-
-				</li>
-
-			</ul>
-
+                @can('pettyCashSummary-view')
+                    <li class="menu-item {{ request()->is('petty-cash-summary*') ? "active" : "" }}">
+                        <a href="" class="menu-link">
+                            <div data-i18n="Summary">Summary</div>
+                        </a>
+                    </li>
+                @endcan
+            </ul>
 		</li>
         @endcanany
 
