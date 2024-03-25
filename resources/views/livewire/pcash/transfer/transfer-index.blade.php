@@ -45,7 +45,9 @@
                                     </a>
                                 @endif
                                 @can('transfer-edit')
-                                    <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
+                                    @if(!in_array($transfer->to_till_id, $tillsIds))
+                                        <a href="{{ route('transfer.edit', $transfer->id) }}" class="text-body"><i class="ti ti-edit ti-sm"></i></a>
+                                    @endif
                                 @endcan
                             @endif
                             @can('transfer-delete')
