@@ -75,7 +75,7 @@ class TransferForm extends Component
             }
 
 
-            $this->authorize('view',$this->transfer);
+            $this->authorize('view', $this->transfer);
             $this->user_id = $this->transfer->user_id;
             $this->from_till_id = $this->transfer->from_till_id;
             $this->to_till_id = $this->transfer->to_till_id;

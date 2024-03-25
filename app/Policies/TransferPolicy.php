@@ -21,8 +21,8 @@ class TransferPolicy
      */
     public function view(User $user, Transfer $transfer): bool
     {
-        return $user->hasPermissionTo('transfer-viewAll') || $user->id == $transfer->user_id;
-
+        $tillsIds = $user->tills()->pluck('id')->toArray();
+        return $user->hasPermissionTo('transfer-viewAll') || $user->id == $transfer->user_id || in_array($transfer->from_till_id, $tillsIds) || in_array($transfer->to_till_id, $tillsIds);
     }
 
     /**
