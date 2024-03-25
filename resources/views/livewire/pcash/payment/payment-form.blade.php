@@ -214,7 +214,7 @@
                     availableAmountSelector.text("Available Amount: " + availableAmounts[$(this).val()])
                 } else {
                     availableAmountSelector.addClass("text-danger")
-                    availableAmountSelector.text("Currency does not exists in till!");
+                    availableAmountSelector.text("0.00");
                 }
             }
         })

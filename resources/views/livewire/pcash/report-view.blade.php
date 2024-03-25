@@ -82,6 +82,7 @@
                 <tbody>
                     @php($grandTotalDebits = [])
                     @php($grandTotalCredits = [])
+                    @php($grandTotalBalances = [])
                     @foreach($selectedTills as $till)
                         @php($totalDebits = [])
                         @php($totalCredits = [])
@@ -102,6 +103,7 @@
                                 @foreach($currencies as $currency)
                                     @php($grandTotalDebits[$currency->id] = ($grandTotalDebits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['debit'] ?? 0))
                                     @php($grandTotalCredits[$currency->id] = ($grandTotalCredits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['credit'] ?? 0))
+                                    @php($grandTotalBalances[$currency->id] = ($grandTotalBalances[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['balance'] ?? 0))
 
                                     <th class="text-nowrap text-center">{{ number_format($totalsBefore[$till->id][$currency->id]['debit'] ?? 0, 2) }} {{ $currency->name }}</th>
                                     <th class="text-nowrap text-center">{{ number_format($totalsBefore[$till->id][$currency->id]['credit'] ?? 0, 2) }} {{ $currency->name }}</th>
@@ -177,6 +179,7 @@
                             @foreach($currencies as $currency)
                                 @php($grandTotalDebits[$currency->id] = ($grandTotalDebits[$currency->id] ?? 0) + ($totalDebits[$till->id][$currency->id] ?? 0))
                                 @php($grandTotalCredits[$currency->id] = ($grandTotalCredits[$currency->id] ?? 0) + ($totalCredits[$till->id][$currency->id] ?? 0))
+                                @php($grandTotalBalances[$currency->id] = ($grandTotalBalances[$currency->id] ?? 0) + ($balances[$till->id][$currency->id] ?? 0))
 
                                 <th class="text-nowrap text-center">{{ number_format($totalDebits[$till->id][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                                 <th class="text-nowrap text-center">{{ number_format($totalCredits[$till->id][$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
@@ -191,7 +194,7 @@
                     @foreach($currencies as $currency)
                         <th class="text-nowrap text-center">{{ number_format($grandTotalDebits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                         <th class="text-nowrap text-center">{{ number_format($grandTotalCredits[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
-                        <th class="text-nowrap text-center"></th>
+                        <th class="text-nowrap text-center">{{ number_format($grandTotalBalances[$currency->id] ?? 0, 2) }} {{ $currency->name }}</th>
                     @endforeach
                 </tr>
                 </tfoot>
