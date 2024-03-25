@@ -68,7 +68,7 @@
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-premium-rights"></i>
-				<div data-i18n="Petty Cash Summary">Petty Cash Summary</div>
+				<div data-i18n="Petty Cash">Petty Cash</div>
 			</a>
 
             <ul class="menu-sub">
@@ -138,7 +138,7 @@
 
                 @can('pettyCashSummary-view')
                     <li class="menu-item {{ request()->is('petty-cash-summary*') ? "active" : "" }}">
-                        <a href="" class="menu-link">
+                        <a href="{{ route('petty-cash-summary') }}" class="menu-link">
                             <div data-i18n="Summary">Summary</div>
                         </a>
                     </li>
