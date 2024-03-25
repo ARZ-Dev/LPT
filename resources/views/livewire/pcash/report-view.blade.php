@@ -98,7 +98,7 @@
 
                         @if($filterByDate)
                             <tr class="bg-label-warning">
-                                <th colspan="7" class="text-center">Totals Before {{ $startDate }}</th>
+                                <th colspan="7" class="text-center">Totals Before {{ \Carbon\Carbon::parse($startDate)->format('d-m-Y') }}</th>
                                 @foreach($currencies as $currency)
                                     @php($grandTotalDebits[$currency->id] = ($grandTotalDebits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['debit'] ?? 0))
                                     @php($grandTotalCredits[$currency->id] = ($grandTotalCredits[$currency->id] ?? 0) + ($totalsBefore[$till->id][$currency->id]['credit'] ?? 0))
