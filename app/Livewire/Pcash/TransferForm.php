@@ -71,6 +71,9 @@ class TransferForm extends Component
             } else {
                 $this->authorize('transfer-edit');
 
+                // prevent edit if the transfer transferred to till is for the authenticated user
+                abort_if(in_array($this->transfer->to_till_id, $this->userTillsIds), 403);
+
                 abort_if($this->transfer->status == 1, 403);
             }
 
