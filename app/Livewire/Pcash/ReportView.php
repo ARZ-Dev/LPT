@@ -48,8 +48,10 @@ class ReportView extends Component
             ->get();
 
         $this->currencies = Currency::all();
+
+        $this->filterByDate = true;
         $this->startDate = now()->startOfMonth()->format("Y-m-d");
-        $this->endDate = now()->endOfMonth()->format("Y-m-d");
+        $this->endDate = now()->format("Y-m-d");
 
         if (count($this->tills) == 1) {
             $this->tillIds = [$this->tills[0]->id];
