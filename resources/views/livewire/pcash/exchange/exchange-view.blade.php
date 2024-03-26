@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Exchange #{{ $exchange->id }}</h5>
                     <a href="{{ route('exchange') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Exchange
+                        Exchanges
                     </a>
                 </div>
                 <div class="card-body">

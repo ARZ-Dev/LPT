@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Currency #{{ $currency->id }}</h5>
                     <a href="{{ route('currency') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Currency
+                        Currencies
                     </a>
                 </div>
                 <div class="card-body">
