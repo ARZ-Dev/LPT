@@ -34,6 +34,9 @@ class ReportView extends Component
     public $endDate;
     public array $totalsBefore = [];
 
+    public array $sectionTotalsCount = [];
+    public array $userTillsIds = [];
+
     public function mount()
     {
         $this->authorize('pettyCashSummary-view');
@@ -52,6 +55,44 @@ class ReportView extends Component
             $this->tillIds = [$this->tills[0]->id];
             $this->getReportData();
         }
+
+        $this->userTillsIds = auth()->user()->tills()->pluck('id')->toArray();
+
+        $monthlyEntriesCount = MonthlyEntry::when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->count();
+
+        $paymentsCount = Payment::when(!auth()->user()->hasPermissionTo('payment-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->count();
+
+        $receiptsCount = Payment::when(!auth()->user()->hasPermissionTo('receipt-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->count();
+
+        $transfersCount = Transfer::when(!auth()->user()->hasPermissionTo('transfer-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhereIn('from_till_id', $this->userTillsIds)
+                    ->orWhereIn('to_till_id', $this->userTillsIds);
+            })
+            ->count();
+
+        $exchangesCount = Exchange::when(!auth()->user()->hasPermissionTo('exchange-viewAll'), function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->count();
+
+        $this->sectionTotalsCount = [
+            'tills' => count($this->tills),
+            'monthly_entries' => $monthlyEntriesCount,
+            'payments' => $paymentsCount,
+            'receipts' => $receiptsCount,
+            'transfers' => $transfersCount,
+            'exchanges' => $exchangesCount,
+        ];
     }
 
     public function rules()

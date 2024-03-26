@@ -203,6 +203,123 @@
         </div>
     </div>
 
+    <div class="row mt-1 g-4 mb-4">
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('till') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Tills</h3>
+                                <p class="mb-0">Total Tills: {{ number_format($sectionTotalsCount['tills']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="ti ti-cash-banknote ti-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('monthly-openings-closings') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Monthly Openings/Closings</h3>
+                                <p class="mb-0">Total Monthly Openings/Closings: {{ number_format($sectionTotalsCount['monthly_entries']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="ti ti-calendar-stats ti-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('payment') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Payments</h3>
+                                <p class="mb-0">Total Payments: {{ number_format($sectionTotalsCount['payments']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="ti ti-report-money ti-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('receipt') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Receipts</h3>
+                                <p class="mb-0">Total Receipts: {{ number_format($sectionTotalsCount['receipts']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="ti ti-file-invoice ti-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('transfer') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Transfers</h3>
+                                <p class="mb-0">Total Transfers: {{ number_format($sectionTotalsCount['transfers']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa fa-money-bill-transfer fa-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+            <a href="{{ route('exchange') }}" target="_blank">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <h3>Exchanges</h3>
+                                <p class="mb-0">Total Exchanges: {{ number_format($sectionTotalsCount['exchanges']) }}</p>
+                            </div>
+                            <div class="avatar">
+                              <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa fa-exchange fa-sm"></i>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
     @script
     <script>
 
