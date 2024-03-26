@@ -98,7 +98,7 @@ class ReportView extends Component
     public function rules()
     {
         return [
-            'tillIds' => ['required', 'array', 'min:1'],
+            'tillIds' => ['array',],
             'startDate' => [new RequiredIf($this->filterByDate), 'date'],
             'endDate' => [new RequiredIf($this->filterByDate), 'date', 'after_or_equal:startDate'],
         ];
