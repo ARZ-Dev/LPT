@@ -62,9 +62,9 @@
                 <span>Loading data...</span>
             </div>
         </div>
-        <div wire:loading.remove class="card-datatable table-responsive">
+        <div wire:loading.remove class="card-datatable table-responsive" style="height: {{ count($reportData) ? "750px" : "auto" }}">
             <table id="report-data-table" class="datatables-reportData table table-hover border-top table-bordered">
-                <thead>
+                <thead class="position-sticky top-0 bg-light border-white">
                  <tr>
                      <th class="text-nowrap text-center">ID</th>
                      <th class="text-nowrap text-center">Date</th>
