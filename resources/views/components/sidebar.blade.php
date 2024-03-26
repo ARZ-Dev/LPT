@@ -92,7 +92,7 @@
         @endcanany
 
         @can('pettyCashSummary-view')
-        <li class="menu-item {{ request()->is('petty-cash-summary*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('petty-cash-summary*', 'till*', 'monthly-openings-closings*', 'payment*', 'receipt*', 'transfer*', 'exchange*') ? "active" : "" }}">
             <a href="{{ route('petty-cash-summary') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-premium-rights"></i>
                 <div data-i18n="Petty Cash">Petty Cash</div>

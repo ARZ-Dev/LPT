@@ -204,6 +204,7 @@
     </div>
 
     <div class="row mt-1 g-4 mb-4">
+        @can('till-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('till') }}" target="_blank">
                 <div class="card">
@@ -223,6 +224,9 @@
                 </div>
             </a>
         </div>
+        @endcan
+
+        @can('monthlyEntry-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('monthly-openings-closings') }}" target="_blank">
                 <div class="card">
@@ -242,6 +246,9 @@
                 </div>
             </a>
         </div>
+        @endcan
+
+        @can('payment-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('payment') }}" target="_blank">
                 <div class="card">
@@ -261,6 +268,9 @@
                 </div>
             </a>
         </div>
+        @endcan
+
+        @can('receipt-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('receipt') }}" target="_blank">
                 <div class="card">
@@ -280,6 +290,9 @@
                 </div>
             </a>
         </div>
+        @endcan
+
+        @can('transfer-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('transfer') }}" target="_blank">
                 <div class="card">
@@ -299,6 +312,9 @@
                 </div>
             </a>
         </div>
+        @endcan
+
+        @can('exchange-list')
         <div class="col-sm-6 col-xl-4">
             <a href="{{ route('exchange') }}" target="_blank">
                 <div class="card">
@@ -318,6 +334,8 @@
                 </div>
             </a>
         </div>
+        @endcan
+
     </div>
 
     @script
