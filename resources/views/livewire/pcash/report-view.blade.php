@@ -12,8 +12,8 @@
             <div class="row g-4">
                 @foreach($tills as $till)
                     <div class="col-2">
-                        <a href="{{ route('till.view', [$till->id, \App\Utils\Constants::VIEW_STATUS]) }}" target="_blank" class="text-decoration-none">
-                            <div class="bg-light rounded-pill p-3 mb-3 text-center">
+                        <a href="{{ route('till.view', [$till->id, \App\Utils\Constants::VIEW_STATUS]) }}" target="_blank">
+                            <div class="bg-light rounded p-3 mb-3 text-center">
                                 <h6 class="mb-0">{{ $till->name }}</h6>
                                 <small class="text-muted">{{ $till->user?->full_name }}</small>
                             </div>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-1">
                             <label class="form-label" for="filterByDate">Filter By Date:</label>
-                            <div class="form-check form-switch m-2">
+                            <div class="form-check form-switch m-2 d-flex justify-content-center">
                                 <input wire:model.live="filterByDate" wire:change="getReportData" class="form-check-input" type="checkbox" id="filterByDate">
                             </div>
                         </div>
