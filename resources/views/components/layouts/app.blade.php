@@ -12,7 +12,33 @@
 
         @auth
 
-            <div class="layout-container">
+        <div class="layout-container">
+           {{-- @php
+                $currentRoute = request()->route()->getName();
+            @endphp
+            @if(!in_array($currentRoute, [
+                'monthly-openings-closings',
+                'monthly-openings-closings.create',
+                'monthly-openings-closings.edit',
+                'monthly-openings-closings.view',
+                'payment',
+                'payment.create',
+                'payment.edit',
+                'payment.view',
+                'receipt',
+                'receipt.create',
+                'receipt.edit',
+                'receipt.view',
+                'transfer',
+                'transfer.create',
+                'transfer.edit',
+                'transfer.view',
+                'transfer.confirm',
+                'exchange',
+                'exchange.create',
+                'exchange.edit',
+                'exchange.view',
+            ])) --}}
                 @include('components.sidebar')
 
                 <!-- Layout container -->
@@ -21,6 +47,7 @@
                     <!-- Navbar -->
                     @include('components.navbar')
                     <!-- / Navbar -->
+           {{-- @endif --}}
 
                     <!-- Content wrapper -->
                     <div class="content-wrapper">

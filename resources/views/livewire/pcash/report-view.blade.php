@@ -11,8 +11,8 @@
         <div class="card-body">
             <div class="row g-4">
                 @foreach($tills as $till)
-                    <div class="col-2">
-                        <a href="{{ route('till.view', [$till->id, \App\Utils\Constants::VIEW_STATUS]) }}" target="_blank">
+                    <div class="col-12 col-md-2">
+                        <a href="{{ route('till.view', [$till->id, \App\Utils\Constants::VIEW_STATUS]) }}">
                             <div class="bg-light rounded p-3 mb-3 text-center">
                                 <h6 class="mb-0">{{ $till->name }}</h6>
                                 <small class="text-muted">{{ $till->user?->full_name }}</small>
@@ -23,6 +23,125 @@
 
             </div>
         </div>
+    </div>
+
+    <div class="row mt-1 g-4 mb-4">
+        @can('monthlyEntry-list')
+        <div class="col-sm-6 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <a class="monthlyEntry-button" style="cursor: pointer;">
+                            <div class="content-left">
+                                <h5>Monthly Entry</h5>
+                                <!-- <p class="mb-0">Total Monthly Openings/Closings: {{ number_format($sectionTotalsCount['monthly_entries']) }}</p> -->
+                            </div>
+                        </a>
+                        <a href="{{ route('monthly-openings-closings.create') }}" >
+                            <div class="avatar">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        @endcan
+
+        @can('payment-list')
+        <div class="col-sm-6 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <a class="payment-button" style="cursor: pointer;">
+                            <div class="content-left">
+                                <h5>Payments</h5>
+                            </div>
+                        </a>
+                        <a href="{{ route('payment.create') }}" >
+                            <div class="avatar">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        @endcan
+
+        @can('receipt-list')
+        <div class="col-sm-6 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <a class="receipt-button" style="cursor: pointer;">
+                            <div class="content-left">
+                                <h5>Receipts</h5>
+                            </div>
+                        </a>
+                        <a href="{{ route('receipt.create') }}" >
+                            <div class="avatar">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        @endcan
+
+        @can('transfer-list')
+        <div class="col-sm-6 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <a class="transfers-button" style="cursor: pointer;">
+                            <div class="content-left">
+                                <h5>Transfers</h5>
+                            </div>
+                        </a>
+                        <a href="{{ route('transfer.create') }}">
+                            <div class="avatar">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        @endcan
+
+        @can('exchange-list')
+        <div class="col-sm-6 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <a class="exchange-button" style="cursor: pointer;">
+                            <div class="content-left">
+                                <h5>Exchanges</h5>
+                            </div>
+                        </a>
+                        <a href="{{ route('exchange.create') }}" >
+                            <div class="avatar">
+                            <span class="avatar-initial rounded bg-label-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @endcan
     </div>
 
     <div class="card mt-3">
@@ -229,122 +348,79 @@
         </div>
     </div>
 
-    <div class="row mt-1 g-4 mb-4">
 
-        @can('monthlyEntry-list')
-        <div class="col-sm-6 col-xl-4">
-            <a href="{{ route('monthly-openings-closings') }}" target="_blank">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <h3>Monthly Openings/Closings</h3>
-                                <p class="mb-0">Total Monthly Openings/Closings: {{ number_format($sectionTotalsCount['monthly_entries']) }}</p>
-                            </div>
-                            <div class="avatar">
-                              <span class="avatar-initial rounded bg-label-primary">
-                                <i class="ti ti-calendar-stats ti-sm"></i>
-                              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endcan
 
-        @can('payment-list')
-        <div class="col-sm-6 col-xl-4">
-            <a href="{{ route('payment') }}" target="_blank">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <h3>Payments</h3>
-                                <p class="mb-0">Total Payments: {{ number_format($sectionTotalsCount['payments']) }}</p>
-                            </div>
-                            <div class="avatar">
-                              <span class="avatar-initial rounded bg-label-primary">
-                                <i class="ti ti-report-money ti-sm"></i>
-                              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endcan
-
-        @can('receipt-list')
-        <div class="col-sm-6 col-xl-4">
-            <a href="{{ route('receipt') }}" target="_blank">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <h3>Receipts</h3>
-                                <p class="mb-0">Total Receipts: {{ number_format($sectionTotalsCount['receipts']) }}</p>
-                            </div>
-                            <div class="avatar">
-                              <span class="avatar-initial rounded bg-label-primary">
-                                <i class="ti ti-file-invoice ti-sm"></i>
-                              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endcan
-
-        @can('transfer-list')
-        <div class="col-sm-6 col-xl-4">
-            <a href="{{ route('transfer') }}" target="_blank">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <h3>Transfers</h3>
-                                <p class="mb-0">Total Transfers: {{ number_format($sectionTotalsCount['transfers']) }}</p>
-                            </div>
-                            <div class="avatar">
-                              <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa fa-money-bill-transfer fa-sm"></i>
-                              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endcan
-
-        @can('exchange-list')
-        <div class="col-sm-6 col-xl-4">
-            <a href="{{ route('exchange') }}" target="_blank">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <h3>Exchanges</h3>
-                                <p class="mb-0">Total Exchanges: {{ number_format($sectionTotalsCount['exchanges']) }}</p>
-                            </div>
-                            <div class="avatar">
-                              <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa fa-exchange fa-sm"></i>
-                              </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endcan
-
-    </div>
+    <style>
+        .swal2-popup{
+            width: 64em;
+        }
+    </style>
 
     @script
     <script>
+
+
+    $(document).on('click', '.monthlyEntry-button', function () {
+                Swal.fire({
+                html: '<iframe src="{{ route("monthly-openings-closings") }}" style="width: 100%; height: 800px;"></iframe>',
+                showCloseButton: true,
+                showConfirmButton: false,
+                customClass: {
+                    closeButton: 'btn btn-label-secondary'
+                }
+                });
+            });
+            
+
+
+    $(document).on('click', '.payment-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("payment") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.receipt-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("receipt") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.transfers-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("transfer") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.exchange-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("exchange") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
 
         Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
             succeed(({ status, json }) => {
