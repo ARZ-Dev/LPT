@@ -13,7 +13,7 @@
         @auth
 
         <div class="layout-container">
-            @php
+           {{-- @php
                 $currentRoute = request()->route()->getName();
             @endphp
             @if(!in_array($currentRoute, [
@@ -38,7 +38,7 @@
                 'exchange.create',
                 'exchange.edit',
                 'exchange.view',
-            ]))
+            ])) --}}
                 @include('components.sidebar')
 
                 <!-- Layout container -->
@@ -47,7 +47,7 @@
                     <!-- Navbar -->
                     @include('components.navbar')
                     <!-- / Navbar -->
-            @endif
+           {{-- @endif --}}
 
                     <!-- Content wrapper -->
                     <div class="content-wrapper">
