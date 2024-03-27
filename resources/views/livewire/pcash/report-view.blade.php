@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('monthly-openings-closings') }}" target="_blank">
+                        <a class="monthlyEntry-button" style="cursor: pointer;">
                             <div class="content-left">
                                 <h5>Monthly Entry</h5>
                                 <!-- <p class="mb-0">Total Monthly Openings/Closings: {{ number_format($sectionTotalsCount['monthly_entries']) }}</p> -->
@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('payment') }}" target="_blank">
+                        <a class="payment-button" style="cursor: pointer;">
                             <div class="content-left">
                                 <h5>Payments</h5>
                             </div>
@@ -78,7 +78,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('receipt') }}" target="_blank">
+                        <a class="receipt-button" style="cursor: pointer;">
                             <div class="content-left">
                                 <h5>Receipts</h5>
                             </div>
@@ -101,7 +101,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('transfer') }}" target="_blank">
+                        <a class="transfers-button" style="cursor: pointer;">
                             <div class="content-left">
                                 <h5>Transfers</h5>
                             </div>
@@ -124,7 +124,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('exchange') }}" target="_blank">
+                        <a class="exchange-button" style="cursor: pointer;">
                             <div class="content-left">
                                 <h5>Exchanges</h5>
                             </div>
@@ -350,8 +350,77 @@
 
 
 
+    <style>
+        .swal2-popup{
+            width: 64em;
+        }
+    </style>
+
     @script
     <script>
+
+
+    $(document).on('click', '.monthlyEntry-button', function () {
+                Swal.fire({
+                html: '<iframe src="{{ route("monthly-openings-closings") }}" style="width: 100%; height: 800px;"></iframe>',
+                showCloseButton: true,
+                showConfirmButton: false,
+                customClass: {
+                    closeButton: 'btn btn-label-secondary'
+                }
+                });
+            });
+            
+
+
+    $(document).on('click', '.payment-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("payment") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.receipt-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("receipt") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.transfers-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("transfer") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
+        $(document).on('click', '.exchange-button', function () {
+            Swal.fire({
+            // title: "Payment Route",
+            html: '<iframe src="{{ route("exchange") }}" style="width: 100%; height: 800px;"></iframe>',
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'btn btn-label-secondary'
+            }
+            });
+        });
+
 
         Livewire.hook('request', ({ uri, options, payload, respond, succeed, fail }) => {
             succeed(({ status, json }) => {
