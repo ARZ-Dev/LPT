@@ -80,12 +80,12 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-5">
+                                        <div class="col-4 col-md-5 col-sm-4">
                                             <input id="amount-{{$key}}" class="form-control cleave-input w-100 me-2" wire:model="receiptAmounts.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="Amount" required>
                                             @error('receiptAmounts.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
-                                        <div class="col-5">
+                                        <div class="col-4 col-md-5 col-sm-4">
                                             <select wire:model="receiptAmounts.{{ $key }}.currency_id"
                                                 aria-label="Default select example"
                                                 id="currency-{{$key}}"
@@ -109,7 +109,7 @@
                                         </div>
 
                                         @if(!$status)
-                                            <div class="col-2">
+                                            <div class="col-4 col-md-2 col-sm-4">
                                                 @if($key == 0)
                                                     <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
                                                 @else
