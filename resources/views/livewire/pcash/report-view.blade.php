@@ -27,13 +27,13 @@
 
     <div class="row mt-1 g-4 mb-4">
         @can('monthlyEntry-list')
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-sm-6 col-xl-2">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <a href="{{ route('monthly-openings-closings') }}" target="_blank">
                             <div class="content-left">
-                                <h5>Monthly Openings/Closings</h5>
+                                <h5>Monthly Entry</h5>
                             </div>
                         </a>
                         <a href="{{ route('monthly-openings-closings.create') }}" >
