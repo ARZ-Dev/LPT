@@ -185,10 +185,15 @@ class ReportView extends Component
                     $url = route('monthly-openings-closings.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
 
                     foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
+                        if ($entry->action == "opening") {
+                            $amount = $monthlyEntryAmount->amount;
+                        } else {
+                            $amount = $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount;
+                        }
                         $amounts[$monthlyEntryAmount->currency_id] = [
-                            'debit' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
+                            'debit' => $amount,
                             'credit' => 0,
-                            'balance' => $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount,
+                            'balance' => $amount,
                         ];
 
                         if (!in_array($monthlyEntryAmount->currency_id, $usedCurrenciesIds)) {
