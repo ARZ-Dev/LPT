@@ -27,14 +27,13 @@
 
     <div class="row mt-1 g-4 mb-4">
         @can('monthlyEntry-list')
-        <div class="col-sm-6 col-xl-2">
+        <div class="col-sm-6 col-xl-3">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <a href="{{ route('monthly-openings-closings') }}" target="_blank">
                             <div class="content-left">
-                                <h5>Monthly Entry</h5>
-                                <!-- <p class="mb-0">Total Monthly Openings/Closings: {{ number_format($sectionTotalsCount['monthly_entries']) }}</p> -->
+                                <h5>Monthly Openings/Closings</h5>
                             </div>
                         </a>
                         <a href="{{ route('monthly-openings-closings.create') }}" >
@@ -44,9 +43,9 @@
                             </span>
                             </div>
                         </a>
-                        </div>
                     </div>
                 </div>
+            </div>
         </div>
         @endcan
 
@@ -62,14 +61,14 @@
                         </a>
                         <a href="{{ route('payment.create') }}" >
                             <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
+                                <span class="avatar-initial rounded bg-label-primary">
+                                    <i class="fa-solid fa-plus"></i>
+                                </span>
                             </div>
                         </a>
-                        </div>
                     </div>
                 </div>
+            </div>
         </div>
         @endcan
 
@@ -90,9 +89,9 @@
                             </span>
                             </div>
                         </a>
-                        </div>
                     </div>
                 </div>
+            </div>
         </div>
         @endcan
 
@@ -113,9 +112,9 @@
                             </span>
                             </div>
                         </a>
-                        </div>
                     </div>
                 </div>
+            </div>
         </div>
         @endcan
 
@@ -136,10 +135,9 @@
                             </span>
                             </div>
                         </a>
-                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
         @endcan
     </div>
