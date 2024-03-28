@@ -1,9 +1,3 @@
-<style>
-    .swal2-popup{
-        width: 64em;
-    }
-</style>
-
 <div>
     <div class="card">
         <div class="card-header d-flex justify-content-between">
@@ -18,27 +12,13 @@
             <div class="row g-4">
                 @foreach($tills as $till)
                     <div class="col-12 col-md-2">
-                        <a class="till-button" style="cursor: pointer;">
+                        <a wire:click="getTillInfo({{ $till->id }})" data-bs-toggle="modal" data-bs-target="#tillModal" class="tills cursor-pointer">
                             <div class="bg-light rounded p-3 mb-3 text-center">
                                 <h6 class="mb-0">{{ $till->name }}</h6>
                                 <small class="text-muted">{{ $till->user?->full_name }}</small>
                             </div>
                         </a>
                     </div>
-                    @script
-                    <script>
-                            $(document).on('click', '.till-button', function () {
-                            Swal.fire({
-                            html: '<iframe src="{{ route('till.view', [$till->id, \App\Utils\Constants::VIEW_STATUS]) }}" style="width: 100%; height: 800px;"></iframe>',
-                            showCloseButton: true,
-                            showConfirmButton: false,
-                            customClass: {
-                                closeButton: 'btn btn-label-secondary'
-                            }
-                            });
-                        });
-                    </script>
-                    @endscript
                 @endforeach
 
             </div>
@@ -216,15 +196,8 @@
                 </div>
             </div>
         </div>
-        <div wire:loading>
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <span>Loading data...</span>
-            </div>
+        <div wire:loading wire:target="getReportData">
+            @include('.components.spinner')
         </div>
         <div wire:loading.remove class="card-datatable table-responsive" style="height: {{ count($reportData) ? "750px" : "auto" }}">
             <table id="report-data-table" class="datatables-reportData table table-hover border-top table-bordered">
@@ -368,8 +341,20 @@
         </div>
     </div>
 
-
-
+    <div wire:ignore class="modal fade" id="tillModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-simple">
+            <div class="modal-content p-3 p-md-5">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">{{ $selectedTill?->name }} / {{ $selectedTill?->user?->full_name }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     @script
@@ -381,6 +366,6 @@
         })
 
     </script>
+    @endscript
 </div>
-@endscript
 

@@ -36,6 +36,7 @@ class ReportView extends Component
 
     public array $sectionTotalsCount = [];
     public array $userTillsIds = [];
+    public $selectedTill;
 
     public function mount()
     {
@@ -427,6 +428,11 @@ class ReportView extends Component
             $amounts[$otherCurrencyId]['credit'] = 0;
         }
         return $amounts;
+    }
+
+    public function getTillInfo($tillId)
+    {
+        $this->selectedTill = Till::with(['tillAmounts', 'user'])->find($tillId);
     }
 
     public function render()
