@@ -12,7 +12,7 @@
             <div class="row g-4">
                 @foreach($tills as $till)
                     <div class="col-12 col-md-2">
-                        <a >
+                        <a wire:click="getTillInfo({{ $till->id }})" class="tills cursor-pointer">
                             <div class="bg-light rounded p-3 mb-3 text-center">
                                 <h6 class="mb-0">{{ $till->name }}</h6>
                                 <small class="text-muted">{{ $till->user?->full_name }}</small>
@@ -421,6 +421,10 @@
             succeed(({ status, json }) => {
                 // $('#report-data-table').DataTable().order([[1, 'asc']]).draw();
             })
+        })
+
+        $wire.on('showModal', function () {
+            $('#tillModal').modal('show')
         })
 
     </script>

@@ -433,6 +433,7 @@ class ReportView extends Component
     public function getTillInfo($tillId)
     {
         $this->selectedTill = Till::with(['tillAmounts' => ['currency'], 'user', 'createdBy'])->find($tillId);
+        $this->dispatch('showModal');
     }
 
     public function render()
