@@ -33,7 +33,7 @@
                     <div class="d-flex align-items-start justify-content-between">
                         <a href="{{ route('monthly-openings-closings') }}" target="_blank">
                             <div class="content-left">
-                                <h5>Monthly Entry</h5>
+                                <h5>Closings</h5>
                             </div>
                         </a>
                         <a href="{{ route('monthly-openings-closings.create') }}" target="_blank">
