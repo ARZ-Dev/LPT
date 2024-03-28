@@ -344,15 +344,6 @@
             <div class="modal-content p-3 p-md-5">
                 <div class="modal-body">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="row">
-                        <div class="col-12">
-                            <div wire:loading wire:target="getTillInfo" class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div>
                         <div>
                             <div class="text-center mb-4">
