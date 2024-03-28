@@ -36,7 +36,7 @@
                                 <h5>Monthly Entry</h5>
                             </div>
                         </a>
-                        <a href="{{ route('monthly-openings-closings.create') }}" >
+                        <a href="{{ route('monthly-openings-closings.create') }}" target="_blank">
                             <div class="avatar">
                             <span class="avatar-initial rounded bg-label-primary">
                                 <i class="fa-solid fa-plus"></i>
@@ -59,7 +59,7 @@
                                 <h5>Payments</h5>
                             </div>
                         </a>
-                        <a href="{{ route('payment.create') }}" >
+                        <a href="{{ route('payment.create') }}" target="_blank">
                             <div class="avatar">
                                 <span class="avatar-initial rounded bg-label-primary">
                                     <i class="fa-solid fa-plus"></i>
@@ -82,7 +82,7 @@
                                 <h5>Receipts</h5>
                             </div>
                         </a>
-                        <a href="{{ route('receipt.create') }}" >
+                        <a href="{{ route('receipt.create') }}" target="_blank">
                             <div class="avatar">
                             <span class="avatar-initial rounded bg-label-primary">
                                 <i class="fa-solid fa-plus"></i>
@@ -105,7 +105,7 @@
                                 <h5>Transfers</h5>
                             </div>
                         </a>
-                        <a href="{{ route('transfer.create') }}">
+                        <a href="{{ route('transfer.create') }}" target="_blank">
                             <div class="avatar">
                             <span class="avatar-initial rounded bg-label-primary">
                                 <i class="fa-solid fa-plus"></i>
@@ -128,7 +128,7 @@
                                 <h5>Exchanges</h5>
                             </div>
                         </a>
-                        <a href="{{ route('exchange.create') }}" >
+                        <a href="{{ route('exchange.create') }}" target="_blank">
                             <div class="avatar">
                             <span class="avatar-initial rounded bg-label-primary">
                                 <i class="fa-solid fa-plus"></i>
