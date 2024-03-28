@@ -332,35 +332,36 @@ class ReportView extends Component
 
     public function getTotalsBefore($tillId)
     {
+        $startOfMonth = Carbon::parse($this->startDate)->startOfMonth()->format('Y-m-d') . " 00:00";
         $monthlyActions = MonthlyEntryAction::with([
                 'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
             ])
             ->whereHas('monthlyEntry', function ($query) use ($tillId) {
                 $query->where('till_id', $tillId);
             })
-            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->whereBetween('created_at', [$startOfMonth, $this->startDate . " 00:00"])
             ->get();
 
         $payments = Payment::with(['user', 'paymentAmounts', 'category', 'subCategory', 'till' => ['user']])
             ->where('till_id', $tillId)
-            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->whereBetween('created_at', [$startOfMonth, $this->startDate . " 00:00"])
             ->get();
 
         $receipts = Receipt::with(['user', 'receiptAmounts', 'category', 'subCategory', 'till' => ['user']])
             ->where('till_id', $tillId)
-            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->whereBetween('created_at', [$startOfMonth, $this->startDate . " 00:00"])
             ->get();
 
         $transfers = Transfer::with(['user', 'transferAmounts', 'fromTill' => ['user'], 'toTill' => ['user']])
             ->where(function ($query) use ($tillId) {
                 $query->where('from_till_id', $tillId)->orWhere('to_till_id', $tillId);
             })
-            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->whereBetween('created_at', [$startOfMonth, $this->startDate . " 00:00"])
             ->get();
 
         $exchanges = Exchange::with(['user', 'till' => ['user']])
             ->where('till_id', $tillId)
-            ->whereDate('created_at', '<', $this->startDate . " 00:00")
+            ->whereBetween('created_at', [$startOfMonth, $this->startDate . " 00:00"])
             ->get();
 
         $data = collect()
