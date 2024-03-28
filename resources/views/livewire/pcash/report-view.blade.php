@@ -12,7 +12,7 @@
             <div class="row g-4">
                 @foreach($tills as $till)
                     <div class="col-12 col-md-2">
-                        <a class="tills cursor-pointer">
+                        <a wire:click="getTillInfo({{ $till->id }})" data-bs-toggle="modal" data-bs-target="#tillModal" class="tills cursor-pointer">
                             <div class="bg-light rounded p-3 mb-3 text-center">
                                 <h6 class="mb-0">{{ $till->name }}</h6>
                                 <small class="text-muted">{{ $till->user?->full_name }}</small>
@@ -341,14 +341,83 @@
         </div>
     </div>
 
-    <div wire:ignore class="modal fade" id="tillModal" tabindex="-1" aria-hidden="true">
+    <div wire.self:ignore class="modal fade" id="tillModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-simple">
             <div class="modal-content p-3 p-md-5">
                 <div class="modal-body">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div>
-                        <div class="text-center mb-4">
-                            <h3 class="mb-2">{{ $selectedTill?->name }} / {{ $selectedTill?->user?->full_name }}</h3>
+                    <div class="row">
+                        <div class="col-12">
+                            <div wire:loading wire:target="getTillInfo" class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div wire:loading.remove>
+                        <div>
+                            <div class="text-center mb-4">
+                                <h3 class="mb-2">{{ $selectedTill?->name }} / {{ $selectedTill?->user?->full_name }}</h3>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center flex-grow-1">
+                                    <div class="me-2">
+                                        <p class="mb-0 text-dark">Name:</p>
+                                        <p class="mb-0 text-muted">{{ $selectedTill?->name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center flex-grow-1">
+                                    <div class="me-2">
+                                        <p class="mb-0 text-dark">User:</p>
+                                        <p class="mb-0 text-muted">{{ $selectedTill?->user?->full_name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center flex-grow-1">
+                                    <div class="me-2">
+                                        <p class="mb-0 text-dark">Created By:</p>
+                                        <p class="mb-0 text-muted">{{ $selectedTill?->createdBy?->full_name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-5 table-responsive">
+                                <table class="table border">
+                                    <thead class="table-light">
+                                    <tr class="text-nowrap">
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Currency</th>
+                                        <th class="text-center">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @forelse($selectedTill?->tillAmounts ?? [] as $key => $tillAmount)
+                                        <tr>
+                                            <td class="text-center">
+                                                {{ $key + 1 }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $tillAmount->currency?->name }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ number_format($tillAmount->amount, 2) }} {{ $tillAmount->currency?->symbol }}
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-center" colspan="3">No till amounts available yet.</td>
+                                        </tr>
+                                    @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
