@@ -197,7 +197,7 @@
         <div wire:loading wire:target="getReportData">
             @include('.components.spinner')
         </div>
-        <div wire:loading.remove class="card-datatable table-responsive" style="height: {{ count($reportData) ? "750px" : "auto" }}">
+        <div wire:loading.remove wire:target="getReportData" class="card-datatable table-responsive" style="height: {{ count($reportData) ? "750px" : "auto" }}">
             <table id="report-data-table" class="datatables-reportData table table-hover border-top table-bordered">
                 <thead class="position-sticky top-0 bg-light border-white">
                  <tr>
