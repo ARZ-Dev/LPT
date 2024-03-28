@@ -353,7 +353,7 @@
                             </div>
                         </div>
                     </div>
-                    <div wire:loading.remove>
+                    <div>
                         <div>
                             <div class="text-center mb-4">
                                 <h3 class="mb-2">{{ $selectedTill?->name }} / {{ $selectedTill?->user?->full_name }}</h3>
