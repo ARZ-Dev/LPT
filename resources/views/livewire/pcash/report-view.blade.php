@@ -386,7 +386,7 @@
                                 <table class="table border">
                                     <thead class="table-light">
                                     <tr class="text-nowrap">
-                                        <th class="text-center">#</th>
+                                        
                                         <th class="text-center">Currency</th>
                                         <th class="text-center">Amount</th>
                                     </tr>
@@ -394,9 +394,7 @@
                                     <tbody>
                                     @forelse($selectedTill?->tillAmounts ?? [] as $key => $tillAmount)
                                         <tr>
-                                            <td class="text-center">
-                                                {{ $key + 1 }}
-                                            </td>
+                                          
                                             <td class="text-center">
                                                 {{ $tillAmount->currency?->name }}
                                             </td>
