@@ -25,122 +25,127 @@
         </div>
     </div>
 
-    <div class="row mt-1 g-4 mb-4">
-        @can('monthlyEntry-list')
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('monthly-openings-closings') }}" target="_blank">
-                            <div class="content-left">
-                                <h5>Closings</h5>
-                            </div>
-                        </a>
-                        <a href="{{ route('monthly-openings-closings.create') }}" target="_blank">
-                            <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endcan
+  
+    <a class="  d-md-none d-sm-block " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fa-solid fa-filter mt-3 mb-3" style="font-size: 48px;"></i>
+    </a>
 
-        @can('payment-list')
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('payment') }}" target="_blank">
-                            <div class="content-left">
-                                <h5>Payments</h5>
-                            </div>
-                        </a>
-                        <a href="{{ route('payment.create') }}" target="_blank">
-                            <div class="avatar">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="fa-solid fa-plus"></i>
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endcan
+    <div class="collapse show " id="collapseExample">
+        <div class="card card-body">
 
-        @can('receipt-list')
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('receipt') }}" target="_blank">
-                            <div class="content-left">
-                                <h5>Receipts</h5>
-                            </div>
-                        </a>
-                        <a href="{{ route('receipt.create') }}" target="_blank">
-                            <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endcan
+            <div class="row mt-1 g-4 mb-4 ">
+                @can('monthlyEntry-list')
+                <div class="col-sm-6 col-xl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <a href="{{ route('monthly-openings-closings') }}" target="_blank">
+                                    <div class="content-left">
+                                        <h5>Closings</h5>
+                                    </div>
+                                </a>
 
-        @can('transfer-list')
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('transfer') }}" target="_blank">
-                            <div class="content-left">
-                                <h5>Transfers</h5>
                             </div>
-                        </a>
-                        <a href="{{ route('transfer.create') }}" target="_blank">
-                            <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
-                            </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        @endcan
+                @endcan
 
-        @can('exchange-list')
-        <div class="col-sm-6 col-xl-2">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <a href="{{ route('exchange') }}" target="_blank">
-                            <div class="content-left">
-                                <h5>Exchanges</h5>
+                @can('payment-list')
+                <div class="col-sm-6 col-xl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <a href="{{ route('payment') }}" target="_blank">
+                                    <div class="content-left">
+                                        <h5>Payments</h5>
+                                    </div>
+                                </a>
+                                <a href="{{ route('payment.create') }}" target="_blank">
+                                    <div class="avatar">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
-                        <a href="{{ route('exchange.create') }}" target="_blank">
-                            <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
-                            </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
+                @endcan
+
+                @can('receipt-list')
+                <div class="col-sm-6 col-xl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <a href="{{ route('receipt') }}" target="_blank">
+                                    <div class="content-left">
+                                        <h5>Receipts</h5>
+                                    </div>
+                                </a>
+                                <a href="{{ route('receipt.create') }}" target="_blank">
+                                    <div class="avatar">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endcan
+
+                @can('transfer-list')
+                <div class="col-sm-6 col-xl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <a href="{{ route('transfer') }}" target="_blank">
+                                    <div class="content-left">
+                                        <h5>Transfers</h5>
+                                    </div>
+                                </a>
+                                <a href="{{ route('transfer.create') }}" target="_blank">
+                                    <div class="avatar">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endcan
+
+                @can('exchange-list')
+                <div class="col-sm-6 col-xl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <a href="{{ route('exchange') }}" target="_blank">
+                                    <div class="content-left">
+                                        <h5>Exchanges</h5>
+                                    </div>
+                                </a>
+                                <a href="{{ route('exchange.create') }}" target="_blank">
+                                    <div class="avatar">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endcan
             </div>
         </div>
-        @endcan
     </div>
+
 
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between">
@@ -381,7 +386,7 @@
                                 <table class="table border">
                                     <thead class="table-light">
                                     <tr class="text-nowrap">
-                                        <th class="text-center">#</th>
+                                        
                                         <th class="text-center">Currency</th>
                                         <th class="text-center">Amount</th>
                                     </tr>
@@ -389,9 +394,7 @@
                                     <tbody>
                                     @forelse($selectedTill?->tillAmounts ?? [] as $key => $tillAmount)
                                         <tr>
-                                            <td class="text-center">
-                                                {{ $key + 1 }}
-                                            </td>
+                                          
                                             <td class="text-center">
                                                 {{ $tillAmount->currency?->name }}
                                             </td>
@@ -426,6 +429,22 @@
         $wire.on('showModal', function () {
             $('#tillModal').modal('show')
         })
+
+        $(document).ready(function(){
+        function toggleCollapse() {
+            if ($(window).width() < 768) {
+                $('#collapseExample').removeClass('show');
+            } else {
+                $('#collapseExample').addClass('show');
+            }
+        }
+
+        toggleCollapse();
+
+        $(window).resize(function() {
+            toggleCollapse();
+        });
+    });
 
     </script>
     @endscript
