@@ -187,14 +187,19 @@ class ReportView extends Component
                     foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
                         if ($entry->action == "opening") {
                             $amount = $monthlyEntryAmount->amount;
+                            $amounts[$monthlyEntryAmount->currency_id] = [
+                                'debit' => $amount,
+                                'credit' => 0,
+                                'balance' => $amount,
+                            ];
                         } else {
                             $amount = $entry->monthlyEntry?->close_date ? $monthlyEntryAmount->closing_amount : $monthlyEntryAmount->amount;
+                            $amounts[$monthlyEntryAmount->currency_id] = [
+                                'debit' => 0,
+                                'credit' => $amount,
+                                'balance' => 0,
+                            ];
                         }
-                        $amounts[$monthlyEntryAmount->currency_id] = [
-                            'debit' => $amount,
-                            'credit' => 0,
-                            'balance' => $amount,
-                        ];
 
                         if (!in_array($monthlyEntryAmount->currency_id, $usedCurrenciesIds)) {
                             $usedCurrenciesIds[] = $monthlyEntryAmount->currency_id;
