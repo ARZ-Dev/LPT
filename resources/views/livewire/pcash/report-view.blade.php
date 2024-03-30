@@ -25,7 +25,7 @@
         </div>
     </div>
 
-  
+
     <a class="  d-md-none d-sm-block " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
         <i class="fa-solid fa-filter mt-3 mb-3" style="font-size: 48px;"></i>
     </a>
@@ -150,6 +150,7 @@
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title mb-3">Summary</h4>
+            <a href="#" class="btn btn-primary mb-2 text-nowrap" id="export-excel-btn">Export to Excel</a>
         </div>
         <div class="card-body">
             <div class="row">
@@ -261,7 +262,7 @@
                                     </a>
                                 </td>
                                 <td class="text-nowrap text-center">
-                                    {{ $data['date']->format('d-m-Y H:i') }}
+                                    {{ $data['date']->format('d/m/Y H:i') }}
                                 </td>
                                 <td class="text-nowrap text-center">
                                     {{ $data['user']->username }}
@@ -288,7 +289,7 @@
 
                                             @php($totalDebits[$till->id][$currency->id] = ($totalDebits[$till->id][$currency->id] ?? 0) + $data['amounts'][$currency->id]['debit'])
 
-                                            {{ number_format($data['amounts'][$currency->id]['debit'], 2) }}
+                                            {{ number_format($data['amounts'][$currency->id]['debit'], 2) }} {{ $currency->name }}
                                         @endif
                                     </td>
                                     <td class="text-nowrap text-center">
@@ -296,7 +297,7 @@
 
                                             @php($totalCredits[$till->id][$currency->id] = ($totalCredits[$till->id][$currency->id] ?? 0) + $data['amounts'][$currency->id]['credit'])
 
-                                            {{ number_format($data['amounts'][$currency->id]['credit'], 2) }}
+                                            {{ number_format($data['amounts'][$currency->id]['credit'], 2) }} {{ $currency->name }}
                                         @endif
                                     </td>
                                     <td class="text-nowrap text-center">
@@ -304,7 +305,7 @@
 
                                             @php($balances[$till->id][$currency->id] = $data['amounts'][$currency->id]['balance'])
 
-                                            {{ number_format($data['amounts'][$currency->id]['balance'], 2) }}
+                                            {{ number_format($data['amounts'][$currency->id]['balance'], 2) }} {{ $currency->name }}
                                         @endif
                                     </td>
                                 @endforeach
@@ -386,7 +387,7 @@
                                 <table class="table border">
                                     <thead class="table-light">
                                     <tr class="text-nowrap">
-                                        
+
                                         <th class="text-center">Currency</th>
                                         <th class="text-center">Amount</th>
                                     </tr>
@@ -394,7 +395,7 @@
                                     <tbody>
                                     @forelse($selectedTill?->tillAmounts ?? [] as $key => $tillAmount)
                                         <tr>
-                                          
+
                                             <td class="text-center">
                                                 {{ $tillAmount->currency?->name }}
                                             </td>
@@ -431,20 +432,30 @@
         })
 
         $(document).ready(function(){
-        function toggleCollapse() {
-            if ($(window).width() < 768) {
-                $('#collapseExample').removeClass('show');
-            } else {
-                $('#collapseExample').addClass('show');
+            function toggleCollapse() {
+                if ($(window).width() < 768) {
+                    $('#collapseExample').removeClass('show');
+                } else {
+                    $('#collapseExample').addClass('show');
+                }
             }
+
+            toggleCollapse();
+
+            $(window).resize(function() {
+                toggleCollapse();
+            });
+        });
+
+        function exportToExcel() {
+            const table = document.getElementById("report-data-table");
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet JS" });
+            XLSX.writeFile(wb, "summary-report.xlsx");
         }
 
-        toggleCollapse();
-
-        $(window).resize(function() {
-            toggleCollapse();
+        $('#export-excel-btn').on('click', function() {
+            exportToExcel();
         });
-    });
 
     </script>
     @endscript
