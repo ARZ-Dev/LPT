@@ -1,5 +1,13 @@
 <div>
 
+<style>
+
+    @media print{
+        .wael{
+            display:none ; 
+        }
+    }
+</style>
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Payments List</h4>
