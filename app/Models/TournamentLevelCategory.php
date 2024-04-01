@@ -6,14 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tournament extends Model
+class TournamentLevelCategory extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function levelCategories()
+    public function tournament()
     {
-        return $this->hasMany(TournamentLevelCategory::class);
+        return $this->belongsTo(Tournament::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(TournamentType::class);
     }
 }
