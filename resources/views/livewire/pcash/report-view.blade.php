@@ -461,7 +461,7 @@
         });
 
         $('#print-report').on('click', function() {
-            $('#print-report').on('click', function() {
+           
          
             var printWindow = window.open('', '_blank');
             printWindow.document.write('<html><head><title>Print Report</title>');
@@ -474,7 +474,7 @@
             printWindow.document.close();
             printWindow.print();
         });
-    });
+   
        
 
     </script>
