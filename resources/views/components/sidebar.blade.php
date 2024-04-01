@@ -118,6 +118,15 @@
         </li>
         @endcan
 
+        @can('tournament-list')
+        <li class="menu-item {{ request()->is('tournaments*') ? "active" : "" }}">
+            <a href="{{ route('tournaments') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-tournament"></i>
+                <div data-i18n="Tournaments">Tournaments</div>
+            </a>
+        </li>
+        @endcan
+
 	</ul>
 
 	<script>

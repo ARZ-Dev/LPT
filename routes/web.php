@@ -45,6 +45,9 @@ use App\Livewire\Teams\TeamForm;
 use App\Livewire\Players\PlayerView;
 use App\Livewire\Players\PlayerForm;
 
+use App\Livewire\Tournaments\TournamentView;
+use App\Livewire\Tournaments\TournamentForm;
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -190,7 +193,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/view/{id}/{status}', PlayerForm::class)->name('players.view');
     });
 
+    // |--------------------------------------------------------------------------
+    // |Tournaments
+    // |--------------------------------------------------------------------------
 
+    Route::group(['prefix' => 'tournaments'], function() {
+        Route::get('/', TournamentView::class)->name('tournaments');
+        Route::get('/create', TournamentForm::class)->name('tournaments.create');
+        Route::get('/edit/{id}', TournamentForm::class)->name('tournaments.edit');
+        Route::get('/view/{id}/{status}', TournamentForm::class)->name('tournaments.view');
+    });
 
 
 });
