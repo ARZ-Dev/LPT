@@ -31,7 +31,7 @@
     </a>
 
     <div class="collapse show " id="collapseExample">
-        <div class="card card-body">
+        <div class="card card-body mt-4">
 
             <div class="row mt-1 g-4 mb-4 ">
                 @can('monthlyEntry-list')
