@@ -150,7 +150,10 @@
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title mb-3">Summary</h4>
-            <a href="#" class="btn btn-primary mb-2 text-nowrap" id="export-excel-btn">Export to Excel</a>
+            <div>
+                <a href="#" class="btn btn-primary mb-2 text-nowrap" id="export-excel-btn">Export to Excel</a>
+                <a href="#" class="btn btn-primary mb-2 text-nowrap" id="print-report">Print</a>
+            </div>
         </div>
         <div class="card-body">
             <div class="row">
@@ -456,6 +459,23 @@
         $('#export-excel-btn').on('click', function() {
             exportToExcel();
         });
+
+        $('#print-report').on('click', function() {
+            $('#print-report').on('click', function() {
+         
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>Print Report</title>');
+
+            printWindow.document.write('<style>table {border-collapse: collapse; width: 100%;} th, td {border: 1px solid black; padding: 8px;}</style>');
+            printWindow.document.write('</head><body><h1>Summary</h1>');
+
+            printWindow.document.write($('#report-data-table').prop('outerHTML'));
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+    });
+       
 
     </script>
     @endscript
