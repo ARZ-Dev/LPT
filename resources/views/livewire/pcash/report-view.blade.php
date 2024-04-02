@@ -164,11 +164,17 @@
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title mb-3">Summary</h4>
-            <div>
+            <div class="d-none d-md-block">
                 <a href="#" class="btn btn-primary mb-2 text-nowrap" id="export-excel-btn">Export to Excel</a>
                 <a href="#" class="btn btn-primary mb-2 text-nowrap" id="print-report">Print</a>
             </div>
         </div>
+
+        <div class="d-flex flex-wrap gap-2 ms-3 d-md-none d-sm-block">
+            <a href="#" class="btn btn-primary mb-2 text-nowrap" id="export-excel-btn">Export to Excel</a>
+            <a href="#" class="btn btn-primary mb-2 text-nowrap" id="print-report">Print</a>
+        </div>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
