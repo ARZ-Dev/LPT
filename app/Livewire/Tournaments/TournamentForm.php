@@ -31,7 +31,7 @@ class TournamentForm extends Component
 
     public function mount($id = 0, $status = 0)
     {
-        $this->levelCategories = LevelCategory::all();
+        $this->levelCategories = LevelCategory::has('teams')->get();
         $this->tournamentTypes = TournamentType::all();
         $this->teams = Team::with('players')->get();
         $this->status = $status;
