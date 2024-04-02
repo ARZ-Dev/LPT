@@ -4,9 +4,12 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">View Receipt #{{ $receipt->id }}</h5>
-                    <a href="{{ route('receipt') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Receipts
-                    </a>
+                    <div>
+                        <a href="#" class="btn btn-primary mb-2 text-nowrap" id="print-receipt">Print</a>
+                        <a href="{{ route('receipt') }}" class="btn btn-primary mb-2 text-nowrap">
+                            Receipts
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -69,6 +72,52 @@
 
     @script
     <script>
+           $('#print-receipt').on('click', function() {
+           
+           var printWindow = window.open('', '_blank');
+   
+           printWindow.document.write('<html><head><title>Receipt #{{ $receipt->id }}</title>');
+           printWindow.document.write('<style>');
+           printWindow.document.write('body { font-family: Arial, sans-serif; font-size: 14px; }');
+           printWindow.document.write('.invoice { border: 1px solid #ccc; padding: 20px; margin: 20px; }');
+           printWindow.document.write('.invoice h1 { font-size: 24px; margin-bottom: 20px; }');
+           printWindow.document.write('.invoice span { display: block; margin-bottom: 10px; }');
+           printWindow.document.write('.invoice .fw-bold { font-weight: bold; }');
+           printWindow.document.write('</style>');
+           printWindow.document.write('</head><body>');
+   
+           printWindow.document.write('<div class="invoice">');
+           printWindow.document.write('<h1>Receipt #{{ $receipt->id }}</h1>');
+           printWindow.document.write('<span class="fw-bold">Created By:</span>');
+           printWindow.document.write('<span>{{ $receipt->user?->full_name }} / {{ $receipt->user?->username }}</span>');
+           printWindow.document.write('<span class="fw-bold">Till Name:</span>');
+           printWindow.document.write('<span>{{ $receipt->till?->name }} / {{ $receipt->till?->user?->full_name }}</span>');
+           printWindow.document.write('<span class="fw-bold">Category:</span>');
+           printWindow.document.write('<span>{{ $receipt->category?->name }}</span>');
+           printWindow.document.write('<span class="fw-bold">Sub Category:</span>');
+           printWindow.document.write('<span>{{ $receipt->subCategory?->name }}</span>');
+           printWindow.document.write('<span class="fw-bold">Paid By:</span>');
+           printWindow.document.write('<span>{{ $receipt->paid_by }}</span>');
+           printWindow.document.write('<span class="fw-bold">Description:</span>');
+           printWindow.document.write('<span>{{ $receipt->description }}</span>');
+
+           @foreach($receipt->receiptAmounts as $key => $receiptAmount)
+                printWindow.document.write('<h1></h1>');
+                printWindow.document.write('<h1>Receipt Amount {{ $key + 1 }}</h1>');
+                printWindow.document.write('<span class="fw-bold">Currency:</span>');
+                printWindow.document.write('<span>{{$receiptAmount->currency?->name}}</span>');
+                printWindow.document.write('<span class="fw-bold">Amount:</span>');
+                printWindow.document.write('<span>{{ number_format($receiptAmount->amount, 2) }} {{$receiptAmount->currency?->symbol}}</span>');
+            @endforeach
+
+
+           printWindow.document.write('</div>');
+   
+           printWindow.document.write('</body></html>');
+           printWindow.document.close();
+           
+           printWindow.print();
+          });
 
     </script>
     @endscript
