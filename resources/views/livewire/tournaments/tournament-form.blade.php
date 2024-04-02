@@ -57,8 +57,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                @error('categoriesInfo') <div class="text-danger">Please add the categories info.</div> @enderror
 
                 @foreach($selectedCategoriesIds as $key => $categoryId)
                     <div class="card mb-2">
