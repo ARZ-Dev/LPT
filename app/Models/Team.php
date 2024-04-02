@@ -21,4 +21,9 @@ class Team extends Model
     {
         return $this->belongsTo(LevelCategory::class);
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
 }
