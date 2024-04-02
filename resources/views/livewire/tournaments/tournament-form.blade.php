@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-12 col-md-6">
-                                <label class="form-label" for="name">Name</label>
+                                <label class="form-label" for="name">Name *</label>
                                 <input
                                     wire:model="name"
                                     type="text"
@@ -46,12 +46,12 @@
                                 @error('selectedCategoriesIds') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-sm-6">
-                                <label class="form-label">Start Date:</label>
+                                <label class="form-label">Start Date *</label>
                                 <input wire:model="startDate" type="date" class="form-control dt-input">
                                 @error('startDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-sm-6">
-                                <label class="form-label">End Date:</label>
+                                <label class="form-label">End Date *</label>
                                 <input wire:model="endDate" type="date" class="form-control dt-input">
                                 @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
@@ -75,7 +75,7 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
-                                    <label class="form-label" for="tournament-type-{{ $categoryId }}">Tournament Type *</label>
+                                    <label class="form-label" for="tournament-type-{{ $categoryId }}">Type *</label>
                                     <div wire:ignore>
                                         <select
                                             wire:model="categoriesInfo.{{ $categoryId }}.type_id"
@@ -96,8 +96,35 @@
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Teams:</label>
-                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_teams" id="nb-of-teams-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Teams">
+                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_teams" id="nb-of-teams-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Teams" disabled readonly>
                                     @error('categoriesInfo.' . $categoryId . '.nb_of_teams') <div class="text-danger">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="col-12 col-sm-12">
+                                    <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Teams:</label>
+                                    <div class="row">
+                                        @forelse($teams->where('level_category_id', $categoryId) as $team)
+                                            <div class="col-md-3 mb-4">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h5 class="card-title">{{ $team->nickname }}</h5>
+                                                            <a wire:click="toggleTeam({{ $categoryId }}, {{ $team->id }})" class="btn rounded-pill btn-{{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "warning" : "success" }} mb-2 text-nowrap text-white">
+                                                                {{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "Remove" : "Select" }}
+                                                            </a>
+                                                        </div>
+                                                        <p class="card-text">Players: {{ count($team->players) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="col-md-12">
+                                                <div class="alert alert-danger" role="alert">
+                                                    No teams available.
+                                                </div>
+                                            </div>
+                                        @endforelse
+                                    </div>
+
                                 </div>
                                 <div class="col-12 col-sm-6 mt-4">
                                     <label class="switch switch-primary">

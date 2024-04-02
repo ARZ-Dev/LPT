@@ -3,8 +3,10 @@
 namespace App\Livewire\Tournaments;
 
 use App\Models\LevelCategory;
+use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentLevelCategory;
+use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
 use App\Rules\EvenNumber;
 use App\Utils\Constants;
@@ -18,6 +20,7 @@ class TournamentForm extends Component
     public $status;
 
     public $tournament = null;
+    public $teams;
 
     // form data
     public $name;
@@ -30,6 +33,7 @@ class TournamentForm extends Component
     {
         $this->levelCategories = LevelCategory::all();
         $this->tournamentTypes = TournamentType::all();
+        $this->teams = Team::with('players')->get();
         $this->status = $status;
 
         if ($id) {
@@ -40,7 +44,9 @@ class TournamentForm extends Component
                 $this->authorize('tournament-edit');
             }
 
-            $this->tournament = Tournament::with(['levelCategories'])->findOrFail($id);
+            $this->tournament = Tournament::with([
+                    'levelCategories' => ['teams']
+                ])->findOrFail($id);
             $this->editing = true;
             $this->name = $this->tournament->name;
             $this->startDate = $this->tournament->start_date;
@@ -53,13 +59,23 @@ class TournamentForm extends Component
                     'type_id' => $levelCategory->tournament_type_id,
                     'nb_of_teams' => $levelCategory->number_of_teams,
                     'has_group_stage' => $levelCategory->has_group_stage,
+                    'teams' => $levelCategory->teams->pluck('team_id')->toArray(),
                 ];
             }
         } else {
-
             $this->authorize('tournament-create');
-
         }
+    }
+
+    public function toggleTeam($categoryId, $teamId)
+    {
+        if (in_array($teamId, $this->categoriesInfo[$categoryId]['teams'] ?? [])) {
+            $index = array_search($teamId, $this->categoriesInfo[$categoryId]['teams']);
+            unset($this->categoriesInfo[$categoryId]['teams'][$index]);
+        } else {
+            $this->categoriesInfo[$categoryId]['teams'][] = $teamId;
+        }
+        $this->categoriesInfo[$categoryId]['nb_of_teams'] = count($this->categoriesInfo[$categoryId]['teams']);
     }
 
     public function removeCategory($categoryId)
@@ -81,7 +97,8 @@ class TournamentForm extends Component
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
             'categoriesInfo' => ['required', 'array', 'min:1'],
             'categoriesInfo.*.type_id' => ['required'],
-            'categoriesInfo.*.nb_of_teams' => ['required', 'numeric', new EvenNumber],
+            'categoriesInfo.*.nb_of_teams' => ['required', 'numeric', new EvenNumber, 'min:2'],
+            'categoriesInfo.*.teams' => ['required', 'array', 'min:2']
         ];
     }
 
@@ -97,12 +114,19 @@ class TournamentForm extends Component
         ]);
 
         foreach ($this->categoriesInfo as $categoryId => $categoryInfo) {
-            $tournament->levelCategories()->create([
+            $tournamentLevelCategory = $tournament->levelCategories()->create([
                 'level_category_id' => $categoryId,
                 'tournament_type_id' => $categoryInfo['type_id'],
                 'number_of_teams' => $categoryInfo['nb_of_teams'],
                 'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
             ]);
+
+            foreach ($categoryInfo['teams'] ?? [] as $teamId) {
+                TournamentLevelCategoryTeam::create([
+                    'tournament_level_category_id' => $tournamentLevelCategory->id,
+                    'team_id' => $teamId,
+                ]);
+            }
         }
 
         return to_route('tournaments')->with('success', 'Tournament has been created successfully!');
@@ -123,11 +147,23 @@ class TournamentForm extends Component
             $levelCategory = TournamentLevelCategory::updateOrCreate([
                 'tournament_id' => $this->tournament->id,
                 'level_category_id' => $categoryId,
+            ],[
                 'tournament_type_id' => $categoryInfo['type_id'],
                 'number_of_teams' => $categoryInfo['nb_of_teams'],
                 'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
             ]);
             $categoriesIds[] = $levelCategory->id;
+
+            $teamsIds = [];
+            foreach ($categoryInfo['teams'] ?? [] as $teamId) {
+                $team = TournamentLevelCategoryTeam::updateOrCreate([
+                    'tournament_level_category_id' => $levelCategory->id,
+                    'team_id' => $teamId,
+                ]);
+                $teamsIds[] = $team->id;
+            }
+            TournamentLevelCategoryTeam::where('tournament_level_category_id', $levelCategory->id)->whereNotIn('id', $teamsIds)->delete();
+
         }
         TournamentLevelCategory::where('tournament_id', $this->tournament->id)->whereNotIn('id', $categoriesIds)->delete();
 
