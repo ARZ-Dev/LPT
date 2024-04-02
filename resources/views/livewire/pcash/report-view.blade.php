@@ -2,8 +2,8 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title mb-3">Available Tills</h4>
-            @can('till-create')
             <div>
+                @can('till-create')
                 <a href="{{ route('till.create') }}" class="btn btn-primary mb-2 text-nowrap" >
                     Create Till
                 </a>
@@ -13,9 +13,6 @@
                 </a>
             </div>
         </div>
-
-
-
         <div class="card-body collapse show" id="collapseExample2">
             <div class="row g-4">
                 @foreach($tills as $till)
@@ -33,132 +30,129 @@
         </div>
     </div>
 
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title mb-3">Pages</h4>
+            <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fa-solid fa-filter" style="font-size: 32px;"></i>
+            </a>
+        </div>
+        <div class="collapse show " id="collapseExample">
+            <div class="card-body">
 
-    
+                <div class="row mt-1 g-4 mb-4 ">
+                    @can('monthlyEntry-list')
+                    <div class="col-sm-6 col-xl-2">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <a href="{{ route('monthly-openings-closings') }}" >
+                                        <div class="content-left">
+                                            <h5>Closings</h5>
+                                        </div>
+                                    </a>
 
-        <div class="card mt-4">
-            <div class="card-header d-flex justify-content-between">
-                <h4 class="card-title mb-3">Pages</h4>
-                <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    <i class="fa-solid fa-filter" style="font-size: 32px;"></i>
-                </a>
-            </div>
-            <div class="collapse show " id="collapseExample">
-                <div class="card-body">
-
-                    <div class="row mt-1 g-4 mb-4 ">
-                        @can('monthlyEntry-list')
-                        <div class="col-sm-6 col-xl-2">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <a href="{{ route('monthly-openings-closings') }}" >
-                                            <div class="content-left">
-                                                <h5>Closings</h5>
-                                            </div>
-                                        </a>
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        @endcan
-
-                        @can('payment-list')
-                        <div class="col-sm-6 col-xl-2">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <a href="{{ route('payment') }}" >
-                                            <div class="content-left">
-                                                <h5>Payments</h5>
-                                            </div>
-                                        </a>
-                                        <a href="{{ route('payment.create') }}" >
-                                            <div class="avatar">
-                                                <span class="avatar-initial rounded bg-label-primary">
-                                                    <i class="fa-solid fa-plus"></i>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endcan
-
-                        @can('receipt-list')
-                        <div class="col-sm-6 col-xl-2">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <a href="{{ route('receipt') }}" >
-                                            <div class="content-left">
-                                                <h5>Receipts</h5>
-                                            </div>
-                                        </a>
-                                        <a href="{{ route('receipt.create') }}" >
-                                            <div class="avatar">
-                                            <span class="avatar-initial rounded bg-label-primary">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endcan
-
-                        @can('transfer-list')
-                        <div class="col-sm-6 col-xl-2">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <a href="{{ route('transfer') }}" >
-                                            <div class="content-left">
-                                                <h5>Transfers</h5>
-                                            </div>
-                                        </a>
-                                        <a href="{{ route('transfer.create') }}" >
-                                            <div class="avatar">
-                                            <span class="avatar-initial rounded bg-label-primary">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endcan
-
-                        @can('exchange-list')
-                        <div class="col-sm-6 col-xl-2">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <a href="{{ route('exchange') }}" >
-                                            <div class="content-left">
-                                                <h5>Exchanges</h5>
-                                            </div>
-                                        </a>
-                                        <a href="{{ route('exchange.create') }}" >
-                                            <div class="avatar">
-                                            <span class="avatar-initial rounded bg-label-primary">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endcan
                     </div>
+                    @endcan
+
+                    @can('payment-list')
+                    <div class="col-sm-6 col-xl-2">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <a href="{{ route('payment') }}" >
+                                        <div class="content-left">
+                                            <h5>Payments</h5>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('payment.create') }}" >
+                                        <div class="avatar">
+                                            <span class="avatar-initial rounded bg-label-primary">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endcan
+
+                    @can('receipt-list')
+                    <div class="col-sm-6 col-xl-2">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <a href="{{ route('receipt') }}" >
+                                        <div class="content-left">
+                                            <h5>Receipts</h5>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('receipt.create') }}" >
+                                        <div class="avatar">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endcan
+
+                    @can('transfer-list')
+                    <div class="col-sm-6 col-xl-2">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <a href="{{ route('transfer') }}" >
+                                        <div class="content-left">
+                                            <h5>Transfers</h5>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('transfer.create') }}" >
+                                        <div class="avatar">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endcan
+
+                    @can('exchange-list')
+                    <div class="col-sm-6 col-xl-2">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <a href="{{ route('exchange') }}" >
+                                        <div class="content-left">
+                                            <h5>Exchanges</h5>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('exchange.create') }}" >
+                                        <div class="avatar">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endcan
                 </div>
             </div>
         </div>
+    </div>
 
 
     <div class="card mt-3">
@@ -485,8 +479,8 @@
         });
 
         $('#print-report').on('click', function() {
-           
-         
+
+
             var printWindow = window.open('', '_blank');
             printWindow.document.write('<html><head><title>Print Report</title>');
 
@@ -498,8 +492,8 @@
             printWindow.document.close();
             printWindow.print();
         });
-   
-       
+
+
 
     </script>
     @endscript
