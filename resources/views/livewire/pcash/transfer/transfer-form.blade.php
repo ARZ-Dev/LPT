@@ -87,11 +87,11 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-4 col-md-5 col-sm-4">
+                                            <div class="col-5 col-md-5 col-sm-5">
                                                 <input class="form-control cleave-input w-100 me-2 " wire:model="transferAmounts.{{ $key }}.amount" type="text" name="transferAmount[{{ $key }}][amount]" placeholder="Amount" id="amount-{{$key}}" required>
                                                 @error('transferAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
-                                            <div class="col-4 col-md-5 col-sm-4">
+                                            <div class="col-3 col-md-5 col-sm-3">
                                                 <div wire:ignore>
                                                     <select
                                                         wire:model="transferAmounts.{{ $key }}.currency_id"

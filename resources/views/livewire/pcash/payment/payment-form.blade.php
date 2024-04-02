@@ -82,7 +82,7 @@
                                 <div class="row">
                                     <div class="col-5 d-flex justify-content-between">
                                         <label class="form-label mt-3" for="amount-{{$key}}">
-                                            Amount <span class="text-danger">*</span>
+                                            Amount<span class="text-danger">*</span>
                                         </label>
                                         <span class="form-label mt-3 available-amounts" wire:ignore id="amount-available-{{ $key }}"></span>
                                     </div>
@@ -92,11 +92,11 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-4 col-md-5 col-sm-4 ">
+                                    <div class="col-5 col-md-5 col-sm-5 ">
                                         <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="paymentAmounts.{{ $key }}.amount" type="text" placeholder="Amount" required>
                                         @error('paymentAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
-                                    <div class="col-4 col-md-5 col-sm-4">
+                                    <div class="col-3 col-md-5 col-sm-3">
                                         <div wire:ignore>
                                             <select class="form-select selectpicker w-100 currency"
                                                 aria-label="Default select example"
