@@ -54,7 +54,7 @@
                                     <div class="d-flex align-items-start justify-content-between">
                                         <a href="{{ route('monthly-openings-closings') }}" >
                                             <div class="content-left">
-                                                <h5>Closings</h5>
+                                                <h5>Openings/Closings</h5>
                                             </div>
                                         </a>
 
