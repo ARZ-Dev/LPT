@@ -105,7 +105,7 @@
                                     <div class="row">
                                         @forelse($teams->where('level_category_id', $categoryId) as $team)
                                             <div class="col-md-3 mb-4">
-                                                <div class="card bg-label-{{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "success" : "danger" }}">
+                                                <div class="card bg-label-{{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "linkedin" : "danger" }}">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
                                                             <h5 class="card-title">{{ $team->nickname }}</h5>
