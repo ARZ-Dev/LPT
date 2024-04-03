@@ -1,4 +1,7 @@
 <div>
+    <style>
+
+    </style>
     <div class="row">
         <div class="col-xl">
 
@@ -79,24 +82,24 @@
 
                             <div wire:key="paymentAmount-{{ $key }}">
 
-                                <div class="row">
+                                <div class="row ">
                                     <div class="col-5 d-flex justify-content-between">
-                                        <label class="form-label mt-3" for="amount-{{$key}}">
+                                        <label class="form-label mt-3 d-none d-md-block" for="amount-{{$key}}">
                                             Amount<span class="text-danger">*</span>
                                         </label>
                                         <span class="form-label mt-3 available-amounts" wire:ignore id="amount-available-{{ $key }}"></span>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-5 d-none d-md-block">
                                         <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-5 col-md-5 col-sm-5 ">
+                                    <div class="col-12 col-md-5 col-sm-12 sm-mb ">
                                         <input class="form-control  cleave-input w-100 me-2" id="amount{{$key}}" wire:model="paymentAmounts.{{ $key }}.amount" type="text" placeholder="Amount" required>
                                         @error('paymentAmounts.'. $key .'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                     </div>
-                                    <div class="col-3 col-md-5 col-sm-3">
+                                    <div class="col-12 col-md-5 col-sm-12 sm-mb ">
                                         <div wire:ignore>
                                             <select class="form-select selectpicker w-100 currency"
                                                 aria-label="Default select example"
@@ -121,7 +124,7 @@
                                     </div>
 
                                     @if(!$status)
-                                        <div class="col-4 col-md-2 col-sm-4">
+                                        <div class="col-12 col-md-2 col-sm-12 ">
                                             @if($key == 0)
                                                 <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
                                             @else
