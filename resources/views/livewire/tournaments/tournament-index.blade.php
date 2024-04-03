@@ -22,7 +22,7 @@
                         <td>{{ $tournament->name }}</td>
                         <td>
                             @can('tournament-view')
-                                <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+{{--                                <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
                             @can('tournament-edit')
                                 <a href="{{ route('tournaments.edit', $tournament->id) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
