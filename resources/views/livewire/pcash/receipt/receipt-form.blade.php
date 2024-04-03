@@ -1,4 +1,7 @@
 <div>
+    <style>
+
+    </style>
     <div class="row">
         <div class="col-xl">
                 <div class="card mb-4">
@@ -71,21 +74,21 @@
                         <div class="col-12 col-md-12">
                             @foreach($receiptAmounts as $key => $receiptAmount)
                                 <div wire:key="receiptAmount-{{ $key }}">
-                                    <div class="row">
+                                    <div class="row ">
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3 d-none d-md-block " for="amount-{{$key}}">Amount <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-5">
-                                            <label class="form-label mt-3" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
+                                            <label class="form-label mt-3 d-none d-md-block" for="currency-{{$key}}">Currency <span class="text-danger">*</span></label>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-5 col-md-5 col-sm-5">
+                                        <div class="col-12 col-md-5 col-sm-12 sm-mb">
                                             <input id="amount-{{$key}}" class="form-control cleave-input w-100 me-2" wire:model="receiptAmounts.{{ $key }}.amount" type="text" name="receiptAmount[{{ $key }}][amount]" placeholder="Amount" required>
                                             @error('receiptAmounts.'.$key.'.amount') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
-                                        <div class="col-3 col-md-5 col-sm-3">
+                                        <div class="col-12 col-md-5 col-sm-12 sm-mb">
                                             <select wire:model="receiptAmounts.{{ $key }}.currency_id"
                                                 aria-label="Default select example"
                                                 id="currency-{{$key}}"
@@ -109,7 +112,7 @@
                                         </div>
 
                                         @if(!$status)
-                                            <div class="col-4 col-md-2 col-sm-4">
+                                            <div class="col-12 col-md-2 col-sm-12 sm-mb">
                                                 @if($key == 0)
                                                     <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Amount</button>
                                                 @else
