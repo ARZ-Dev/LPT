@@ -60,6 +60,8 @@ class TournamentForm extends Component
                     'nb_of_teams' => $levelCategory->number_of_teams,
                     'has_group_stage' => $levelCategory->has_group_stage,
                     'teams' => $levelCategory->teams->pluck('team_id')->toArray(),
+                    'nb_of_groups' => $levelCategory->number_of_groups,
+                    'nb_of_winners_per_group' => $levelCategory->number_of_winners_per_group,
                 ];
             }
         } else {
@@ -98,7 +100,10 @@ class TournamentForm extends Component
             'categoriesInfo' => ['required', 'array', 'min:1'],
             'categoriesInfo.*.type_id' => ['required'],
             'categoriesInfo.*.nb_of_teams' => ['required', 'numeric', new EvenNumber, 'min:2'],
-            'categoriesInfo.*.teams' => ['required', 'array', 'min:2']
+            'categoriesInfo.*.teams' => ['required', 'array', 'min:2'],
+            'categoriesInfo.*.has_group_stage' => ['boolean'],
+            'categoriesInfo.*.nb_of_groups' => ['required_if:categoriesInfo.*.has_group_stage,true', 'numeric'],
+            'categoriesInfo.*.nb_of_winners_per_group' => ['required_if:categoriesInfo.*.has_group_stage,true', 'numeric'],
         ];
     }
 
@@ -119,6 +124,8 @@ class TournamentForm extends Component
                 'tournament_type_id' => $categoryInfo['type_id'],
                 'number_of_teams' => $categoryInfo['nb_of_teams'],
                 'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
+                'number_of_groups' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_groups'] : NULL,
+                'number_of_winners_per_group' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_winners_per_group'] : NULL,
             ]);
 
             foreach ($categoryInfo['teams'] ?? [] as $teamId) {
@@ -151,6 +158,8 @@ class TournamentForm extends Component
                 'tournament_type_id' => $categoryInfo['type_id'],
                 'number_of_teams' => $categoryInfo['nb_of_teams'],
                 'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
+                'number_of_groups' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_groups'] : NULL,
+                'number_of_winners_per_group' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_winners_per_group'] : NULL,
             ]);
             $categoriesIds[] = $levelCategory->id;
 

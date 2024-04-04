@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('tournament_type_id')->constrained()->cascadeOnDelete();
             $table->integer('number_of_teams');
             $table->boolean('has_group_stage')->default(false);
+            $table->integer('number_of_groups')->nullable();
+            $table->integer('number_of_winners_per_group')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
