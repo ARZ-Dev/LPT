@@ -21,9 +21,9 @@
                         <td>{{ $tournament->id }}</td>
                         <td>{{ $tournament->name }}</td>
                         <td>
-                            <a href="#" class="text-body generate-matches" data-id="{{ $tournament->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
-                                <i class="ti ti-table-shortcut ti-sm me-2"></i>
-                            </a>
+{{--                            <a href="#" class="text-body generate-matches" data-id="{{ $tournament->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">--}}
+{{--                                <i class="ti ti-table-shortcut ti-sm me-2"></i>--}}
+{{--                            </a>--}}
                             @can('tournament-view')
 {{--                                <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => '1']) }}" class="text-body"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
