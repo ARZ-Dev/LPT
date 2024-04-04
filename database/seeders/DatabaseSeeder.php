@@ -22,15 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TournamentDeuceTypeSeeder::class);
         $this->call(CountrySeeder::class);
         $this->call(TillAmountSeeder::class);
-
-
-
-
-
-
-
-
-
-
+        $this->call(KnockoutRoundSeeder::class);
     }
 }

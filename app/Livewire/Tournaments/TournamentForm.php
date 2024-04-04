@@ -102,8 +102,8 @@ class TournamentForm extends Component
             'categoriesInfo.*.nb_of_teams' => ['required', 'numeric', new EvenNumber, 'min:2'],
             'categoriesInfo.*.teams' => ['required', 'array', 'min:2'],
             'categoriesInfo.*.has_group_stage' => ['boolean'],
-            'categoriesInfo.*.nb_of_groups' => ['required_if:categoriesInfo.*.has_group_stage,true', 'numeric'],
-            'categoriesInfo.*.nb_of_winners_per_group' => ['required_if:categoriesInfo.*.has_group_stage,true', 'numeric'],
+            'categoriesInfo.*.nb_of_groups' => ['required_if:categoriesInfo.*.has_group_stage,true'],
+            'categoriesInfo.*.nb_of_winners_per_group' => ['required_if:categoriesInfo.*.has_group_stage,true'],
         ];
     }
 

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('rank')->default(1);
+            $table->boolean('has_qualified')->default(false);
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_teams');
+        Schema::dropIfExists('group_team');
     }
 };
