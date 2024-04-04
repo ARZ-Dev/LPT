@@ -4,6 +4,7 @@ namespace App\Livewire\Tournaments;
 
 use App\Models\Game;
 use App\Models\Group;
+use App\Models\KnockoutRound;
 use App\Models\Team;
 use App\Models\Tournament;
 use Illuminate\Support\Facades\DB;
@@ -42,15 +43,15 @@ class TournamentView extends Component
             $tournament = Tournament::with(['levelCategories' => ['teams']])->findOrFail($tournamentId);
 
             foreach ($tournament->levelCategories as $category) {
+                $nbOfTeams = $category->number_of_teams;
+                $teamsIds = $category->teams->pluck('team_id')->toArray();
+                $teams = Team::find($teamsIds);
+
                 if ($category->has_group_stage) {
-                    $nbOfTeams = $category->number_of_teams;
                     $numberOfGroups = $category->number_of_groups;
                     $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
-                    $teamsIds = $category->teams->pluck('team_id')->toArray();
-                    $teams = Team::find($teamsIds);
                     $shuffledTeams = $teams->shuffle();
-
                     for ($i = 1; $i <= $numberOfGroups; $i++) {
                         $group = Group::create([
                             'tournament_level_category_id' => $category->id,
@@ -67,7 +68,7 @@ class TournamentView extends Component
                         for ($j = 0; $j < $teamCount - 1; $j++) {
                             for ($k = $j + 1; $k < $teamCount; $k++) {
                                 Game::create([
-                                    'type' => 'group_stage',
+                                    'type' => 'group_stages',
                                     'group_id' => $group->id,
                                     'home_team_id' => $teamIds[$j],
                                     'away_team_id' => $teamIds[$k],
@@ -76,7 +77,29 @@ class TournamentView extends Component
                         }
                     }
                 } else {
-                    // @todo - Knockout Stages
+                    $rounds = ceil(log($nbOfTeams, 2));
+
+                    for ($i = 1; $i <= $rounds; $i++) {
+                        $knockoutRound = KnockoutRound::create([
+                            'tournament_level_category_id' => $category->id,
+                            'name' => 'Round ' . $i,
+                        ]);
+
+                        // Generate matches for the current knockout round
+                        while ($teams->count() >= 2) {
+                            // Take two teams from the top of the teams list
+                            $homeTeam = $teams->shift();
+                            $awayTeam = $teams->shift();
+
+                            // Create a match for the current knockout round
+                            Game::create([
+                                'type' => 'knockouts',
+                                'knockout_round_id' => $knockoutRound->id,
+                                'home_team_id' => $homeTeam->id,
+                                'away_team_id' => $awayTeam->id,
+                            ]);
+                        }
+                    }
                 }
             }
             DB::commit();

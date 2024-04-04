@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('knockout_rounds', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tournament_level_category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->integer('remaining_teams');
             $table->timestamps();
         });
     }
