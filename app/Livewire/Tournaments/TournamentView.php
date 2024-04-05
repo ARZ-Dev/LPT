@@ -80,9 +80,16 @@ class TournamentView extends Component
                     $rounds = ceil(log($nbOfTeams, 2));
 
                     for ($i = 1; $i <= $rounds; $i++) {
-                        $knockoutRound = KnockoutRound::create([
+                        $roundName = match ($nbOfTeams) {
+                            2 => 'Final',
+                            4 => 'Semi Final',
+                            8 => 'Quarter Final',
+                            default => 'Round of ' . $nbOfTeams,
+                        };
+
+                        $knockoutRound = KnockoutRound::updateOrCreate([
                             'tournament_level_category_id' => $category->id,
-                            'name' => 'Round ' . $i,
+                            'name' => $roundName,
                         ]);
 
                         // Generate matches for the current knockout round
