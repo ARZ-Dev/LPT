@@ -140,14 +140,14 @@
                                         <span class="switch-label">Has Group Stages?</span>
                                     </label>
                                 </div>
-                                <div class="col-6 col-sm-6 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
+                                <div class="col-md-6 col-sm-12 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
                                     <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Groups:</label>
                                     <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_groups" id="nb-of-groups-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Groups">
                                     @error('categoriesInfo.' . $categoryId . '.nb_of_groups') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-6 col-sm-6 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
+                                <div class="col-md-6 col-sm-12 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
                                     <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Winners per Group:</label>
-                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_winners_per_group" id="nb-of-winners-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Winners Per Group">
+                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_winners_per_group" id="nb-of-winners-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
                                     @error('categoriesInfo.' . $categoryId . '.nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                             </div>
