@@ -59,103 +59,6 @@
                     </div>
                 </div>
 
-                @error('categoriesInfo') <div class="text-danger">Please add the categories info.</div> @enderror
-
-                @foreach($selectedCategoriesIds as $key => $categoryId)
-                    <div class="card mb-2">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                {{ $levelCategories->firstWhere('id', $categoryId)?->name }}
-                            </h5>
-                            <a wire:click="removeCategory({{ $categoryId }})" href="#" data-category-id="{{ $categoryId }}"
-                               class="btn btn-danger mb-2 text-nowrap remove-category-btn"
-                            >
-                                Remove
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <label class="form-label" for="tournament-type-{{ $categoryId }}">Type *</label>
-                                    <div wire:ignore>
-                                        <select
-                                            wire:model="categoriesInfo.{{ $categoryId }}.type_id"
-                                            id="tournament-type-{{ $categoryId }}"
-                                            class="selectpicker w-100 @error('levelCategoryId') invalid-validation-select @enderror"
-                                            title="Select Type"
-                                            data-style="btn-default"
-                                            data-live-search="true"
-                                            data-icon-base="ti"
-                                            data-size="5"
-                                            data-tick-icon="ti-check text-white" required>
-                                            @foreach($tournamentTypes as $tournamentType)
-                                                <option value="{{ $tournamentType->id }}" @selected(($categoriesInfo[$categoryId]['type_id'] ?? null) == $tournamentType->id)>{{ $tournamentType->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('categoriesInfo.' . $categoryId . '.type_id') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Teams:</label>
-                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_teams" id="nb-of-teams-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Teams" disabled readonly>
-                                    @error('categoriesInfo.' . $categoryId . '.nb_of_teams') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="col-12 col-sm-12">
-                                    <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Teams:</label>
-                                    <div class="row">
-                                        @forelse($teams->where('level_category_id', $categoryId) as $team)
-                                            <div class="col-md-3 mb-4">
-                                                <div class="card bg-label-{{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "linkedin" : "danger" }}">
-                                                    <div class="card-body">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h5 class="card-title">{{ $team->nickname }}</h5>
-                                                            <a wire:click="toggleTeam({{ $categoryId }}, {{ $team->id }})" class="btn rounded-pill btn-{{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "warning" : "success" }} mb-2 text-nowrap text-white">
-                                                                {{ in_array($team->id, $categoriesInfo[$categoryId]['teams'] ?? []) ? "Remove" : "Select" }}
-                                                            </a>
-                                                        </div>
-                                                        <p class="card-text">Players: {{ count($team->players) }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @empty
-                                            <div class="col-md-12">
-                                                <div class="alert alert-danger" role="alert">
-                                                    No teams available.
-                                                </div>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-12 mt-4">
-                                    <label class="switch switch-primary">
-                                        <input wire:model.live="categoriesInfo.{{ $categoryId }}.has_group_stage" @checked($categoriesInfo[$categoryId]['has_group_stage'] ?? false) type="checkbox" class="switch-input" />
-                                        <span class="switch-toggle-slider">
-                                          <span class="switch-on">
-                                            <i class="ti ti-check"></i>
-                                          </span>
-                                          <span class="switch-off">
-                                            <i class="ti ti-x"></i>
-                                          </span>
-                                        </span>
-                                        <span class="switch-label">Has Group Stages?</span>
-                                    </label>
-                                </div>
-                                <div class="col-md-6 col-sm-12 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
-                                    <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Groups:</label>
-                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_groups" id="nb-of-groups-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Groups">
-                                    @error('categoriesInfo.' . $categoryId . '.nb_of_groups') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="col-md-6 col-sm-12 {{ ($categoriesInfo[$categoryId]['has_group_stage'] ?? false) ? "" : "d-none" }}">
-                                    <label for="nb-of-teams-{{ $categoryId }}" class="form-label">Number of Winners per Group:</label>
-                                    <input wire:model="categoriesInfo.{{ $categoryId }}.nb_of_winners_per_group" id="nb-of-winners-{{ $categoryId }}" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
-                                    @error('categoriesInfo.' . $categoryId . '.nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                @endforeach
-
                 @if(!$status)
                     <div class="col-12 text-end mt-2">
                         <button wire:click="{{ $editing ? "update" : "store" }}" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
@@ -175,14 +78,6 @@
 
         $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
-        })
-
-        $(document).on('click', '.remove-category-btn', function () {
-            const categoriesSelector = $('#selectedCategoriesIds')
-            let selectedCategories = categoriesSelector.val();
-            let removedCategoryId = $(this).data('category-id');
-            selectedCategories = selectedCategories.filter(categoryId => categoryId != removedCategoryId);
-            categoriesSelector.selectpicker('val', selectedCategories);
         })
 
     </script>

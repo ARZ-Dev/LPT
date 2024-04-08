@@ -26,4 +26,9 @@ class TournamentLevelCategory extends Model
     {
         return $this->hasMany(TournamentLevelCategoryTeam::class);
     }
+
+    public function levelCategory()
+    {
+        return $this->belongsTo(LevelCategory::class);
+    }
 }

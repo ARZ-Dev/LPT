@@ -16,7 +16,6 @@ class TournamentForm extends Component
 {
     public bool $editing = false;
     public $levelCategories = [];
-    public $tournamentTypes = [];
     public $status;
 
     public $tournament = null;
@@ -32,7 +31,6 @@ class TournamentForm extends Component
     public function mount($id = 0, $status = 0)
     {
         $this->levelCategories = LevelCategory::has('teams')->get();
-        $this->tournamentTypes = TournamentType::all();
         $this->teams = Team::with('players')->get();
         $this->status = $status;
 
@@ -52,32 +50,9 @@ class TournamentForm extends Component
             $this->startDate = $this->tournament->start_date;
             $this->endDate = $this->tournament->end_date;
             $this->selectedCategoriesIds = $this->tournament->levelCategories->pluck('level_category_id')->toArray();
-
-            $this->categoriesInfo = [];
-            foreach ($this->tournament->levelCategories as $levelCategory) {
-                $this->categoriesInfo[$levelCategory->level_category_id] = [
-                    'type_id' => $levelCategory->tournament_type_id,
-                    'nb_of_teams' => $levelCategory->number_of_teams,
-                    'has_group_stage' => $levelCategory->has_group_stage,
-                    'teams' => $levelCategory->teams->pluck('team_id')->toArray(),
-                    'nb_of_groups' => $levelCategory->number_of_groups,
-                    'nb_of_winners_per_group' => $levelCategory->number_of_winners_per_group,
-                ];
-            }
         } else {
             $this->authorize('tournament-create');
         }
-    }
-
-    public function toggleTeam($categoryId, $teamId)
-    {
-        if (in_array($teamId, $this->categoriesInfo[$categoryId]['teams'] ?? [])) {
-            $index = array_search($teamId, $this->categoriesInfo[$categoryId]['teams']);
-            unset($this->categoriesInfo[$categoryId]['teams'][$index]);
-        } else {
-            $this->categoriesInfo[$categoryId]['teams'][] = $teamId;
-        }
-        $this->categoriesInfo[$categoryId]['nb_of_teams'] = count($this->categoriesInfo[$categoryId]['teams']);
     }
 
     public function removeCategory($categoryId)
@@ -97,13 +72,6 @@ class TournamentForm extends Component
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
             'startDate' => ['required', 'date'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
-            'categoriesInfo' => ['required', 'array', 'min:1'],
-            'categoriesInfo.*.type_id' => ['required'],
-            'categoriesInfo.*.nb_of_teams' => ['required', 'numeric', new EvenNumber, 'min:2'],
-            'categoriesInfo.*.teams' => ['required', 'array', 'min:2'],
-            'categoriesInfo.*.has_group_stage' => ['boolean'],
-            'categoriesInfo.*.nb_of_groups' => ['required_if:categoriesInfo.*.has_group_stage,true'],
-            'categoriesInfo.*.nb_of_winners_per_group' => ['required_if:categoriesInfo.*.has_group_stage,true'],
         ];
     }
 
@@ -118,25 +86,15 @@ class TournamentForm extends Component
             'end_date' => $this->endDate,
         ]);
 
-        foreach ($this->categoriesInfo as $categoryId => $categoryInfo) {
-            $tournamentLevelCategory = $tournament->levelCategories()->create([
+        foreach ($this->selectedCategoriesIds as $categoryId) {
+            $tournament->levelCategories()->create([
                 'level_category_id' => $categoryId,
-                'tournament_type_id' => $categoryInfo['type_id'],
-                'number_of_teams' => $categoryInfo['nb_of_teams'],
-                'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
-                'number_of_groups' => ($categoryInfo['has_group_stage'] ?? false) ? $categoryInfo['nb_of_groups'] : NULL,
-                'number_of_winners_per_group' => ($categoryInfo['has_group_stage'] ?? false) ? $categoryInfo['nb_of_winners_per_group'] : NULL,
+                'start_date' => $this->startDate,
+                'end_date' => $this->endDate,
             ]);
-
-            foreach ($categoryInfo['teams'] ?? [] as $teamId) {
-                TournamentLevelCategoryTeam::create([
-                    'tournament_level_category_id' => $tournamentLevelCategory->id,
-                    'team_id' => $teamId,
-                ]);
-            }
         }
 
-        return to_route('tournaments')->with('success', 'Tournament has been created successfully!');
+        return to_route('tournaments-categories', $tournament->id)->with('success', 'Tournament has been created successfully!');
     }
 
     public function update()
