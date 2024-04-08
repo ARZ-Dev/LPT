@@ -51,9 +51,45 @@
                         <input wire:model="nb_of_teams" id="nb-of-teams" type="number" class="form-control dt-input" placeholder="Number of Teams" disabled readonly>
                         @error('nb_of_teams') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+                    <div class="col-12 col-sm-12 mt-4">
+                        <label class="switch switch-primary">
+                            <input wire:model.live="has_group_stages" @checked($has_group_stages ?? false) type="checkbox" class="switch-input" />
+                            <span class="switch-toggle-slider">
+                                <span class="switch-on">
+                                  <i class="ti ti-check"></i>
+                                </span>
+                                <span class="switch-off">
+                                  <i class="ti ti-x"></i>
+                                </span>
+                            </span>
+                            <span class="switch-label">Has Group Stages?</span>
+                        </label>
+                    </div>
+                    <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
+                        <label for="nb-of-teams" class="form-label">Number of Groups:</label>
+                        <input wire:model="nb_of_groups" id="nb-of-groups" type="number" class="form-control dt-input" placeholder="Number of Groups">
+                        @error('nb_of_groups') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
+                        <label for="nb-of-teams" class="form-label">Number of Winners per Group:</label>
+                        <input wire:model="nb_of_winners_per_group" id="nb-of-winners" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
+                        @error('nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 mb-2">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {{ $tournamentLevelCategory?->levelCategory?->name }} Teams
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+
                     <div class="col-12 col-sm-12">
-                        <div class="d-flex justify-content-between">
-                            <h6>Teams:</h6>
+                        <div class="d-flex justify-content-end">
                             <div class="col-2 mb-2">
                                 <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
                             </div>
@@ -81,30 +117,6 @@
                                 </div>
                             @endforelse
                         </div>
-                    </div>
-                    <div class="col-12 col-sm-12 mt-4">
-                        <label class="switch switch-primary">
-                            <input wire:model.live="has_group_stages" @checked($has_group_stages ?? false) type="checkbox" class="switch-input" />
-                            <span class="switch-toggle-slider">
-                                <span class="switch-on">
-                                  <i class="ti ti-check"></i>
-                                </span>
-                                <span class="switch-off">
-                                  <i class="ti ti-x"></i>
-                                </span>
-                            </span>
-                            <span class="switch-label">Has Group Stages?</span>
-                        </label>
-                    </div>
-                    <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
-                        <label for="nb-of-teams" class="form-label">Number of Groups:</label>
-                        <input wire:model="nb_of_groups" id="nb-of-groups" type="number" class="form-control dt-input" placeholder="Number of Groups">
-                        @error('nb_of_groups') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
-                        <label for="nb-of-teams" class="form-label">Number of Winners per Group:</label>
-                        <input wire:model="nb_of_winners_per_group" id="nb-of-winners" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
-                        @error('nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                 </div>
             </div>

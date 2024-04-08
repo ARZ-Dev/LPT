@@ -76,7 +76,7 @@ class TournamentCategoryForm extends Component
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'tournament_type_id' => $this->type_id,
-            'number_of_teams' => $this->nb_of_teams,
+            'number_of_teams' => count($this->selectedTeamsIds),
             'has_group_stage' => $this->has_group_stages ?? false,
             'number_of_groups' => ($this->has_group_stages ?? false) ? $this->nb_of_groups : NULL,
             'number_of_winners_per_group' => ($this->has_group_stages ?? false) ? $this->nb_of_winners_per_group : NULL,
