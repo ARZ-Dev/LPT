@@ -43,7 +43,7 @@ class TournamentForm extends Component
             }
 
             $this->tournament = Tournament::with(['createdBy',
-                    'levelCategories' => ['teams']
+                    'levelCategories.levelCategory' => ['teams']
                 ])->findOrFail($id);
             $this->editing = true;
             $this->name = $this->tournament->name;

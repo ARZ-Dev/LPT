@@ -36,6 +36,27 @@
                 </div>
             </div>
 
+            <div class="row">
+                @foreach($tournament->levelCategories as $key => $levelCategory)
+                        <div class="col-12 col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Tournament Category {{ $key + 1 }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 m-2">
+                                            <span class="fw-bold text-dark">Level Category: </span>
+                                            <span class="text-dark">{{$levelCategory->levelCategory?->name}} </span><br>
+                                        </div>
+                               
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                @endforeach
+            </div>
+
         </div>
     </div>
 

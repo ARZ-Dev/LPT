@@ -34,6 +34,8 @@
                         <td>
                             <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
                             <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                            <a href="#" class="text-body edit-tournament-button knockoutRound" data-id="{{ $category->id }}"><i class="ti ti-vector ti-sm"></i></a>
+
                         </td>
                     </tr>
                 @endforeach
@@ -52,6 +54,11 @@
         $(document).on('click', '.generate-matches', function () {
             let tournamentId = $(this).data('id');
             $wire.dispatch('generateMatches', { tournamentId })
+        })
+
+        $(document).on('click', '.knockoutRound', function () {
+            let id = $(this).data('id');
+            $wire.dispatch('knockoutRound', { id })
         })
     </script>
     @endscript
