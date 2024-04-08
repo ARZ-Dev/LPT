@@ -16,11 +16,11 @@ class TournamentCategoryForm extends Component
     public $tournamentLevelCategory;
     public $tournamentTypes = [];
     public $type_id;
-    public int $nb_of_teams;
+    public $nb_of_teams;
     public $selectedTeamsIds = [];
     public bool $has_group_stages = false;
-    public int $nb_of_groups;
-    public int $nb_of_winners_per_group;
+    public $nb_of_groups;
+    public $nb_of_winners_per_group;
     public $start_date;
     public $end_date;
     public string $teams_filter_search = "";

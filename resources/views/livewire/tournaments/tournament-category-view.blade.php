@@ -33,6 +33,7 @@
                         <td>{{ $category->end_date }}</td>
                         <td>
                             <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
+                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                         </td>
                     </tr>
                 @endforeach
