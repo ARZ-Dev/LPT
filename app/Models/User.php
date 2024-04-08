@@ -111,4 +111,9 @@ class User extends Authenticatable
         return $this->hasMany(MonthlyEntry::class,'created_by');
     }
 
+    public function tournaments()
+    {
+        return $this->hasMany(Tournament::class,'created_by');
+    }
+
 }

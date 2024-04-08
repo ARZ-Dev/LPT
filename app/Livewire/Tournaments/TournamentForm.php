@@ -42,7 +42,7 @@ class TournamentForm extends Component
                 $this->authorize('tournament-edit');
             }
 
-            $this->tournament = Tournament::with([
+            $this->tournament = Tournament::with(['createdBy',
                     'levelCategories' => ['teams']
                 ])->findOrFail($id);
             $this->editing = true;

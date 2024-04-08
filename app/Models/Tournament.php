@@ -16,4 +16,9 @@ class Tournament extends Model
     {
         return $this->hasMany(TournamentLevelCategory::class);
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class,'created_by');
+    }
 }
