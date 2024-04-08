@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tournament_id')->constrained()->cascadeOnDelete();
             $table->foreignId('level_category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('tournament_type_id')->constrained()->cascadeOnDelete();
-            $table->integer('number_of_teams');
+            $table->foreignId('tournament_type_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->integer('number_of_teams')->nullable();
             $table->boolean('has_group_stage')->default(false);
             $table->integer('number_of_groups')->nullable();
             $table->integer('number_of_winners_per_group')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
             $table->softDeletes();
         });

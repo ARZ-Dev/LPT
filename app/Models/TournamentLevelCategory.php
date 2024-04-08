@@ -19,7 +19,7 @@ class TournamentLevelCategory extends Model
 
     public function type()
     {
-        return $this->belongsTo(TournamentType::class);
+        return $this->belongsTo(TournamentType::class, 'tournament_type_id');
     }
 
     public function teams()
@@ -30,5 +30,10 @@ class TournamentLevelCategory extends Model
     public function knockoutRound()
     {
         return $this->hasMany(KnockoutRound::class);
+    }
+    
+    public function levelCategory()
+    {
+        return $this->belongsTo(LevelCategory::class);
     }
 }
