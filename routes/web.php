@@ -199,6 +199,7 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix' => 'tournaments'], function() {
         Route::get('/', TournamentView::class)->name('tournaments');
+
         Route::get('/create', TournamentForm::class)->name('tournaments.create');
         Route::get('/edit/{id}', TournamentForm::class)->name('tournaments.edit');
         Route::get('/view/{id}/{status}', TournamentForm::class)->name('tournaments.view');
