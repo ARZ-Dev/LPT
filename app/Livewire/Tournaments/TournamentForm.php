@@ -108,29 +108,18 @@ class TournamentForm extends Component
         ]);
 
         $categoriesIds = [];
-        foreach ($this->categoriesInfo as $categoryId => $categoryInfo) {
-            $levelCategory = TournamentLevelCategory::updateOrCreate([
-                'tournament_id' => $this->tournament->id,
-                'level_category_id' => $categoryId,
-            ],[
-                'tournament_type_id' => $categoryInfo['type_id'],
-                'number_of_teams' => $categoryInfo['nb_of_teams'],
-                'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
-                'number_of_groups' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_groups'] : NULL,
-                'number_of_winners_per_group' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_winners_per_group'] : NULL,
-            ]);
-            $categoriesIds[] = $levelCategory->id;
-
-            $teamsIds = [];
-            foreach ($categoryInfo['teams'] ?? [] as $teamId) {
-                $team = TournamentLevelCategoryTeam::updateOrCreate([
-                    'tournament_level_category_id' => $levelCategory->id,
-                    'team_id' => $teamId,
+        foreach ($this->selectedCategoriesIds as $categoryId) {
+            $levelCategory = TournamentLevelCategory::where('tournament_id', $this->tournament->id)->where('level_category_id', $categoryId)->first();
+            if (!$levelCategory) {
+                $levelCategory = TournamentLevelCategory::create([
+                    'tournament_id' => $this->tournament->id,
+                    'level_category_id' => $categoryId,
+                    'start_date' => $this->startDate,
+                    'end_date' => $this->endDate,
                 ]);
-                $teamsIds[] = $team->id;
             }
-            TournamentLevelCategoryTeam::where('tournament_level_category_id', $levelCategory->id)->whereNotIn('id', $teamsIds)->delete();
 
+            $categoriesIds[] = $levelCategory->id;
         }
         TournamentLevelCategory::where('tournament_id', $this->tournament->id)->whereNotIn('id', $categoriesIds)->delete();
 
