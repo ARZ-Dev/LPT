@@ -36,14 +36,14 @@ class TournamentCategoryView extends Component
     #[On('knockoutRound')]
     public function knockoutRound($id)
     {
-        $winnerTeamsIds = Game::with(['knockoutRound.tournamentLevelCategory' => function ($query) use ($id) {
-            $query->where('tournament_id', $id);
+        $winnerTeamsIds = Game::with(['knockoutRound' => function ($query) use ($id) {
+            $query->where('tournament_level_category_id', $id);
         }])->where('is_completed', 1)->pluck('winner_team_id')->ToArray();
         
         $winnerTeamsCount = count($winnerTeamsIds) /2;
 
-        $game = Game::with(['knockoutRound.tournamentLevelCategory' => function ($query) use ($id) {
-            $query->where('tournament_id', $id);
+        $game = Game::with(['knockoutRound' => function ($query) use ($id) {
+            $query->where('tournament_level_category_id', $id);
         }])->where('is_completed', 1)->first();
 
         
