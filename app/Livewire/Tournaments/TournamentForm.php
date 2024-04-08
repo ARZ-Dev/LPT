@@ -124,8 +124,8 @@ class TournamentForm extends Component
                 'tournament_type_id' => $categoryInfo['type_id'],
                 'number_of_teams' => $categoryInfo['nb_of_teams'],
                 'has_group_stage' => $categoryInfo['has_group_stage'] ?? false,
-                'number_of_groups' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_groups'] : NULL,
-                'number_of_winners_per_group' => $categoryInfo['has_group_stage'] ? $categoryInfo['nb_of_winners_per_group'] : NULL,
+                'number_of_groups' => ($categoryInfo['has_group_stage'] ?? false) ? $categoryInfo['nb_of_groups'] : NULL,
+                'number_of_winners_per_group' => ($categoryInfo['has_group_stage'] ?? false) ? $categoryInfo['nb_of_winners_per_group'] : NULL,
             ]);
 
             foreach ($categoryInfo['teams'] ?? [] as $teamId) {
