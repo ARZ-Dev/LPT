@@ -4,7 +4,7 @@
         <div class="card mb-2">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
-                    {{ $tournamentLevelCategory?->levelCategory?->name }}
+                    {{ $tournamentLevelCategory?->levelCategory?->name }} Info
                 </h5>
                 <div>
                     <a href="{{ route('tournaments-categories', $tournament->id) }}"
