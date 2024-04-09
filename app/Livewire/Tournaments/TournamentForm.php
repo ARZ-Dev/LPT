@@ -123,7 +123,7 @@ class TournamentForm extends Component
         }
         TournamentLevelCategory::where('tournament_id', $this->tournament->id)->whereNotIn('id', $categoriesIds)->delete();
 
-        return to_route('tournaments')->with('success', 'Tournament has been updated successfully!');
+        return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament has been updated successfully!');
     }
 
     public function render()

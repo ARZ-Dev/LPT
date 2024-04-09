@@ -2,6 +2,11 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $tournament->name }} Categories List</h4>
+            <a href="{{ route('tournaments') }}"
+               class="btn btn-primary mb-2 text-nowrap"
+            >
+                Tournaments
+            </a>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-tournaments dataTable table border-top">
