@@ -39,7 +39,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="{{ route('tournaments-categories', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="View Categories">
+                            <a href="{{ route('tournaments-categories', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Categories">
                                 <i class="ti ti-category ti-sm me-2"></i>
                             </a>
                             <!-- match -->
@@ -47,7 +47,7 @@
                                 <i class="ti ti-crown ti-sm me-2"></i>
                             </a>
                             @can('tournament-view')
-                            <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+                            <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan
                             @can('tournament-edit')
                             <a href="{{ route('tournaments.edit', $tournament->id) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('number_of_winners_per_group')->nullable();
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('is_group_matches_generated')->default(false);
+            $table->boolean('is_knockout_matches_generated')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
