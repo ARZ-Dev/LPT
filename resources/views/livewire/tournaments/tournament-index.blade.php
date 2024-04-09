@@ -12,6 +12,10 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Categories</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -20,6 +24,20 @@
                     <tr>
                         <td>{{ $tournament->id }}</td>
                         <td>{{ $tournament->name }}</td>
+                        <td>
+                            @foreach($tournament->levelCategories as $tournamentCategory)
+                                <span class="badge bg-label-success">
+                                {{ $tournamentCategory->levelCategory?->name }}
+                            </span>
+                            @endforeach
+                        </td>
+                        <td>{{ $tournament->start_date }}</td>
+                        <td>{{ $tournament->end_date }}</td>
+                        <td>
+                            <span class="badge bg-label-{{ $tournament->is_completed ? "info" : "warning" }}">
+                                {{ $tournament->is_completed ? "Completed" : "Pending" }}
+                            </span>
+                        </td>
                         <td>
                             <a href="{{ route('tournaments-categories', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="View Categories">
                                 <i class="ti ti-category ti-sm me-2"></i>

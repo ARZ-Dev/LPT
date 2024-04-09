@@ -80,10 +80,11 @@
         </div>
 
         <div class="card mt-4 mb-2">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header align-items-center">
                 <h5 class="mb-0">
                     {{ $tournamentLevelCategory?->levelCategory?->name }} Teams
                 </h5>
+                @error('selectedTeamsIds') <div class="text-danger">{{ $message }}</div> @enderror
             </div>
             <div class="card-body">
                 <div class="row g-3">

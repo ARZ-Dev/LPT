@@ -8,6 +8,7 @@ use App\Models\TournamentLevelCategory;
 use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
 use App\Rules\EvenNumber;
+use App\Rules\PowerOfTwo;
 use Livewire\Component;
 
 class TournamentCategoryForm extends Component
@@ -60,7 +61,7 @@ class TournamentCategoryForm extends Component
         return [
             'type_id' => ['required'],
             'nb_of_teams' => ['required', 'numeric', new EvenNumber(), 'min:2'],
-            'selectedTeamsIds' => ['required', 'array', 'min:2'],
+            'selectedTeamsIds' => ['required', 'array', 'min:2', new PowerOfTwo()],
             'has_group_stages' => ['boolean'],
             'nb_of_groups' => ['required_if:has_group_stages,true'],
             'nb_of_winners_per_group' => ['required_if:has_group_stages,true'],
