@@ -1,5 +1,5 @@
 <div>
-    <div class="card">
+    <div class="card" wire:ignore>
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $tournament->name }} Categories List</h4>
             <a href="{{ route('tournaments') }}" class="btn btn-primary mb-2 text-nowrap">
@@ -35,11 +35,15 @@
                         <td>{{ $category->start_date }}</td>
                         <td>{{ $category->end_date }}</td>
                         <td>
-                            <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
-                                <i class="ti ti-layout-grid-add ti-sm me-2"></i>
-                            </a>
-                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm me-2"></i></a>
-                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>
+                            @if(($category->has_group_stage && !$category->is_group_matches_generated) || (!$category->has_group_stage && !$category->is_knockout_matches_generated))
+                                <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
+                                    <i class="ti ti-layout-grid-add ti-sm me-2"></i>
+                                </a>
+                            @endif
+                            @if(!$category->is_group_matches_generated && !$category->is_knockout_matches_generated)
+                                <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>
+                            @endif
                             {{-- <a href="#" class="text-body edit-tournament-button knockoutRound" data-id="{{ $category->id }}"><i class="ti ti-vector ti-sm"></i></a> --}}
 
                         </td>
