@@ -50,6 +50,11 @@ use App\Livewire\Tournaments\TournamentForm;
 use App\Livewire\Tournaments\TournamentCategoryView;
 use App\Livewire\Tournaments\TournamentCategoryForm;
 
+use App\Livewire\Matches\MatchesView;
+use App\Livewire\Matches\MatchesForm;
+
+
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -212,6 +217,13 @@ Route::middleware('auth')->group(function () {
         Route::get('{tournamentId}/categories/{categoryId}/edit', TournamentCategoryForm::class)->name('tournaments-categories.edit');
         Route::get('{tournamentId}/categories/{categoryId}/view/{status}', TournamentCategoryForm::class)->name('tournaments-categories.view');
     });
+
+    Route::group(['prefix' => 'matches'], function() {
+        Route::get('/{id}', MatchesView::class)->name('matches');
+        Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
+    });
+
+
 
 
 });

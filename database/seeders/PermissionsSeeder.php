@@ -108,6 +108,11 @@ class PermissionsSeeder extends Seeder
             'tournament-view',
             'tournament-delete',
             'tournament-viewAll',
+
+            'matches-list',
+            'matches-view',
+
+
         ];
 
         $permissionsIds = [];
