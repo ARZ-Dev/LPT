@@ -2,28 +2,26 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $tournament->name }} Categories List</h4>
-            <a href="{{ route('tournaments') }}"
-               class="btn btn-primary mb-2 text-nowrap"
-            >
+            <a href="{{ route('tournaments') }}" class="btn btn-primary mb-2 text-nowrap">
                 Tournaments
             </a>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-tournaments dataTable table border-top">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Nb of Teams</th>
-                    <th>Group Stage</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Nb of Teams</th>
+                        <th>Group Stage</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach($tournamentCategories as $category)
+                    @foreach($tournamentCategories as $category)
                     <tr>
                         <td>{{ $category->id }}</td>
                         <td>{{ $category->levelCategory?->name }}</td>
@@ -40,11 +38,13 @@
                             <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
                                 <i class="ti ti-layout-grid-add ti-sm"></i>
                             </a>
-                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit mx-2 ti-sm"></i></a>
-                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm text-danger"></i></a>
+                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
+                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                            {{-- <a href="#" class="text-body edit-tournament-button knockoutRound" data-id="{{ $category->id }}"><i class="ti ti-vector ti-sm"></i></a> --}}
+
                         </td>
                     </tr>
-                @endforeach
+                    @endforeach
                 </tbody>
             </table>
 
@@ -57,12 +57,21 @@
 
     @script
     <script>
-        $(document).on('click', '.generate-matches', function () {
+        $(document).on('click', '.generate-matches', function() {
             let categoryId = $(this).data('id');
-            $wire.dispatch('generateMatches', { categoryId })
+            $wire.dispatch('generateMatches', {
+                categoryId
+            })
         })
+
+        $(document).on('click', '.knockoutRound', function() {
+            let id = $(this).data('id');
+            $wire.dispatch('knockoutRound', {
+                id
+            })
+        })
+
     </script>
     @endscript
 
 </div>
-

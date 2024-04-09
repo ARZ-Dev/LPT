@@ -42,8 +42,8 @@ class TournamentForm extends Component
                 $this->authorize('tournament-edit');
             }
 
-            $this->tournament = Tournament::with([
-                    'levelCategories' => ['teams']
+            $this->tournament = Tournament::with(['createdBy',
+                    'levelCategories.levelCategory' => ['teams']
                 ])->findOrFail($id);
             $this->editing = true;
             $this->name = $this->tournament->name;

@@ -147,6 +147,37 @@ class TournamentCategoryView extends Component
         return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament category has been deleted successfully!');
     }
 
+    #[On('knockoutRound')]
+    public function knockoutRound($id)
+    {
+        $winnerTeamsIds = Game::with(['knockoutRound' => function ($query) use ($id) {
+            $query->where('tournament_level_category_id', $id);
+        }])->where('is_completed', 1)->pluck('winner_team_id')->ToArray();
+        
+        $winnerTeamsCount = count($winnerTeamsIds) /2;
+
+        $game = Game::with(['knockoutRound' => function ($query) use ($id) {
+            $query->where('tournament_level_category_id', $id);
+        }])->where('is_completed', 1)->first();
+
+        
+        $knockout_round_id = $game->knockout_round_id;
+        
+        for($i=0; $i <= $winnerTeamsCount; $i = $i +2) {
+            $team1_id = $winnerTeamsIds[$i];
+            $team2_id = $winnerTeamsIds[$i + 1];
+
+            Game::create([
+                'type'=>"knockouts",
+                'knockout_round_id'=>$knockout_round_id + 1,
+                'home_team_id'=>$team1_id,
+                'away_team_id'=>$team2_id,
+            ]);
+        }
+    
+
+    }
+
     public function render()
     {
         return view('livewire.tournaments.tournament-category-view');

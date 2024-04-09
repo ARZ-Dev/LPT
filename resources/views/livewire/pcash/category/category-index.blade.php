@@ -38,6 +38,7 @@
                             @can('category-delete')
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                             @endcan
+
                         </td>
                     </tr>
                 @endforeach
