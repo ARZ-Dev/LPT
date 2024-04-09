@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('type');
             $table->foreignId('group_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('knockout_round_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('home_team_id')->constrained('teams')->cascadeOnDelete();
-            $table->foreignId('away_team_id')->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('home_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('away_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('related_home_game_id')->nullable()->constrained('games')->nullOnDelete();
+            $table->foreignId('related_away_game_id')->nullable()->constrained('games')->nullOnDelete();
             $table->dateTime('datetime')->nullable();
             $table->foreignId('winner_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->foreignId('loser_team_id')->nullable()->constrained('teams')->cascadeOnDelete();

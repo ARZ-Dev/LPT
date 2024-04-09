@@ -37,8 +37,11 @@
                         <td>{{ $category->start_date }}</td>
                         <td>{{ $category->end_date }}</td>
                         <td>
-                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
-                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                            <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
+                                <i class="ti ti-layout-grid-add ti-sm"></i>
+                            </a>
+                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit mx-2 ti-sm"></i></a>
+                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm text-danger"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -55,8 +58,8 @@
     @script
     <script>
         $(document).on('click', '.generate-matches', function () {
-            let tournamentId = $(this).data('id');
-            $wire.dispatch('generateMatches', { tournamentId })
+            let categoryId = $(this).data('id');
+            $wire.dispatch('generateMatches', { categoryId })
         })
     </script>
     @endscript

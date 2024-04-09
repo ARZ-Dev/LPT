@@ -83,12 +83,17 @@ class TournamentCategoryForm extends Component
             'number_of_winners_per_group' => ($this->has_group_stages ?? false) ? $this->nb_of_winners_per_group : NULL,
         ]);
 
-        foreach ($this->selectedTeamsIds ?? [] as $teamId) {
-            TournamentLevelCategoryTeam::create([
+        $categoryTeamsIds = [];
+        foreach ($this->selectedTeamsIds as $teamId) {
+            $categoryTeam = TournamentLevelCategoryTeam::updateOrCreate([
                 'tournament_level_category_id' => $this->tournamentLevelCategory->id,
                 'team_id' => $teamId,
             ]);
+            $categoryTeamsIds[] = $categoryTeam->id;
         }
+        TournamentLevelCategoryTeam::where('tournament_level_category_id', $this->tournamentLevelCategory->id)
+            ->whereNotIn('id', $categoryTeamsIds)
+            ->delete();
 
         return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament category has been updated successfully!');
     }

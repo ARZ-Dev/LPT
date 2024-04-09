@@ -15,4 +15,9 @@ class KnockoutRound extends Model
     {
         return $this->belongsTo(TournamentLevelCategory::class);
     }
+
+    public function games()
+    {
+        return $this->hasMany(Game::class);
+    }
 }

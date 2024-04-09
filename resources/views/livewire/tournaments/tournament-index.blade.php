@@ -34,7 +34,6 @@
                                 <a href="#" class="text-body delete-record delete-button" data-id="{{ $tournament->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
                             @endcan
 {{--                            <a href="#" class="text-body edit-tournament-button knockoutRound" data-id="{{ $tournament->id }}"><i class="ti ti-vector ti-sm"></i></a>--}}
-                            <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $tournament->id }}"><i class="ti ti-vector ti-sm"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -50,10 +49,6 @@
 
     @script
     <script>
-        $(document).on('click', '.generate-matches', function () {
-            let tournamentId = $(this).data('id');
-            $wire.dispatch('generateMatches', { tournamentId })
-        })
 
         $(document).on('click', '.knockoutRound', function () {
 
