@@ -51,6 +51,7 @@ class TournamentCategoryForm extends Component
         } else {
             $this->selectedTeamsIds[] = $teamId;
         }
+        $this->selectedTeamsIds = array_unique($this->selectedTeamsIds);
         $this->nb_of_teams = count($this->selectedTeamsIds);
     }
 

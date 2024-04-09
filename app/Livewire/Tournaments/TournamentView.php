@@ -78,38 +78,50 @@ class TournamentView extends Component
                         }
                     }
                 } else {
-                    $rounds = ceil(log($nbOfTeams, 2));
+                    $matchesPerRound = $nbOfTeams / 2;
 
-                    for ($i = 1; $i <= $rounds; $i++) {
-                        $roundName = match ($nbOfTeams) {
-                            2 => 'Final',
-                            4 => 'Semi Final',
-                            8 => 'Quarter Final',
-                            default => 'Round of ' . $nbOfTeams,
+                    while ($matchesPerRound >= 1) {
+                        // Determine round name
+                        $roundName = match ($matchesPerRound) {
+                            1 => 'Final',
+                            2 => 'Semi Final',
+                            4 => 'Quarter Final',
+                            default => "Round of $nbOfTeams",
                         };
 
+                        // Create or update the knockout round
                         $knockoutRound = KnockoutRound::updateOrCreate([
                             'tournament_level_category_id' => $category->id,
                             'name' => $roundName,
                         ]);
 
+                        $teams = $teams->shuffle();
+
                         // Generate matches for the current knockout round
-                        while ($teams->count() >= 2) {
+                        for ($i = 0; $i < $matchesPerRound; $i++) {
                             // Take two teams from the top of the teams list
                             $homeTeam = $teams->shift();
                             $awayTeam = $teams->shift();
 
-                            // Create a match for the current knockout round
-                            Game::create([
-                                'type' => 'knockouts',
-                                'knockout_round_id' => $knockoutRound->id,
-                                'home_team_id' => $homeTeam->id,
-                                'away_team_id' => $awayTeam->id,
-                            ]);
+                            if ($homeTeam && $awayTeam) {
+                                // Create a match for the current knockout round
+                                Game::create([
+                                    'type' => 'knockouts',
+                                    'knockout_round_id' => $knockoutRound->id,
+                                    'home_team_id' => $homeTeam->id,
+                                    'away_team_id' => $awayTeam->id,
+                                ]);
+                            }
                         }
+
+                        // Update remaining teams and matches per round for the next iteration
+                        $nbOfTeams /= 2;
+                        $matchesPerRound /= 2;
                     }
+
                 }
             }
+
             DB::commit();
 
         } catch (\Exception $exception) {
@@ -123,23 +135,23 @@ class TournamentView extends Component
         return to_route('tournaments')->with('success', 'Matches has been generated successfully!');
     }
 
-    
+
     #[On('knockoutRound')]
     public function knockoutRound($id)
     {
         $winnerTeamsIds = Game::with(['knockoutRound.tournamentLevelCategory' => function ($query) use ($id) {
             $query->where('tournament_id', $id);
         }])->where('is_completed', 1)->pluck('winner_team_id')->ToArray();
-        
+
         $winnerTeamsCount = count($winnerTeamsIds) /2;
 
         $game = Game::with(['knockoutRound.tournamentLevelCategory' => function ($query) use ($id) {
             $query->where('tournament_id', $id);
         }])->where('is_completed', 1)->first();
 
-        
+
         $knockout_round_id = $game->knockout_round_id;
-        
+
         for($i=0; $i <= $winnerTeamsCount; $i = $i +2) {
             $team1_id = $winnerTeamsIds[$i];
             $team2_id = $winnerTeamsIds[$i + 1];
@@ -151,7 +163,7 @@ class TournamentView extends Component
                 'away_team_id'=>$team2_id,
             ]);
         }
-    
+
 
     }
 
