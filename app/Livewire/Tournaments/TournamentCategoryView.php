@@ -78,12 +78,6 @@ class TournamentCategoryView extends Component
                         default => "Round of $nbOfTeams",
                     };
 
-                    // Create or update the knockout round
-                    $knockoutRound = KnockoutRound::updateOrCreate([
-                        'tournament_level_category_id' => $category->id,
-                        'name' => $roundName,
-                    ]);
-
                     // Shuffle the teams randomly
                     $teams = $teams->shuffle();
 
@@ -92,6 +86,15 @@ class TournamentCategoryView extends Component
 
                     // Generate matches for the current knockout round
                     for ($i = 0; $i < $matchesPerRound; $i++) {
+
+                        $roundNumber = $i + 1;
+
+                        // Create or update the knockout round
+                        $knockoutRound = KnockoutRound::create([
+                            'tournament_level_category_id' => $category->id,
+                            'name' => $roundName . " #$roundNumber",
+                        ]);
+
                         // Take two teams from the top of the teams list
                         $homeTeam = $teams->shift();
                         $awayTeam = $teams->shift();

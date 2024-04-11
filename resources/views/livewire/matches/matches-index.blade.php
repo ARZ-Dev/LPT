@@ -25,8 +25,20 @@
                         <td>{{ $match->id }}</td>
                         <td>{{ $match->type }}</td>
                         <td>{{ $match->knockoutRound->name }}</td>
-                        <td>{{ $match->homeTeam?->nickname }}</td>
-                        <td>{{ $match->awayTeam?->nickname }}</td>
+                        <td>
+                            @if($match->homeTeam)
+                               {{ $match->homeTeam->nickname }}
+                            @elseif($match->relatedHomeGame)
+                                Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
+                            @endif
+                        </td>
+                        <td>
+                            @if($match->awayTeam)
+                                {{ $match->awayTeam->nickname }}
+                            @elseif($match->relatedAwayGame)
+                                Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
+                            @endif
+                        </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
 
                         <td>

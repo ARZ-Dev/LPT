@@ -37,4 +37,14 @@ class Game extends Model
         return $this->belongsTo(KnockoutRound::class);
     }
 
+    public function relatedHomeGame()
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    public function relatedAwayGame()
+    {
+        return $this->belongsTo(Game::class);
+    }
+
 }
