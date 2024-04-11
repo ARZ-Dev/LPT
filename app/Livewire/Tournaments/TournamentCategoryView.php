@@ -33,10 +33,16 @@ class TournamentCategoryView extends Component
             $category = TournamentLevelCategory::with(['teams'])->findOrFail($categoryId);
 
             $nbOfTeams = $category->number_of_teams;
+
+            throw_if($nbOfTeams <= 0, new \Exception("There are no teams selected!"));
+
             $teamsIds = $category->teams->pluck('team_id')->toArray();
             $teams = Team::find($teamsIds);
 
             if ($category->has_group_stage) {
+
+                throw_if($category->is_group_matches_generated, new \Exception("Group matches has already been generated!"));
+
                 $numberOfGroups = $category->number_of_groups;
                 $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
@@ -65,7 +71,14 @@ class TournamentCategoryView extends Component
                         }
                     }
                 }
+
+                $category->update([
+                    'is_group_matches_generated' => true,
+                ]);
             } else {
+
+                throw_if($category->is_knockout_matches_generated, new \Exception("Knockout matches has already been generated!"));
+
                 $matchesPerRound = $nbOfTeams / 2;
                 $previousRoundGameIds = [];
 
@@ -123,6 +136,10 @@ class TournamentCategoryView extends Component
                     $nbOfTeams /= 2;
                     $matchesPerRound /= 2;
                 }
+
+                $category->update([
+                    'is_knockout_matches_generated' => true,
+                ]);
             }
 
             DB::commit();
@@ -156,16 +173,16 @@ class TournamentCategoryView extends Component
         $winnerTeamsIds = Game::with(['knockoutRound' => function ($query) use ($id) {
             $query->where('tournament_level_category_id', $id);
         }])->where('is_completed', 1)->pluck('winner_team_id')->ToArray();
-        
+
         $winnerTeamsCount = count($winnerTeamsIds) /2;
 
         $game = Game::with(['knockoutRound' => function ($query) use ($id) {
             $query->where('tournament_level_category_id', $id);
         }])->where('is_completed', 1)->first();
 
-        
+
         $knockout_round_id = $game->knockout_round_id;
-        
+
         for($i=0; $i <= $winnerTeamsCount; $i = $i +2) {
             $team1_id = $winnerTeamsIds[$i];
             $team2_id = $winnerTeamsIds[$i + 1];
@@ -177,7 +194,7 @@ class TournamentCategoryView extends Component
                 'away_team_id'=>$team2_id,
             ]);
         }
-    
+
 
     }
 
