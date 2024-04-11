@@ -30,7 +30,7 @@
                             <span class="fw-bold text-dark">Away Team :</span>
                             <span class="text-dark" id="category">{{ $matches->awayTeam->nickname }}</span>
                         </div>
-                    
+
                     </div>
                 </div>
             </div>
@@ -39,5 +39,5 @@
     </div>
 
 
-    
+
 </div>

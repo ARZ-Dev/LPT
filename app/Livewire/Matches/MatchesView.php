@@ -3,6 +3,7 @@
 namespace App\Livewire\Matches;
 
 use App\Models\Game;
+use App\Models\TournamentLevelCategory;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -12,13 +13,20 @@ class MatchesView extends Component
     public $matches = [];
     public $match ;
     public $loser_team_id ;
+    public $category;
 
-
-    public function mount()
+    public function mount($categoryId)
     {
         $this->authorize('matches-list');
-        $this->matches = Game::with('knockoutRound','homeTeam','awayTeam')->get();
-
+        $this->category = TournamentLevelCategory::with('tournament')->findOrFail($categoryId);
+        $this->matches = Game::with('knockoutRound','homeTeam','awayTeam')
+            ->whereHas('knockoutRound', function ($query) {
+                $query->where('tournament_level_category_id', $this->category->id);
+            })
+            ->orWhereHas('group', function ($query) {
+                $query->where('tournament_level_category_id', $this->category->id);
+            })
+            ->get();
     }
 
     #[On('chooseWinner')]

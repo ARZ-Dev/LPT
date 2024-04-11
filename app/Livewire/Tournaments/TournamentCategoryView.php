@@ -21,7 +21,7 @@ class TournamentCategoryView extends Component
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->tournamentCategories = TournamentLevelCategory::where('tournament_id', $tournamentId)
-            ->with(['levelCategory', 'type'])
+            ->with(['levelCategory', 'type', 'knockoutsMatches', 'groupStageMatches'])
             ->get();
     }
 
@@ -152,7 +152,7 @@ class TournamentCategoryView extends Component
             ]);
         }
 
-        return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Matches has been generated successfully!');
+        return to_route('matches', $category->id)->with('success', 'Matches has been generated successfully!');
     }
 
     #[On('delete')]

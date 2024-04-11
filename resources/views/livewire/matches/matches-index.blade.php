@@ -1,8 +1,8 @@
 <div>
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">Matches List</h4>
-            <a class="btn btn-primary h-50" href="{{ route('tournaments') }}">Tournaments</a>
+            <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} Matches</h4>
+            <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
 
 
         </div>
@@ -43,7 +43,7 @@
 
                         <td>
                             @can('matches-view')
-                                <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
+{{--                                <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
 
                             @if($match->homeTeam && $match->awayTeam && !$match->is_completed)

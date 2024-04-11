@@ -42,10 +42,6 @@
                             <a href="{{ route('tournaments-categories', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Categories">
                                 <i class="ti ti-category ti-sm me-2"></i>
                             </a>
-                            <!-- match -->
-                            <a href="{{ route('matches', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
-                                <i class="ti ti-crown ti-sm me-2"></i>
-                            </a>
                             @can('tournament-view')
                             <a href="{{ route('tournaments.view', ['id' => $tournament->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan

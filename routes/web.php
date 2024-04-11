@@ -219,7 +219,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'matches'], function() {
-        Route::get('/{id}', MatchesView::class)->name('matches');
+        Route::get('/{categoryId}', MatchesView::class)->name('matches');
         Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
     });
 
