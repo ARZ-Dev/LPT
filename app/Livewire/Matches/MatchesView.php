@@ -46,18 +46,22 @@ class MatchesView extends Component
             'is_completed' => 1,
         ]);
 
-        $relatedHomeGame = Game::where('related_home_game_id', $this->match->id)->first();
-        if ($relatedHomeGame) {
-            $relatedHomeGame->update([
-                'home_team_id' => $winnerId
-            ]);
-        }
+        if ($this->match->type == "Knockouts") {
+            $relatedHomeGame = Game::where('related_home_game_id', $this->match->id)->first();
+            if ($relatedHomeGame) {
+                $relatedHomeGame->update([
+                    'home_team_id' => $winnerId
+                ]);
+            }
 
-        $relatedAwayGame = Game::where('related_away_game_id', $this->match->id)->first();
-        if ($relatedAwayGame) {
-            $relatedAwayGame->update([
-                'away_team_id' => $winnerId
-            ]);
+            $relatedAwayGame = Game::where('related_away_game_id', $this->match->id)->first();
+            if ($relatedAwayGame) {
+                $relatedAwayGame->update([
+                    'away_team_id' => $winnerId
+                ]);
+            }
+        } else {
+            
         }
 
         return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
