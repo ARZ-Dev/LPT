@@ -1,7 +1,7 @@
 <div>
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} Matches</h4>
+            <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} - Matches</h4>
             <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
 
 
@@ -12,7 +12,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Type</th>
-                    <th>Knockout Round </th>
+                    <th>Group</th>
+                    <th>Knockout Round</th>
                     <th>Home Team</th>
                     <th>Away Team</th>
                     <th>Winner Team</th>
@@ -24,7 +25,8 @@
                     <tr>
                         <td>{{ $match->id }}</td>
                         <td>{{ $match->type }}</td>
-                        <td>{{ $match->knockoutRound->name }}</td>
+                        <td>{{ $match->group?->name }}</td>
+                        <td>{{ $match->knockoutRound?->name }}</td>
                         <td>
                             @if($match->homeTeam)
                                {{ $match->homeTeam->nickname }}
@@ -65,7 +67,7 @@
                                             </select>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-success submit-btn">Submit</button>
+                                            <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary submit-btn">Submit</button>
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                     </div>

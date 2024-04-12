@@ -63,7 +63,7 @@ class TournamentCategoryView extends Component
                     for ($j = 0; $j < $teamCount - 1; $j++) {
                         for ($k = $j + 1; $k < $teamCount; $k++) {
                             Game::create([
-                                'type' => 'group_stages',
+                                'type' => 'Group Stages',
                                 'group_id' => $group->id,
                                 'home_team_id' => $teamIds[$j],
                                 'away_team_id' => $teamIds[$k],
@@ -102,10 +102,14 @@ class TournamentCategoryView extends Component
 
                         $roundNumber = $i + 1;
 
+                        $knockoutRoundName = $roundName;
+                        if ($roundName != "Final") {
+                            $knockoutRoundName = $roundName . " #$roundNumber";
+                        }
                         // Create or update the knockout round
                         $knockoutRound = KnockoutRound::create([
                             'tournament_level_category_id' => $category->id,
-                            'name' => $roundName . " #$roundNumber",
+                            'name' => $knockoutRoundName,
                         ]);
 
                         // Take two teams from the top of the teams list
@@ -117,7 +121,7 @@ class TournamentCategoryView extends Component
 
                         // Create a match for the current knockout round
                         $game = Game::create([
-                            'type' => 'knockouts',
+                            'type' => 'Knockouts',
                             'knockout_round_id' => $knockoutRound->id,
                             'home_team_id' => $homeTeam?->id,
                             'away_team_id' => $awayTeam?->id,

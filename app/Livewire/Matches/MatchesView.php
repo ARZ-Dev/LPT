@@ -32,7 +32,7 @@ class MatchesView extends Component
     #[On('chooseWinner')]
     public function chooseWinner($matchId, $winnerId)
     {
-        $this->match = Game::with('knockoutRound.tournamentLevelCategory','homeTeam','awayTeam')->find($matchId);
+        $this->match = Game::with('knockoutRound.tournamentLevelCategory','homeTeam','awayTeam')->findOrFail($matchId);
 
         if ($this->match->home_team_id == $winnerId) {
             $this->loser_team_id = $this->match->away_team_id;
@@ -60,7 +60,7 @@ class MatchesView extends Component
             ]);
         }
 
-        $this->redirect(back()->with('success', 'Winner team has been updated successfully!'));
+        return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
     }
 
     public function render()
