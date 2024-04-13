@@ -35,7 +35,7 @@
                         <td>{{ $category->start_date }}</td>
                         <td>{{ $category->end_date }}</td>
                         <td>
-                            @if(count($category->knockoutsMatches))
+                            @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
                                 <a href="{{ route('matches', $category->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
                                     <i class="ti ti-crown ti-sm me-2"></i>
                                 </a>
