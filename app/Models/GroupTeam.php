@@ -9,7 +9,5 @@ class GroupTeam extends Model
 {
     use HasFactory;
 
-    protected $table = "group_team";
-
     protected $guarded = [];
 }
