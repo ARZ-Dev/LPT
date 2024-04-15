@@ -3,9 +3,11 @@
 namespace App\Livewire\Matches;
 
 use App\Models\Game;
+use App\Models\GroupTeam;
 use App\Models\TournamentLevelCategory;
 use Livewire\Component;
 use Livewire\Attributes\On;
+
 
 
 class MatchesView extends Component
@@ -61,7 +63,23 @@ class MatchesView extends Component
                 ]);
             }
         } else {
-            
+
+            if ($this->match->type == "Group Stages") {
+                
+                $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->first();
+                $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->first();
+
+                $groupTeamWinner->update([
+                    'wins' => $groupTeamWinner->wins + 1 ,
+                    'rank' =>($groupTeamWinner->rank > 1) ? ($groupTeamWinner->rank - 1) : $groupTeamWinner->rank,
+                ]);
+
+                $groupTeamLooser->update([
+                    'losses' =>  $groupTeamLooser->losses + 1  ,
+                    'rank' =>$groupTeamLooser->rank  + 1 ,
+                ]);
+                
+            }
         }
 
         return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
