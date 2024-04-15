@@ -100,13 +100,9 @@ class TournamentCategoryView extends Component
                     // Generate matches for the current knockout round
                     for ($i = 0; $i < $matchesPerRound; $i++) {
 
-                        $roundNumber = $i + 1;
-
-                        $knockoutRoundName = $roundName;
-                        if ($roundName != "Final") {
-                            $knockoutRoundName = $roundName . " #$roundNumber";
-                        }
                         // Create or update the knockout round
+                        $roundNumber = $i + 1;
+                        $knockoutRoundName = $roundName == "Final" ? $roundName : $roundName . " #$roundNumber";
                         $knockoutRound = KnockoutRound::create([
                             'tournament_level_category_id' => $category->id,
                             'name' => $knockoutRoundName,
