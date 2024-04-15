@@ -78,17 +78,11 @@ class MatchesView extends Component
                 $groupTeamWinner->increment('matches_played');
                 $groupTeamLooser->increment('losses');
                 $groupTeamLooser->increment('matches_played');
-
-  
-                $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
-            
+          
                 foreach ($teams as $index => $team) {
                     $newRank = $index + 1;
                     $team->update(['rank' => $newRank]);
                 }
-
-                $matchesPlayed = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played',count($teams) - 1)->get();
-
                 
                 if(count($matchesPlayed) == count($teams)  ){
 
