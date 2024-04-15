@@ -3,6 +3,7 @@
 namespace App\Livewire\Matches;
 
 use App\Models\Game;
+use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\TournamentLevelCategory;
 use Livewire\Component;
@@ -64,18 +65,32 @@ class MatchesView extends Component
             }
         } else {
 
+                $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
+                $matchesPlayed = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played',count($teams) - 1)->get();
+                $group =Group::where('id',$this->match->group_id)->first();
+                $tournamentLevelCategories=TournamentLevelCategory::where('id',$this->category->id)->first();
+      
+
                 $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
                 $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
-                
+
                 $groupTeamWinner->increment('wins');
+                $groupTeamWinner->increment('matches_played');
                 $groupTeamLooser->increment('losses');
-  
-                $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
-            
+                $groupTeamLooser->increment('matches_played');
+          
                 foreach ($teams as $index => $team) {
                     $newRank = $index + 1;
                     $team->update(['rank' => $newRank]);
-                }   
+                }
+                
+                if(count($matchesPlayed) == count($teams)  ){
+
+                    $group->update(['is_completed' => 1,]);
+                    $tournamentLevelCategories->update(['is_group_stages_completed' => 1,]);
+
+                }
+               
         }
 
             return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
