@@ -64,25 +64,21 @@ class MatchesView extends Component
             }
         } else {
 
-            if ($this->match->type == "Group Stages") {
+                $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
+                $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
                 
-                $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->first();
-                $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->first();
-
-                $groupTeamWinner->update([
-                    'wins' => $groupTeamWinner->wins + 1 ,
-                    'rank' =>($groupTeamWinner->rank > 1) ? ($groupTeamWinner->rank - 1) : $groupTeamWinner->rank,
-                ]);
-
-                $groupTeamLooser->update([
-                    'losses' =>  $groupTeamLooser->losses + 1  ,
-                    'rank' =>$groupTeamLooser->rank  + 1 ,
-                ]);
-                
-            }
+                $groupTeamWinner->increment('wins');
+                $groupTeamLooser->increment('losses');
+  
+                $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
+            
+                foreach ($teams as $index => $team) {
+                    $newRank = $index + 1;
+                    $team->update(['rank' => $newRank]);
+                }   
         }
 
-        return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
+            return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
     }
 
     public function render()
