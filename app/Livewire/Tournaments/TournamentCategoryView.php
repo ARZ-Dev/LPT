@@ -83,20 +83,20 @@ class TournamentCategoryView extends Component
 
                     throw_if(!$category->is_group_stages_completed, new \Exception("Group stages is not completed yet!"));
 
-                    $winningTeamsIds = [];
+                    $qualifiedTeamsIds = [];
                     foreach ($category->groups as $group) {
 
                         throw_if(!$group->is_completed, new \Exception("$group->name is not completed yet!"));
 
-                        $winningTeams = $group->teams()->orderBy('rank')->take($category->number_of_winners_per_group)->get();
-                        foreach ($winningTeams as $winningTeam) {
-                            $winningTeamsIds[] = $winningTeam->id;
+                        $qualifiedTeams = $group->teams()->where('has_qualified', true)->get();
+                        foreach ($qualifiedTeams as $qualifiedTeam) {
+                            $qualifiedTeamsIds[] = $qualifiedTeam->id;
                         }
                     }
 
-                    $winningTeams = Team::find($winningTeamsIds);
+                    $qualifiedTeams = Team::find($qualifiedTeamsIds);
 
-                    $this->generateKnockoutMatches($category, $winningTeams);
+                    $this->generateKnockoutMatches($category, $qualifiedTeams);
 
                     $category->update([
                         'is_knockout_matches_generated' => true,
