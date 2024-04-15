@@ -89,8 +89,15 @@ class MatchesView extends Component
             
                 $groupsCount = Group::where('tournament_level_category_id',$this->category->id)->count();
                 
+                $smallestRanks = $teams->sortBy('rank')->take( $this->category->number_of_winners_per_group);
+              
                 if ($matchesPlayedCount == count($teams)) {
                     $group->update(['is_completed' => 1,]);
+
+                    foreach ($smallestRanks as $team) {
+                        $team->update(['has_qualified' => 1]);
+                    }
+
                 }
                 
                 $groupsIsCompleted = Group::where('tournament_level_category_id',$this->category->id)->where('is_completed',1)->count();
