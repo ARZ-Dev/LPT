@@ -46,4 +46,9 @@ class TournamentLevelCategory extends Model
     {
         return $this->hasManyThrough(Game::class, Group::class);
     }
+
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 }

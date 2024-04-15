@@ -6,6 +6,7 @@ use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\TournamentLevelCategory;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -35,65 +36,74 @@ class MatchesView extends Component
     #[On('chooseWinner')]
     public function chooseWinner($matchId, $winnerId)
     {
-        $this->match = Game::with('knockoutRound.tournamentLevelCategory','homeTeam','awayTeam')->findOrFail($matchId);
+        DB::beginTransaction();
+        try {
+            $this->match = Game::with('knockoutRound.tournamentLevelCategory','homeTeam','awayTeam')->findOrFail($matchId);
 
-        if ($this->match->home_team_id == $winnerId) {
-            $this->loser_team_id = $this->match->away_team_id;
-        } elseif ($this->match->away_team_id == $winnerId) {
-            $this->loser_team_id = $this->match->home_team_id;
-        }
-
-        $this->match->update([
-            'winner_team_id' => $winnerId,
-            'loser_team_id' => $this->loser_team_id,
-            'is_completed' => 1,
-        ]);
-
-        if ($this->match->type == "Knockouts") {
-            $relatedHomeGame = Game::where('related_home_game_id', $this->match->id)->first();
-            if ($relatedHomeGame) {
-                $relatedHomeGame->update([
-                    'home_team_id' => $winnerId
-                ]);
+            if ($this->match->home_team_id == $winnerId) {
+                $this->loser_team_id = $this->match->away_team_id;
+            } elseif ($this->match->away_team_id == $winnerId) {
+                $this->loser_team_id = $this->match->home_team_id;
             }
 
-            $relatedAwayGame = Game::where('related_away_game_id', $this->match->id)->first();
-            if ($relatedAwayGame) {
-                $relatedAwayGame->update([
-                    'away_team_id' => $winnerId
-                ]);
-            }
-        } else {
+            $this->match->update([
+                'winner_team_id' => $winnerId,
+                'loser_team_id' => $this->loser_team_id,
+                'is_completed' => 1,
+            ]);
+
+            if ($this->match->type == "Knockouts") {
+                $relatedHomeGame = Game::where('related_home_game_id', $this->match->id)->first();
+                if ($relatedHomeGame) {
+                    $relatedHomeGame->update([
+                        'home_team_id' => $winnerId
+                    ]);
+                }
+
+                $relatedAwayGame = Game::where('related_away_game_id', $this->match->id)->first();
+                if ($relatedAwayGame) {
+                    $relatedAwayGame->update([
+                        'away_team_id' => $winnerId
+                    ]);
+                }
+            } else {
 
                 $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
-                $matchesPlayed = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played',count($teams) - 1)->get();
-                $group =Group::where('id',$this->match->group_id)->first();
-                $tournamentLevelCategories=TournamentLevelCategory::where('id',$this->category->id)->first();
-      
 
                 $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
                 $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
 
-                $groupTeamWinner->increment('wins');
-                $groupTeamWinner->increment('matches_played');
-                $groupTeamLooser->increment('losses');
-                $groupTeamLooser->increment('matches_played');
-          
+                $groupTeamWinner->increment(['wins', 'matches_played']);
+                $groupTeamLooser->increment(['losses', 'matches_played']);
+
                 foreach ($teams as $index => $team) {
                     $newRank = $index + 1;
                     $team->update(['rank' => $newRank]);
                 }
-                
-                if(count($matchesPlayed) == count($teams)  ){
 
+                $matchesPlayedCount = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played', count($teams) - 1)->count();
+
+                $group = Group::where('id',$this->match->group_id)->first();
+
+                if ($matchesPlayedCount == count($teams)) {
                     $group->update(['is_completed' => 1,]);
-                    $tournamentLevelCategories->update(['is_group_stages_completed' => 1,]);
-
+                    $this->category->update(['is_group_stages_completed' => 1,]);
                 }
-               
-        }
+
+            }
+
+            DB::commit();
 
             return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
     }
 
     public function render()

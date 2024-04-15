@@ -30,112 +30,88 @@ class TournamentCategoryView extends Component
     {
         DB::beginTransaction();
         try {
-            $category = TournamentLevelCategory::with(['teams'])->findOrFail($categoryId);
-
-            $nbOfTeams = $category->number_of_teams;
-
-            throw_if($nbOfTeams <= 0, new \Exception("There are no teams selected!"));
+            $category = TournamentLevelCategory::with(['teams', 'groups' => ['teams']])->findOrFail($categoryId);
 
             $teamsIds = $category->teams->pluck('team_id')->toArray();
+
+            $nbOfTeams = count($teamsIds);
+            throw_if($nbOfTeams <= 0, new \Exception("There are no teams selected!"));
+
             $teams = Team::find($teamsIds);
 
             if ($category->has_group_stage) {
 
-                throw_if($category->is_group_matches_generated, new \Exception("Group matches has already been generated!"));
+                if (!$category->is_knockout_matches_generated && !$category->is_group_matches_generated) {
 
-                $numberOfGroups = $category->number_of_groups;
-                $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
-                $shuffledTeams = $teams->shuffle();
-                for ($i = 1; $i <= $numberOfGroups; $i++) {
-                    $group = Group::create([
-                        'tournament_level_category_id' => $category->id,
-                        'name' => 'Group ' . $i,
-                    ]);
+                    throw_if($category->is_group_matches_generated, new \Exception("Group matches has already been generated!"));
 
-                    $groupTeams = $shuffledTeams->splice(0, $teamsPerGroup);
-                    $group->teams()->attach($groupTeams);
+                    $numberOfGroups = $category->number_of_groups;
+                    $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
-                    // Generate matches for each group
-                    $teamIds = $group->teams()->pluck('teams.id');
-                    $teamCount = count($teamIds);
+                    $shuffledTeams = $teams->shuffle();
+                    for ($i = 1; $i <= $numberOfGroups; $i++) {
+                        $group = Group::create([
+                            'tournament_level_category_id' => $category->id,
+                            'name' => 'Group ' . $i,
+                        ]);
 
-                    for ($j = 0; $j < $teamCount - 1; $j++) {
-                        for ($k = $j + 1; $k < $teamCount; $k++) {
-                            Game::create([
-                                'type' => 'Group Stages',
-                                'group_id' => $group->id,
-                                'home_team_id' => $teamIds[$j],
-                                'away_team_id' => $teamIds[$k],
-                            ]);
+                        $groupTeams = $shuffledTeams->splice(0, $teamsPerGroup);
+                        $group->teams()->attach($groupTeams);
+
+                        // Generate matches for each group
+                        $teamIds = $group->teams()->pluck('teams.id');
+                        $teamCount = count($teamIds);
+
+                        for ($j = 0; $j < $teamCount - 1; $j++) {
+                            for ($k = $j + 1; $k < $teamCount; $k++) {
+                                Game::create([
+                                    'type' => 'Group Stages',
+                                    'group_id' => $group->id,
+                                    'home_team_id' => $teamIds[$j],
+                                    'away_team_id' => $teamIds[$k],
+                                ]);
+                            }
                         }
                     }
+
+                    $category->update([
+                        'is_group_matches_generated' => true,
+                    ]);
+
+                } else {
+
+                    throw_if(!$category->is_group_stages_completed, new \Exception("Group stages is not completed yet!"));
+
+                    $winningTeamsIds = [];
+                    foreach ($category->groups as $group) {
+
+                        throw_if(!$group->is_completed, new \Exception("$group->name is not completed yet!"));
+
+                        $winningTeams = $group->teams()->orderBy('rank')->take($category->number_of_winners_per_group)->get();
+                        foreach ($winningTeams as $winningTeam) {
+                            $winningTeamsIds[] = $winningTeam->id;
+                        }
+                    }
+
+                    $winningTeams = Team::find($winningTeamsIds);
+
+                    $this->generateKnockoutMatches($category, $winningTeams);
+
+                    $category->update([
+                        'is_knockout_matches_generated' => true,
+                    ]);
+
                 }
 
-                $category->update([
-                    'is_group_matches_generated' => true,
-                ]);
             } else {
 
                 throw_if($category->is_knockout_matches_generated, new \Exception("Knockout matches has already been generated!"));
 
-                $matchesPerRound = $nbOfTeams / 2;
-                $previousRoundGameIds = [];
+                $teamsIds = $category->teams->pluck('team_id')->toArray();
+                $teams = Team::find($teamsIds);
 
-                while ($matchesPerRound >= 1) {
-                    // Determine round name
-                    $roundName = match ($matchesPerRound) {
-                        1 => 'Final',
-                        2 => 'Semi Final',
-                        4 => 'Quarter Final',
-                        default => "Round of $nbOfTeams",
-                    };
-
-                    // Shuffle the teams randomly
-                    $teams = $teams->shuffle();
-
-                    // Initialize an array to store related game IDs for the current round
-                    $currentRoundGameIds = [];
-
-                    // Generate matches for the current knockout round
-                    for ($i = 0; $i < $matchesPerRound; $i++) {
-
-                        // Create or update the knockout round
-                        $roundNumber = $i + 1;
-                        $knockoutRoundName = $roundName == "Final" ? $roundName : $roundName . " #$roundNumber";
-                        $knockoutRound = KnockoutRound::create([
-                            'tournament_level_category_id' => $category->id,
-                            'name' => $knockoutRoundName,
-                        ]);
-
-                        // Take two teams from the top of the teams list
-                        $homeTeam = $teams->shift();
-                        $awayTeam = $teams->shift();
-
-                        $relatedHomeGameId = $previousRoundGameIds[$i * 2] ?? null;
-                        $relatedAwayGameId = $previousRoundGameIds[$i * 2 + 1] ?? null;
-
-                        // Create a match for the current knockout round
-                        $game = Game::create([
-                            'type' => 'Knockouts',
-                            'knockout_round_id' => $knockoutRound->id,
-                            'home_team_id' => $homeTeam?->id,
-                            'away_team_id' => $awayTeam?->id,
-                            'related_home_game_id' => $relatedHomeGameId,
-                            'related_away_game_id' => $relatedAwayGameId,
-                        ]);
-
-                        // Store the game ID for the current match
-                        $currentRoundGameIds[] = $game->id;
-                    }
-
-                    // Update previous round game IDs after all matches of the current round have been generated
-                    $previousRoundGameIds = $currentRoundGameIds;
-
-                    // Update remaining teams and matches per round for the next iteration
-                    $nbOfTeams /= 2;
-                    $matchesPerRound /= 2;
-                }
+                $this->generateKnockoutMatches($category, $teams);
 
                 $category->update([
                     'is_knockout_matches_generated' => true,
@@ -155,6 +131,77 @@ class TournamentCategoryView extends Component
         return to_route('matches', $category->id)->with('success', 'Matches has been generated successfully!');
     }
 
+
+    /**
+     * @param $teams
+     * @param $category
+     * @return void
+     * @throws \Throwable
+     */
+    public function generateKnockoutMatches($category, $teams): void
+    {
+        $nbOfTeams = count($teams);
+        throw_if($nbOfTeams <= 0, new \Exception("There are no teams selected!"));
+
+        $matchesPerRound = $nbOfTeams / 2;
+        $previousRoundGameIds = [];
+
+        while ($matchesPerRound >= 1) {
+            // Determine round name
+            $roundName = match ($matchesPerRound) {
+                1 => 'Final',
+                2 => 'Semi Final',
+                4 => 'Quarter Final',
+                default => "Round of $nbOfTeams",
+            };
+
+            // Shuffle the teams randomly
+            $teams = $teams->shuffle();
+
+            // Initialize an array to store related game IDs for the current round
+            $currentRoundGameIds = [];
+
+            // Generate matches for the current knockout round
+            for ($i = 0; $i < $matchesPerRound; $i++) {
+
+                // Create or update the knockout round
+                $roundNumber = $i + 1;
+                $knockoutRoundName = $roundName == "Final" ? $roundName : $roundName . " #$roundNumber";
+                $knockoutRound = KnockoutRound::create([
+                    'tournament_level_category_id' => $category->id,
+                    'name' => $knockoutRoundName,
+                ]);
+
+                // Take two teams from the top of the teams list
+                $homeTeam = $teams->shift();
+                $awayTeam = $teams->shift();
+
+                $relatedHomeGameId = $previousRoundGameIds[$i * 2] ?? null;
+                $relatedAwayGameId = $previousRoundGameIds[$i * 2 + 1] ?? null;
+
+                // Create a match for the current knockout round
+                $game = Game::create([
+                    'type' => 'Knockouts',
+                    'knockout_round_id' => $knockoutRound->id,
+                    'home_team_id' => $homeTeam?->id,
+                    'away_team_id' => $awayTeam?->id,
+                    'related_home_game_id' => $relatedHomeGameId,
+                    'related_away_game_id' => $relatedAwayGameId,
+                ]);
+
+                // Store the game ID for the current match
+                $currentRoundGameIds[] = $game->id;
+            }
+
+            // Update previous round game IDs after all matches of the current round have been generated
+            $previousRoundGameIds = $currentRoundGameIds;
+
+            // Update remaining teams and matches per round for the next iteration
+            $nbOfTeams /= 2;
+            $matchesPerRound /= 2;
+        }
+    }
+
     #[On('delete')]
     public function delete($id)
     {
@@ -165,37 +212,6 @@ class TournamentCategoryView extends Component
         $tournamentCategory->delete();
 
         return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament category has been deleted successfully!');
-    }
-
-    #[On('knockoutRound')]
-    public function knockoutRound($id)
-    {
-        $winnerTeamsIds = Game::with(['knockoutRound' => function ($query) use ($id) {
-            $query->where('tournament_level_category_id', $id);
-        }])->where('is_completed', 1)->pluck('winner_team_id')->ToArray();
-
-        $winnerTeamsCount = count($winnerTeamsIds) /2;
-
-        $game = Game::with(['knockoutRound' => function ($query) use ($id) {
-            $query->where('tournament_level_category_id', $id);
-        }])->where('is_completed', 1)->first();
-
-
-        $knockout_round_id = $game->knockout_round_id;
-
-        for($i=0; $i <= $winnerTeamsCount; $i = $i +2) {
-            $team1_id = $winnerTeamsIds[$i];
-            $team2_id = $winnerTeamsIds[$i + 1];
-
-            Game::create([
-                'type'=>"knockouts",
-                'knockout_round_id'=>$knockout_round_id + 1,
-                'home_team_id'=>$team1_id,
-                'away_team_id'=>$team2_id,
-            ]);
-        }
-
-
     }
 
     public function render()
