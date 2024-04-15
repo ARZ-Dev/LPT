@@ -73,8 +73,10 @@ class MatchesView extends Component
                 $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
                 $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
 
-                $groupTeamWinner->increment(['wins', 'matches_played']);
-                $groupTeamLooser->increment(['losses', 'matches_played']);
+                $groupTeamWinner->increment('wins');
+                $groupTeamWinner->increment('matches_played');
+                $groupTeamLooser->increment('losses');
+                $groupTeamLooser->increment('matches_played');
 
                 foreach ($teams as $index => $team) {
                     $newRank = $index + 1;
@@ -84,12 +86,17 @@ class MatchesView extends Component
                 $matchesPlayedCount = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played', count($teams) - 1)->count();
 
                 $group = Group::where('id',$this->match->group_id)->first();
-
+            
+                $groupsCount = Group::where('tournament_level_category_id',$this->category->id)->count();
+                
                 if ($matchesPlayedCount == count($teams)) {
                     $group->update(['is_completed' => 1,]);
+                }
+                
+                $groupsIsCompleted = Group::where('tournament_level_category_id',$this->category->id)->where('is_completed',1)->count();
+                if($groupsIsCompleted == $groupsCount){
                     $this->category->update(['is_group_stages_completed' => 1,]);
                 }
-
             }
 
             DB::commit();
