@@ -18,11 +18,13 @@ class MatchesView extends Component
     public $match ;
     public $loser_team_id ;
     public $category;
+    public $tournament;
 
     public function mount($categoryId)
     {
         $this->authorize('matches-list');
-        $this->category = TournamentLevelCategory::with('tournament')->findOrFail($categoryId);
+        $this->category = TournamentLevelCategory::with('tournament.levelCategories')->findOrFail($categoryId);
+        $this->tournament = $this->category->tournament;
         $this->matches = Game::with('knockoutRound','homeTeam','awayTeam')
             ->whereHas('knockoutRound', function ($query) {
                 $query->where('tournament_level_category_id', $this->category->id);
@@ -77,6 +79,13 @@ class MatchesView extends Component
                         'winner_team_id' => $winnerId,
                         'silver_team_id' => $this->loser_team_id,
                     ]);
+
+                    $completedCategoriesCount = $this->tournament->levelCategories()->where('is_completed', true)->count();
+                    if ( count($this->tournament->levelCategories) == $completedCategoriesCount ) {
+                        $this->tournament->update([
+                            'is_completed' => true,
+                        ]);
+                    }
                 }
 
             } else {
