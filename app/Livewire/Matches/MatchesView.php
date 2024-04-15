@@ -66,6 +66,19 @@ class MatchesView extends Component
                         'away_team_id' => $winnerId
                     ]);
                 }
+
+                $this->match->knockoutRound->update([
+                    'is_completed' => true,
+                ]);
+
+                if ($this->match->knockoutRound->name == "Final") {
+                    $this->category->update([
+                        'is_completed' => true,
+                        'winner_team_id' => $winnerId,
+                        'silver_team_id' => $this->loser_team_id,
+                    ]);
+                }
+
             } else {
 
                 $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();

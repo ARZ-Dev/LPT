@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('is_group_matches_generated')->default(false);
             $table->boolean('is_group_stages_completed')->default(false);
             $table->boolean('is_knockout_matches_generated')->default(false);
+            $table->boolean('is_completed')->default(false);
             $table->foreignId('winner_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->foreignId('silver_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->timestamps();
