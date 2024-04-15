@@ -51,7 +51,8 @@
                             @if(
                                 (
                                     ($category->has_group_stage && !$category->is_group_matches_generated) ||
-                                    (!$category->has_group_stage && !$category->is_knockout_matches_generated)
+                                    (!$category->has_group_stage && !$category->is_knockout_matches_generated) ||
+                                    ($category->has_group_stage && $category->is_group_stages_completed && !$category->is_knockout_matches_generated)
                                 )
                                     && $category->number_of_teams > 0
                             )

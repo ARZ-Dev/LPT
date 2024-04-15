@@ -99,11 +99,11 @@ class MatchesView extends Component
                 $matchesPlayedCount = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played', count($teams) - 1)->count();
 
                 $group = Group::where('id',$this->match->group_id)->first();
-            
+
                 $groupsCount = Group::where('tournament_level_category_id',$this->category->id)->count();
-                
-                $smallestRanks = $teams->sortBy('rank')->take( $this->category->number_of_winners_per_group);
-              
+
+                $smallestRanks = $teams->sortBy('rank')->take($this->category->number_of_winners_per_group);
+
                 if ($matchesPlayedCount == count($teams)) {
                     $group->update(['is_completed' => 1,]);
 
@@ -112,7 +112,7 @@ class MatchesView extends Component
                     }
 
                 }
-                
+
                 $groupsIsCompleted = Group::where('tournament_level_category_id',$this->category->id)->where('is_completed',1)->count();
                 if($groupsIsCompleted == $groupsCount){
                     $this->category->update(['is_group_stages_completed' => 1,]);
