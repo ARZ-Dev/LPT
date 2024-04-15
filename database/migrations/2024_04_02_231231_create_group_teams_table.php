@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->integer('matches_played')->default(0);
             $table->integer('rank')->default(1);
             $table->integer('wins')->default(0);
             $table->integer('losses')->default(0);
             $table->boolean('has_qualified')->default(false);
+            $table->timestamps();
         });
     }
 
