@@ -17,6 +17,8 @@
                         <th>Group Stage</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Status</th>
+                        <th>Winner Team</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -34,6 +36,12 @@
                         </td>
                         <td>{{ $category->start_date }}</td>
                         <td>{{ $category->end_date }}</td>
+                        <td>
+                            <span class="badge bg-label-{{ $category->is_completed ? "success" : "warning" }}">
+                                {{ $category->is_completed ? "Completed" : "Pending" }}
+                            </span>
+                        </td>
+                        <td>{{ $category->winnerTeam?->nickname }}</td>
                         <td>
                             @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
                                 <a href="{{ route('matches', $category->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
