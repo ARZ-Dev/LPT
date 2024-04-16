@@ -215,7 +215,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{tournamentId}/categories', TournamentCategoryView::class)->name('tournaments-categories');
         Route::get('{tournamentId}/categories/{categoryId}/edit', TournamentCategoryForm::class)->name('tournaments-categories.edit');
         Route::get('{tournamentId}/categories/{categoryId}/view/{status}', TournamentCategoryForm::class)->name('tournaments-categories.view');
-        Route::get('categories/{categoryId}/knockoutMap', TournamentCategoryKnockoutMap::class)->name('tournaments-categories.knockoutMap');
+        Route::get('categories/{categoryId}/knockout-bracket', TournamentCategoryKnockoutMap::class)->name('tournaments-categories.knockoutMap');
 
     });
 

@@ -3,8 +3,6 @@
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} - Matches</h4>
             <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
-
-
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-matches dataTable table border-top">
