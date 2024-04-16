@@ -48,9 +48,13 @@
                             @can('tournament-edit')
                             <a href="{{ route('tournaments.edit', $tournament->id) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm"></i></a>
                             @endcan
-                            @can('tournament-delete')
-                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $tournament->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
-                            @endcan
+
+                            @if(!$tournament->levelCategories?->firstWhere('is_group_matches_generated', true) && !$tournament->levelCategories?->firstWhere('is_knockout_matches_generated', true))
+                                @can('tournament-delete')
+                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $tournament->id }}"><i class="ti ti-trash ti-sm mx-2 text-danger"></i></a>
+                                @endcan
+                            @endif
+
                         </td>
                     </tr>
                     @endforeach

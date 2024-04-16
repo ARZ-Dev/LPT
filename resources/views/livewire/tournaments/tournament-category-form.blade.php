@@ -74,6 +74,7 @@
                         <label for="nb-of-teams" class="form-label">Number of Winners per Group:</label>
                         <input wire:model="nb_of_winners_per_group" id="nb-of-winners" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
                         @error('nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
+                        @error('knockout_teams') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                 </div>
             </div>

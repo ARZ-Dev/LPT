@@ -19,7 +19,7 @@ class TournamentView extends Component
     public function mount()
     {
         $this->authorize('tournament-list');
-        $this->tournaments = Tournament::all();
+        $this->tournaments = Tournament::with('levelCategories')->get();
     }
 
     #[On('delete')]
@@ -64,7 +64,7 @@ class TournamentView extends Component
             ]);
         }
     }
-    
+
     #[On('generateMatches')]
     public function generateMatches($tournamentId)
     {
@@ -152,7 +152,7 @@ class TournamentView extends Component
         return to_route('tournaments')->with('success', 'Matches has been generated successfully!');
     }
 
-    
+
 
 
     public function render()

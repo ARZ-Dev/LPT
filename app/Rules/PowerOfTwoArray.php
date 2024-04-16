@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class PowerOfTwo implements ValidationRule
+class PowerOfTwoArray implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -14,7 +14,8 @@ class PowerOfTwo implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ( !(($value & ($value - 1)) == 0 && $value != 0) ) {
+        $count = count($value);
+        if ( !(($count & ($count - 1)) == 0 && $count != 0) ) {
             $fail('The :attribute must be a power of 2 (2, 4, 8, 16, 32, 64, ...).');
         }
     }

@@ -148,9 +148,9 @@ class MatchesView extends Component
         }
     }
 
-    public function updateTeamsRank($categoryId)
+    public function updateTeamsRank($levelCategoryId)
     {
-        $teams = Team::where('level_category_id', $categoryId)->orderBy('points', 'desc')->get();
+        $teams = Team::where('level_category_id', $levelCategoryId)->orderBy('points', 'desc')->get();
         $teams->each(function ($team, $index) {
             $team->update(['rank' => $index + 1]);
         });

@@ -9,6 +9,7 @@ use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
 use App\Rules\EvenNumber;
 use App\Rules\PowerOfTwo;
+use App\Rules\PowerOfTwoArray;
 use Livewire\Component;
 
 class TournamentCategoryForm extends Component
@@ -25,6 +26,7 @@ class TournamentCategoryForm extends Component
     public $start_date;
     public $end_date;
     public string $teams_filter_search = "";
+    public int $knockout_teams = 0;
 
     public function mount($tournamentId, $categoryId)
     {
@@ -58,16 +60,25 @@ class TournamentCategoryForm extends Component
 
     public function rules()
     {
-        return [
+        $rules = [
             'type_id' => ['required'],
             'nb_of_teams' => ['required', 'numeric', new EvenNumber(), 'min:2'],
-            'selectedTeamsIds' => ['required', 'array', 'min:2', new PowerOfTwo()],
             'has_group_stages' => ['boolean'],
             'nb_of_groups' => ['required_if:has_group_stages,true'],
             'nb_of_winners_per_group' => ['required_if:has_group_stages,true'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
         ];
+
+        if ($this->has_group_stages) {
+            $this->knockout_teams = $this->nb_of_groups * $this->nb_of_winners_per_group;
+            $rules['knockout_teams'] = ['required', 'gte:2', new PowerOfTwo()];
+            $rules['selectedTeamsIds'] = ['required', 'array', 'min:' . ($this->nb_of_groups ?? 0) * 2];
+        } else {
+            $rules['selectedTeamsIds'] = ['required', 'array', 'min:2', new PowerOfTwoArray()];
+        }
+
+        return $rules;
     }
 
     public function update()

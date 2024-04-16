@@ -10,6 +10,7 @@ use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
 use App\Rules\EvenNumber;
 use App\Utils\Constants;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class TournamentForm extends Component
@@ -101,27 +102,42 @@ class TournamentForm extends Component
     {
         $this->validate();
 
-        $this->tournament->update([
-            'name' => $this->name,
-            'start_date' => $this->startDate,
-            'end_date' => $this->endDate,
-        ]);
+        DB::beginTransaction();
+        try {
 
-        $categoriesIds = [];
-        foreach ($this->selectedCategoriesIds as $categoryId) {
-            $levelCategory = TournamentLevelCategory::where('tournament_id', $this->tournament->id)->where('level_category_id', $categoryId)->first();
-            if (!$levelCategory) {
-                $levelCategory = TournamentLevelCategory::create([
-                    'tournament_id' => $this->tournament->id,
-                    'level_category_id' => $categoryId,
-                    'start_date' => $this->startDate,
-                    'end_date' => $this->endDate,
-                ]);
+            $this->tournament->update([
+                'name' => $this->name,
+                'start_date' => $this->startDate,
+                'end_date' => $this->endDate,
+            ]);
+
+            $categoriesIds = [];
+            foreach ($this->selectedCategoriesIds as $categoryId) {
+                $levelCategory = TournamentLevelCategory::where('tournament_id', $this->tournament->id)->where('level_category_id', $categoryId)->first();
+                if (!$levelCategory) {
+                    $levelCategory = TournamentLevelCategory::create([
+                        'tournament_id' => $this->tournament->id,
+                        'level_category_id' => $categoryId,
+                        'start_date' => $this->startDate,
+                        'end_date' => $this->endDate,
+                    ]);
+                }
+
+                $categoriesIds[] = $levelCategory->id;
             }
+            $removedCategories = TournamentLevelCategory::where('tournament_id', $this->tournament->id)->whereNotIn('id', $categoriesIds)->get();
+            throw_if($removedCategories->firstWhere('is_group_matches_generated', true) || $removedCategories->firstWhere('is_knockout_matches_generated', true), new \Exception("You cannot delete a category that have pending matches!"));
 
-            $categoriesIds[] = $levelCategory->id;
+            $removedCategories->each->delete();
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
         }
-        TournamentLevelCategory::where('tournament_id', $this->tournament->id)->whereNotIn('id', $categoriesIds)->delete();
 
         return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament has been updated successfully!');
     }
