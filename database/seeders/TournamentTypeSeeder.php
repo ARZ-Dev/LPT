@@ -23,6 +23,7 @@ class TournamentTypeSeeder extends Seeder
         foreach ($tournamentTypes as $tournamentType) {
             TournamentType::updateOrCreate([
                 'name' => $tournamentType,
+                'points' => str_replace('P', '', $tournamentType),
             ]);
         }
     }

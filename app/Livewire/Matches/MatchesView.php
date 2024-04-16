@@ -5,6 +5,7 @@ namespace App\Livewire\Matches;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
+use App\Models\Team;
 use App\Models\TournamentLevelCategory;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -23,7 +24,7 @@ class MatchesView extends Component
     public function mount($categoryId)
     {
         $this->authorize('matches-list');
-        $this->category = TournamentLevelCategory::with('tournament.levelCategories')->findOrFail($categoryId);
+        $this->category = TournamentLevelCategory::with('tournament.levelCategories', 'type')->findOrFail($categoryId);
         $this->tournament = $this->category->tournament;
         $this->matches = Game::with('knockoutRound','homeTeam','awayTeam')
             ->whereHas('knockoutRound', function ($query) {
@@ -40,7 +41,7 @@ class MatchesView extends Component
     {
         DB::beginTransaction();
         try {
-            $this->match = Game::with('knockoutRound.tournamentLevelCategory','homeTeam','awayTeam')->findOrFail($matchId);
+            $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
 
             if ($this->match->home_team_id == $winnerId) {
                 $this->loser_team_id = $this->match->away_team_id;
@@ -53,6 +54,11 @@ class MatchesView extends Component
                 'loser_team_id' => $this->loser_team_id,
                 'is_completed' => 1,
             ]);
+
+            $this->match->homeTeam->increment('matches');
+            $this->match->awayTeam->increment('matches');
+            $this->match->winnerTeam->increment('wins');
+            $this->match->loserTeam->increment('losses');
 
             if ($this->match->type == "Knockouts") {
                 $relatedHomeGame = Game::where('related_home_game_id', $this->match->id)->first();
@@ -80,6 +86,10 @@ class MatchesView extends Component
                         'silver_team_id' => $this->loser_team_id,
                     ]);
 
+                    $this->match->winnerTeam->increment('points', $this->category->type->points);
+
+                    $this->updateTeamsRank($this->category->level_category_id);
+
                     $completedCategoriesCount = $this->tournament->levelCategories()->where('is_completed', true)->count();
                     if ( count($this->tournament->levelCategories) == $completedCategoriesCount ) {
                         $this->tournament->update([
@@ -89,42 +99,38 @@ class MatchesView extends Component
                 }
 
             } else {
+                $group = Group::findOrFail($this->match->group_id);
+                $groupTeams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->get();
 
-                $teams = GroupTeam::where('group_id', $this->match->group_id)->orderBy('wins', 'desc')->orderBy('id', 'asc')->get();
-
-                $groupTeamWinner=GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
-                $groupTeamLooser=GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
+                $groupTeamWinner = GroupTeam::where('team_id',$winnerId)->where('group_id',$this->match->group_id)->first();
+                $groupTeamLoser = GroupTeam::where('team_id',$this->loser_team_id)->where('group_id',$this->match->group_id)->first();
 
                 $groupTeamWinner->increment('wins');
                 $groupTeamWinner->increment('matches_played');
-                $groupTeamLooser->increment('losses');
-                $groupTeamLooser->increment('matches_played');
+                $groupTeamLoser->increment('losses');
+                $groupTeamLoser->increment('matches_played');
 
-                foreach ($teams as $index => $team) {
-                    $newRank = $index + 1;
-                    $team->update(['rank' => $newRank]);
+                $groupTeams->each(function ($team, $index) {
+                    $team->update(['rank' => $index + 1]);
+                });
+
+                $matchesPlayedCount = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played', $groupTeams->count() - 1)->count();
+
+                if ($matchesPlayedCount == $groupTeams->count()) {
+
+                    $group->update(['is_completed' => true]);
+
+                    GroupTeam::where('group_id', $this->match->group_id)
+                        ->orderBy('rank')
+                        ->take($this->category->number_of_winners_per_group)
+                        ->update(['has_qualified' => true]);
                 }
-
-                $matchesPlayedCount = GroupTeam::where('group_id', $this->match->group_id)->where('matches_played', count($teams) - 1)->count();
-
-                $group = Group::where('id',$this->match->group_id)->first();
 
                 $groupsCount = Group::where('tournament_level_category_id',$this->category->id)->count();
+                $completedGroupsCount = Group::where('tournament_level_category_id',$this->category->id)->where('is_completed', true)->count();
 
-                $smallestRanks = $teams->sortBy('rank')->take($this->category->number_of_winners_per_group);
-
-                if ($matchesPlayedCount == count($teams)) {
-                    $group->update(['is_completed' => 1,]);
-
-                    foreach ($smallestRanks as $team) {
-                        $team->update(['has_qualified' => 1]);
-                    }
-
-                }
-
-                $groupsIsCompleted = Group::where('tournament_level_category_id',$this->category->id)->where('is_completed',1)->count();
-                if($groupsIsCompleted == $groupsCount){
-                    $this->category->update(['is_group_stages_completed' => 1,]);
+                if ($completedGroupsCount == $groupsCount) {
+                    $this->category->update(['is_group_stages_completed' => true]);
                 }
             }
 
@@ -140,6 +146,14 @@ class MatchesView extends Component
                 'text'  => $exception->getMessage(),
             ]);
         }
+    }
+
+    public function updateTeamsRank($categoryId)
+    {
+        $teams = Team::where('level_category_id', $categoryId)->orderBy('points', 'desc')->get();
+        $teams->each(function ($team, $index) {
+            $team->update(['rank' => $index + 1]);
+        });
     }
 
     public function render()

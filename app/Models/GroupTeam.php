@@ -11,4 +11,13 @@ class GroupTeam extends Model
 
     protected $guarded = [];
 
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 }
