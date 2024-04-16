@@ -59,10 +59,13 @@
                                 <a href="#" class="text-body edit-tournament-button generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
                                     <i class="ti ti-layout-grid-add ti-sm me-2"></i>
                                 </a>
-                            @endif
+                                @endif
+                                @if($category->is_knockout_matches_generated == 1)
+                                    <a href="{{ route('tournaments-categories.knockoutMap', [$category->id]) }}" class="text-body edit-tournament-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Knockout Map"><i class="ti ti-star ti-sm me-2"></i></a>
+                                @endif
                             @if(!$category->is_group_matches_generated && !$category->is_knockout_matches_generated)
-                                <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm me-2"></i></a>
-                                <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>
+                            <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body edit-tournament-button"><i class="ti ti-edit ti-sm me-2"></i></a>
+                            <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>
                             @endif
                         </td>
                     </tr>
