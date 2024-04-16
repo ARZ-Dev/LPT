@@ -5,6 +5,7 @@ namespace App\Livewire\Matches;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
+use App\Models\KnockoutRound;
 use App\Models\Team;
 use App\Models\TournamentLevelCategory;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +79,14 @@ class MatchesView extends Component
                 $this->match->knockoutRound->update([
                     'is_completed' => true,
                 ]);
+
+                $knockoutStage = $this->match->knockoutRound->knockoutStage;
+                $completedRoundsCount = KnockoutRound::where('knockout_stage_id', $knockoutStage->id)->where('is_completed', true)->count();
+                if ($completedRoundsCount == $knockoutStage->knockoutRounds()->count()) {
+                    $knockoutStage->update([
+                        'is_completed' => true,
+                    ]);
+                }
 
                 if ($this->match->knockoutRound->name == "Final") {
                     $this->category->update([

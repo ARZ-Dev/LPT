@@ -27,9 +27,14 @@ class TournamentLevelCategory extends Model
         return $this->hasMany(TournamentLevelCategoryTeam::class);
     }
 
-    public function knockoutRound()
+    public function knockoutRounds()
     {
         return $this->hasMany(KnockoutRound::class);
+    }
+
+    public function knockoutStages()
+    {
+        return $this->hasMany(KnockoutStage::class);
     }
 
     public function levelCategory()

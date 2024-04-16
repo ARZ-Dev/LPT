@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('knockout_rounds', function (Blueprint $table) {
+        Schema::create('knockout_stages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tournament_level_category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('knockout_stage_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->boolean('is_completed')->default(false);
             $table->timestamps();
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('knockout_rounds');
+        Schema::dropIfExists('knockout_stages');
     }
 };

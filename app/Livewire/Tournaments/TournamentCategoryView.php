@@ -5,6 +5,7 @@ namespace App\Livewire\Tournaments;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\KnockoutRound;
+use App\Models\KnockoutStage;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentLevelCategory;
@@ -155,6 +156,11 @@ class TournamentCategoryView extends Component
                 default => "Round of $nbOfTeams",
             };
 
+            $knockoutStage = KnockoutStage::create([
+                'tournament_level_category_id' => $category->id,
+                'name' => $roundName,
+            ]);
+
             // Shuffle the teams randomly
             $teams = $teams->shuffle();
 
@@ -169,6 +175,7 @@ class TournamentCategoryView extends Component
                 $knockoutRoundName = $roundName == "Final" ? $roundName : $roundName . " #$roundNumber";
                 $knockoutRound = KnockoutRound::create([
                     'tournament_level_category_id' => $category->id,
+                    'knockout_stage_id' => $knockoutStage->id,
                     'name' => $knockoutRoundName,
                 ]);
 
