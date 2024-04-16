@@ -68,6 +68,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/filepond/filepond.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/filepond/filepond-plugin-image-preview.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/gracket.css') }}" />
+
 
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
@@ -92,7 +94,7 @@
         }
         @media (max-width: 767px) {
           .sm-mb {
-              margin-bottom: 15px; 
+              margin-bottom: 15px;
           }
       }
     </style>
@@ -151,6 +153,7 @@
     <script src="{{ asset('assets/vendor/libs/filepond/filepond.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/filepond/filepond.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/table-excel-export/xlsx.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.gracket.min.js') }}"></script>
 
     <script>
 
@@ -560,7 +563,7 @@
         },]
         })
     });
-  
+
   </script>
 
   </body>
