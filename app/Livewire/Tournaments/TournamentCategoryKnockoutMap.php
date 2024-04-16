@@ -16,17 +16,14 @@ class TournamentCategoryKnockoutMap extends Component
     {
 
         // $this->category = TournamentLevelCategory::with('knockoutsMatches.winnerTeam','knockoutsMatches.looserTeam')->findOrFail($categoryId);
-        
+
         $this->category = TournamentLevelCategory::with(['knockoutsMatches' => function ($query) {
-            $query->where('knockout_round_id', '!=', 12)
+            $query
                   ->with('winnerTeam', 'looserTeam');
         }])->findOrFail($categoryId);
         
 
-        $this->final = TournamentLevelCategory::with(['knockoutsMatches' => function ($query) {
-            $query->where('knockout_round_id', 12)
-                  ->with('winnerTeam', 'looserTeam');
-        }])->findOrFail($categoryId);
+
      
 
     }
