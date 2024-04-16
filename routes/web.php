@@ -49,11 +49,10 @@ use App\Livewire\Tournaments\TournamentView;
 use App\Livewire\Tournaments\TournamentForm;
 use App\Livewire\Tournaments\TournamentCategoryView;
 use App\Livewire\Tournaments\TournamentCategoryForm;
+use App\Livewire\Tournaments\TournamentCategoryKnockoutMap;
 
 use App\Livewire\Matches\MatchesView;
 use App\Livewire\Matches\MatchesForm;
-
-
 
 
 Route::get('/login', Login::class)->name('login');
@@ -216,6 +215,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{tournamentId}/categories', TournamentCategoryView::class)->name('tournaments-categories');
         Route::get('{tournamentId}/categories/{categoryId}/edit', TournamentCategoryForm::class)->name('tournaments-categories.edit');
         Route::get('{tournamentId}/categories/{categoryId}/view/{status}', TournamentCategoryForm::class)->name('tournaments-categories.view');
+        Route::get('categories/{categoryId}/knockoutMap', TournamentCategoryKnockoutMap::class)->name('tournaments-categories.knockoutMap');
+
     });
 
     Route::group(['prefix' => 'matches'], function() {

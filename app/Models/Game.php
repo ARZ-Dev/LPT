@@ -31,6 +31,11 @@ class Game extends Model
     {
         return $this->belongsTo(Team::class, 'winner_team_id');
     }
+    public function looserTeam()
+    {
+        return $this->belongsTo(Team::class, 'loser_team_id');
+    }
+    
 
     public function knockoutRound()
     {
