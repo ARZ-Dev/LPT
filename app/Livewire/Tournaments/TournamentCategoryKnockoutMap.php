@@ -18,6 +18,10 @@ class TournamentCategoryKnockoutMap extends Component
     {
         // $this->category = TournamentLevelCategory::with(['knockoutStages', 'knockoutsMatches.homeTeam','knockoutsMatches.awayTeam','knockoutsMatches.winnerTeam','knockoutsMatches.looserTeam'])->findOrFail($categoryId);
 
+        // $this->category = TournamentLevelCategory::with(['knockoutStages','knockoutsMatches.knockoutRound','knockoutsMatches' => function ($query) {
+        //     $query->whereNotNull('home_team_id')->whereNotNull('away_team_id')->whereBetween('knockout_round_id', [25, 28]);
+        // }, 'knockoutsMatches.homeTeam','knockoutsMatches.awayTeam','knockoutsMatches.winnerTeam','knockoutsMatches.looserTeam'])->findOrFail($categoryId);
+
         $this->category = TournamentLevelCategory::with(['knockoutStages', 'knockoutsMatches.knockoutRound' => function ($query) {
             $query->where('name', 'like', '%Quarter Final%');
         }, 'knockoutsMatches' => function ($query) {

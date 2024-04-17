@@ -28,9 +28,23 @@ var singleElimination = {
 
         [1, 0],
 
-        @else  
+        @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
+
+        [1, 0],
+
+        @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
 
         [0, 1],
+
+        @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
+
+        [0, 1],
+
+        @else
+
+        [0, 1],
+
+       
 
         @endif
 
@@ -41,30 +55,58 @@ var singleElimination = {
       ],
       [   
                       
-        @foreach($semiFinal->knockoutsMatches as $match)
-            @if($match->homeTeam?->id == $match->winnerTeam?->id )
+        @foreach($semiFinal->knockoutsMatches as $teams)
+        @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
 
-                [1, 0],
+          [1, 0],
 
-            @else  
+          @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
 
-                [0, 1],
+          [1, 0],
 
-            @endif
+          @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
+
+          [0, 1],
+
+          @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
+
+          [0, 1],
+
+          @else
+
+          [0, 1],
+
+
+
+          @endif
         @endforeach              
       ],
       [                   
-        @foreach($final->knockoutsMatches as $match)
-            @if($match->homeTeam?->id == $match->winnerTeam?->id )
+        @foreach($semiFinal->knockoutsMatches as $teams)
+        @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
 
-                [1, 0],
+          [1, 0],
 
-            @else  
+          @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
 
-                [0, 1],
-                
-            @endif
-        @endforeach   
+          [1, 0],
+
+          @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
+
+          [0, 1],
+
+          @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
+
+          [0, 1],
+
+          @else
+
+          [0, 1],
+
+
+
+          @endif
+        @endforeach  
       ]
     ]
   ]
