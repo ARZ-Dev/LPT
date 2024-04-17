@@ -8,30 +8,67 @@
     <a class="btn btn-primary" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
 </div>
 
-@foreach($category->knockoutsMatches as $teams)
 
-{{$teams->homeTeam?->nickname}}
-@endforeach
 
 <div class="tournament"></div>
 <script>
 var singleElimination = {
-  "teams": [              // Matchups
-    ["Team 1", "Team 2"], // First match
-    ["Team 3", "Team 4"]  // Second match
+  "teams": [              
+    @foreach($category->knockoutsMatches as $teams)
+
+    ["{{$teams->homeTeam->nickname ?? 'Unknown' }}", "{{$teams->awayTeam->nickname ?? 'Unknown' }}"], 
+    @endforeach
   ],
-  "results": [            // List of brackets (single elimination, so only one bracket)
-    [                     // List of rounds in bracket
-      [                   // First round in this bracket
-        [1, 2],           // Team 1 vs Team 2
-        [3, 4]            // Team 3 vs Team 4
+
+  "results": [            
+    [                   
+      [  
+    @foreach($category->knockoutsMatches as $teams)
+    @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
+
+        [1, 0],
+
+        @else  
+
+        [0, 1],
+
+        @endif
+
+    @endforeach
+
+    
+
       ],
-      [                   // Second (final) round in single elimination bracket
-        [5, 6],           // Match for first place
-        [7, 8]            // Match for 3rd place
+      [   
+                      
+        @foreach($semiFinal->knockoutsMatches as $match)
+            @if($match->homeTeam?->id == $match->winnerTeam?->id )
+
+                [1, 0],
+
+            @else  
+
+                [0, 1],
+
+            @endif
+        @endforeach              
+      ],
+      [                   
+        @foreach($final->knockoutsMatches as $match)
+            @if($match->homeTeam?->id == $match->winnerTeam?->id )
+
+                [1, 0],
+
+            @else  
+
+                [0, 1],
+                
+            @endif
+        @endforeach   
       ]
     ]
   ]
+
 }
 
 $('.tournament').bracket({
