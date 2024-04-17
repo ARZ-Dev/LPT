@@ -12,7 +12,7 @@ class TournamentCategoryKnockoutMap extends Component
 
     public function mount($categoryId)
     {
-        $this->category = TournamentLevelCategory::with(['knockoutStages', 'knockoutsMatches'])->findOrFail($categoryId);
+        $this->category = TournamentLevelCategory::with(['knockoutStages', 'knockoutsMatches.homeTeam','knockoutsMatches.awayTeam','knockoutsMatches.winnerTeam','knockoutsMatches.looserTeam'])->findOrFail($categoryId);
     }
 
     public function render()
