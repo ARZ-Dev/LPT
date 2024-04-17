@@ -17,8 +17,8 @@
                     @foreach($knockoutStage->games as $game)
 
                     [
-                        { name: "{{ $game->homeTeam?->nickname ?? "Winner of " . $game->relatedHomeGame->knockoutRound?->name }}", id: "{{ $game->homeTeam?->id }}"},
-                        { name: "{{ $game->awayTeam?->nickname ?? "Winner of " . $game->relatedAwayGame->knockoutRound?->name }}", id: "{{ $game->awayTeam?->id }}"},
+                        { name: "{{ $game->homeTeam?->nickname ?? "Winner of " . $game->relatedHomeGame?->knockoutRound?->name }}", id: "{{ $game->homeTeam?->id }}"},
+                        { name: "{{ $game->awayTeam?->nickname ?? "Winner of " . $game->relatedAwayGame?->knockoutRound?->name }}", id: "{{ $game->awayTeam?->id }}"},
                     ],
 
                     @endforeach
