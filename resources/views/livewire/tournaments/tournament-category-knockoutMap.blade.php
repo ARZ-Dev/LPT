@@ -1,50 +1,26 @@
 <div>
 
-    <script src="{{ asset('assets/js/jquery-1.11.3.js') }}"></script>
-    <script src="{{ asset('assets/js/brackets.min.js') }}"></script>
-
-    <!-- <link rel="stylesheet" href="{{ asset('assets/css/jquery.bracket.min.css') }}" /> -->
-
-
 
     <div class="d-flex mb-2 justify-content-end">
         <a class="btn btn-primary" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
     </div>
 
-    @foreach($category->knockoutStages as $knockoutStage)
+    <div class="brackets" style="height: 1000px"></div>
 
-    @foreach($knockoutStage->games as $game)
-
-
-
-    @endforeach
-    @endforeach
-
-
-    <div class="brackets"></div>
-
+    @script
     <script>
-        var rounds;
 
-        rounds = [
+        let rounds = [
 
-            @foreach($category - > knockoutStages as $knockoutStage)
-            //-- round 1
+            @foreach($category->knockoutStages as $knockoutStage)
+
             [
 
-                @foreach($knockoutStage - > games as $game)
-
+                @foreach($knockoutStage->games as $game)
 
                 {
-                    player1: {
-                        name: "{{ $game->homeTeam?->nickname ??  $game->relatedHomeGame?->knockoutRound?->name }}"
-                        , winner: true
-                        , ID: '{{ $game->homeTeam?->id }}'
-                    }
-                    , player2: {
-                        name: "{{ $game->awayTeam?->nickname ??  $game->relatedAwayGame?->knockoutRound?->name }}"
-                        , ID: '{{ $game->homeTeam?->id }}'
-                    }
+                    player1: { name: "{{ $game->homeTeam?->nickname ??  $game->relatedHomeGame?->knockoutRound?->name }}", winner: true, ID: '{{ $game->homeTeam?->id }}' },
+                    player2: { name: "{{ $game->awayTeam?->nickname ??  $game->relatedAwayGame?->knockoutRound?->name }}", ID: '{{ $game->homeTeam?->id }}' }
                 },
 
                 @endforeach
@@ -53,52 +29,41 @@
 
             @endforeach
 
-            // //-- Champion
-
+            // Champion
             [
-
                 {
-                    player1: {
-                        name: "{{ $category->winnerTeam?->nickname ?? "
-                        N / A " }}"
-                        , winner: true
-                        , ID: '{{ $category->winner_team_id }}'
-                    }
-                , }
-            , ],
-
-
+                    player1: { name: "{{ $category->winnerTeam?->nickname ?? "N/A" }}", winner: true, ID: '{{ $category->winner_team_id }}' },
+                },
+            ],
 
         ];
 
-        var titles = [
+        let titles = [
 
-            @foreach($category - > knockoutStages as $knockoutStage)
+            @foreach($category->knockoutStages as $knockoutStage)
 
-            '{{$knockoutStage->name}}',
+                '{{$knockoutStage->name}}',
 
             @endforeach
 
+            'Winner',
         ];
 
         $(".brackets").brackets({
-            titles: titles
-            , rounds: rounds
-            , color_title: 'black'
-            , border_color: 'black'
-            , color_player: 'black'
-            , bg_player: 'white'
-            , color_player_hover: 'black'
-            , bg_player_hover: 'white'
-            , border_radius_player: '0px'
-            , border_radius_lines: '0px'
-        , });
+            titles: titles,
+            rounds: rounds,
+            color_title: 'black',
+            border_color: 'black',
+            color_player: 'black',
+            bg_player: 'white',
+            color_player_hover: 'black',
+            bg_player_hover: 'white',
+            border_radius_player: '10px',
+            border_radius_lines: '10px',
+        });
 
     </script>
-
-
-
-
+    @endscript
 
 
 </div>
