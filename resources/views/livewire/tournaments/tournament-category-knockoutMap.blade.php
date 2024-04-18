@@ -5,20 +5,9 @@
 
 <!-- <link rel="stylesheet" href="{{ asset('assets/css/jquery.bracket.min.css') }}" /> -->
 
-
-
 <div class="d-flex mb-2 justify-content-end">
     <a class="btn btn-primary" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
 </div>
-
-@foreach($category->knockoutStages as $knockoutStage)
-
-@foreach($knockoutStage->games as $game)
-
-
-
-@endforeach
-@endforeach
 
 
 <div class="brackets"></div>
