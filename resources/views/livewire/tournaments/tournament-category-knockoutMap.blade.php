@@ -1,100 +1,90 @@
 <div>
-<script src="{{ asset('assets/js/jquery-1.6.2.min.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/css/jquery.bracket.min.css') }}" />
-<script src="{{ asset('assets/js/jquery.bracket.min.js') }}"></script>
+
+<script src="{{ asset('assets/js/jquery-1.11.3.js') }}"></script>
+<script src="{{ asset('assets/js/brackets.min.js') }}"></script>
+
+<!-- <link rel="stylesheet" href="{{ asset('assets/css/jquery.bracket.min.css') }}" /> -->
+
 
 
 <div class="d-flex mb-2 justify-content-end">
     <a class="btn btn-primary" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
 </div>
 
+@foreach($category->knockoutStages as $knockoutStage)
+
+@foreach($knockoutStage->games as $game)
 
 
-<div class="tournament"></div>
+
+@endforeach
+@endforeach
+
+
+<div class="brackets"></div>
+
 <script>
-var singleElimination = {
-  "teams": [              
-    @foreach($category->knockoutsMatches as $teams)
+var rounds;
 
-    ["{{$teams->homeTeam->nickname ?? 'Unknown' }}", "{{$teams->awayTeam->nickname ?? 'Unknown' }}"], 
-    @endforeach
+rounds = [
+
+  @foreach($category->knockoutStages as $knockoutStage)
+  //-- round 1
+  [
+
+  @foreach($knockoutStage->games as $game)
+
+    
+      {
+        player1: { name: "{{ $game->homeTeam?->nickname ??  $game->relatedHomeGame?->knockoutRound?->name }}", winner: true, ID: '{{ $game->homeTeam?->id }}' },
+        player2: { name: "{{ $game->awayTeam?->nickname ??  $game->relatedAwayGame?->knockoutRound?->name }}", ID: '{{ $game->homeTeam?->id }}' }
+      },
+
+  @endforeach
+
   ],
 
-  "results": [            
-    [                   
-      [  
-    @foreach($category->knockoutsMatches as $teams)
-    @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
+  @endforeach  
 
-        [1, 0],
+  // //-- Champion
+  
+  [
 
-        @else
+      {
+        player1: { name: "{{ $category->winnerTeam?->nickname ?? "N/A" }}", winner: true, ID: '{{ $category->winner_team_id }}' },
+      },
+  ],
 
-        [0, 0],
+  
 
-        @endif
+];
 
-    @endforeach
+var titles = [
+  
+  @foreach($category->knockoutStages as $knockoutStage) 
+  
+  '{{$knockoutStage->name}}', 
+  
+  @endforeach
 
-      ],
-      [   
-                      
-        @foreach($semiFinal->knockoutsMatches as $teams)
-        @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
+];
 
-          [1, 0],
-
-          @else
-
-          [0, 0],
-
-          @endif
-        @endforeach              
-      ],
-      [                   
-        @foreach($semiFinal->knockoutsMatches as $teams)
-        @if($teams->homeTeam?->id == $teams->winnerTeam?->id )
-
-          [1, 0],
-
-          @else
-
-          [0, 0],
-
-          @endif
-        @endforeach  
-      ]
-    ]
-  ]
-
-}
-
-$('.tournament').bracket({
-  init: singleElimination
+$(".brackets").brackets({
+  titles: titles,
+  rounds: rounds,
+  color_title: 'black',
+  border_color: 'black',
+  color_player: 'black',
+  bg_player: 'white',
+  color_player_hover: 'black',
+  bg_player_hover: 'white',
+  border_radius_player: '0px',
+  border_radius_lines: '0px',
 });
 
-// $('.demo').bracket({
-//   init: null, // data to initialize
-//   save: null, // called whenever bracket is modified
-//   userData: null, // custom user data
-//   onMatchClick: null, // callback
-//   onMatchHover: null, // callback
-//   decorator: null, // a function
-//   skipSecondaryFinal: false,
-//   skipGrandFinalComeback: false,
-//   skipConsolationRound: false,
-//   dir: 'rl', // "rl" or  "lr",
-//   disableToolbar: false,
-//   disableTeamEdit: false,
-//   teamWidth: '', // number
-//   scoreWidth: '', // number
-//   roundMargin: '', // number
-//   matchMargin: '', // number
-// });
+</script>
 
 
-
-    </script>
 
 
 
