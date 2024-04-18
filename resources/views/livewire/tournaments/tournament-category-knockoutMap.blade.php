@@ -28,29 +28,13 @@ var singleElimination = {
 
         [1, 0],
 
-        @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
-
-        [1, 0],
-
-        @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
-
-        [0, 1],
-
-        @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
-
-        [0, 1],
-
         @else
 
         [0, 0],
 
-       
-
         @endif
 
     @endforeach
-
-    
 
       ],
       [   
@@ -60,23 +44,9 @@ var singleElimination = {
 
           [1, 0],
 
-          @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
-
-          [1, 0],
-
-          @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
-
-          [0, 1],
-
-          @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
-
-          [0, 1],
-
           @else
 
           [0, 0],
-
-
 
           @endif
         @endforeach              
@@ -87,23 +57,9 @@ var singleElimination = {
 
           [1, 0],
 
-          @elseif(($teams->awayTeam?->id == $teams->winnerTeam?->id ))  
-
-          [1, 0],
-
-          @elseif(($teams->homeTeam?->id == $teams->looserTeam?->id ))  
-
-          [0, 1],
-
-          @elseif(($teams->awayTeam?->id == $teams->looserTeam?->id ))  
-
-          [0, 1],
-
           @else
 
           [0, 0],
-
-
 
           @endif
         @endforeach  
