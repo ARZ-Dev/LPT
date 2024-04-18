@@ -56,4 +56,9 @@ class Game extends Model
         return $this->belongsTo(Game::class);
     }
 
+    public function sets()
+    {
+        return $this->hasMany(Set::class);
+    }
+
 }

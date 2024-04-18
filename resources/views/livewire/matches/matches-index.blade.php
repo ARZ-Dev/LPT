@@ -47,6 +47,10 @@
                             @endcan
 
                             @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
+                                <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"><i class="ti ti-player-play ti-sm me-2"></i></a>
+                            @endif
+
+                            @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
                                 <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#userModal{{$match->id}}"><i class="ti ti-wand ti-sm me-2"></i></a>
                             @endif
 
