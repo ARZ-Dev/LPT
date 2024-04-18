@@ -42,7 +42,7 @@ var singleElimination = {
 
         @else
 
-        [0, 1],
+        [0, 0],
 
        
 
