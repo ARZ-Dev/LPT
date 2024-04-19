@@ -61,4 +61,9 @@ class Game extends Model
         return $this->hasMany(Set::class);
     }
 
+    public function setGames()
+    {
+        return $this->hasManyThrough(SetGame::class, Set::class);
+    }
+
 }

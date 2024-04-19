@@ -6,41 +6,69 @@ use App\Models\Game;
 use App\Models\Set;
 use App\Models\SetGamePoint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 
 class MatchScoringForm extends Component
 {
     public $homeTeam;
     public $awayTeam;
-    public $match;
     public $startedAt;
     public $referee;
+    public $matchId;
+    public $servingTeamId;
+    public bool $isAlreadyStarted = false;
 
     public function mount($matchId)
     {
-        $this->match = Game::with(['homeTeam', 'awayTeam', 'sets' => [
-                    'setGames'
+        $this->matchId = $matchId;
+        $match = Game::with(['homeTeam', 'awayTeam', 'sets' => [
+                    'setGames' => [
+                        'points'
+                    ]
                 ]
             ])->findOrFail($matchId);
 
-        $this->homeTeam = $this->match->homeTeam;
-        $this->awayTeam = $this->match->awayTeam;
-        $this->startedAt = $this->match->started_at ?? now()->format('d-m-Y H:i');
+        $this->isAlreadyStarted = $match->is_started;
+
+        $this->homeTeam = $match->homeTeam;
+        $this->awayTeam = $match->awayTeam;
+        $this->startedAt = $match->started_at ?? now()->format('d-m-Y H:i');
         $this->referee = auth()->user()->full_name;
+    }
+
+    public function rules()
+    {
+        return [
+            'servingTeamId' => [new RequiredIf(!$this->isAlreadyStarted)]
+        ];
     }
 
     public function scorePoint($teamId)
     {
+        $this->validate();
+
         DB::beginTransaction();
         try {
-            $this->match->loadMissing('sets');
+            $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
+
+            $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
 
-            $latestSet = $this->match->sets()->latest('set_number')->where('is_completed', false)->first();
+            if (!$match->is_started) {
+                $this->isAlreadyStarted = true;
+                $match->update([
+                    'is_started' => true,
+                    'started_at' => now(),
+                ]);
+            }
+
+            $latestSet = $match->sets()->latest('set_number')->where('is_completed', false)->first();
 
             if (!$latestSet) {
                 // Create a new set if no set exists
-                $latestSet = $this->match->sets()->create([
+                $latestSet = $match->sets()->create([
                     'set_number' => 1,
                     'home_team_score' => 0,
                     'away_team_score' => 0,
@@ -50,9 +78,18 @@ class MatchScoringForm extends Component
             $latestSetGame = $latestSet->setGames()->latest('game_number')->where('is_completed', false)->first();
 
             if (!$latestSetGame) {
+
+                $servingTeamId = $this->servingTeamId;
+
+                $lastPlayedSetGame = $latestSet->setGames()->latest('game_number')->where('is_completed', true)->first();
+                if ($lastPlayedSetGame) {
+                    $servingTeamId = $lastPlayedSetGame->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
+                }
+
                 // Create a new set game if no set game exists
                 $latestSetGame = $latestSet->setGames()->create([
-                    'game_number' => 1,
+                    'serving_team_id' => $servingTeamId,
+                    'game_number' => ($lastPlayedSetGame?->game_number ?? 0) + 1,
                     'home_team_score' => 0,
                     'away_team_score' => 0,
                 ]);
@@ -167,6 +204,13 @@ class MatchScoringForm extends Component
 
             $latestSetGame->set->increment('home_team_score');
 
+            if ($latestSetGame->set->home_team_score == 6 && $latestSetGame->set->away_team_score < 5) {
+                $latestSetGame->set->update([
+                    'winner_team_id' => $winningTeam->id,
+                    'is_completed' => true,
+                ]);
+            }
+
         } else {
             $latestSetGame->update([
                 'is_completed' => true,
@@ -174,11 +218,26 @@ class MatchScoringForm extends Component
             ]);
 
             $latestSetGame->set->increment('away_team_score');
+
+            if ($latestSetGame->set->away_team_score == 6 && $latestSetGame->set->home_team_score < 5) {
+                $latestSetGame->set->update([
+                    'winner_team_id' => $winningTeam->id,
+                    'is_completed' => true,
+                ]);
+            }
         }
     }
 
     public function render()
     {
-        return view('livewire.match-scoring-form');
+        $data = [];
+
+        $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames'], 'setGames'])->findOrFail($this->matchId);
+        $data['match'] = $match;
+
+        $currentSetGame = $match->setGames()->latest()->where('set_games.is_completed', false)->first();
+        $data['currentSetGame'] = $currentSetGame;
+
+        return view('livewire.match-scoring-form', $data);
     }
 }

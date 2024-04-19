@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('set_id')->constrained()->cascadeOnDelete();
             $table->integer('game_number');
+            $table->foreignId('serving_team_id')->constrained('teams')->cascadeOnDelete();
             $table->string('home_team_score')->default("0");
             $table->string('away_team_score')->default("0");
             $table->foreignId('winner_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
