@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Game;
 use App\Models\Set;
+use App\Models\SetGamePoint;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -57,6 +58,13 @@ class MatchScoringForm extends Component
                 ]);
             }
 
+            SetGamePoint::create([
+                'set_game_id' => $latestSetGame->id,
+                'point_number' => '',
+                'point_team_id' => $teamId,
+                'home_team_score' => '',
+                'away_team_score' => '',
+            ]);
 
             // Get the scores for the teams
             $homeTeamScore = $latestSetGame->home_team_score;
