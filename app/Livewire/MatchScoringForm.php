@@ -58,14 +58,6 @@ class MatchScoringForm extends Component
                 ]);
             }
 
-            SetGamePoint::create([
-                'set_game_id' => $latestSetGame->id,
-                'point_number' => '',
-                'point_team_id' => $teamId,
-                'home_team_score' => '',
-                'away_team_score' => '',
-            ]);
-
             // Get the scores for the teams
             $homeTeamScore = $latestSetGame->home_team_score;
             $awayTeamScore = $latestSetGame->away_team_score;
@@ -82,6 +74,15 @@ class MatchScoringForm extends Component
                 $awayTeamScore = $scores['first_team'];
                 $homeTeamScore = $scores['second_team'];
             }
+
+            $latestPoint = SetGamePoint::where('set_game_id', $latestSetGame->id)->latest()->first();
+            SetGamePoint::create([
+                'set_game_id' => $latestSetGame->id,
+                'point_number' => ($latestPoint->point_number ?? 0) + 1,
+                'point_team_id' => $teamId,
+                'home_team_score' => $homeTeamScore,
+                'away_team_score' => $awayTeamScore,
+            ]);
 
             // Check if the set is won
             if ($this->isSetGameWon($homeTeamScore, $awayTeamScore)) {
