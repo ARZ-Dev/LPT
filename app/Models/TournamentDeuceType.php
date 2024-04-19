@@ -11,4 +11,9 @@ class TournamentDeuceType extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function knockoutStage()
+    {
+        return $this->hasMany(KnockoutStage::class);
+    }
 }

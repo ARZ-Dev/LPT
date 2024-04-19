@@ -43,6 +43,9 @@
                         </td>
                         <td>{{ $category->winnerTeam?->nickname }}</td>
                         <td>
+
+                        <a href="{{ route('knockoutStage.view', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Knockout-Stage Table"><i class="ti ti-article ti-sm"></i></a>
+
                             @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
                                 <a href="{{ route('matches', $category->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
                                     <i class="ti ti-crown ti-sm me-2"></i>

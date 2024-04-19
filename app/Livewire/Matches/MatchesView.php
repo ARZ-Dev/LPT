@@ -21,6 +21,9 @@ class MatchesView extends Component
     public $loser_team_id ;
     public $category;
     public $tournament;
+    public $datetimeModel ;
+    public $wael ;
+
 
     public function mount($categoryId)
     {
@@ -157,6 +160,17 @@ class MatchesView extends Component
         }
     }
 
+    #[On('storeDateTime')]
+    public function storeDateTime($matchId)
+    {
+        $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
+        $this->match->update([
+            'datetime'=>$this->datetimeModel,
+        ]);
+        return to_route('matches', $this->category->id)->with('success', 'date/time has been updated successfully!');
+
+    }
+
     public function updateTeamsRank($levelCategoryId)
     {
         $teams = Team::where('level_category_id', $levelCategoryId)->orderBy('points', 'desc')->get();
@@ -164,6 +178,7 @@ class MatchesView extends Component
             $team->update(['rank' => $index + 1]);
         });
     }
+
 
     public function render()
     {

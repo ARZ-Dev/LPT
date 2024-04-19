@@ -20,4 +20,14 @@ class KnockoutStage extends Model
     {
         return $this->hasManyThrough(Game::class, KnockoutRound::class);
     }
+
+    public function tournamentDeuceType()
+    {
+        return $this->belongsTo(TournamentDeuceType::class);
+    }
+
+    public function tournamentLevelCategory()
+    {
+        return $this->belongsTo(TournamentLevelCategory::class);
+    }
 }
