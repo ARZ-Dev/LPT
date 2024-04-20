@@ -53,6 +53,7 @@ class MatchScoringForm extends Component
         DB::beginTransaction();
         try {
             $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
+            throw_if($match->is_completed, new \Exception("Match is already completed!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
