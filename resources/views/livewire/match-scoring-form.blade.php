@@ -33,35 +33,19 @@
                     </div>
                 @endif
                 <div class="row g-3 mt-2">
-                    <div class="col-12 col-sm-6">
-                        <h5>{{ $homeTeam->nickname }}</h5>
-                        <div class="d-flex justify-content-center">
-                            <button wire:click="scorePoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
-                                <span class="ti ti-plus"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <h5>{{ $awayTeam->nickname }}</h5>
-                        <div class="d-flex justify-content-center">
-                            <button wire:click="scorePoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
-                                <span class="ti ti-plus"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row g-3 mt-2">
                     <div class="col-12 col-sm-12">
                         <div class="d-flex justify-content-center">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr>
-                                            <td>
-                                                @if($currentSetGame?->serving_team_id == $homeTeam->id)
-                                                    <i class="ti ti-ball-tennis ti-xs"></i>
-                                                @endif
-                                            </td>
+                                            @if(!$match->is_completed)
+                                                <td class="border-bottom-0">
+                                                    @if($currentSetGame?->serving_team_id == $homeTeam->id)
+                                                        <i class="ti ti-ball-tennis ti-xs"></i>
+                                                    @endif
+                                                </td>
+                                            @endif
                                             <th>{{ $homeTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
                                                 <td>{{ $set->home_team_score }}</td>
@@ -69,13 +53,22 @@
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->home_team_score ?? 0 }}</td>
                                                 @endif
                                             @endforeach
-                                        </tr>
-                                        <tr>
                                             <td>
-                                                @if($currentSetGame?->serving_team_id == $awayTeam->id)
-                                                    <i class="ti ti-ball-tennis ti-xs"></i>
+                                                @if(!$match->is_completed)
+                                                    <button wire:click="scorePoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
+                                                        <span class="ti ti-plus"></span>
+                                                    </button>
                                                 @endif
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            @if(!$match->is_completed)
+                                                <td>
+                                                    @if($currentSetGame?->serving_team_id == $awayTeam->id)
+                                                        <i class="ti ti-ball-tennis ti-xs"></i>
+                                                    @endif
+                                                </td>
+                                            @endif
                                             <th>{{ $awayTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
                                                 <td>{{ $set->away_team_score }}</td>
@@ -83,6 +76,13 @@
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->away_team_score ?? 0 }}</td>
                                                 @endif
                                             @endforeach
+                                            <td>
+                                                @if(!$match->is_completed)
+                                                    <button wire:click="scorePoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
+                                                        <span class="ti ti-plus"></span>
+                                                    </button>
+                                                @endif
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

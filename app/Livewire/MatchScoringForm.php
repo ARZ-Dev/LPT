@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Matches\MatchesView;
 use App\Models\Game;
 use App\Models\Set;
 use App\Models\SetGamePoint;
@@ -67,9 +68,11 @@ class MatchScoringForm extends Component
             $latestSet = $match->sets()->latest('set_number')->where('is_completed', false)->first();
 
             if (!$latestSet) {
+                $lastPlayedSet = $match->sets()->where('is_completed', true)->latest()->first();
+
                 // Create a new set if no set exists
                 $latestSet = $match->sets()->create([
-                    'set_number' => 1,
+                    'set_number' => ($lastPlayedSet?->set_number ?? 0) + 1,
                     'home_team_score' => 0,
                     'away_team_score' => 0,
                 ]);
@@ -81,7 +84,7 @@ class MatchScoringForm extends Component
 
                 $servingTeamId = $this->servingTeamId;
 
-                $lastPlayedSetGame = $latestSet->setGames()->latest('game_number')->where('is_completed', true)->first();
+                $lastPlayedSetGame = $latestSet->setGames()->where('is_completed', true)->latest()->first();
                 if ($lastPlayedSetGame) {
                     $servingTeamId = $lastPlayedSetGame->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
                 }
@@ -124,7 +127,7 @@ class MatchScoringForm extends Component
             // Check if the set is won
             if ($this->isSetGameWon($homeTeamScore, $awayTeamScore)) {
                 // Handle set win
-                $this->handleSetGameWin($latestSetGame, $team, $homeTeamScore, $awayTeamScore);
+                $this->handleSetGameWin($latestSetGame, $team);
             } else {
                 $latestSetGame->update([
                     'home_team_score' => $homeTeamScore,
@@ -191,39 +194,42 @@ class MatchScoringForm extends Component
     }
 
     /**
-     * Handle a set win.
+     * Handle a set game win.
      */
-    protected function handleSetGameWin($latestSetGame, $winningTeam, $homeTeamScore, $awayTeamScore)
+    protected function handleSetGameWin($latestSetGame, $winningTeam)
     {
         // Update the scores and set the set as won
-        if ($homeTeamScore === 'won') {
-            $latestSetGame->update([
-                'is_completed' => true,
-                'winner_team_id' => $winningTeam->id,
-            ]);
+        $latestSetGame->update([
+            'is_completed' => true,
+            'winner_team_id' => $winningTeam->id,
+        ]);
 
+        if ($winningTeam->id == $this->homeTeam->id) {
             $latestSetGame->set->increment('home_team_score');
-
-            if ($latestSetGame->set->home_team_score == 6 && $latestSetGame->set->away_team_score < 5) {
-                $latestSetGame->set->update([
-                    'winner_team_id' => $winningTeam->id,
-                    'is_completed' => true,
-                ]);
-            }
-
         } else {
-            $latestSetGame->update([
-                'is_completed' => true,
+            $latestSetGame->set->increment('away_team_score');
+        }
+
+        $this->checkSetResults($latestSetGame, $winningTeam);
+    }
+
+    public function checkSetResults($latestSetGame, $winningTeam)
+    {
+        $hasHomeTeamWon = $latestSetGame->set->home_team_score == 6 && $latestSetGame->set->away_team_score < 5;
+        $hasAwayTeamWon = $latestSetGame->set->away_team_score == 6 && $latestSetGame->set->home_team_score < 5;
+
+        if ($hasHomeTeamWon || $hasAwayTeamWon) {
+            $latestSetGame->set->update([
                 'winner_team_id' => $winningTeam->id,
+                'is_completed' => true,
             ]);
 
-            $latestSetGame->set->increment('away_team_score');
+            $winningSetsCount = Set::where('game_id', $latestSetGame->set->game_id)->where('winner_team_id', $winningTeam->id)->count();
+            if ($winningSetsCount === 3) {
+                // @todo - Handle Match Won
+                MatchesView::updateMatchWinner($latestSetGame->set->game_id, $winningTeam->id);
 
-            if ($latestSetGame->set->away_team_score == 6 && $latestSetGame->set->home_team_score < 5) {
-                $latestSetGame->set->update([
-                    'winner_team_id' => $winningTeam->id,
-                    'is_completed' => true,
-                ]);
+                return to_route('matches', $latestSetGame->set->game->knockoutRound->tournament_level_category_id)->with('success', 'Winner team has been updated successfully!');
             }
         }
     }
