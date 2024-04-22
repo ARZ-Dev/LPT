@@ -14,6 +14,8 @@ return new class extends Migration
             $table->foreignId('tournament_deuce_type_id')->after('tournament_level_category_id')->nullable()->constrained('tournament_deuce_types')->cascadeOnDelete();
             $table->integer('nb_of_sets')->after('name')->nullable();
             $table->integer('nb_of_games')->after('nb_of_sets')->nullable();
+            $table->integer('tie_break')->after('nb_of_games')->nullable();
+
         });
      
     }
@@ -24,6 +26,8 @@ return new class extends Migration
             $table->dropColumn('tournament_deuce_type_id');
             $table->dropColumn('nb_of_sets');
             $table->dropColumn('nb_of_games');
+            $table->dropColumn('tie_break');
+
         });
     }
 };

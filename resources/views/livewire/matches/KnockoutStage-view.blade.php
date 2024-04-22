@@ -13,6 +13,8 @@
                     <th>Name</th>
                     <th>Nb Of Sets</th>
                     <th>Nb Of Games</th>
+                    <th>Tie Break</th>
+
                     <th>Is Completed</th>
                     <th>Actions</th>
 
@@ -27,6 +29,8 @@
                         <td>{{ $knockoutStage->name }}</td>
                         <td>{{ $knockoutStage->nb_of_sets }}</td>
                         <td>{{ $knockoutStage->nb_of_games }}</td>
+                        <td>{{ $knockoutStage->tie_break }}</td>
+
                         <td>
                         <span class="badge bg-label-{{ $knockoutStage->is_completed  == 0 ? "warning" : "info" }}">
                                 {{ $knockoutStage->is_completed == 0 ? "Pending" : "Completed" }}
@@ -74,6 +78,12 @@
                                         <div class="col-md-10">
                                             <label class="form-label " for="nb_of_games">nb of games</label>
                                             <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-10">
+                                            <label class="form-label " for="tie_break">tie break</label>
+                                            <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input">
                                         </div>
                                     </div>
                                 </div>

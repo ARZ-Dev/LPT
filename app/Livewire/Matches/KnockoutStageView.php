@@ -21,6 +21,8 @@ class KnockoutStageView extends Component
     public $tournament_deuce_type_id;
     public $nb_of_sets;
     public $nb_of_games;
+    public $tie_break;
+
     public $knockoutStageValues;
 
    
@@ -38,11 +40,15 @@ class KnockoutStageView extends Component
             $this->tournament_deuce_type_id = $knockoutStage->tournament_deuce_type_id;
             $this->nb_of_sets = $knockoutStage->nb_of_sets;
             $this->nb_of_games = $knockoutStage->nb_of_games;
+            $this->tie_break = $knockoutStage->tie_break;
+
     
             $this->knockoutStageValues[$knockoutStage->id] = [
                 'tournament_deuce_type_id' => $this->tournament_deuce_type_id,
                 'nb_of_sets' => $this->nb_of_sets,
                 'nb_of_games' => $this->nb_of_games,
+                'tie_break' => $this->tie_break,
+
             ];
         }
         
@@ -61,6 +67,8 @@ class KnockoutStageView extends Component
                 'tournament_deuce_type_id' => $this->knockoutStageValues[$knockoutStage->id]['tournament_deuce_type_id'],
                 'nb_of_sets' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_sets'],
                 'nb_of_games' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_games'],
+                'tie_break' => $this->knockoutStageValues[$knockoutStage->id]['tie_break'],
+
             ]);
         }
     
