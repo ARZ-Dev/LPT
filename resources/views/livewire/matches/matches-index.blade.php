@@ -1,5 +1,5 @@
 <div>
-    
+
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} - Matches</h4>
@@ -17,8 +17,6 @@
                     <th>Away Team</th>
                     <th>Winner Team</th>
                     <th>Date/Time </th>
-
-                    
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -29,7 +27,6 @@
                         <td>{{ $match->type }}</td>
                         <td>{{ $match->group?->name }}</td>
                         <td>{{ $match->knockoutRound?->name }}</td>
-                        <td>{{ $match?->datetime }}</td>
 
                         <td>
                             @if($match->homeTeam)
@@ -46,6 +43,7 @@
                             @endif
                         </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
+                        <td>{{ $match?->datetime }}</td>
 
                         <td>
                             @can('matches-view')
@@ -110,7 +108,7 @@
         </div>
     </div>
 
-    
+
 
 
     @script
