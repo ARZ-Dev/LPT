@@ -48,7 +48,7 @@ class MatchScoringForm extends Component
 
         $latestSet = $match->sets()->latest()->where('is_completed', false)->first();
         if ($latestSet) {
-            $this->tiebreak = $latestSet->home_team_score == $latestSet->away_team_score;
+            $this->tiebreak = $latestSet->home_team_score == $latestSet->away_team_score && $latestSet->home_team_score == $this->nbOfGamesToWin;
         }
     }
 
@@ -97,12 +97,12 @@ class MatchScoringForm extends Component
 
             if (!$latestSetGame) {
 
-                $servingTeamId = $this->servingTeamId ?? $this->homeTeam->id;
-
-                $lastPlayedSetGame = $latestSet->setGames()->where('is_completed', true)->latest()->first();
-                if ($lastPlayedSetGame) {
+                $servingTeamId = $this->servingTeamId;
+                if (!$servingTeamId) {
+                    $lastPlayedSetGame = $match->setGames()->where('set_games.is_completed', true)->latest()->first();
                     $servingTeamId = $lastPlayedSetGame->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
                 }
+
 
                 // Create a new set game if no set game exists
                 $latestSetGame = $latestSet->setGames()->create([
