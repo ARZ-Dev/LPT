@@ -54,7 +54,16 @@ class KnockoutStageView extends Component
 
     }
 
-
+    public function rules()
+    {
+        return [
+            'knockoutStageValues' => ['array'],
+            'knockoutStageValues.*.tournament_deuce_type_id' => ['nullable'],
+            'knockoutStageValues.*.nb_of_sets' => ['nullable'],
+            'knockoutStageValues.*.nb_of_games' => ['nullable'],
+            'knockoutStageValues.*.tie_break' => ['nullable'],
+        ];
+    }
 
     public function actions($id)
     {
