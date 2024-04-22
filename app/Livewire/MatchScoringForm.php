@@ -20,16 +20,22 @@ class MatchScoringForm extends Component
     public $matchId;
     public $servingTeamId;
     public bool $isAlreadyStarted = false;
+    public $nbOfSetsToWin;
+    public $nbOfGamesToWin;
+    public $tiebreak = false;
 
     public function mount($matchId)
     {
         $this->matchId = $matchId;
-        $match = Game::with(['homeTeam', 'awayTeam', 'sets' => [
+        $match = Game::with(['homeTeam', 'awayTeam', 'knockoutRound', 'knockoutRound.knockoutStage', 'sets' => [
                     'setGames' => [
                         'points'
                     ]
                 ]
             ])->findOrFail($matchId);
+
+        $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets ?? 3;
+        $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games ?? 6;
 
         $this->isAlreadyStarted = $match->is_started;
 
@@ -106,14 +112,22 @@ class MatchScoringForm extends Component
             // Determine which team is scoring
             if ($teamId == $this->homeTeam->id) {
                 // Update the score for home team
-                $scores = $this->getNextScore($homeTeamScore, $awayTeamScore);
-                $homeTeamScore = $scores['first_team'];
-                $awayTeamScore = $scores['second_team'];
+                if (!$this->tiebreak) {
+                    $scores = $this->getNextScore($homeTeamScore, $awayTeamScore);
+                    $homeTeamScore = $scores['first_team'];
+                    $awayTeamScore = $scores['second_team'];
+                } else {
+                    $homeTeamScore++;
+                }
             } else {
-                // Update the score for away team
-                $scores = $this->getNextScore($awayTeamScore, $homeTeamScore);
-                $awayTeamScore = $scores['first_team'];
-                $homeTeamScore = $scores['second_team'];
+                if (!$this->tiebreak) {
+                    // Update the score for away team
+                    $scores = $this->getNextScore($awayTeamScore, $homeTeamScore);
+                    $awayTeamScore = $scores['first_team'];
+                    $homeTeamScore = $scores['second_team'];
+                } else {
+                    $awayTeamScore++;
+                }
             }
 
             $latestPoint = SetGamePoint::where('set_game_id', $latestSetGame->id)->latest()->first();
@@ -211,13 +225,17 @@ class MatchScoringForm extends Component
             $latestSetGame->set->increment('away_team_score');
         }
 
+        if ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score == $this->nbOfGamesToWin) {
+            $this->tiebreak = true;
+        }
+
         $this->checkSetResults($latestSetGame, $winningTeam);
     }
 
     public function checkSetResults($latestSetGame, $winningTeam)
     {
-        $hasHomeTeamWon = $latestSetGame->set->home_team_score == 6 && $latestSetGame->set->away_team_score < 5;
-        $hasAwayTeamWon = $latestSetGame->set->away_team_score == 6 && $latestSetGame->set->home_team_score < 5;
+        $hasHomeTeamWon = $latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1;
+        $hasAwayTeamWon = $latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1;
 
         if ($hasHomeTeamWon || $hasAwayTeamWon) {
             $latestSetGame->set->update([
@@ -226,8 +244,7 @@ class MatchScoringForm extends Component
             ]);
 
             $winningSetsCount = Set::where('game_id', $latestSetGame->set->game_id)->where('winner_team_id', $winningTeam->id)->count();
-            if ($winningSetsCount === 3) {
-                // @todo - Handle Match Won
+            if ($winningSetsCount === $this->nbOfSetsToWin) {
                 MatchesView::updateMatchWinner($latestSetGame->set->game_id, $winningTeam->id);
 
                 return to_route('matches', $latestSetGame->set->game->knockoutRound->tournament_level_category_id)->with('success', 'Winner team has been updated successfully!');
