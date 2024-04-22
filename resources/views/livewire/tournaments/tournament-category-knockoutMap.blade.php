@@ -7,16 +7,16 @@
 
     <div class="brackets" style="height: 1000px"></div>
 
-    
+
     @script
     <script>
         let rounds = [
 
-            @foreach($category - > knockoutStages as $knockoutStage)
+            @foreach($category->knockoutStages as $knockoutStage)
 
             [
 
-                @foreach($knockoutStage - > games as $game)
+                @foreach($knockoutStage->games as $game)
 
                 {
                     player1: {
@@ -50,7 +50,7 @@
 
         let titles = [
 
-            @foreach($category - > knockoutStages as $knockoutStage)
+            @foreach($category->knockoutStages as $knockoutStage)
 
             '{{$knockoutStage->name}}',
 
