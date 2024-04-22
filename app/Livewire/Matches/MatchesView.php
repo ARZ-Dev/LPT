@@ -71,7 +71,7 @@ class MatchesView extends Component
 
     }
 
-    public function updateTeamsRank($levelCategoryId)
+    public static function updateTeamsRank($levelCategoryId)
     {
         $teams = Team::where('level_category_id', $levelCategoryId)->orderBy('points', 'desc')->get();
         $teams->each(function ($team, $index) {

@@ -211,6 +211,15 @@ class MatchScoringForm extends Component
                 ];
             }
 
+            if ($currentScore > $this->tiebreakPointsToWin - 2 && $opponentScore > $this->tiebreakPointsToWin - 2 && $nextScore == $opponentScore + 2) {
+                $this->tiebreak = false;
+
+                return [
+                    'first_team' => 'won',
+                    'second_team' => $opponentScore,
+                ];
+            }
+
             return [
                 'first_team' => $nextScore,
                 'second_team' => $opponentScore,
@@ -265,7 +274,10 @@ class MatchScoringForm extends Component
             if ($winningSetsCount === $this->nbOfSetsToWin) {
                 MatchesView::updateMatchWinner($latestSetGame->set->game_id, $winningTeam->id);
 
-                return to_route('matches', $latestSetGame->set->game->knockoutRound->tournament_level_category_id)->with('success', 'Winner team has been updated successfully!');
+                return $this->dispatch('swal:success', [
+                    'title' => 'Great!',
+                    'text'  => $winningTeam->nickname . " has won!",
+                ]);
             }
         }
     }
