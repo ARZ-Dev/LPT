@@ -63,6 +63,8 @@
                                                     <option  value="{{ $type->id }}">{{ $type->name }}</option>
                                                 @endforeach
                                             </select>
+                                            @error('knockoutStageValues.'.$knockoutStage->id.'.tournament_deuce_type_id') <div class="text-danger">{{ $message }}</div> @enderror   
+
                                         </div>
 
                                         </div>
@@ -71,11 +73,13 @@
                                                 <label class="form-label " for="nb_of_sets">Nb Of Sets</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''" >
                                             </div>
+                                            @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror   
                                         </div>
                                         <div class=" col-md-6 row justify-content-center">
                                             <div class="col-md-10">
                                                 <label class="form-label " for="nb_of_games">Nb Of Games</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_games') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
                                         <div class=" col-md-6 row justify-content-center">
@@ -83,6 +87,7 @@
                                                 <label class="form-label " for="tie_break">Tie Break</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
+                                            @error('knockoutStageValues.'.$knockoutStage->id.'.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                     </div>
 
