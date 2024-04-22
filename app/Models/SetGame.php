@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Set extends Model
+class SetGame extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function game()
+    public function set()
     {
-        return $this->belongsTo(Game::class);
+        return $this->belongsTo(Set::class);
     }
 
-    public function setGames()
+    public function points()
     {
-        return $this->hasMany(SetGame::class);
+        return $this->hasMany(SetGamePoint::class);
     }
 }

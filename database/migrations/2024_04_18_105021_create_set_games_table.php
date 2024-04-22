@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sets', function (Blueprint $table) {
+        Schema::create('set_games', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('game_id')->constrained()->cascadeOnDelete();
-            $table->integer('set_number');
-            $table->integer('home_team_score')->default(0);
-            $table->integer('away_team_score')->default(0);
+            $table->foreignId('set_id')->constrained()->cascadeOnDelete();
+            $table->integer('game_number');
+            $table->foreignId('serving_team_id')->constrained('teams')->cascadeOnDelete();
+            $table->string('home_team_score')->default("0");
+            $table->string('away_team_score')->default("0");
             $table->foreignId('winner_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->boolean('is_completed')->default(false);
             $table->timestamps();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sets');
+        Schema::dropIfExists('set_games');
     }
 };

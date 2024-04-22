@@ -8,20 +8,20 @@
         <div class="card-datatable table-responsive">
             <table class="datatables-matches dataTable table border-top">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Group</th>
-                    <th>Knockout Round</th>
-                    <th>Home Team</th>
-                    <th>Away Team</th>
-                    <th>Winner Team</th>
-                    <th>Date/Time </th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Group</th>
+                        <th>Knockout Round</th>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+                        <th>Winner Team</th>
+                        <th>Date/Time </th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach($matches as $match)
+                    @foreach($matches as $match)
                     <tr>
                         <td>{{ $match->id }}</td>
                         <td>{{ $match->type }}</td>
@@ -30,16 +30,16 @@
 
                         <td>
                             @if($match->homeTeam)
-                               {{ $match->homeTeam->nickname }}
+                            {{ $match->homeTeam->nickname }}
                             @elseif($match->relatedHomeGame)
-                                Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
+                            Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
                             @endif
                         </td>
                         <td>
                             @if($match->awayTeam)
-                                {{ $match->awayTeam->nickname }}
+                            {{ $match->awayTeam->nickname }}
                             @elseif($match->relatedAwayGame)
-                                Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
+                            Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
                             @endif
                         </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
@@ -47,14 +47,16 @@
 
                         <td>
                             @can('matches-view')
-{{--                                <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
+                            {{-- <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
 
                             @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
+                            <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"><i class="ti ti-player-play ti-sm me-2"></i></a>
+                            @endif
 
+                            @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
                             <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}"><i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Date/Time"></i></a>
-
-                                <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#userModal{{$match->id}}"><i class="ti ti-wand ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Choose Winner"></i></a>
+                            <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#userModal{{$match->id}}"><i class="ti ti-wand ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Choose Winner"></i></a>
                             @endif
 
                             <div class="modal fade" id="userModal{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
@@ -101,7 +103,7 @@
                         </div>
                     </div>
 
-                @endforeach
+                    @endforeach
                 </tbody>
             </table>
 
@@ -117,27 +119,29 @@
 
     @script
     <script>
-        $(document).on('click', '.submit-btn', function () {
+        $(document).on('click', '.submit-btn', function() {
             let matchId = $(this).data('match-id');
             let winnerId = $('#winner-' + matchId).val();
             let data = {
-                matchId, winnerId
+                matchId
+                , winnerId
             };
 
             $wire.dispatch('chooseWinner', data)
         })
 
-        $(document).on('click', '.storeDateTime-btn', function () {
+        $(document).on('click', '.storeDateTime-btn', function() {
             let matchId = $(this).data('match-id');
             let datetime = $('#datetime-' + matchId).val();
             let data = {
-                matchId, matchId
+                matchId
+                , matchId
             };
 
             $wire.dispatch('storeDateTime', data)
         })
+
     </script>
     @endscript
 
 </div>
-
