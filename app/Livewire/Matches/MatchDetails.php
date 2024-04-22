@@ -21,6 +21,7 @@ class MatchDetails extends Component
         $this->match = Game::with('homeTeam','awayTeam','knockoutRound.tournamentLevelCategory')->findOrFail($matchId);
         $setGamesIds = $this->match->setGames()->pluck('set_games.id')->toArray();
         $this->points = SetGamePoint::whereIn('set_game_id', $setGamesIds)->get();
+        dd($this->points->toArray());
     }
 
     public function render()
