@@ -93,7 +93,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <input wire:model="datetimeModel" type="date" class="form-control dt-input">
+                                    <input wire:model="datetimeModel" type="datetime-local" class="form-control dt-input">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary storeDateTime-btn">Submit</button>
