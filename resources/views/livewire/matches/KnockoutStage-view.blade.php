@@ -52,12 +52,13 @@
 
                                 <div class="modal-body">
 
-                                    <div class="container ">
-                                        <div class="row justify-content-center">
+                                    <div class="container row ">
+                                    
+                                        <div class="col-md-6 row justify-content-center">
                                         <div class="col-md-10">
-                                            <label class="form-label" for="tournament_deuce_type_id">tournament deuce type</label>
+                                            <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type</label>
                                             <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id" class="form-control">
-                                                <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select tournament deuce type</option>
+                                                <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select Tournament Deuce Type</option>
                                                 @foreach($TournamentDeuceTypes as $type)
                                                     <option  value="{{ $type->id }}">{{ $type->name }}</option>
                                                 @endforeach
@@ -65,22 +66,22 @@
                                         </div>
 
                                         </div>
-                                        <div class="row justify-content-center">
+                                        <div class="col-md-6 row justify-content-center">
                                             <div class="col-md-10">
-                                                <label class="form-label " for="nb_of_sets">nb of sets</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" >
+                                                <label class="form-label " for="nb_of_sets">Nb Of Sets</label>
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''" >
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center">
+                                        <div class=" col-md-6 row justify-content-center">
                                             <div class="col-md-10">
-                                                <label class="form-label " for="nb_of_games">nb of games</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input">
+                                                <label class="form-label " for="nb_of_games">Nb Of Games</label>
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center">
+                                        <div class=" col-md-6 row justify-content-center">
                                             <div class="col-md-10">
-                                                <label class="form-label " for="tie_break">tie break</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input">
+                                                <label class="form-label " for="tie_break">Tie Break</label>
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
                                         </div>
                                     </div>

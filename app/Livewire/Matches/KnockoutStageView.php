@@ -54,15 +54,32 @@ class KnockoutStageView extends Component
 
     }
 
+
+
     public function actions($id)
     {
         $this->knockoutStage = KnockoutStage::find($id);
+        $this->validate();
+        $nb_of_sets = $this->knockoutStageValues[$id]['nb_of_sets']; 
+        $nb_of_games = $this->knockoutStageValues[$id]['nb_of_games']; 
+        $tie_break = $this->knockoutStageValues[$id]['tie_break']; 
+
+
+        if ($nb_of_sets === '') {
+            $nb_of_sets = null;
+        }
+        if ($nb_of_games === '') {
+            $nb_of_games = null;
+        }
+        if ($tie_break === '') {
+            $tie_break = null;
+        }
 
         $this->knockoutStage->update([
             'tournament_deuce_type_id' => $this->knockoutStageValues[$id]['tournament_deuce_type_id'],
-            'nb_of_sets' => $this->knockoutStageValues[$id]['nb_of_sets'],
-            'nb_of_games' => $this->knockoutStageValues[$id]['nb_of_games'],
-            'tie_break' => $this->knockoutStageValues[$id]['tie_break'],
+            'nb_of_sets' => $nb_of_sets ,
+            'nb_of_games' => $nb_of_games,
+            'tie_break' => $tie_break ,
         ]);
 
         return to_route('knockoutStage.view', $this->knockoutStage->tournament_level_category_id)->with('success', 'Knockout stages has been updated successfully!');
