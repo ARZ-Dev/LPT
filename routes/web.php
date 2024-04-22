@@ -228,10 +228,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
 
         Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
-        Route::get('/knockoutStage/{id}', KnockoutStageView::class)->name('knockoutStage.view');
+        Route::get('/knockoutStage/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
 
 
-        
+
     });
 
 

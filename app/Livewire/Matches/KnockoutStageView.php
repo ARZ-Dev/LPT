@@ -7,6 +7,7 @@ use App\Models\Tournament;
 use App\Models\TournamentDeuceType;
 
 
+use App\Models\TournamentLevelCategory;
 use Livewire\Component;
 
 
@@ -16,7 +17,7 @@ class KnockoutStageView extends Component
     public $knockoutStages;
     public $tournament;
     public $TournamentDeuceTypes;
-    
+
     public $knockoutStage;
     public $tournament_deuce_type_id;
     public $nb_of_sets;
@@ -24,14 +25,13 @@ class KnockoutStageView extends Component
     public $tie_break;
 
     public $knockoutStageValues;
+    public $tournamentCategory;
 
-   
-    public function mount ($id){
-
-        $this->tournament = Tournament::findOrFail($id);
-        $this->knockoutStages = KnockoutStage::with('knockoutRounds', 'tournamentDeuceType', 'games', 'tournamentLevelCategory')->whereHas('tournamentLevelCategory', function ($query) {
-        $query->where('tournament_id', $this->tournament->id);
-        })->get();
+    public function mount($categoryId)
+    {
+        $this->tournamentCategory = TournamentLevelCategory::with(['knockoutStages', 'tournament'])->findOrFail($categoryId);
+        $this->knockoutStages = $this->tournamentCategory->knockoutStages;
+        $this->tournament = $this->tournamentCategory->tournament;
 
         $this->TournamentDeuceTypes = TournamentDeuceType::all();
 
@@ -42,7 +42,7 @@ class KnockoutStageView extends Component
             $this->nb_of_games = $knockoutStage->nb_of_games;
             $this->tie_break = $knockoutStage->tie_break;
 
-    
+
             $this->knockoutStageValues[$knockoutStage->id] = [
                 'tournament_deuce_type_id' => $this->tournament_deuce_type_id,
                 'nb_of_sets' => $this->nb_of_sets,
@@ -51,28 +51,21 @@ class KnockoutStageView extends Component
 
             ];
         }
-        
+
     }
 
     public function actions($id)
     {
-        $this->knockoutStage = KnockoutStage::with('knockoutRounds', 'tournamentDeuceType', 'games', 'tournamentLevelCategory')->whereHas('tournamentLevelCategory', function ($query) {
-            $query->where('tournament_id', $this->tournament->id);
-        })->find($id);
+        $this->knockoutStage = KnockoutStage::find($id);
 
-        $this->nb_of_sets =  $this->knockoutStage->nb_of_sets;
+        $this->knockoutStage->update([
+            'tournament_deuce_type_id' => $this->knockoutStageValues[$id]['tournament_deuce_type_id'],
+            'nb_of_sets' => $this->knockoutStageValues[$id]['nb_of_sets'],
+            'nb_of_games' => $this->knockoutStageValues[$id]['nb_of_games'],
+            'tie_break' => $this->knockoutStageValues[$id]['tie_break'],
+        ]);
 
-        foreach ($this->knockoutStages as $knockoutStage) {
-            $knockoutStage->update([
-                'tournament_deuce_type_id' => $this->knockoutStageValues[$knockoutStage->id]['tournament_deuce_type_id'],
-                'nb_of_sets' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_sets'],
-                'nb_of_games' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_games'],
-                'tie_break' => $this->knockoutStageValues[$knockoutStage->id]['tie_break'],
-
-            ]);
-        }
-    
-        return to_route('knockoutStage.view', $this->knockoutStage->tournament_level_category_id)->with('success', ' the update has been successful!');
+        return to_route('knockoutStage.view', $this->knockoutStage->tournament_level_category_id)->with('success', 'Knockout stages has been updated successfully!');
 
     }
 
