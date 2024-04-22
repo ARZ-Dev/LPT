@@ -154,6 +154,7 @@
     <script src="{{ asset('assets/vendor/libs/filepond/filepond.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/table-excel-export/xlsx.full.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.gracket.min.js') }}"></script>
+    <script src="{{ asset('assets/js/brackets.min.js') }}"></script>
 
     <script>
 

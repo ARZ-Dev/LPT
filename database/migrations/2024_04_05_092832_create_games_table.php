@@ -23,7 +23,10 @@ return new class extends Migration
             $table->dateTime('datetime')->nullable();
             $table->foreignId('winner_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->foreignId('loser_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
+            $table->boolean('is_started')->default(false);
+            $table->timestamp('started_at')->nullable();
             $table->boolean('is_completed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
