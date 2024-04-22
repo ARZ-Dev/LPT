@@ -57,6 +57,7 @@
                             @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
                             <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}"><i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Date/Time"></i></a>
                             <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#userModal{{$match->id}}"><i class="ti ti-wand ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Choose Winner"></i></a>
+                            <a href="{{ route('matches.details', [$match->id]) }}" class="text-body edit-tournament-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
 
                             <div class="modal fade" id="userModal{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
