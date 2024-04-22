@@ -7,6 +7,7 @@
 
     <div class="brackets" style="height: 1000px"></div>
 
+    
     @script
     <script>
         let rounds = [
