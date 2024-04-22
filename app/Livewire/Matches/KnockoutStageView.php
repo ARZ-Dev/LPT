@@ -56,12 +56,14 @@ class KnockoutStageView extends Component
 
         $this->nb_of_sets =  $this->knockoutStage->nb_of_sets;
 
-        $this->knockoutStage->update([
-            'tournament_deuce_type_id'=>$this->tournament_deuce_type_id,
-            'nb_of_sets'=>$this->nb_of_sets,
-            'nb_of_games'=>$this->nb_of_games,
-
-        ]);
+        foreach ($this->knockoutStages as $knockoutStage) {
+            $knockoutStage->update([
+                'tournament_deuce_type_id' => $this->knockoutStageValues[$knockoutStage->id]['tournament_deuce_type_id'],
+                'nb_of_sets' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_sets'],
+                'nb_of_games' => $this->knockoutStageValues[$knockoutStage->id]['nb_of_games'],
+            ]);
+        }
+    
         return to_route('knockoutStage.view', $this->knockoutStage->tournament_level_category_id)->with('success', ' the update has been successful!');
 
     }
