@@ -55,6 +55,9 @@ use App\Livewire\Matches\MatchesView;
 use App\Livewire\Matches\MatchesForm;
 
 use App\Livewire\MatchScoringForm;
+use App\Livewire\Matches\knockoutStageView;
+
+
 
 Route::get('/login', Login::class)->name('login');
 
@@ -225,6 +228,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
 
         Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
+        Route::get('/knockoutStage/{id}', KnockoutStageView::class)->name('knockoutStage.view');
+
+
+        
     });
 
 
