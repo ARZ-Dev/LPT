@@ -12,6 +12,11 @@ class Group extends Model
 
     protected $guarded = [];
 
+    public function tournamentLevelCategory()
+    {
+        return $this->belongsTo(TournamentLevelCategory::class);
+    }
+
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'group_teams');

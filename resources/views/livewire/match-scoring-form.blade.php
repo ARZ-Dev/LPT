@@ -4,7 +4,7 @@
         <div class="card mb-2">
             <div class="card-header d-flex justify-content-center align-items-center">
                 <h5 class="mb-0">
-                    {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring - {{ $match->knockoutRound?->name }}
+                    {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring - {{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}
                 </h5>
             </div>
             <div class="card-body">

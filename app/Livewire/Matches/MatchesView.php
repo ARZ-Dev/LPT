@@ -93,7 +93,7 @@ class MatchesView extends Component
     public static function updateMatchWinner($matchId, $winnerId): mixed
     {
         $match = Game::with('homeTeam', 'awayTeam')->findOrFail($matchId);
-        $category = $match->knockoutRound->tournamentLevelCategory;
+        $category = $match->type == "Knockouts" ? $match->knockoutRound->tournamentLevelCategory : $match->group->tournamentLevelCategory;
         $tournament = $category->tournament;
 
         if ($match->home_team_id == $winnerId) {
