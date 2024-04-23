@@ -49,7 +49,9 @@
                             @can('matches-view')
                             {{-- <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
-
+                            @if($match->is_started)
+                            <a href="{{ route('matches.details', [$match->id]) }}" class="text-body edit-tournament-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
+                            @endif
                             @if($match->homeTeam && $match->awayTeam && !$match->is_completed)
                             <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"><i class="ti ti-player-play ti-sm me-2"></i></a>
                             @endif

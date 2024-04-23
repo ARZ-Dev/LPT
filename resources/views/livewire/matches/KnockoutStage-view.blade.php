@@ -7,22 +7,22 @@
         <div class="card-datatable table-responsive">
             <table class="datatables-matches dataTable table border-top">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tournament Deuce Type</th>
-                    <th>Name</th>
-                    <th>Nb Of Sets</th>
-                    <th>Nb Of Games</th>
-                    <th>Tie Break</th>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tournament Deuce Type</th>
+                        <th>Name</th>
+                        <th>Nb Of Sets</th>
+                        <th>Nb Of Games</th>
+                        <th>Tie Break</th>
 
-                    <th>Is Completed</th>
-                    <th>Actions</th>
+                        <th>Is Completed</th>
+                        <th>Actions</th>
 
 
-                </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach($knockoutStages as $knockoutStage)
+                    @foreach($knockoutStages as $knockoutStage)
                     <tr>
                         <td>{{ $knockoutStage->id }}</td>
                         <td>{{ $knockoutStage->tournamentDeuceType?->name }}</td>
@@ -32,17 +32,17 @@
                         <td>{{ $knockoutStage->tie_break }}</td>
 
                         <td>
-                        <span class="badge bg-label-{{ $knockoutStage->is_completed  == 0 ? "warning" : "info" }}">
+                            <span class="badge bg-label-{{ $knockoutStage->is_completed  == 0 ? "warning" : "info" }}">
                                 {{ $knockoutStage->is_completed == 0 ? "Pending" : "Completed" }}
-                        </span>
+                            </span>
 
                         <td>
-                        <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}"><i class="ti ti-pencil ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actions"></i></a>
+                            <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}"><i class="ti ti-pencil ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actions"></i></a>
 
                         </td>
                     </tr>
 
-                    <div class="modal fade" id="actions{{$knockoutStage->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$knockoutStage->id}}" aria-hidden="true">
+                    <div wire:ignore.self class="modal fade" id="actions{{$knockoutStage->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$knockoutStage->id}}" aria-hidden="true">
                         <div class="modal-dialog modal-xl modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -52,7 +52,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
 
-                                <div class="modal-body">
+                                <div class=" modal-body">
 
                                     <div class="container">
 
@@ -60,10 +60,10 @@
                                             <div class="col-md-6">
                                                 <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type</label>
                                                 <div wire:ignore>
-                                                    <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Deuce Type" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                                    <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Deuce Type" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
                                                         <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select Tournament Deuce Type</option>
                                                         @foreach($TournamentDeuceTypes as $type)
-                                                            <option  value="{{ $type->id }}">{{ $type->name }}</option>
+                                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -71,20 +71,23 @@
 
                                             <div class="col-md-6">
                                                 <label class="form-label " for="nb_of_sets">Nb Of Sets</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''" >
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
+                                            @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                         <div class="row mt-2">
                                             <div class="col-md-6">
                                                 <label class="form-label " for="nb_of_games">Nb Of Games</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games" id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_games') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
 
                                             <div class=" col-md-6">
                                                 <label class="form-label " for="tie_break">Tie Break</label>
-                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break" id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
+                                            @error('knockoutStageValues.'.$knockoutStage->id.'.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                     </div>
 
@@ -97,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                    @endforeach
                 </tbody>
             </table>
 
@@ -124,4 +127,3 @@
     @endscript
 
 </div>
-
