@@ -1,23 +1,24 @@
 <div>
 
-  <div class="d-flex justify-content-end" style="margin-right: 150px;">
-    <a href="{{ route('matches', $match->knockoutRound->tournament_level_category_id ) }}" class="btn btn-primary mb-2 text-nowrap">
-      Matches
-    </a>
-  </div>
+
 
   <div class="layout-wrapper layout-content-navbar">
     <div class="layout-page">
-      <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
 
-          <h4 class="py-3 mb-4"><span class="text-muted fw-light">Match /</span> {{$match->homeTeam->nickname}} VS {{$match->awayTeam->nickname}}</h4>
+          <h4 class="py-3 mb-4 d-flex justify-content-between align-items-center">
+            <span class="text-muted fw-light">Match /  {{$match->homeTeam->nickname}} VS {{$match->awayTeam->nickname}}</span>
+            <span class="text-muted fw-light">
+              <a href="{{ route('matches', $match->knockoutRound->tournament_level_category_id ) }}" class="btn btn-primary text-nowrap ms-2">
+                Matches
+              </a>
+            </span>
+          </h4>
 
           <div class="row overflow-hidden">
             <div class="col-12">
               <ul class="timeline timeline-center mt-5">
                 @foreach($points as $point)
-                    @if($point->away_team_score != 0)
+                    @if($point->away_team_score != 0 )
                       <li class="timeline-item timeline-item-right mt-1">
                     @else
                       <li class="timeline-item timeline-item-left mt-1">
@@ -28,7 +29,7 @@
                     </span>
                   <div class="timeline-event card p-0" data-aos="fade-left">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                      <h6 class="card-title mb-0">@if($point->home_team_score != 0) {{$match->homeTeam->nickname}} @else {{$match->awayTeam->nickname}} @endif</h6>
+                      <h6 class="card-title mb-0">@if($point->away_team_score != 0) {{$match->homeTeam->nickname}} @else {{$match->awayTeam->nickname}} @endif</h6>
                       <!-- <div class="meta">
                         <span class="badge rounded-pill bg-label-primary">Design</span>
                         <span class="badge rounded-pill bg-label-success">Meeting</span>
@@ -51,9 +52,6 @@
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
   </div>
 </div>
     
