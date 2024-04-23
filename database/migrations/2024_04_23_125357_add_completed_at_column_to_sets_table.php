@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('sets', function (Blueprint $table) {
+            $table->timestamp('completed_at')->nullable()->after('is_completed');
+        });
+        Schema::table('set_games', function (Blueprint $table) {
+            $table->timestamp('completed_at')->nullable()->after('is_completed');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('sets', function (Blueprint $table) {
+            $table->dropColumn('completed_at');
+        });
+        Schema::table('set_games', function (Blueprint $table) {
+            $table->dropColumn('completed_at');
+        });
+    }
+};

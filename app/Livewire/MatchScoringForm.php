@@ -265,6 +265,7 @@ class MatchScoringForm extends Component
             'home_team_score' => $homeTeamScore,
             'away_team_score' => $awayTeamScore,
             'is_completed' => true,
+            'completed_at' => now(),
             'winner_team_id' => $winningTeam->id,
         ]);
 
@@ -292,6 +293,7 @@ class MatchScoringForm extends Component
             $pendingSetGame->set->update([
                 'winner_team_id' => $winningTeam->id,
                 'is_completed' => true,
+                'completed_at' => now(),
             ]);
 
             $winningSetsCount = Set::where('game_id', $pendingSetGame->set->game_id)->where('winner_team_id', $winningTeam->id)->count();
