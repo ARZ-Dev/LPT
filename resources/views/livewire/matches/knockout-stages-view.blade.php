@@ -70,7 +70,7 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label " for="nb_of_sets">Nb Of Sets *</label>
+                                                <label class="form-label " for="nb_of_sets">Nb Of Sets to Win the Match *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                                 @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
@@ -78,13 +78,13 @@
 
                                         <div class="row mt-2">
                                             <div class="col-md-6">
-                                                <label class="form-label " for="nb_of_games">Nb Of Games *</label>
+                                                <label class="form-label " for="nb_of_games">Nb Of Games to Win the Set *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games" id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                                 @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_games') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label " for="tie_break">Tie Break *</label>
+                                                <label class="form-label " for="tie_break">Tie Break points to Win the Game *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break" id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                                 @error('knockoutStageValues.'.$knockoutStage->id.'.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
