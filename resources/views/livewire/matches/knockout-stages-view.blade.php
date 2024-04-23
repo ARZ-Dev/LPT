@@ -1,5 +1,5 @@
 <div>
-    <div class="card" wire:ignore>
+    <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $tournament->name }} Stages</h4>
             <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $tournament->id) }}">{{ $tournament->name }} Categories</a>
