@@ -4,7 +4,7 @@
         <div class="card mb-2">
             <div class="card-header d-flex justify-content-center align-items-center">
                 <h5 class="mb-0">
-                    {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring
+                    {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring - {{ $match->knockoutRound?->name }}
                 </h5>
             </div>
             <div class="card-body">
@@ -40,7 +40,7 @@
                                     <tbody>
                                         <tr>
                                             @if(!$match->is_completed)
-                                                <td class="border-bottom-0">
+                                                <td style="min-width: 60px">
                                                     @if($currentSetGame?->serving_team_id == $homeTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
@@ -58,12 +58,22 @@
                                                     <button wire:click="scorePoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
                                                         <span class="ti ti-plus"></span>
                                                     </button>
+                                                @else
+                                                    @if($match->winner_team_id == $homeTeam->id)
+                                                        <span class="badge rounded-pill bg-label-success">
+                                                            Winner!
+                                                        </span>
+                                                    @else
+                                                        <span class="badge rounded-pill bg-label-danger">
+                                                            Loser!
+                                                        </span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             @if(!$match->is_completed)
-                                                <td>
+                                                <td style="min-width: 60px">
                                                     @if($currentSetGame?->serving_team_id == $awayTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
@@ -81,6 +91,16 @@
                                                     <button wire:click="scorePoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
                                                         <span class="ti ti-plus"></span>
                                                     </button>
+                                                @else
+                                                    @if($match->winner_team_id == $awayTeam->id)
+                                                        <span class="badge rounded-pill bg-label-success">
+                                                            Winner!
+                                                        </span>
+                                                    @else
+                                                        <span class="badge rounded-pill bg-label-danger">
+                                                            Loser!
+                                                        </span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>

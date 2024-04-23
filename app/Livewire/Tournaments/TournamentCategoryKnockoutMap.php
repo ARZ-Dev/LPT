@@ -17,6 +17,6 @@ class TournamentCategoryKnockoutMap extends Component
 
     public function render()
     {
-        return view('livewire.tournaments.tournament-category-knockoutMap2');
+        return view('livewire.tournaments.tournament-category-knockoutMap');
     }
 }

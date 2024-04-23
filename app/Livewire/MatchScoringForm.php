@@ -23,6 +23,7 @@ class MatchScoringForm extends Component
     public $nbOfSetsToWin;
     public $nbOfGamesToWin;
     public $tiebreak = false;
+    public $tiebreakPointsToWin;
 
     public function mount($matchId)
     {
@@ -34,8 +35,9 @@ class MatchScoringForm extends Component
                 ]
             ])->findOrFail($matchId);
 
-        $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets ?? 3;
-        $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games ?? 6;
+        $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
+        $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
+        $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
 
         $this->isAlreadyStarted = $match->is_started;
 
@@ -43,6 +45,11 @@ class MatchScoringForm extends Component
         $this->awayTeam = $match->awayTeam;
         $this->startedAt = $match->started_at ?? now()->format('d-m-Y H:i');
         $this->referee = auth()->user()->full_name;
+
+        $latestSet = $match->sets()->latest()->where('is_completed', false)->first();
+        if ($latestSet) {
+            $this->tiebreak = $latestSet->home_team_score == $latestSet->away_team_score && $latestSet->home_team_score == $this->nbOfGamesToWin;
+        }
     }
 
     public function rules()
@@ -60,6 +67,7 @@ class MatchScoringForm extends Component
         try {
             $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
             throw_if($match->is_completed, new \Exception("Match is already completed!"));
+            throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin, new \Exception($match->knockoutRound?->knockoutStage?->name . " scoring settings are required!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
@@ -90,11 +98,11 @@ class MatchScoringForm extends Component
             if (!$latestSetGame) {
 
                 $servingTeamId = $this->servingTeamId;
-
-                $lastPlayedSetGame = $latestSet->setGames()->where('is_completed', true)->latest()->first();
-                if ($lastPlayedSetGame) {
+                if (!$servingTeamId) {
+                    $lastPlayedSetGame = $match->setGames()->where('set_games.is_completed', true)->latest()->first();
                     $servingTeamId = $lastPlayedSetGame->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
                 }
+
 
                 // Create a new set game if no set game exists
                 $latestSetGame = $latestSet->setGames()->create([
@@ -112,22 +120,14 @@ class MatchScoringForm extends Component
             // Determine which team is scoring
             if ($teamId == $this->homeTeam->id) {
                 // Update the score for home team
-                if (!$this->tiebreak) {
-                    $scores = $this->getNextScore($homeTeamScore, $awayTeamScore);
-                    $homeTeamScore = $scores['first_team'];
-                    $awayTeamScore = $scores['second_team'];
-                } else {
-                    $homeTeamScore++;
-                }
+                $scores = $this->getNextScore($homeTeamScore, $awayTeamScore);
+                $homeTeamScore = $scores['first_team'];
+                $awayTeamScore = $scores['second_team'];
             } else {
-                if (!$this->tiebreak) {
-                    // Update the score for away team
-                    $scores = $this->getNextScore($awayTeamScore, $homeTeamScore);
-                    $awayTeamScore = $scores['first_team'];
-                    $homeTeamScore = $scores['second_team'];
-                } else {
-                    $awayTeamScore++;
-                }
+                // Update the score for away team
+                $scores = $this->getNextScore($awayTeamScore, $homeTeamScore);
+                $awayTeamScore = $scores['first_team'];
+                $homeTeamScore = $scores['second_team'];
             }
 
             $latestPoint = SetGamePoint::where('set_game_id', $latestSetGame->id)->latest()->first();
@@ -169,35 +169,62 @@ class MatchScoringForm extends Component
      */
     protected function getNextScore($currentScore, $opponentScore)
     {
-        // Define the scoring progression
-        $scoreProgression = [
-            0 => 15,
-            15 => 30,
-            30 => 40,
-            40 => 'won',
-            "AD" => 'won'
-        ];
+        if (!$this->tiebreak) {
+            // Define the scoring progression
+            $scoreProgression = [
+                0 => 15,
+                15 => 30,
+                30 => 40,
+                40 => 'won',
+                "AD" => 'won'
+            ];
 
-        // Check if the current score is 40 and opponent's score is also 40
-        if ($currentScore == 40 && $opponentScore == 40) {
+            // Check if the current score is 40 and opponent's score is also 40
+            if ($currentScore == 40 && $opponentScore == 40) {
+                return [
+                    'first_team' => "AD",
+                    'second_team' => $opponentScore,
+                ];
+            }
+
+            if ($currentScore == 40 && $opponentScore == "AD") {
+                return [
+                    'first_team' => 40,
+                    'second_team' => 40,
+                ];
+            }
+
+            // Return the next score based on the progression
             return [
-                'first_team' => "AD",
+                'first_team' => $scoreProgression[$currentScore],
+                'second_team' => $opponentScore,
+            ];
+        } else {
+
+            $nextScore = $currentScore + 1;
+            if ($nextScore === $this->tiebreakPointsToWin && $opponentScore < $this->tiebreakPointsToWin - 1) {
+                $this->tiebreak = false;
+
+                return [
+                    'first_team' => 'won',
+                    'second_team' => $opponentScore,
+                ];
+            }
+
+            if ($currentScore > $this->tiebreakPointsToWin - 2 && $opponentScore > $this->tiebreakPointsToWin - 2 && $nextScore == $opponentScore + 2) {
+                $this->tiebreak = false;
+
+                return [
+                    'first_team' => 'won',
+                    'second_team' => $opponentScore,
+                ];
+            }
+
+            return [
+                'first_team' => $nextScore,
                 'second_team' => $opponentScore,
             ];
         }
-
-        if ($currentScore == 40 && $opponentScore == "AD") {
-            return [
-                'first_team' => 40,
-                'second_team' => 40,
-            ];
-        }
-
-        // Return the next score based on the progression
-        return [
-            'first_team' => $scoreProgression[$currentScore],
-            'second_team' => $opponentScore,
-        ];
     }
 
     /**
@@ -234,8 +261,8 @@ class MatchScoringForm extends Component
 
     public function checkSetResults($latestSetGame, $winningTeam)
     {
-        $hasHomeTeamWon = $latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1;
-        $hasAwayTeamWon = $latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1;
+        $hasHomeTeamWon = ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1) || $latestSetGame->set->away_team_score === $this->nbOfGamesToWin + 1;
+        $hasAwayTeamWon = ($latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1) || $latestSetGame->set->home_team_score === $this->nbOfGamesToWin + 1;
 
         if ($hasHomeTeamWon || $hasAwayTeamWon) {
             $latestSetGame->set->update([
@@ -247,7 +274,10 @@ class MatchScoringForm extends Component
             if ($winningSetsCount === $this->nbOfSetsToWin) {
                 MatchesView::updateMatchWinner($latestSetGame->set->game_id, $winningTeam->id);
 
-                return to_route('matches', $latestSetGame->set->game->knockoutRound->tournament_level_category_id)->with('success', 'Winner team has been updated successfully!');
+                return $this->dispatch('swal:success', [
+                    'title' => 'Great!',
+                    'text'  => $winningTeam->nickname . " has won!",
+                ]);
             }
         }
     }
