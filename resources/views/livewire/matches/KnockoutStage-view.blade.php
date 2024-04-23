@@ -1,5 +1,5 @@
 <div>
-    <div class="card">
+    <div class="card" wire:ignore>
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">{{ $tournament->name }}</h4>
             <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $tournament->id) }}">{{ $tournament->name }} Tournament</a>
@@ -58,43 +58,43 @@
 
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type</label>
+                                                <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type *</label>
                                                 <div wire:ignore>
                                                     <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id" class="form-select selectpicker w-100" aria-label="Default select example" title="Select Deuce Type" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
-                                                        <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select Tournament Deuce Type</option>
                                                         @foreach($TournamentDeuceTypes as $type)
-                                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                        <option value="{{ $type->id }}" @selected(($knockoutStageValues[$knockoutStage->id]['tournament_deuce_type_id'] ?? "") == $type->id)>{{ $type->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                @error('knockoutStageValues.'.$knockoutStage->id.'.tournament_deuce_type_id') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label " for="nb_of_sets">Nb Of Sets</label>
+                                                <label class="form-label " for="nb_of_sets">Nb Of Sets *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
-                                            @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
 
                                         <div class="row mt-2">
                                             <div class="col-md-6">
-                                                <label class="form-label " for="nb_of_games">Nb Of Games</label>
+                                                <label class="form-label " for="nb_of_games">Nb Of Games *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games" id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                                 @error('knockoutStageValues.'.$knockoutStage->id.'.nb_of_games') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
 
-                                            <div class=" col-md-6">
-                                                <label class="form-label " for="tie_break">Tie Break</label>
+                                            <div class="col-md-6">
+                                                <label class="form-label " for="tie_break">Tie Break *</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break" id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
+                                                @error('knockoutStageValues.'.$knockoutStage->id.'.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
-                                            @error('knockoutStageValues.'.$knockoutStage->id.'.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>
                                     </div>
 
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button wire:click="actions({{$knockoutStage->id }})" type="submit" data-match-id="{{ $knockoutStage->id }}" class="btn btn-primary ">Submit</button>
+                                    <button wire:click="submitSettings({{$knockoutStage->id }})" type="submit" data-match-id="{{ $knockoutStage->id }}" class="btn btn-primary ">Submit</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
@@ -113,17 +113,13 @@
     @endscript
 
     @script
-    <!-- <script>
-        $(document).on('click', '.storeDateTime-btn', function () {
-            let matchId = $(this).data('match-id');
-            let datetime = $('#datetime-' + matchId).val();
-            let data = {
-                matchId, matchId
-            };
+    <script>
+        $('.selectpicker').selectpicker();
 
-            $wire.dispatch('storeDateTime', data)
+        Livewire.hook('morph.added', ({ el }) => {
+            $('.selectpicker').selectpicker();
         })
-    </script> -->
+    </script>
     @endscript
 
 </div>

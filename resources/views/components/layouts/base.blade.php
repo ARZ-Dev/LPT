@@ -195,12 +195,12 @@
         window.addEventListener('swal:error', event => {
             Swal.fire({
                 title: event.detail[0].title,
-                text: event.detail[0].text,
+                html: event.detail[0].text,
                 icon: 'error',
                 customClass: {
                     confirmButton: 'btn btn-primary'
                 },
-                buttonsStyling: false
+                buttonsStyling: false,
             });
         });
 

@@ -19,11 +19,6 @@ class KnockoutStageView extends Component
     public $TournamentDeuceTypes;
 
     public $knockoutStage;
-    public $tournament_deuce_type_id;
-    public $nb_of_sets;
-    public $nb_of_games;
-    public $tie_break;
-
     public $knockoutStageValues;
     public $tournamentCategory;
 
@@ -53,23 +48,17 @@ class KnockoutStageView extends Component
         }
     }
 
-    public function rules()
+    public function submitSettings($id)
     {
-        return [
+        $this->validate([
             'knockoutStageValues' => ['array'],
-            'knockoutStageValues.*.tournament_deuce_type_id' => ['required'],
-            'knockoutStageValues.*.nb_of_sets' => ['required'],
-            'knockoutStageValues.*.nb_of_games' => ['required'],
-            'knockoutStageValues.*.tie_break' => ['required'],
-        ];
-    }
+            'knockoutStageValues.'. $id .'.tournament_deuce_type_id' => ['required'],
+            'knockoutStageValues.'. $id .'.nb_of_sets' => ['required'],
+            'knockoutStageValues.'. $id .'.nb_of_games' => ['required'],
+            'knockoutStageValues.'. $id .'.tie_break' => ['required'],
+        ]);
 
-    public function actions($id)
-    {
-        
-        $this->validate();
-        $this->knockoutStage = KnockoutStage::find($id);
-
+        $this->knockoutStage = KnockoutStage::findOrFail($id);
         $this->knockoutStage->update([
             'tournament_deuce_type_id' => $this->knockoutStageValues[$id]['tournament_deuce_type_id'],
             'nb_of_sets' => $this->knockoutStageValues[$id]['nb_of_sets'],

@@ -222,21 +222,17 @@ Route::middleware('auth')->group(function () {
         Route::get('categories/{categoryId}/knockout-bracket', TournamentCategoryKnockoutMap::class)->name('tournaments-categories.knockoutMap');
 
 
+        Route::group(['prefix' => 'matches'], function() {
+            Route::get('/{categoryId}', MatchesView::class)->name('matches');
+            Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
+
+            Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
+            Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
+
+            Route::get('/{matchId}/details', MatchDetails::class)->name('matches.details');
+        });
     });
 
-    Route::group(['prefix' => 'matches'], function() {
-        Route::get('/{categoryId}', MatchesView::class)->name('matches');
-        Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
-
-        Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
-        Route::get('/knockoutStage/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
-
-        Route::get('/{matchId}/details', MatchDetails::class)->name('matches.details');
-
-
-
-
-    });
 
 
 

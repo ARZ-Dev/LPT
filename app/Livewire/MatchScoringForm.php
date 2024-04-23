@@ -67,7 +67,11 @@ class MatchScoringForm extends Component
         try {
             $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
             throw_if($match->is_completed, new \Exception("Match is already completed!"));
-            throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin, new \Exception($match->knockoutRound?->knockoutStage?->name . " scoring settings are required!"));
+
+            $knockoutSettingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
+
+            throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin,
+                new \Exception($match->knockoutRound?->knockoutStage?->name . " scoring settings are required, please go to <a href='$knockoutSettingsLink'>this link</a> to add them!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
