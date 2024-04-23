@@ -21,4 +21,9 @@ class Group extends Model
     {
         return $this->hasMany(Game::class);
     }
+
+    public function tournamentLevelCategory()
+    {
+        return $this->belongsTo(TournamentLevelCategory::class);
+    }
 }
