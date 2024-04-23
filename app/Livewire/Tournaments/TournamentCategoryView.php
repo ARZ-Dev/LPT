@@ -47,6 +47,11 @@ class TournamentCategoryView extends Component
 
                     throw_if($category->is_group_matches_generated, new \Exception("Group matches has already been generated!"));
 
+                    $groupStage = KnockoutStage::create([
+                        'tournament_level_category_id' => $category->id,
+                        'name' => "Group Stages",
+                    ]);
+
                     $numberOfGroups = $category->number_of_groups;
                     $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
@@ -54,6 +59,7 @@ class TournamentCategoryView extends Component
                     for ($i = 1; $i <= $numberOfGroups; $i++) {
                         $group = Group::create([
                             'tournament_level_category_id' => $category->id,
+                            'knockout_stage_id' => $groupStage->id,
                             'name' => 'Group ' . $i,
                         ]);
 

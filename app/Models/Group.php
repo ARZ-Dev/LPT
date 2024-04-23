@@ -21,4 +21,9 @@ class Group extends Model
     {
         return $this->hasMany(Game::class);
     }
+
+    public function knockoutStage()
+    {
+        return $this->belongsTo(KnockoutStage::class);
+    }
 }

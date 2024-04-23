@@ -35,10 +35,6 @@ class MatchScoringForm extends Component
                 ]
             ])->findOrFail($matchId);
 
-        $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
-        $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
-        $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
-
         $this->isAlreadyStarted = $match->is_started;
 
         $this->homeTeam = $match->homeTeam;
@@ -68,10 +64,23 @@ class MatchScoringForm extends Component
             $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
             throw_if($match->is_completed, new \Exception("Match is already completed!"));
 
-            $knockoutSettingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
+            if ($match->type == "Knockouts") {
+
+                $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
+                $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
+                $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
+
+                $settingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
+            } else {
+                $this->nbOfSetsToWin = $match->group?->knockoutStage?->nb_of_sets;
+                $this->nbOfGamesToWin = $match->group?->knockoutStage?->nb_of_games;
+                $this->tiebreakPointsToWin = $match->group?->knockoutStage?->tie_break;
+
+                $settingsLink = route('knockoutStage.view', $match->group->tournament_level_category_id);
+            }
 
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin,
-                new \Exception($match->knockoutRound?->knockoutStage?->name . " scoring settings are required, please go to <a href='$knockoutSettingsLink'>this link</a> to add them!"));
+                new \Exception($match->group?->knockoutStage?->name . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
@@ -115,6 +124,7 @@ class MatchScoringForm extends Component
                     'home_team_score' => 0,
                     'away_team_score' => 0,
                 ]);
+                $this->servingTeamId = null;
             }
 
             // Get the scores for the teams
