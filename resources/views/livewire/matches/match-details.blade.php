@@ -15,7 +15,12 @@
 
 
                   @foreach($points as $point)
-                    <li class="timeline-item">
+                  @if($point->home_team_score != 0)
+                    <li class="timeline-item timeline-item-right mt-1">
+                      @else
+                    <li class="timeline-item timeline-item-left">
+                      @endif
+
                       <span
                         class="timeline-indicator timeline-indicator-primary"
                         data-aos="zoom-in"
@@ -23,7 +28,7 @@
                         <i class="ti ti-ball-tennis ti-sm"></i>
                       </span>
                       <div class="timeline-event card p-0"
-                        data-aos="fade-right">
+                        data-aos="fade-left">
                         <div
                           class="card-header d-flex justify-content-between align-items-center flex-wrap">
                           <h6 class="card-title mb-0">@if($point->home_team_score != 0) {{$match->homeTeam->nickname}} @else {{$match->awayTeam->nickname}} @endif</h6>
@@ -45,7 +50,7 @@
                           </div>
                         </div>
                         <div class="timeline-event-time" style="font-size: 12px;">{{ \Carbon\Carbon::parse($point->created_at)->format('jS F H:i') }}
-</div>
+                        </div>
                       </div>
                     </li>
                   @endforeach
