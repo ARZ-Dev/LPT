@@ -1,12 +1,15 @@
 <div>
 
-
-<div class="layout-wrapper layout-content-navbar">
-        <div class="layout-page">
-          <div class="content-wrapper">
- 
-
-            <div class="container-xxl flex-grow-1 container-p-y">
+  
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-page">
+      <div class="content-wrapper">
+        
+        
+        <div class="container-xxl flex-grow-1 container-p-y">
+              <a href="{{ route('matches', $match->knockoutRound->tournament_level_category_id ) }}" class="btn btn-primary mb-2 text-nowrap">
+                  Matches
+              </a>
               <h4 class="py-3 mb-4"><span class="text-muted fw-light">Match /</span> {{$match->homeTeam->nickname}} VS {{$match->awayTeam->nickname}} </h4>
 
               <div class="row overflow-hidden">
