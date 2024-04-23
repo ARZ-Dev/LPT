@@ -72,6 +72,6 @@ class KnockoutStageView extends Component
 
     public function render()
     {
-        return view('livewire.matches.knockoutStage-view');
+        return view('livewire.matches.knockout-stages-view');
     }
 }
