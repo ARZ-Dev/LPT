@@ -24,7 +24,7 @@ class KnockoutStageView extends Component
 
     public function mount($categoryId)
     {
-        $this->tournamentCategory = TournamentLevelCategory::with(['knockoutStages', 'tournament'])->findOrFail($categoryId);
+        $this->tournamentCategory = TournamentLevelCategory::with(['knockoutStages' => ['startedGroupStagesGames', 'startedGames'], 'tournament'])->findOrFail($categoryId);
         $this->knockoutStages = $this->tournamentCategory->knockoutStages;
         $this->tournament = $this->tournamentCategory->tournament;
 
@@ -37,13 +37,11 @@ class KnockoutStageView extends Component
             $this->nb_of_games = $knockoutStage->nb_of_games;
             $this->tie_break = $knockoutStage->tie_break;
 
-
             $this->knockoutStageValues[$knockoutStage->id] = [
                 'tournament_deuce_type_id' => $this->tournament_deuce_type_id,
                 'nb_of_sets' => $this->nb_of_sets,
                 'nb_of_games' => $this->nb_of_games,
                 'tie_break' => $this->tie_break,
-
             ];
         }
     }

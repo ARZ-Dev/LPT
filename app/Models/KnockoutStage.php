@@ -21,6 +21,21 @@ class KnockoutStage extends Model
         return $this->hasManyThrough(Game::class, KnockoutRound::class);
     }
 
+    public function startedGames()
+    {
+        return $this->games()->where('is_started', true);
+    }
+
+    public function groupStagesGames()
+    {
+        return $this->hasManyThrough(Game::class, Group::class);
+    }
+
+    public function startedGroupStagesGames()
+    {
+        return $this->groupStagesGames()->where('is_started', true);
+    }
+
     public function tournamentDeuceType()
     {
         return $this->belongsTo(TournamentDeuceType::class);

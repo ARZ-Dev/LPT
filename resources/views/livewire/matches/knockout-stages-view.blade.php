@@ -34,8 +34,11 @@
                             </span>
 
                         <td>
-                            <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}"><i class="ti ti-pencil ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actions"></i></a>
-
+                            @if(!count($knockoutStage->startedGroupStagesGames) && !count($knockoutStage->startedGames))
+                                <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}">
+                                    <i class="ti ti-pencil ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actions"></i>
+                                </a>
+                            @endif
                         </td>
                     </tr>
 
