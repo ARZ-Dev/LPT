@@ -159,7 +159,7 @@ class MatchScoringForm extends Component
             // Check if the set is won
             if ($this->isSetGameWon($homeTeamScore, $awayTeamScore)) {
                 // Handle set win
-                $this->handleSetGameWin($latestSetGame, $team);
+                $this->handleSetGameWin($latestSetGame, $team, $homeTeamScore, $awayTeamScore);
             } else {
                 $latestSetGame->update([
                     'home_team_score' => $homeTeamScore,
@@ -257,10 +257,12 @@ class MatchScoringForm extends Component
     /**
      * Handle a set game win.
      */
-    protected function handleSetGameWin($latestSetGame, $winningTeam)
+    protected function handleSetGameWin($latestSetGame, $winningTeam, $homeTeamScore, $awayTeamScore)
     {
         // Update the scores and set the set as won
         $latestSetGame->update([
+            'home_team_score' => $homeTeamScore,
+            'away_team_score' => $awayTeamScore,
             'is_completed' => true,
             'winner_team_id' => $winningTeam->id,
         ]);
