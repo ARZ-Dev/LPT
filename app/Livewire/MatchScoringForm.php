@@ -22,6 +22,7 @@ class MatchScoringForm extends Component
     public bool $isAlreadyStarted = false;
     public $nbOfSetsToWin;
     public $nbOfGamesToWin;
+    public $deuceType;
     public $tiebreak = false;
     public $tiebreakPointsToWin;
 
@@ -69,17 +70,19 @@ class MatchScoringForm extends Component
                 $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
                 $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
                 $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
+                $this->deuceType = $match->knockoutRound?->knockoutStage?->tournamentDeuceType;
 
                 $settingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
             } else {
                 $this->nbOfSetsToWin = $match->group?->knockoutStage?->nb_of_sets;
                 $this->nbOfGamesToWin = $match->group?->knockoutStage?->nb_of_games;
                 $this->tiebreakPointsToWin = $match->group?->knockoutStage?->tie_break;
+                $this->deuceType = $match->group?->knockoutStage?->tournamentDeuceType;
 
                 $settingsLink = route('knockoutStage.view', $match->group->tournament_level_category_id);
             }
 
-            throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin,
+            throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
                 new \Exception($match->group?->knockoutStage?->name . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
 
             $match->loadMissing('sets');
@@ -194,18 +197,20 @@ class MatchScoringForm extends Component
             ];
 
             // Check if the current score is 40 and opponent's score is also 40
-            if ($currentScore == 40 && $opponentScore == 40) {
-                return [
-                    'first_team' => "AD",
-                    'second_team' => $opponentScore,
-                ];
-            }
+            if ($this->deuceType->name == "Full Deuce") {
+                if ($currentScore == 40 && $opponentScore == 40) {
+                    return [
+                        'first_team' => "AD",
+                        'second_team' => $opponentScore,
+                    ];
+                }
 
-            if ($currentScore == 40 && $opponentScore == "AD") {
-                return [
-                    'first_team' => 40,
-                    'second_team' => 40,
-                ];
+                if ($currentScore == 40 && $opponentScore == "AD") {
+                    return [
+                        'first_team' => 40,
+                        'second_team' => 40,
+                    ];
+                }
             }
 
             // Return the next score based on the progression
