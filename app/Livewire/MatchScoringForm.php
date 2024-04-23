@@ -96,34 +96,35 @@ class MatchScoringForm extends Component
                 ]);
             }
 
-            $latestSet = $match->sets()->latest('set_number')->where('is_completed', false)->first();
+            $pendingSet = $match->sets()->latest('set_number')->where('is_completed', false)->first();
 
-            if (!$latestSet) {
+            if (!$pendingSet) {
                 $lastPlayedSet = $match->sets()->where('is_completed', true)->latest('id')->first();
 
                 // Create a new set if no set exists
-                $latestSet = $match->sets()->create([
+                $pendingSet = $match->sets()->create([
                     'set_number' => ($lastPlayedSet?->set_number ?? 0) + 1,
                     'home_team_score' => 0,
                     'away_team_score' => 0,
                 ]);
             }
 
-            $latestSetGame = $latestSet->setGames()->latest('game_number')->where('is_completed', false)->first();
+            $pendingSetGame = $pendingSet->setGames()->latest('game_number')->where('is_completed', false)->first();
 
-            if (!$latestSetGame) {
+            if (!$pendingSetGame) {
 
                 $servingTeamId = $this->servingTeamId;
                 if (!$servingTeamId) {
-                    $lastPlayedSetGame = $match->setGames()->where('set_games.is_completed', true)->latest('id')->first();
-                    $servingTeamId = $lastPlayedSetGame->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
+                    $lastMatchSet = $match->setGames()->where('set_games.is_completed', true)->latest('id')->first();
+                    $servingTeamId = $lastMatchSet?->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
                 }
 
+                $lastPlayedSetGame = $pendingSet->setGames()->where('is_completed', true)->latest('game_number')->first();
 
                 // Create a new set game if no set game exists
-                $latestSetGame = $latestSet->setGames()->create([
+                $pendingSetGame = $pendingSet->setGames()->create([
                     'serving_team_id' => $servingTeamId,
-                    'game_number' => ($latestSetGame?->game_number ?? 0) + 1,
+                    'game_number' => ($lastPlayedSetGame?->game_number ?? 0) + 1,
                     'home_team_score' => 0,
                     'away_team_score' => 0,
                 ]);
@@ -131,8 +132,8 @@ class MatchScoringForm extends Component
             }
 
             // Get the scores for the teams
-            $homeTeamScore = $latestSetGame->home_team_score;
-            $awayTeamScore = $latestSetGame->away_team_score;
+            $homeTeamScore = $pendingSetGame->home_team_score;
+            $awayTeamScore = $pendingSetGame->away_team_score;
 
             // Determine which team is scoring
             if ($teamId == $this->homeTeam->id) {
@@ -147,9 +148,9 @@ class MatchScoringForm extends Component
                 $homeTeamScore = $scores['second_team'];
             }
 
-            $latestPoint = SetGamePoint::where('set_game_id', $latestSetGame->id)->latest()->first();
+            $latestPoint = SetGamePoint::where('set_game_id', $pendingSetGame->id)->latest()->first();
             SetGamePoint::create([
-                'set_game_id' => $latestSetGame->id,
+                'set_game_id' => $pendingSetGame->id,
                 'point_number' => ($latestPoint->point_number ?? 0) + 1,
                 'point_team_id' => $teamId,
                 'home_team_score' => $homeTeamScore,
@@ -159,9 +160,9 @@ class MatchScoringForm extends Component
             // Check if the set is won
             if ($this->isSetGameWon($homeTeamScore, $awayTeamScore)) {
                 // Handle set win
-                $this->handleSetGameWin($latestSetGame, $team, $homeTeamScore, $awayTeamScore);
+                $this->handleSetGameWin($pendingSetGame, $team, $homeTeamScore, $awayTeamScore);
             } else {
-                $latestSetGame->update([
+                $pendingSetGame->update([
                     'home_team_score' => $homeTeamScore,
                     'away_team_score' => $awayTeamScore,
                 ]);
@@ -257,10 +258,10 @@ class MatchScoringForm extends Component
     /**
      * Handle a set game win.
      */
-    protected function handleSetGameWin($latestSetGame, $winningTeam, $homeTeamScore, $awayTeamScore)
+    protected function handleSetGameWin($pendingSetGame, $winningTeam, $homeTeamScore, $awayTeamScore)
     {
         // Update the scores and set the set as won
-        $latestSetGame->update([
+        $pendingSetGame->update([
             'home_team_score' => $homeTeamScore,
             'away_team_score' => $awayTeamScore,
             'is_completed' => true,
@@ -268,34 +269,34 @@ class MatchScoringForm extends Component
         ]);
 
         if ($winningTeam->id == $this->homeTeam->id) {
-            $latestSetGame->set->increment('home_team_score');
+            $pendingSetGame->set->increment('home_team_score');
         } else {
-            $latestSetGame->set->increment('away_team_score');
+            $pendingSetGame->set->increment('away_team_score');
         }
 
-        if ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score == $this->nbOfGamesToWin) {
+        if ($pendingSetGame->set->home_team_score == $this->nbOfGamesToWin && $pendingSetGame->set->away_team_score == $this->nbOfGamesToWin) {
             $this->tiebreak = true;
         }
 
-        $this->checkSetResults($latestSetGame, $winningTeam);
+        $this->checkSetResults($pendingSetGame, $winningTeam);
     }
 
-    public function checkSetResults($latestSetGame, $winningTeam)
+    public function checkSetResults($pendingSetGame, $winningTeam)
     {
-        $hasHomeTeamWon = ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1)
-            || $latestSetGame->set->away_team_score === $this->nbOfGamesToWin + 1;
-        $hasAwayTeamWon = ($latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1)
-            || $latestSetGame->set->home_team_score === $this->nbOfGamesToWin + 1;
+        $hasHomeTeamWon = ($pendingSetGame->set->home_team_score == $this->nbOfGamesToWin && $pendingSetGame->set->away_team_score < $this->nbOfGamesToWin - 1)
+            || $pendingSetGame->set->away_team_score === $this->nbOfGamesToWin + 1;
+        $hasAwayTeamWon = ($pendingSetGame->set->away_team_score == $this->nbOfGamesToWin && $pendingSetGame->set->home_team_score < $this->nbOfGamesToWin - 1)
+            || $pendingSetGame->set->home_team_score === $this->nbOfGamesToWin + 1;
 
         if ($hasHomeTeamWon || $hasAwayTeamWon) {
-            $latestSetGame->set->update([
+            $pendingSetGame->set->update([
                 'winner_team_id' => $winningTeam->id,
                 'is_completed' => true,
             ]);
 
-            $winningSetsCount = Set::where('game_id', $latestSetGame->set->game_id)->where('winner_team_id', $winningTeam->id)->count();
+            $winningSetsCount = Set::where('game_id', $pendingSetGame->set->game_id)->where('winner_team_id', $winningTeam->id)->count();
             if ($winningSetsCount === $this->nbOfSetsToWin) {
-                MatchesView::updateMatchWinner($latestSetGame->set->game_id, $winningTeam->id);
+                MatchesView::updateMatchWinner($pendingSetGame->set->game_id, $winningTeam->id);
 
                 return $this->dispatch('swal:success', [
                     'title' => 'Great!',
