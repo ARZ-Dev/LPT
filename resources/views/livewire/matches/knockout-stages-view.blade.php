@@ -9,24 +9,21 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tournament Deuce Type</th>
                         <th>Name</th>
+                        <th>Tournament Deuce Type</th>
                         <th>Nb Of Sets</th>
                         <th>Nb Of Games</th>
                         <th>Tie Break</th>
-
                         <th>Is Completed</th>
                         <th>Actions</th>
-
-
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($knockoutStages as $knockoutStage)
                     <tr>
                         <td>{{ $knockoutStage->id }}</td>
-                        <td>{{ $knockoutStage->tournamentDeuceType?->name }}</td>
                         <td>{{ $knockoutStage->name }}</td>
+                        <td>{{ $knockoutStage->tournamentDeuceType?->name }}</td>
                         <td>{{ $knockoutStage->nb_of_sets }}</td>
                         <td>{{ $knockoutStage->nb_of_games }}</td>
                         <td>{{ $knockoutStage->tie_break }}</td>

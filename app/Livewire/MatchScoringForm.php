@@ -67,6 +67,7 @@ class MatchScoringForm extends Component
 
             if ($match->type == "Knockouts") {
 
+                $stageName = $match->knockoutRound?->knockoutStage?->name;
                 $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
                 $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
                 $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
@@ -74,6 +75,7 @@ class MatchScoringForm extends Component
 
                 $settingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
             } else {
+                $stageName = $match->group?->knockoutStage?->name;
                 $this->nbOfSetsToWin = $match->group?->knockoutStage?->nb_of_sets;
                 $this->nbOfGamesToWin = $match->group?->knockoutStage?->nb_of_games;
                 $this->tiebreakPointsToWin = $match->group?->knockoutStage?->tie_break;
@@ -83,7 +85,7 @@ class MatchScoringForm extends Component
             }
 
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
-                new \Exception($match->group?->knockoutStage?->name . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
+                new \Exception($stageName . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;
