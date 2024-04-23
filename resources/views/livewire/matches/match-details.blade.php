@@ -18,7 +18,7 @@
                   @if($point->home_team_score != 0)
                     <li class="timeline-item timeline-item-right mt-1">
                       @else
-                    <li class="timeline-item timeline-item-left">
+                    <li class="timeline-item timeline-item-left mt-1">
                       @endif
 
                       <span
