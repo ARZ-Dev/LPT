@@ -32,10 +32,10 @@
                         <div
                           class="card-header d-flex justify-content-between align-items-center flex-wrap">
                           <h6 class="card-title mb-0">@if($point->home_team_score != 0) {{$match->homeTeam->nickname}} @else {{$match->awayTeam->nickname}} @endif</h6>
-                          <div class="meta">
+                          <!-- <div class="meta">
                             <span class="badge rounded-pill bg-label-primary">Design</span>
                             <span class="badge rounded-pill bg-label-success">Meeting</span>
-                          </div>
+                          </div> -->
                         </div>
                         <div class="card-body">
                           <p class="mb-2">
