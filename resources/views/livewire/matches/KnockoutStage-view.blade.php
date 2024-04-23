@@ -46,40 +46,42 @@
                         <div class="modal-dialog modal-xl modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="userModalLabel{{$knockoutStage->id}}">Actions</h5>
+                                    <h5 class="modal-title" id="userModalLabel{{$knockoutStage->id}}">
+                                        {{ $knockoutStage->name }} Settings
+                                    </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
 
                                 <div class="modal-body">
 
-                                    <div class="container row ">
-                                    
-                                        <div class="col-md-6 row justify-content-center">
-                                        <div class="col-md-10">
-                                            <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type</label>
-                                            <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id" class="form-control">
-                                                <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select Tournament Deuce Type</option>
-                                                @foreach($TournamentDeuceTypes as $type)
-                                                    <option  value="{{ $type->id }}">{{ $type->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <div class="container">
 
-                                        </div>
-                                        <div class="col-md-6 row justify-content-center">
-                                            <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label" for="tournament_deuce_type_id">Tournament Deuce Type</label>
+                                                <div wire:ignore>
+                                                    <select wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tournament_deuce_type_id" id="tournament_deuce_type_id"  class="form-select selectpicker w-100" aria-label="Default select example" title="Select Deuce Type" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                                        <option value="{{$knockoutStage->tournament_deuce_type_id}}">Select Tournament Deuce Type</option>
+                                                        @foreach($TournamentDeuceTypes as $type)
+                                                            <option  value="{{ $type->id }}">{{ $type->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
                                                 <label class="form-label " for="nb_of_sets">Nb Of Sets</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_sets" id="nb_of_sets" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''" >
                                             </div>
                                         </div>
-                                        <div class=" col-md-6 row justify-content-center">
-                                            <div class="col-md-10">
+
+                                        <div class="row mt-2">
+                                            <div class="col-md-6">
                                                 <label class="form-label " for="nb_of_games">Nb Of Games</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.nb_of_games"  id="nb_of_games" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>
-                                        </div>
-                                        <div class=" col-md-6 row justify-content-center">
-                                            <div class="col-md-10">
+
+                                            <div class=" col-md-6">
                                                 <label class="form-label " for="tie_break">Tie Break</label>
                                                 <input type="text" wire:model="knockoutStageValues.{{ $knockoutStage->id }}.tie_break"  id="tie_break" class="form-control form-control dt-input" oninput="this.value = Math.abs(parseInt(this.value)) || ''">
                                             </div>

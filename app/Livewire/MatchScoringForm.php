@@ -261,8 +261,10 @@ class MatchScoringForm extends Component
 
     public function checkSetResults($latestSetGame, $winningTeam)
     {
-        $hasHomeTeamWon = ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1) || $latestSetGame->set->away_team_score === $this->nbOfGamesToWin + 1;
-        $hasAwayTeamWon = ($latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1) || $latestSetGame->set->home_team_score === $this->nbOfGamesToWin + 1;
+        $hasHomeTeamWon = ($latestSetGame->set->home_team_score == $this->nbOfGamesToWin && $latestSetGame->set->away_team_score < $this->nbOfGamesToWin - 1)
+            || $latestSetGame->set->away_team_score === $this->nbOfGamesToWin + 1;
+        $hasAwayTeamWon = ($latestSetGame->set->away_team_score == $this->nbOfGamesToWin && $latestSetGame->set->home_team_score < $this->nbOfGamesToWin - 1)
+            || $latestSetGame->set->home_team_score === $this->nbOfGamesToWin + 1;
 
         if ($hasHomeTeamWon || $hasAwayTeamWon) {
             $latestSetGame->set->update([
