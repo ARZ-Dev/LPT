@@ -34,8 +34,8 @@
                             </span>
                             @endforeach
                         </td>
-                        <td>{{ $tournament->start_date }}</td>
-                        <td>{{ $tournament->end_date }}</td>
+                        <td class="text-nowrap">{{ $tournament->start_date }}</td>
+                        <td class="text-nowrap">{{ $tournament->end_date }}</td>
                         <td>
                             <span class="badge bg-label-{{ $tournament->is_completed ? "info" : "warning" }}">
                                 {{ $tournament->is_completed ? "Completed" : "Pending" }}
