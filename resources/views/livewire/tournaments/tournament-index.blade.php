@@ -11,11 +11,13 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Created By</th>
                         <th>Name</th>
                         <th>Categories</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
+                        <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -23,6 +25,7 @@
                     @foreach($tournaments as $tournament)
                     <tr>
                         <td>{{ $tournament->id }}</td>
+                        <td>{{ $tournament->createdBy?->full_name }}</td>
                         <td>{{ $tournament->name }}</td>
                         <td>
                             @foreach($tournament->levelCategories as $tournamentCategory)
@@ -38,7 +41,8 @@
                                 {{ $tournament->is_completed ? "Completed" : "Pending" }}
                             </span>
                         </td>
-                        <td>
+                        <td>{{ $tournament->created_at->format('d-m-Y h:i') }}</td>
+                        <td class="text-nowrap">
                             <a href="{{ route('tournaments-categories', $tournament->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Categories">
                                 <i class="ti ti-category ti-sm me-2"></i>
                             </a>
