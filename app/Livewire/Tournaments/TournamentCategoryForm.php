@@ -66,8 +66,8 @@ class TournamentCategoryForm extends Component
             'has_group_stages' => ['boolean'],
             'nb_of_groups' => ['required_if:has_group_stages,true'],
             'nb_of_winners_per_group' => ['required_if:has_group_stages,true'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'start_date' => ['required', 'date', 'after_or_equal:' . $this->tournament->start_date],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date', 'before_or_equal:' . $this->tournament->end_date],
         ];
 
         if ($this->has_group_stages) {
