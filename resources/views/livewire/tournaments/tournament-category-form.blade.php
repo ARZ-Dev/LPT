@@ -81,21 +81,18 @@
         </div>
 
         <div class="card mt-4 mb-2">
-            <div class="card-header align-items-center">
+            <div class="card-header d-flex justify-content-between">
                 <h5 class="mb-0">
                     {{ $tournamentLevelCategory?->levelCategory?->name }} Teams
+                    @error('selectedTeamsIds') <div class="text-danger">{{ $message }}</div> @enderror
                 </h5>
-                @error('selectedTeamsIds') <div class="text-danger">{{ $message }}</div> @enderror
+                <div class="col-2 mb-2">
+                    <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
+                </div>
             </div>
             <div class="card-body">
                 <div class="row g-3">
-
                     <div class="col-12 col-sm-12">
-                        <div class="d-flex justify-content-end">
-                            <div class="col-2 mb-2">
-                                <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                        </div>
                         <div class="row overflow-auto h-px-400">
                             @forelse($teams as $team)
                                 <div class="col-md-3 my-2">
