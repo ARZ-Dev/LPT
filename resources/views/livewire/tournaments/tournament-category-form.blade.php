@@ -18,12 +18,12 @@
                 <div class="row g-3">
                     <div class="col-12 col-sm-6">
                         <label class="form-label">Start Date *</label>
-                        <input wire:model="start_date" type="date" class="form-control" min="{{ $tournament->start_date }}">
+                        <input wire:model="start_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}">
                         @error('start_date') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-12 col-sm-6">
                         <label class="form-label">End Date *</label>
-                        <input wire:model="end_date" type="date" class="form-control" max="{{ $tournament->end_date }}">
+                        <input wire:model="end_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}">
                         @error('end_date') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-12 col-md-6">
