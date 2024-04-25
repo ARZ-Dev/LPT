@@ -14,7 +14,7 @@
                         <th>Nb Of Sets</th>
                         <th>Nb Of Games</th>
                         <th>Tie Break</th>
-                        <th>Is Completed</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -34,11 +34,11 @@
                             </span>
 
                         <td>
-                            @if(!count($knockoutStage->startedGroupStagesGames) && !count($knockoutStage->startedGames))
+{{--                            @if(!count($knockoutStage->startedGroupStagesGames) && !count($knockoutStage->startedGames))--}}
                                 <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}">
                                     <i class="ti ti-pencil ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actions"></i>
                                 </a>
-                            @endif
+{{--                            @endif--}}
                         </td>
                     </tr>
 

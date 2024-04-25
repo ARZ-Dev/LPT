@@ -2,10 +2,11 @@
     <form>
 
         <div class="card mb-2">
-            <div class="card-header d-flex justify-content-center align-items-center">
+            <div class="card-header d-flex justify-content-between">
                 <h5 class="mb-0">
                     {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring - {{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}
                 </h5>
+                <a class="btn btn-primary h-50" href="{{ route('matches', $category->id) }}">Matches</a>
             </div>
             <div class="card-body">
                 <div class="row g-3">

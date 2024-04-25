@@ -25,16 +25,20 @@ class MatchScoringForm extends Component
     public $deuceType;
     public $tiebreak = false;
     public $tiebreakPointsToWin;
+    public $category;
+    public $stage;
 
     public function mount($matchId)
     {
         $this->matchId = $matchId;
-        $match = Game::with(['homeTeam', 'awayTeam', 'knockoutRound', 'knockoutRound.knockoutStage', 'sets' => [
+        $match = Game::with(['homeTeam', 'awayTeam', 'knockoutRound', 'knockoutRound.knockoutStage', 'group', 'group.knockoutStage', 'sets' => [
                     'setGames' => [
                         'points'
                     ]
                 ]
             ])->findOrFail($matchId);
+
+        $this->category = $match->type == "Knockouts" ? $match->knockoutRound?->tournamentLevelCategory : $match->group?->tournamentLevelCategory;
 
         $this->isAlreadyStarted = $match->is_started;
 
@@ -42,6 +46,17 @@ class MatchScoringForm extends Component
         $this->awayTeam = $match->awayTeam;
         $this->startedAt = $match->started_at ?? now()->format('d-m-Y H:i');
         $this->referee = auth()->user()->full_name;
+
+        if ($match->type == "Knockouts") {
+            $this->stage = $match->knockoutRound?->knockoutStage;
+        } else {
+            $this->stage = $match->group?->knockoutStage;
+        }
+
+        $this->nbOfSetsToWin = $this->stage->nb_of_sets;
+        $this->nbOfGamesToWin = $this->stage->nb_of_games;
+        $this->tiebreakPointsToWin = $this->stage->tie_break;
+        $this->deuceType = $this->stage->tournamentDeuceType;
 
         $latestSet = $match->sets()->latest()->where('is_completed', false)->first();
         if ($latestSet) {
@@ -65,24 +80,8 @@ class MatchScoringForm extends Component
             $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames']])->findOrFail($this->matchId);
             throw_if($match->is_completed, new \Exception("Match is already completed!"));
 
-            if ($match->type == "Knockouts") {
-
-                $stageName = $match->knockoutRound?->knockoutStage?->name;
-                $this->nbOfSetsToWin = $match->knockoutRound?->knockoutStage?->nb_of_sets;
-                $this->nbOfGamesToWin = $match->knockoutRound?->knockoutStage?->nb_of_games;
-                $this->tiebreakPointsToWin = $match->knockoutRound?->knockoutStage?->tie_break;
-                $this->deuceType = $match->knockoutRound?->knockoutStage?->tournamentDeuceType;
-
-                $settingsLink = route('knockoutStage.view', $match->knockoutRound->tournament_level_category_id);
-            } else {
-                $stageName = $match->group?->knockoutStage?->name;
-                $this->nbOfSetsToWin = $match->group?->knockoutStage?->nb_of_sets;
-                $this->nbOfGamesToWin = $match->group?->knockoutStage?->nb_of_games;
-                $this->tiebreakPointsToWin = $match->group?->knockoutStage?->tie_break;
-                $this->deuceType = $match->group?->knockoutStage?->tournamentDeuceType;
-
-                $settingsLink = route('knockoutStage.view', $match->group->tournament_level_category_id);
-            }
+            $stageName = $this->stage->name;
+            $settingsLink = route('knockoutStage.view', $this->category->id);
 
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
                 new \Exception($stageName . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
