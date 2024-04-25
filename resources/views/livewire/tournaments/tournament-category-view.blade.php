@@ -45,7 +45,7 @@
                         <td>
 
                             @if(count($category->knockoutStages))
-                                <a href="{{ route('knockoutStage.view', $category->id) }}" class="text-body m-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Stages"><i class="ti ti-article ti-sm"></i></a>
+                                <a href="{{ route('knockoutStage.view', $category->id) }}" class="text-body me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Stages"><i class="ti ti-article ti-sm"></i></a>
                             @endif
 
                             @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
