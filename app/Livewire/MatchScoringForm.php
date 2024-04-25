@@ -139,12 +139,12 @@ class MatchScoringForm extends Component
             // Determine which team is scoring
             if ($teamId == $this->homeTeam->id) {
                 // Update the score for home team
-                $scores = $this->getNextScore($homeTeamScore, $awayTeamScore);
+                $scores = $this->getNextScore($homeTeamScore, $awayTeamScore, $pendingSetGame);
                 $homeTeamScore = $scores['first_team'];
                 $awayTeamScore = $scores['second_team'];
             } else {
                 // Update the score for away team
-                $scores = $this->getNextScore($awayTeamScore, $homeTeamScore);
+                $scores = $this->getNextScore($awayTeamScore, $homeTeamScore, $pendingSetGame);
                 $awayTeamScore = $scores['first_team'];
                 $homeTeamScore = $scores['second_team'];
             }
@@ -186,7 +186,7 @@ class MatchScoringForm extends Component
     /**
      * Get the next score for a team based on the current score and opponent's score.
      */
-    protected function getNextScore($currentScore, $opponentScore)
+    protected function getNextScore($currentScore, $opponentScore, $pendingSetGame)
     {
         if (!$this->tiebreak) {
             // Define the scoring progression
@@ -198,9 +198,26 @@ class MatchScoringForm extends Component
                 "AD" => 'won'
             ];
 
-            // Check if the current score is 40 and opponent's score is also 40
-            if ($this->deuceType->name == "Full Deuce") {
+            if ($this->deuceType->name != "Short Deuce") {
+
                 if ($currentScore == 40 && $opponentScore == 40) {
+
+                    if ($this->deuceType->name == "1 Deuce") {
+                        $deuce = SetGamePoint::where('set_game_id', $pendingSetGame->id)
+                            ->where(function ($query) {
+                                $query->where('home_team_score', 'AD')
+                                    ->orWhere('away_team_score', 'AD');
+                            })
+                            ->count();
+
+                        if ($deuce) {
+                            return [
+                                'first_team' => 'won',
+                                'second_team' => $opponentScore,
+                            ];
+                        }
+                    }
+
                     return [
                         'first_team' => "AD",
                         'second_team' => $opponentScore,
