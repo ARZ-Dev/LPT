@@ -10,9 +10,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Type</th>
-                        <th>Group</th>
-                        <th>Knockout Round</th>
+                        <th>Group / Round</th>
                         <th>Home Team</th>
                         <th>Away Team</th>
                         <th>Winner Team</th>
@@ -24,9 +22,7 @@
                     @foreach($matches as $match)
                     <tr>
                         <td>{{ $match->id }}</td>
-                        <td>{{ $match->type }}</td>
-                        <td>{{ $match->group?->name }}</td>
-                        <td>{{ $match->knockoutRound?->name }}</td>
+                        <td>{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
 
                         <td>
                             @if($match->homeTeam)
