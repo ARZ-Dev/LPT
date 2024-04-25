@@ -84,7 +84,7 @@
                     </tr>
 
                     <!-- date/time -->
-                    <div class="modal fade" id="dateTime{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
+                    <div wire:ignore.self class="modal fade" id="dateTime{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -93,6 +93,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <input wire:model="datetimeModel" type="datetime-local" class="form-control" min="{{ $category->start_date . " 00:00" }}" max="{{ $category->end_date . " 23:59" }}">
+                                    @error('datetimeModel') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary storeDateTime-btn">Submit</button>

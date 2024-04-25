@@ -63,6 +63,10 @@ class MatchesView extends Component
     #[On('storeDateTime')]
     public function storeDateTime($matchId)
     {
+        $this->validate([
+            'datetimeModel' => ['after_or_equal:' . $this->category->start_date, 'before_or_equal:' . $this->category->end_date],
+        ]);
+
         $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
         $this->match->update([
             'datetime'=>$this->datetimeModel,
