@@ -56,7 +56,7 @@ class TeamForm extends Component
         return [
             'nickname' => ['required', 'max:255', new Unique('teams', 'id')],
             'levelCategoryId' => ['required', new Exists('level_categories', 'id')],
-            'playersIds' => ['array']
+            'playersIds' => ['array', 'max:2']
         ];
     }
 

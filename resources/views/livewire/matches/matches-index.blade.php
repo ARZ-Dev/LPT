@@ -110,9 +110,6 @@
         </div>
     </div>
 
-
-
-
     @script
     @include('livewire.deleteConfirm')
     @endscript

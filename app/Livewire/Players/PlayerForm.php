@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -63,12 +64,29 @@ class PlayerForm extends Component
         }
         $this->submitting = true;
 
-        $path = null;
-        if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
-            $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
+        DB::beginTransaction();
+        try {
+
+            $path = null;
+            if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
+                $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
+            }
+
+            $this->form->store($path);
+
+            $team = Team::findOrFail($this->form->current_team_id);
+            $teamPlayers = $team->players()->count();
+            throw_if($teamPlayers > 2, new \Exception($team->nickname . ' has no available spots for new players!'));
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
         }
 
-        $this->form->store($path);
 
         return to_route('players')->with('success', 'Player has been added successfully!');
     }
@@ -86,12 +104,28 @@ class PlayerForm extends Component
         }
         $this->submitting = true;
 
-        $path = null;
-        if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
-            $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
-        }
+        DB::beginTransaction();
+        try {
 
-        $this->form->update($path);
+            $path = null;
+            if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
+                $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
+            }
+
+            $this->form->update($path);
+
+            $team = Team::findOrFail($this->form->current_team_id);
+            $teamPlayers = $team->players()->count();
+            throw_if($teamPlayers > 2, new \Exception($team->nickname . ' has no available spots for new players!'));
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
 
         return to_route('players')->with('success', 'Player has been updated successfully!');
     }

@@ -13,6 +13,7 @@
                     <th>ID</th>
                     <th>Nickname</th>
                     <th>Level Category</th>
+                    <th>Players Count</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -22,6 +23,7 @@
                         <td>{{ $team->id }}</td>
                         <td>{{ $team->nickname }}</td>
                         <td>{{ $team->levelCategory?->name }}</td>
+                        <td>{{ count($team->players) }}</td>
                         <td>
                             @can('team-view')
                                 <a href="{{ route('teams.view', ['id' => $team->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>

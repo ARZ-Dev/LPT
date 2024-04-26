@@ -210,7 +210,6 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'tournaments'], function() {
         // Tournaments
         Route::get('/', TournamentView::class)->name('tournaments');
-
         Route::get('/create', TournamentForm::class)->name('tournaments.create');
         Route::get('/edit/{id}', TournamentForm::class)->name('tournaments.edit');
         Route::get('/view/{id}/{status}', TournamentForm::class)->name('tournaments.view');
@@ -221,16 +220,15 @@ Route::middleware('auth')->group(function () {
         Route::get('{tournamentId}/categories/{categoryId}/view/{status}', TournamentCategoryForm::class)->name('tournaments-categories.view');
         Route::get('categories/{categoryId}/knockout-bracket', TournamentCategoryKnockoutMap::class)->name('tournaments-categories.knockoutMap');
 
-
+        // Matches
         Route::group(['prefix' => 'matches'], function() {
             Route::get('/{categoryId}', MatchesView::class)->name('matches');
             Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
-
             Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
-            Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
-
             Route::get('/{matchId}/details', MatchDetails::class)->name('matches.details');
         });
+
+        Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
     });
 
 

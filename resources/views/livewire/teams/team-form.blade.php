@@ -57,6 +57,7 @@
                                         multiple
                                         data-size="5"
                                         data-selected-text-format="count > 5"
+                                        data-max-options="2"
                                         data-live-search="true"
                                         data-icon-base="ti"
                                         data-tick-icon="ti-check text-white" required>
