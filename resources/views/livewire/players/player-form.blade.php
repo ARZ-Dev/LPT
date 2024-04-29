@@ -165,6 +165,15 @@
                                 </div>
                                 @error('form.playing_side') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+
+                            @if(count($playerTeams))
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label" for="teamsIds">Teams</label> <br>
+                                    @foreach($playerTeams as $team)
+                                        <span class='badge bg-label-warning m-1'>{{ $team->nickname }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </div>
 

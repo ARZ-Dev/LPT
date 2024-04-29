@@ -10,6 +10,7 @@ use App\Models\TournamentType;
 use App\Rules\EvenNumber;
 use App\Rules\PowerOfTwo;
 use App\Rules\PowerOfTwoArray;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class TournamentCategoryForm extends Component
@@ -85,27 +86,52 @@ class TournamentCategoryForm extends Component
     {
         $this->validate();
 
-        $this->tournamentLevelCategory->update([
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date,
-            'tournament_type_id' => $this->type_id,
-            'number_of_teams' => count($this->selectedTeamsIds),
-            'has_group_stage' => $this->has_group_stages ?? false,
-            'number_of_groups' => ($this->has_group_stages ?? false) ? $this->nb_of_groups : NULL,
-            'number_of_winners_per_group' => ($this->has_group_stages ?? false) ? $this->nb_of_winners_per_group : NULL,
-        ]);
+        DB::beginTransaction();
+        try {
 
-        $categoryTeamsIds = [];
-        foreach ($this->selectedTeamsIds as $teamId) {
-            $categoryTeam = TournamentLevelCategoryTeam::updateOrCreate([
-                'tournament_level_category_id' => $this->tournamentLevelCategory->id,
-                'team_id' => $teamId,
+            $this->tournamentLevelCategory->update([
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
+                'tournament_type_id' => $this->type_id,
+                'number_of_teams' => count($this->selectedTeamsIds),
+                'has_group_stage' => $this->has_group_stages ?? false,
+                'number_of_groups' => ($this->has_group_stages ?? false) ? $this->nb_of_groups : NULL,
+                'number_of_winners_per_group' => ($this->has_group_stages ?? false) ? $this->nb_of_winners_per_group : NULL,
             ]);
-            $categoryTeamsIds[] = $categoryTeam->id;
+
+            $categoryTeamsIds = [];
+            $playersIds = [];
+            foreach ($this->selectedTeamsIds as $teamId) {
+
+                $team = Team::with('players')->find($teamId);
+                throw_if(count($team->players) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
+
+                foreach ($team->players as $player) {
+                    throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
+                    $playersIds[] = $player->id;
+                }
+
+                $categoryTeam = TournamentLevelCategoryTeam::updateOrCreate([
+                    'tournament_level_category_id' => $this->tournamentLevelCategory->id,
+                    'team_id' => $teamId,
+                    'players_ids' => json_encode($team->players->pluck('id')->toArray()),
+                ]);
+                $categoryTeamsIds[] = $categoryTeam->id;
+            }
+            TournamentLevelCategoryTeam::where('tournament_level_category_id', $this->tournamentLevelCategory->id)
+                ->whereNotIn('id', $categoryTeamsIds)
+                ->delete();
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+
         }
-        TournamentLevelCategoryTeam::where('tournament_level_category_id', $this->tournamentLevelCategory->id)
-            ->whereNotIn('id', $categoryTeamsIds)
-            ->delete();
 
         return to_route('tournaments-categories', $this->tournament->id)->with('success', 'Tournament category has been updated successfully!');
     }

@@ -27,6 +27,8 @@ class PlayerForm extends Component
     public $nationalIdFile;
     public $player;
     public bool $submitting = false;
+    public array $teamPlayersIds = [];
+    public $playerTeams = [];
 
     public function mount($id = 0, $status = 0)
     {
@@ -42,9 +44,12 @@ class PlayerForm extends Component
                 $this->authorize('player-edit');
             }
 
-            $this->player = Player::with(['teams' => ['levelCategory']])->findOrFail($id);
-            $this->form->setPlayer($this->player);
+            $this->player = Player::with(['teams' => ['levelCategory', 'players']])->findOrFail($id);
             $this->editing = true;
+            $this->form->setPlayer($this->player);
+            $this->teamPlayersIds = $this->player->currentTeam->players->pluck('id')->toArray();
+            $this->playerTeams = $this->player->teams;
+
         } else {
             $this->authorize('player-create');
         }
@@ -81,6 +86,8 @@ class PlayerForm extends Component
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            $this->submitting = false;
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => $exception->getMessage(),
@@ -116,11 +123,17 @@ class PlayerForm extends Component
 
             $team = Team::findOrFail($this->form->current_team_id);
             $teamPlayers = $team->players()->count();
-            throw_if($teamPlayers > 2, new \Exception($team->nickname . ' has no available spots for new players!'));
+
+            if (!in_array($this->player->id, $this->teamPlayersIds)) {
+                throw_if($teamPlayers > 2, new \Exception($team->nickname . ' has no available spots for new players!'));
+            }
 
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+
+            $this->submitting = false;
+
             return $this->dispatch('swal:error', [
                 'title' => 'Error!',
                 'text'  => $exception->getMessage(),
@@ -139,10 +152,8 @@ class PlayerForm extends Component
         }
     }
 
-
     public function render()
     {
-
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.players.player-view');
         }
