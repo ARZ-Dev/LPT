@@ -67,7 +67,9 @@
                                             @endif
                                             <th>{{ $homeTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
-                                                <td>{{ $set->home_team_score }}</td>
+                                                <td>
+                                                    {{ $set->home_team_score }}
+                                                </td>
                                                 @if(!$set->is_completed)
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->home_team_score ?? 0 }}</td>
                                                 @endif
@@ -100,7 +102,9 @@
                                             @endif
                                             <th>{{ $awayTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
-                                                <td>{{ $set->away_team_score }}</td>
+                                                <td>
+                                                    {{ $set->away_team_score }}
+                                                </td>
                                                 @if(!$set->is_completed)
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->away_team_score ?? 0 }}</td>
                                                 @endif
