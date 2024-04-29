@@ -123,7 +123,6 @@ class TeamForm extends Component
 
     public function render()
     {
-
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.teams.team-view');
         }
