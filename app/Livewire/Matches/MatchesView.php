@@ -192,11 +192,17 @@ class MatchesView extends Component
                     ->update(['has_qualified' => true]);
             }
 
+            $stage = $match->group->knockoutStage;
+
             $groupsCount = Group::where('tournament_level_category_id', $category->id)->count();
             $completedGroupsCount = Group::where('tournament_level_category_id', $category->id)->where('is_completed', true)->count();
 
             if ($completedGroupsCount == $groupsCount) {
                 $category->update(['is_group_stages_completed' => true]);
+
+                $stage->update([
+                    'is_completed' => true,
+                ]);
             }
         }
         return $category;
