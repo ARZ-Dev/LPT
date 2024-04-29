@@ -19,6 +19,24 @@
                         <input wire:model="referee" type="text" class="form-control" readonly disabled>
                     </div>
                 </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-3">
+                        <label class="form-label">Deuce Type</label>
+                        <input type="text" class="form-control" readonly disabled value="{{ $deuceType->name ?? "N/A" }}">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Number of Sets to Win the Match</label>
+                        <input type="text" class="form-control" readonly disabled value="{{ $nbOfSetsToWin ?? "N/A" }}">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Number of Games to Win the Set</label>
+                        <input type="text" class="form-control" readonly disabled value="{{ $nbOfGamesToWin ?? "N/A" }}">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Tiebreak Winning Points</label>
+                        <input type="text" class="form-control" readonly disabled value="{{ $tiebreakPointsToWin ?? "N/A" }}">
+                    </div>
+                </div>
                 @if(!$isAlreadyStarted)
                     <div class="row g-3 mt-2">
                         <div class="col-12 col-sm-6">
@@ -33,7 +51,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="row g-3 mt-2">
+                <div class="row g-3 mt-4">
                     <div class="col-12 col-sm-12">
                         <div class="d-flex justify-content-center">
                             <div class="table-responsive">
@@ -42,7 +60,7 @@
                                         <tr>
                                             @if(!$match->is_completed)
                                                 <td style="min-width: 60px">
-                                                    @if($currentSetGame?->serving_team_id == $homeTeam->id)
+                                                    @if($servingTeamId == $homeTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
                                                 </td>
@@ -75,7 +93,7 @@
                                         <tr>
                                             @if(!$match->is_completed)
                                                 <td style="min-width: 60px">
-                                                    @if($currentSetGame?->serving_team_id == $awayTeam->id)
+                                                    @if($servingTeamId == $awayTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
                                                 </td>

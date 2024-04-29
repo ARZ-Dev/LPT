@@ -333,8 +333,13 @@ class MatchScoringForm extends Component
         $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames'], 'setGames'])->findOrFail($this->matchId);
         $data['match'] = $match;
 
-        $currentSetGame = $match->setGames()->latest()->where('set_games.is_completed', false)->first();
-        $data['currentSetGame'] = $currentSetGame;
+        $currentSetGame = $match->setGames()->latest()->where('set_games.is_completed', true)->first();
+        if ($currentSetGame) {
+            $this->servingTeamId = $currentSetGame?->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
+        } else {
+            $lastSetGame = $match->setGames()->latest()->where('set_games.is_completed', false)->first();
+            $this->servingTeamId = $lastSetGame?->serving_team_id;
+        }
 
         return view('livewire.match-scoring-form', $data);
     }
