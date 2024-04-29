@@ -14,7 +14,7 @@ class TeamView extends Component
     ];
     public function mount()
     {
-        $this->teams = Team::withCount('players')->get();
+        $this->teams = Team::with('players')->get();
     }
 
     public function delete($id)

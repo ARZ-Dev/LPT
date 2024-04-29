@@ -13,7 +13,7 @@
                     <th>ID</th>
                     <th>Nickname</th>
                     <th>Level Category</th>
-                    <th>Players Count</th>
+                    <th>Players</th>
                     <th>Matches / W / L</th>
                     <th>Rank</th>
                     <th>Points</th>
@@ -26,7 +26,11 @@
                         <td>{{ $team->id }}</td>
                         <td>{{ $team->nickname }}</td>
                         <td>{{ $team->levelCategory?->name }}</td>
-                        <td>{{ $team->players_count }}</td>
+                        <td>
+                            @foreach($team->players as $player)
+                                <span class='badge bg-label-warning m-1'>{{ $player->full_name }}</span>
+                            @endforeach
+                        </td>
                         <td>{{ $team->matches }} / {{ $team->wins }} / {{ $team->losses }}</td>
                         <td>{{ $team->rank }}</td>
                         <td>{{ number_format($team->points) }}</td>
