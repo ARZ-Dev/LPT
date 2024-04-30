@@ -69,8 +69,8 @@ class ReceiptForm extends Component
             ->where('type', 'receipt')
             ->get();
 
-            $this->tournaments = Tournament::all();
-            $this->teams = Team::all();
+        $this->tournaments = Tournament::all();
+        $this->teams = Team::all();
 
         $this->addRow();
 
@@ -88,7 +88,6 @@ class ReceiptForm extends Component
             $this->till_id = $this->receipt->till_id;
             $this->category_id = $this->receipt->category_id;
             $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
-            
             $this->sub_category_id = $this->receipt->sub_category_id;
             $this->paid_by = $this->receipt->paid_by;
             $this->description = $this->receipt->description;
@@ -148,40 +147,26 @@ class ReceiptForm extends Component
         $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
-
-    
-    #[On('getTournaments')]
-    public function getTournaments()
-    {
-        $subCategory = SubCategory::find($this->sub_category_id);
-        
-
-        if(trim($subCategory->name) == 'Team'){
-            $this->tournaments = Tournament::all();
-            $this->teams = Team::all();
-        }else{
-            $this->tournaments = [];
-            $this->teams = [];
-            $this->tournament_id = null;
-            $this->team_id = null;
-        }
-    }
-    
     protected function rules()
     {
-        return [
+        $data = [
             'till_id' => ['required'],
             'category_id' => ['required', new Exists('categories', 'id')],
             'sub_category_id' => ['required', new Exists('sub_categories', 'id')],
             'paid_by' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'tournament_id' => ['nullable'],
-            'team_id' => ['nullable'],
-
             'receiptAmounts' => ['array', 'min:1'],
             'receiptAmounts.*.currency_id' => ['required', 'distinct'],
             'receiptAmounts.*.amount' => ['required'],
         ];
+
+        $subCategory = SubCategory::find($this->sub_category_id);
+        if ($subCategory?->name == "Team") {
+            $data['tournament_id'] = ['required'];
+            $data['team_id'] = ['required'];
+        }
+
+        return $data;
     }
 
     public function addRow()
@@ -212,6 +197,8 @@ class ReceiptForm extends Component
 
             checkMonthlyOpening($this->till_id);
 
+            $subCategory = SubCategory::find($this->sub_category_id);
+
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,
                 'user_id' => auth()->id(),
@@ -219,9 +206,8 @@ class ReceiptForm extends Component
                 'sub_category_id' => $this->sub_category_id,
                 'paid_by' => $this->paid_by,
                 'description' => $this->description,
-                'tournament_id' => $this->tournament_id,
-                'team_id' => $this->team_id,
-
+                'tournament_id' => $subCategory->name == "Team" ? $this->tournament_id : NULL,
+                'team_id' => $subCategory->name == "Team" ? $this->team_id : NULL,
             ]);
 
             $receiptId = $receipt->id;
