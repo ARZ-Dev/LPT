@@ -27,14 +27,14 @@ class Receipt extends Model
         return $this->hasMany(ReceiptAmount::class,'receipt_id');
     }
 
-    public function tourament()
+    public function tournament()
     {
-        return $this->hasMany(Tournament::class,'tournament_id');
+        return $this->belongsTo(Tournament::class,'tournament_id');
     }
 
     public function team()
     {
-        return $this->hasMany(Team::class,'team_id');
+        return $this->belongsTo(Team::class,'team_id');
     }
 
     public static function reportMessage($data)

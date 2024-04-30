@@ -94,10 +94,9 @@ class ReceiptForm extends Component
 
             $subCategory = SubCategory::find($this->sub_category_id);
             if(trim($subCategory->name) == 'Tournament'){
-
-            $this->tournaments = Tournament::all();
-            $this->teams = Team::all();
-        }
+                $this->tournaments = Tournament::all();
+                $this->teams = Team::all();
+            }
 
             $this->receiptAmounts = [];
             foreach($this->receipt->receiptAmounts as $receiptAmount) {

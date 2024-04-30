@@ -24,6 +24,6 @@ class Tournament extends Model
 
     public function receipts()
     {
-        return $this->belongsTo(Receipt::class);
+        return $this->hasMany(Receipt::class);
     }
 }

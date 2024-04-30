@@ -24,7 +24,7 @@ class Team extends Model
 
     public function receipts()
     {
-        return $this->belongsTo(Receipt::class);
+        return $this->hasMany(Receipt::class);
     }
 
     public function groups()
