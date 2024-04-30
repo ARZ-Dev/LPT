@@ -29,7 +29,7 @@ class MatchesView extends Component
         $this->authorize('matches-list');
         $this->category = TournamentLevelCategory::with('tournament.levelCategories', 'type')->findOrFail($categoryId);
         $this->tournament = $this->category->tournament;
-        $this->matches = Game::with('knockoutRound','homeTeam','awayTeam')
+        $this->matches = Game::with('knockoutRound','homeTeam','awayTeam', 'startedBy')
             ->whereHas('knockoutRound', function ($query) {
                 $query->where('tournament_level_category_id', $this->category->id);
             })
@@ -37,7 +37,7 @@ class MatchesView extends Component
                 $query->where('tournament_level_category_id', $this->category->id);
             })
             ->get();
-    }
+     }
 
     #[On('chooseWinner')]
     public function chooseWinner($matchId, $winnerId)

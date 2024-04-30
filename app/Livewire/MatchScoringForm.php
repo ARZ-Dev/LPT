@@ -94,6 +94,7 @@ class MatchScoringForm extends Component
                 $match->update([
                     'is_started' => true,
                     'started_at' => now(),
+                    'started_by' => auth()->id(),
                 ]);
             }
 
@@ -149,7 +150,7 @@ class MatchScoringForm extends Component
                 $homeTeamScore = $scores['second_team'];
             }
 
-            $latestPoint = SetGamePoint::where('set_game_id', $pendingSetGame->id)->latest()->first();
+            $latestPoint = SetGamePoint::where('set_game_id', $pendingSetGame->id)->latest('id')->first();
             SetGamePoint::create([
                 'set_game_id' => $pendingSetGame->id,
                 'point_number' => ($latestPoint->point_number ?? 0) + 1,
@@ -333,11 +334,11 @@ class MatchScoringForm extends Component
         $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames'], 'setGames'])->findOrFail($this->matchId);
         $data['match'] = $match;
 
-        $currentSetGame = $match->setGames()->latest()->where('set_games.is_completed', true)->first();
+        $currentSetGame = $match->setGames()->latest('id')->where('set_games.is_completed', true)->first();
         if ($currentSetGame) {
             $this->servingTeamId = $currentSetGame?->serving_team_id == $this->homeTeam->id ? $this->awayTeam->id : $this->homeTeam->id;
         } else {
-            $lastSetGame = $match->setGames()->latest()->where('set_games.is_completed', false)->first();
+            $lastSetGame = $match->setGames()->latest('id')->where('set_games.is_completed', false)->first();
             $this->servingTeamId = $lastSetGame?->serving_team_id;
         }
 

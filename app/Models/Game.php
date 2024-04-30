@@ -66,4 +66,9 @@ class Game extends Model
         return $this->hasManyThrough(SetGame::class, Set::class);
     }
 
+    public function startedBy()
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
 }

@@ -13,8 +13,9 @@
                         <th>Group / Round</th>
                         <th>Home Team</th>
                         <th>Away Team</th>
+                        <th>Datetime</th>
+                        <th>Started At / By</th>
                         <th>Winner Team</th>
-                        <th>Date/Time </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,8 +39,13 @@
                             Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
                             @endif
                         </td>
+                        <td>{{ $match->datetime }}</td>
+                        <td>
+                            @if($match->is_started)
+                                {{ Carbon\Carbon::parse($match->started_at)->format('d-m-Y H:i') }} / {{ $match->startedBy?->full_name }}
+                            @endif
+                        </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
-                        <td>{{ $match?->datetime }}</td>
 
                         <td>
                             @can('matches-view')
