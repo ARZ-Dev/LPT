@@ -50,12 +50,32 @@
 
                         <div class="col-12 col-md-6 mt-3 ">
                             <label class="form-label" for="sub_category_id">Sub Category <span class="text-danger">*</span></label>
-                            <select wire:model="sub_category_id" class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                            <select wire:model="sub_category_id"  class="form-select selectpicker w-100" id="sub_category_id" title="Select Sub Category" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($subCategories as $subCategory)
                                     <option value="{{ $subCategory->id }}" @selected($subCategory->id == $sub_category_id)>{{ $subCategory->name }}</option>
                                 @endforeach
                             </select>
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-3 ">
+                            <label class="form-label" for="tournament_id">Tournaments<span class="text-danger"></span></label>
+                            <select wire:model="tournament_id" class="form-select selectpicker w-100" id="tournament_id" title="Select Tournament" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                @foreach($tournaments as $tournament)
+                                    <option value="{{ $tournament->id }}" @selected($tournament->id == $tournament_id)>{{ $tournament->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('tournament_id') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-3 ">
+                            <label class="form-label" for="team_id">Teams<span class="text-danger"></span></label>
+                            <select wire:model="team_id" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                @foreach($teams as $team)
+                                    <option value="{{ $team->id }}" @selected($team->id == $team_id)>{{ $team->nickname }}</option>
+                                @endforeach
+                            </select>
+                            @error('team_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-12 col-md-12">
@@ -155,6 +175,10 @@
         $(document).on('change', '#category_id', function() {
             $wire.dispatch('getSubCategories')
         })
+
+        $(document).on('change', '#sub_category_id', function() {
+            $wire.dispatch('getTournaments')
+        }) 
 
         $wire.on('refreshSubCategories', function (event) {
             let subCategories = event[0];
