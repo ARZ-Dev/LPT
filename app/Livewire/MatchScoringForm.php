@@ -44,8 +44,9 @@ class MatchScoringForm extends Component
 
         $this->homeTeam = $match->homeTeam;
         $this->awayTeam = $match->awayTeam;
+
         $this->startedAt = $match->started_at ?? now()->format('d-m-Y H:i');
-        $this->referee = auth()->user()->full_name;
+        $this->referee = $match->startedBy?->full_name ?? auth()->user()->full_name;
 
         if ($match->type == "Knockouts") {
             $this->stage = $match->knockoutRound?->knockoutStage;
