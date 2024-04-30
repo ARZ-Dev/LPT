@@ -69,6 +69,11 @@
                                             @foreach($match?->sets ?? [] as $set)
                                                 <td>
                                                     {{ $set->home_team_score }}
+                                                    @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
+                                                        <sup>
+                                                            {{ $set->setGames()->latest()->first()->points()->latest()->first()->home_team_score }}
+                                                        </sup>
+                                                    @endif
                                                 </td>
                                                 @if(!$set->is_completed)
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->home_team_score ?? 0 }}</td>
@@ -104,6 +109,11 @@
                                             @foreach($match?->sets ?? [] as $set)
                                                 <td>
                                                     {{ $set->away_team_score }}
+                                                    @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
+                                                        <sup>
+                                                            {{ $set->setGames()->latest()->first()->points()->latest()->first()->away_team_score }}
+                                                        </sup>
+                                                    @endif
                                                 </td>
                                                 @if(!$set->is_completed)
                                                     <td>{{ $set->setGames()->where('is_completed', false)->first()?->away_team_score ?? 0 }}</td>
