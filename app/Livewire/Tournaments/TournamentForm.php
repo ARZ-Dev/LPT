@@ -72,7 +72,7 @@ class TournamentForm extends Component
     public function rules()
     {
         return [
-            'name' => ['required', 'max:255'],
+            'name' => ['required', 'max:255', 'unique:tournaments'],
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
             'startDate' => ['required', 'date'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],

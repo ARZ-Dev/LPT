@@ -55,7 +55,7 @@
                                 <input wire:model="endDate" type="date" class="form-control dt-input">
                                 @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-12 col-sm-12 mt-4">
+                            <div class="col-12 col-sm-12 mt-3">
                                 <label class="switch switch-primary">
                                     <input wire:model="is_free" @checked($is_free ?? false) type="checkbox" class="switch-input" />
                                     <span class="switch-toggle-slider">
