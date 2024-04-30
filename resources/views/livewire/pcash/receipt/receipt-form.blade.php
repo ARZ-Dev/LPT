@@ -60,9 +60,9 @@
 
 
                         <div class="col-12 col-md-6">
-                            <div class="tournaments-teams d-none" wire:ignore>
+                            <div class="tournaments-teams {{ $selectedSubCategory?->name == "Team" ? "" : "d-none" }}" wire:ignore>
                                 <label class="form-label" for="tournament_id">Tournaments <span class="text-danger">*</span></label>
-                                <select wire:model="tournament_id" class="form-select selectpicker w-100" id="tournament_id" title="Select Tournament" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                <select wire:model="tournament_id" class="form-select selectpicker w-100" id="tournament_id" title="Select Tournament" data-size="5" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id }}" @selected($tournament->id == $tournament_id)>{{ $tournament->name }}</option>
                                     @endforeach
@@ -72,11 +72,11 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <div class="tournaments-teams d-none" wire:ignore>
+                            <div class="tournaments-teams {{ $selectedSubCategory?->name == "Team" ? "" : "d-none" }}" wire:ignore>
                                 <label class="form-label" for="team_id">Teams <span class="text-danger">*</span></label>
-                                <select wire:model="team_id" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                <select wire:model="team_id" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-size="5" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                     @foreach($teams as $team)
-                                        <option value="{{ $team->id }}" @selected($team->id == $team_id)>{{ $team->nickname }}</option>
+                                        <option value="{{ $team->id }}" @selected($team->id == $team_id)>{{ $team->nickname }} / {{ $team->levelCategory?->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

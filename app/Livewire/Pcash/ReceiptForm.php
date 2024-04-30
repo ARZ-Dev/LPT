@@ -38,6 +38,7 @@ class ReceiptForm extends Component
     public $user_id;
     public $category_id;
     public $sub_category_id;
+    public $selectedSubCategory;
     public $paid_by;
     public $description;
     public $tournament_id;
@@ -69,8 +70,8 @@ class ReceiptForm extends Component
             ->where('type', 'receipt')
             ->get();
 
-        $this->tournaments = Tournament::all();
-        $this->teams = Team::all();
+        $this->tournaments = Tournament::where('is_completed',false)->get();
+        $this->teams = Team::with('levelCategory')->get();
 
         $this->addRow();
 
@@ -89,16 +90,11 @@ class ReceiptForm extends Component
             $this->category_id = $this->receipt->category_id;
             $this->subCategories = SubCategory::where('category_id', $this->category_id)->get();
             $this->sub_category_id = $this->receipt->sub_category_id;
+            $this->selectedSubCategory = $this->subCategories->where('id', $this->sub_category_id)->first();
             $this->paid_by = $this->receipt->paid_by;
             $this->description = $this->receipt->description;
             $this->tournament_id = $this->receipt->tournament_id;
             $this->team_id = $this->receipt->team_id;
-
-            $subCategory = SubCategory::find($this->sub_category_id);
-            if(trim($subCategory->name) == 'Team'){
-                $this->tournaments = Tournament::all();
-                $this->teams = Team::all();
-            }
 
             $this->receiptAmounts = [];
             foreach($this->receipt->receiptAmounts as $receiptAmount) {

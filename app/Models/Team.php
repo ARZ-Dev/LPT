@@ -32,8 +32,4 @@ class Team extends Model
         return $this->belongsToMany(Group::class);
     }
 
-
-
-
-
 }

@@ -27,6 +27,8 @@ class TournamentForm extends Component
     public array $selectedCategoriesIds = [];
     public $startDate;
     public $endDate;
+    public bool $is_free = false;
+
     public array $categoriesInfo = [];
 
     public function mount($id = 0, $status = 0)
@@ -50,6 +52,7 @@ class TournamentForm extends Component
             $this->name = $this->tournament->name;
             $this->startDate = $this->tournament->start_date;
             $this->endDate = $this->tournament->end_date;
+            $this->is_free = $this->tournament->is_free;
             $this->selectedCategoriesIds = $this->tournament->levelCategories->pluck('level_category_id')->toArray();
         } else {
             $this->authorize('tournament-create');
@@ -85,6 +88,7 @@ class TournamentForm extends Component
             'name' => $this->name,
             'start_date' => $this->startDate,
             'end_date' => $this->endDate,
+            'is_free' => $this->is_free,
         ]);
 
         foreach ($this->selectedCategoriesIds as $categoryId) {
@@ -109,6 +113,7 @@ class TournamentForm extends Component
                 'name' => $this->name,
                 'start_date' => $this->startDate,
                 'end_date' => $this->endDate,
+                'is_free' => $this->is_free,
             ]);
 
             $categoriesIds = [];

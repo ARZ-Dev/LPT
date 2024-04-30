@@ -141,6 +141,11 @@ class TournamentCategoryForm extends Component
         $data = [];
         $teams = Team::where('level_category_id', $this->tournamentLevelCategory->level_category_id)
             ->where('nickname', 'like', '%' . $this->teams_filter_search . '%')
+            ->when(!$this->tournament->is_free, function ($query) {
+                $query->whereHas('receipts', function ($query) {
+                    $query->where('tournament_id', $this->tournament->id);
+                });
+            })
             ->get();
         $data['teams'] = $teams;
 
