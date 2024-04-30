@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="timeline-event-time" style="font-size: 12px;">{{ \Carbon\Carbon::parse($point->created_at)->format('jS F H:i:s') }}</div>
+                        <div class="timeline-event-time" style="font-size: 12px;">{{ \Carbon\Carbon::parse($point->created_at)->format('jS F H:i') }}</div>
                     </div>
               </li>
             @endforeach
