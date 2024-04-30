@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use App\Utils\Constants;
+use Illuminate\Validation\Rule;
 
 class CategoryForm extends Component
 {
@@ -52,7 +53,7 @@ class CategoryForm extends Component
             'name' => ['required', 'string', 'max:255'],
             'type' => ['required', 'in:payment,receipt'],
             'subCategories' => ['array'],
-            'subCategories.*.name' => ['required', 'string', 'max:255'],
+            'subCategories.*.name' => ['required', 'string', 'max:255', 'distinct'],
         ];
     }
 
@@ -132,12 +133,10 @@ class CategoryForm extends Component
 
     public function render()
     {
-
-
         if ($this->status == Constants::VIEW_STATUS) {
             return view('livewire.pcash.category.category-view');
         }
         return view('livewire.pcash.category.category-form');
     }
-    }
+}
 
