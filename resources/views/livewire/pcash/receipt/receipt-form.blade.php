@@ -57,8 +57,9 @@
                             </select>
                             @error('sub_category_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-
-                        <div class="col-12 col-md-6 mt-3 ">
+                      
+                        
+                        <div class="tournaments-teams col-12 col-md-6 mt-3 d-none" wire:ignore>
                             <label class="form-label" for="tournament_id">Tournaments<span class="text-danger"></span></label>
                             <select wire:model="tournament_id" class="form-select selectpicker w-100" id="tournament_id" title="Select Tournament" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($tournaments as $tournament)
@@ -68,7 +69,7 @@
                             @error('tournament_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="col-12 col-md-6 mt-3 ">
+                        <div class="tournaments-teams col-12 col-md-6 mt-3 d-none" wire:ignore>
                             <label class="form-label" for="team_id">Teams<span class="text-danger"></span></label>
                             <select wire:model="team_id" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($teams as $team)
@@ -77,6 +78,7 @@
                             </select>
                             @error('team_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
+                      
 
                         <div class="col-12 col-md-12">
                             <label class="form-label" for="description">Description</label>
@@ -175,10 +177,19 @@
         $(document).on('change', '#category_id', function() {
             $wire.dispatch('getSubCategories')
         })
-
+        
         $(document).on('change', '#sub_category_id', function() {
             $wire.dispatch('getTournaments')
+
+            if($('#sub_category_id option:selected').text() == "Team") {
+                $('.tournaments-teams').removeClass('d-none');
+            } else {
+                $('.tournaments-teams').addClass('d-none');
+            }
         }) 
+
+
+        
 
         $wire.on('refreshSubCategories', function (event) {
             let subCategories = event[0];

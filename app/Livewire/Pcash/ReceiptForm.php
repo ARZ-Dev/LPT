@@ -69,6 +69,9 @@ class ReceiptForm extends Component
             ->where('type', 'receipt')
             ->get();
 
+            $this->tournaments = Tournament::all();
+            $this->teams = Team::all();
+
         $this->addRow();
 
         if ($id) {
@@ -93,7 +96,7 @@ class ReceiptForm extends Component
             $this->team_id = $this->receipt->team_id;
 
             $subCategory = SubCategory::find($this->sub_category_id);
-            if(trim($subCategory->name) == 'Tournament'){
+            if(trim($subCategory->name) == 'Team'){
                 $this->tournaments = Tournament::all();
                 $this->teams = Team::all();
             }
@@ -151,7 +154,9 @@ class ReceiptForm extends Component
     public function getTournaments()
     {
         $subCategory = SubCategory::find($this->sub_category_id);
-        if(trim($subCategory->name) == 'Tournament'){
+        
+
+        if(trim($subCategory->name) == 'Team'){
             $this->tournaments = Tournament::all();
             $this->teams = Team::all();
         }else{
@@ -159,7 +164,6 @@ class ReceiptForm extends Component
             $this->teams = [];
             $this->tournament_id = null;
             $this->team_id = null;
-
         }
     }
     
