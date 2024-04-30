@@ -8,8 +8,10 @@ use App\Models\Currency;
 use App\Models\Receipt;
 use App\Models\ReceiptAmount;
 use App\Models\SubCategory;
+use App\Models\Team;
 use App\Models\Till;
 use App\Models\TillAmount;
+use App\Models\Tournament;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
@@ -38,9 +40,13 @@ class ReceiptForm extends Component
     public $sub_category_id;
     public $paid_by;
     public $description;
+    public $tournament_id;
+    public $team_id;
     public  $receiptAmounts = [];
     public $categories = [];
     public $subCategories = [];
+    public $tournaments = [];
+    public $teams =[];
     public bool $submitting = false;
 
 
@@ -63,6 +69,9 @@ class ReceiptForm extends Component
             ->where('type', 'receipt')
             ->get();
 
+        $this->tournaments = Tournament::all();
+        $this->teams = Team::all();
+
         $this->addRow();
 
         if ($id) {
@@ -72,11 +81,9 @@ class ReceiptForm extends Component
                 $this->authorize('receipt-edit');
             }
 
-
             $this->editing = true;
             $this->receipt = Receipt::with('receiptAmounts')->findOrFail($id);
             $this->authorize('view',$this->receipt);
-
 
             $this->till_id = $this->receipt->till_id;
             $this->category_id = $this->receipt->category_id;
@@ -84,6 +91,15 @@ class ReceiptForm extends Component
             $this->sub_category_id = $this->receipt->sub_category_id;
             $this->paid_by = $this->receipt->paid_by;
             $this->description = $this->receipt->description;
+            $this->tournament_id = $this->receipt->tournament_id;
+            $this->team_id = $this->receipt->team_id;
+
+            $subCategory = SubCategory::find($this->sub_category_id);
+            if(trim($subCategory->name) == 'Team'){
+                $this->tournaments = Tournament::all();
+                $this->teams = Team::all();
+            }
+
             $this->receiptAmounts = [];
             foreach($this->receipt->receiptAmounts as $receiptAmount) {
                 $this->receiptAmounts[] = [
@@ -128,13 +144,12 @@ class ReceiptForm extends Component
                 $this->sub_category_id = $selectedSubCategoryId;
             }
         }
-
         $this->dispatch('refreshSubCategories', $this->subCategories, $selectedSubCategoryId);
     }
 
     protected function rules()
     {
-        return [
+        $data = [
             'till_id' => ['required'],
             'category_id' => ['required', new Exists('categories', 'id')],
             'sub_category_id' => ['required', new Exists('sub_categories', 'id')],
@@ -144,6 +159,14 @@ class ReceiptForm extends Component
             'receiptAmounts.*.currency_id' => ['required', 'distinct'],
             'receiptAmounts.*.amount' => ['required'],
         ];
+
+        $subCategory = SubCategory::find($this->sub_category_id);
+        if ($subCategory?->name == "Team") {
+            $data['tournament_id'] = ['required'];
+            $data['team_id'] = ['required'];
+        }
+
+        return $data;
     }
 
     public function addRow()
@@ -174,6 +197,8 @@ class ReceiptForm extends Component
 
             checkMonthlyOpening($this->till_id);
 
+            $subCategory = SubCategory::find($this->sub_category_id);
+
             $receipt = Receipt::create([
                 'till_id' => $this->till_id,
                 'user_id' => auth()->id(),
@@ -181,6 +206,8 @@ class ReceiptForm extends Component
                 'sub_category_id' => $this->sub_category_id,
                 'paid_by' => $this->paid_by,
                 'description' => $this->description,
+                'tournament_id' => $subCategory->name == "Team" ? $this->tournament_id : NULL,
+                'team_id' => $subCategory->name == "Team" ? $this->team_id : NULL,
             ]);
 
             $receiptId = $receipt->id;
@@ -244,6 +271,9 @@ class ReceiptForm extends Component
                 'sub_category_id' => $this->sub_category_id,
                 'paid_by' => $this->paid_by,
                 'description' => $this->description,
+                'tournament_id' => $this->tournament_id,
+                'team_id' => $this->team_id,
+
             ]);
 
             $receiptAmountsIds = [];

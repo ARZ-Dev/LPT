@@ -26,6 +26,17 @@ class Receipt extends Model
     {
         return $this->hasMany(ReceiptAmount::class,'receipt_id');
     }
+
+    public function tournament()
+    {
+        return $this->belongsTo(Tournament::class,'tournament_id');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class,'team_id');
+    }
+
     public static function reportMessage($data)
     {
         echo 'new receipt <u><a href="'. route('receipt.view', ['id' => $data['id'], 'status' => 1]).' "> # '.$data['id'].'</a></u> from   '.$data['paid_by'].'  has been created ';
