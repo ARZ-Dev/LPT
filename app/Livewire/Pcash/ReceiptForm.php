@@ -70,7 +70,13 @@ class ReceiptForm extends Component
             ->where('type', 'receipt')
             ->get();
 
-        $this->tournaments = Tournament::where('is_completed',false)->get();
+        $this->tournaments = Tournament::where('is_completed',false)
+            ->whereDoesntHave('levelCategories', function ($query) {
+                $query->where('is_group_matches_generated', true)
+                    ->orWhere('is_knockout_matches_generated', true);
+            })
+            ->get();
+
         $this->teams = Team::with('levelCategory')->get();
 
         $this->addRow();
