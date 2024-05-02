@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tournaments;
 
+use App\Models\Currency;
 use App\Models\LevelCategory;
 use App\Models\Team;
 use App\Models\Tournament;
@@ -12,6 +13,7 @@ use App\Rules\EvenNumber;
 use App\Utils\Constants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 
 class TournamentForm extends Component
@@ -31,12 +33,17 @@ class TournamentForm extends Component
     public bool $is_free = false;
 
     public array $categoriesInfo = [];
+    public array $subscriptionFees = [];
+    public $usdCurrency;
 
+    public $currencies = [];
     public function mount($id = 0, $status = 0)
     {
         $this->levelCategories = LevelCategory::has('teams')->get();
         $this->teams = Team::with('players')->get();
         $this->status = $status;
+        $this->currencies = Currency::all();
+        $this->usdCurrency = $this->currencies->where('name', 'USD')->first();
 
         if ($id) {
 
@@ -60,24 +67,29 @@ class TournamentForm extends Component
         }
     }
 
-    public function removeCategory($categoryId)
+    public function getExchangedFees()
     {
-        $index = array_search($categoryId, $this->selectedCategoriesIds);
-        if ($index !== false) {
-            unset($this->selectedCategoriesIds[$index]);
-            $this->selectedCategoriesIds = array_values($this->selectedCategoriesIds);
-            unset($this->categoriesInfo[$categoryId]);
+        foreach ($this->selectedCategoriesIds as $categoryId) {
         }
     }
 
     public function rules()
     {
-        return [
+        $data = [
             'name' => ['required', 'max:255', Rule::unique('tournaments', 'id')->ignore($this->tournament?->id)],
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
             'startDate' => ['required', 'date'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
         ];
+
+        if (!$this->is_free) {
+            $data['subscriptionFees'] = ['required', 'array', 'min:1'];
+            foreach ($this->selectedCategoriesIds ?? [] as $categoryId) {
+                $data['subscriptionFees.'. $categoryId . '.' . $this->usdCurrency->id] = ['required', 'numeric'];
+            }
+        }
+
+        return $data;
     }
 
     public function store()
@@ -95,6 +107,7 @@ class TournamentForm extends Component
         foreach ($this->selectedCategoriesIds as $categoryId) {
             $tournament->levelCategories()->create([
                 'level_category_id' => $categoryId,
+                'subscription_fee' => $this->subscriptionFees[$categoryId],
                 'start_date' => $this->startDate,
                 'end_date' => $this->endDate,
             ]);
@@ -124,6 +137,7 @@ class TournamentForm extends Component
                     $levelCategory = TournamentLevelCategory::create([
                         'tournament_id' => $this->tournament->id,
                         'level_category_id' => $categoryId,
+                        'subscription_fee' => $this->subscriptionFees[$categoryId],
                         'start_date' => $this->startDate,
                         'end_date' => $this->endDate,
                     ]);

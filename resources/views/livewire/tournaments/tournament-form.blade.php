@@ -1,4 +1,4 @@
-<div>
+ <div>
     <div class="row">
         <div class="col-xl">
             <form class="row g-3">
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-12 col-sm-12 mt-3">
                                 <label class="switch switch-primary">
-                                    <input wire:model="is_free" @checked($is_free ?? false) type="checkbox" class="switch-input" />
+                                    <input wire:model.live="is_free" @checked($is_free ?? false) type="checkbox" class="switch-input" />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                           <i class="ti ti-check"></i>
@@ -73,6 +73,39 @@
                     </div>
                 </div>
 
+                @if(!$is_free)
+
+                    @foreach($selectedCategoriesIds as $key => $categoryId)
+                        <div class="card mt-2 mb-2">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ $levelCategories->where('id', $categoryId)->first()->name }} Subscrition Fees</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    @foreach($currencies as $currency)
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label" for="subscription-fee-{{ $categoryId }}-{{ $currency->id }}">Subscription Fee in {{ $currency->name }} *</label>
+                                            <input
+                                                wire:model="subscriptionFees.{{ $categoryId }}.{{ $currency->id }}"
+                                                wire:keyup="getExchangedFees"
+                                                type="text"
+                                                id="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
+                                                name="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
+                                                class="form-control cleave-input"
+                                                placeholder="Subscription Fee"
+                                                @disabled($currency->id != $usdCurrency->id)
+                                            />
+                                            @error('subscriptionFees.' . $categoryId . '.' . $currency->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                @endif
+
+
                 @if(!$status)
                     <div class="col-12 text-end mt-2">
                         <button wire:click="{{ $editing ? "update" : "store" }}" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
@@ -86,8 +119,11 @@
     @script
     <script>
 
+        triggerCleave()
+
         Livewire.hook('morph.added', ({ el }) => {
             $('.selectpicker').selectpicker();
+            triggerCleave()
         })
 
         $(document).on('change', '.selectpicker', function() {
