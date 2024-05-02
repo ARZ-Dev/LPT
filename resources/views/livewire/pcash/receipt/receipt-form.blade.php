@@ -1,14 +1,11 @@
 <div>
-    <style>
-
-    </style>
     <div class="row">
         <div class="col-xl">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Edit")) : "Create" }} Receipt</h5>
                         <a href="{{ route('receipt') }}" class="btn btn-primary mb-2 text-nowrap">
-                        Receipt
+                        Receipts
                         </a>
                     </div>
                 <div class="card-body">

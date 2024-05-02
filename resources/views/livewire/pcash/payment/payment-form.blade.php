@@ -1,15 +1,12 @@
 <div>
-    <style>
-
-    </style>
     <div class="row">
         <div class="col-xl">
 
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ $editing ? ($status == \App\Utils\Constants::VIEW_STATUS ? "View" : ($status == \App\Utils\Constants::CONFIRM_STATUS ? "Confirm" : "Edit")) : "Create" }} Payment</h5>
-                    <a href="{{ route('payment') }}"class="btn btn-primary mb-2 text-nowrap">
-                    Payment
+                    <a href="{{ route('payment') }}" class="btn btn-primary mb-2 text-nowrap">
+                    Payments
                     </a>
                 </div>
 
@@ -68,7 +65,7 @@
                                 id="description"
                                 name="description"
                                 class="form-control"
-                                placeholder="description"
+                                placeholder="Description"
                             >
                             </textarea>
                             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
