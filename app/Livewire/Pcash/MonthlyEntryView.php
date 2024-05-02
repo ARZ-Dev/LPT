@@ -20,7 +20,9 @@ class MonthlyEntryView extends Component
         $this->authorize('monthlyEntry-list');
         $this->monthlyEntries = MonthlyEntry::with(['monthlyEntryAmounts'])
             ->when(!auth()->user()->hasPermissionTo('monthlyEntry-viewAll'), function ($query) {
-                $query->where('user_id', auth()->id());
+                $query->whereHas('till', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
             })
             ->orderBy('created_at', 'desc')->get();
 
