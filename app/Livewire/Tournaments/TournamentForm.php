@@ -11,6 +11,7 @@ use App\Models\TournamentType;
 use App\Rules\EvenNumber;
 use App\Utils\Constants;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class TournamentForm extends Component
@@ -72,7 +73,7 @@ class TournamentForm extends Component
     public function rules()
     {
         return [
-            'name' => ['required', 'max:255', 'unique:tournaments'],
+            'name' => ['required', 'max:255', Rule::unique('tournaments', 'id')->ignore($this->tournament?->id)],
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
             'startDate' => ['required', 'date'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
