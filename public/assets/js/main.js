@@ -426,13 +426,15 @@ function getUserFullName(user) {
     return user['first_name'] + " " + user['last_name'];
 }
 
-function triggerCleave()
+function triggerCleave(decimals = 2)
 {
 
     for(let field of $('.cleave-input').toArray()){
         new Cleave(field, {
             numeral: true,
-            numeralThousandsGroupStyle: 'thousand'
+            numeralThousandsGroupStyle: 'thousand',
+            numeralPositiveOnly: true,
+            numeralDecimalScale: decimals,
         });
     }
 }

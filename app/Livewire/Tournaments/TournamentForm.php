@@ -34,7 +34,7 @@ class TournamentForm extends Component
 
     public array $categoriesInfo = [];
     public array $subscriptionFees = [];
-    public $usdCurrency;
+    public $defaultCurrency;
 
     public $currencies = [];
     public function mount($id = 0, $status = 0)
@@ -43,7 +43,7 @@ class TournamentForm extends Component
         $this->teams = Team::with('players')->get();
         $this->status = $status;
         $this->currencies = Currency::all();
-        $this->usdCurrency = $this->currencies->where('name', 'USD')->first();
+        $this->defaultCurrency = Currency::where('is_default', true)->first();
 
         if ($id) {
 
@@ -61,15 +61,29 @@ class TournamentForm extends Component
             $this->startDate = $this->tournament->start_date;
             $this->endDate = $this->tournament->end_date;
             $this->is_free = $this->tournament->is_free;
-            $this->selectedCategoriesIds = $this->tournament->levelCategories->pluck('level_category_id')->toArray();
+            $levelCategories = $this->tournament->levelCategories;
+            $this->selectedCategoriesIds = $levelCategories->pluck('level_category_id')->toArray();
+
+            foreach ($levelCategories as $levelCategory) {
+                $this->subscriptionFees[$levelCategory->level_category_id][$this->defaultCurrency->id] = $levelCategory->subscription_fee;
+                $this->getExchangedFees($levelCategory->level_category_id);
+            }
+
         } else {
             $this->authorize('tournament-create');
         }
     }
 
-    public function getExchangedFees()
+    public function getExchangedFees($categoryId)
     {
-        foreach ($this->selectedCategoriesIds as $categoryId) {
+        foreach ($this->currencies as $currency) {
+            $fee = empty($this->subscriptionFees[$categoryId][$this->defaultCurrency->id]) ? 0 : $this->subscriptionFees[$categoryId][$this->defaultCurrency->id];
+            $fee = sanitizeNumber($fee);
+
+            if (!$currency->is_default) {
+                $exchangedFee = $fee / $currency->rate;
+                $this->subscriptionFees[$categoryId][$currency->id] = number_format($exchangedFee, 2);
+            }
         }
     }
 
@@ -85,7 +99,7 @@ class TournamentForm extends Component
         if (!$this->is_free) {
             $data['subscriptionFees'] = ['required', 'array', 'min:1'];
             foreach ($this->selectedCategoriesIds ?? [] as $categoryId) {
-                $data['subscriptionFees.'. $categoryId . '.' . $this->usdCurrency->id] = ['required', 'numeric'];
+                $data['subscriptionFees.'. $categoryId . '.' . $this->defaultCurrency->id] = ['required', 'numeric'];
             }
         }
 
@@ -107,7 +121,7 @@ class TournamentForm extends Component
         foreach ($this->selectedCategoriesIds as $categoryId) {
             $tournament->levelCategories()->create([
                 'level_category_id' => $categoryId,
-                'subscription_fee' => $this->subscriptionFees[$categoryId],
+                'subscription_fee' => $this->is_free ? 0 : ($this->subscriptionFees[$categoryId][$this->defaultCurrency->id] ?? 0),
                 'start_date' => $this->startDate,
                 'end_date' => $this->endDate,
             ]);
@@ -132,16 +146,14 @@ class TournamentForm extends Component
 
             $categoriesIds = [];
             foreach ($this->selectedCategoriesIds as $categoryId) {
-                $levelCategory = TournamentLevelCategory::where('tournament_id', $this->tournament->id)->where('level_category_id', $categoryId)->first();
-                if (!$levelCategory) {
-                    $levelCategory = TournamentLevelCategory::create([
-                        'tournament_id' => $this->tournament->id,
-                        'level_category_id' => $categoryId,
-                        'subscription_fee' => $this->subscriptionFees[$categoryId],
-                        'start_date' => $this->startDate,
-                        'end_date' => $this->endDate,
-                    ]);
-                }
+                $levelCategory = TournamentLevelCategory::updateOrCreate([
+                    'tournament_id' => $this->tournament->id,
+                    'level_category_id' => $categoryId,
+                ],[
+                    'subscription_fee' => $this->is_free ? 0 : ($this->subscriptionFees[$categoryId][$this->defaultCurrency->id] ?? 0),
+                    'start_date' => $this->startDate,
+                    'end_date' => $this->endDate,
+                ]);
 
                 $categoriesIds[] = $levelCategory->id;
             }

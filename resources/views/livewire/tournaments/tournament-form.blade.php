@@ -87,13 +87,13 @@
                                             <label class="form-label" for="subscription-fee-{{ $categoryId }}-{{ $currency->id }}">Subscription Fee in {{ $currency->name }} *</label>
                                             <input
                                                 wire:model="subscriptionFees.{{ $categoryId }}.{{ $currency->id }}"
-                                                wire:keyup="getExchangedFees"
+                                                wire:keyup="getExchangedFees({{ $categoryId }})"
                                                 type="text"
                                                 id="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
                                                 name="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
                                                 class="form-control cleave-input"
                                                 placeholder="Subscription Fee"
-                                                @disabled($currency->id != $usdCurrency->id)
+                                                @disabled(!$currency->is_default)
                                             />
                                             @error('subscriptionFees.' . $categoryId . '.' . $currency->id) <div class="text-danger">{{ $message }}</div> @enderror
                                         </div>

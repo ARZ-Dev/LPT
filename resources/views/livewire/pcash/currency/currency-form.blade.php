@@ -14,12 +14,12 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
                             <input
-                            wire:model.defer="name"
-                            type="text"
-                            id="name"
-                            name="name"
-                            class="form-control"
-                            placeholder="name"
+                                wire:model="name"
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="name"
                             />
                             @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -27,16 +27,30 @@
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="symbol">Symbol <span class="text-danger">*</span></label>
                             <input
-                            wire:model.defer="symbol"
-                            type="text"
-                            id="symbol"
-                            name="symbol"
-                            class="form-control"
-                            placeholder="symbol"
+                                wire:model="symbol"
+                                type="text"
+                                id="symbol"
+                                name="symbol"
+                                class="form-control"
+                                placeholder="symbol"
                             />
                             @error('symbol') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
+                        @if(!$isDefaultCurrency)
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="rate">Rate to {{ $defaultCurrency->name }} <span class="text-danger">*</span></label>
+                                <input
+                                    wire:model="rate"
+                                    type="text"
+                                    id="rate"
+                                    name="rate"
+                                    class="form-control cleave-input"
+                                    placeholder="Rate"
+                                />
+                                @error('rate') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                        @endif
 
                     </form>
                 </div>
@@ -47,23 +61,18 @@
             <div class="col-12 text-end mt-2">
                 <button wire:click="{{ $editing ? "update" : "store" }}"  type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
             </div>
-
             @endif
         </div>
 
-        <script>
-        document.addEventListener('livewire:navigated', function () {
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-        });
-
-        function submit(action)
-        {
-            window.livewire.emit(action)
-        }
-
-        </script>
     </div>
+
+    @script
+    <script>
+
+        triggerCleave(6)
+
+    </script>
+    @endscript
 </div>
 
 

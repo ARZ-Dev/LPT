@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Tournaments;
 
+use App\Models\Currency;
+use App\Models\Receipt;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentLevelCategory;
@@ -28,6 +30,8 @@ class TournamentCategoryForm extends Component
     public $end_date;
     public string $teams_filter_search = "";
     public int $knockout_teams = 0;
+    public array $fullPayedTeamsIds = [];
+    public $defaultCurrency;
 
     public function mount($tournamentId, $categoryId)
     {
@@ -45,6 +49,36 @@ class TournamentCategoryForm extends Component
         $this->has_group_stages = $this->tournamentLevelCategory->has_group_stage;
         $this->nb_of_groups = $this->tournamentLevelCategory->number_of_groups;
         $this->nb_of_winners_per_group = $this->tournamentLevelCategory->number_of_winners_per_group;
+
+        // Get the teams that have payed the subscription fee for this tournament
+        $this->defaultCurrency = Currency::where('is_default', true)->first();
+        $subscriptionFee = $this->tournamentLevelCategory->subscription_fee;
+
+        $teams = Team::whereHas('receipts', function ($query) {
+                $query->where('tournament_id', $this->tournament->id);
+            })
+            ->with(['receipts' => function ($query) {
+                $query->where('tournament_id', $this->tournament->id);
+            }, 'receipts.receiptAmounts.currency'])
+            ->get();
+
+        foreach ($teams as $team) {
+            $totalPayment = 0;
+            foreach ($team->receipts as $receipt) {
+                foreach ($receipt->receiptAmounts as $receiptAmount) {
+                    if ($receiptAmount->currency_id == $this->defaultCurrency->id) {
+                        $totalPayment += $receiptAmount->amount;
+                    } else {
+                        $totalPayment += $receiptAmount->amount * $receiptAmount->currency?->rate;
+                    }
+                }
+            }
+
+            if ($totalPayment >= $subscriptionFee) {
+                $this->fullPayedTeamsIds[] = $team->id;
+            }
+        }
+
     }
 
     public function toggleTeam($teamId)
@@ -142,11 +176,11 @@ class TournamentCategoryForm extends Component
         $teams = Team::where('level_category_id', $this->tournamentLevelCategory->level_category_id)
             ->where('nickname', 'like', '%' . $this->teams_filter_search . '%')
             ->when(!$this->tournament->is_free, function ($query) {
-                $query->whereHas('receipts', function ($query) {
-                    $query->where('tournament_id', $this->tournament->id);
-                });
+                $query->whereIn('id', $this->fullPayedTeamsIds);
             })
+            ->with(['receipts' => ['receiptAmounts']])
             ->get();
+
         $data['teams'] = $teams;
 
         return view('livewire.tournaments.tournament-category-form', $data);

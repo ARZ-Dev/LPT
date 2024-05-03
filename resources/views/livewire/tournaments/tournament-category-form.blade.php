@@ -83,7 +83,7 @@
         <div class="card mt-4 mb-2">
             <div class="card-header d-flex justify-content-between">
                 <h5 class="mb-0">
-                    {{ $tournamentLevelCategory?->levelCategory?->name }} Teams
+                    {{ $tournamentLevelCategory?->levelCategory?->name }} {{ $tournament->is_free ? "" : "Paying" }} Teams
                     @error('selectedTeamsIds') <div class="text-danger">{{ $message }}</div> @enderror
                 </h5>
                 <div class="col-2 mb-2">
