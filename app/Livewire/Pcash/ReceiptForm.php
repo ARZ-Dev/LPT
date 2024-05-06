@@ -12,6 +12,7 @@ use App\Models\Team;
 use App\Models\Till;
 use App\Models\TillAmount;
 use App\Models\Tournament;
+use App\Models\TournamentLevelCategory;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
@@ -47,9 +48,9 @@ class ReceiptForm extends Component
     public $categories = [];
     public $subCategories = [];
     public $tournaments = [];
-    public $teams =[];
+    public $teams = [];
     public bool $submitting = false;
-
+    public $defaultCurrency;
 
     protected $listeners = ['store', 'update'];
 
@@ -58,6 +59,8 @@ class ReceiptForm extends Component
         $this->status = $status;
 
         $this->currencies = Currency::all();
+
+        $this->defaultCurrency = Currency::where('is_default', true)->first();
 
         $this->tills = Till::when(!auth()->user()->hasPermissionTo('till-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
@@ -129,6 +132,47 @@ class ReceiptForm extends Component
 
         }
 
+    }
+
+    public function getSubscriptionFee()
+    {
+        $team = Team::with('levelCategory')->find($this->team_id);
+        $tournamentCategory = TournamentLevelCategory::where('tournament_id', $this->tournament_id)->where('level_category_id', $team->level_category_id)->first();
+        $subscriptionFee = $tournamentCategory?->subscription_fee;
+        if ($subscriptionFee) {
+            $this->receiptAmounts = [
+                [
+                    'amount' => number_format($subscriptionFee, 2),
+                    'currency_id' => $this->defaultCurrency->id,
+                ]
+            ];
+        }
+    }
+
+    #[On('updateSubscriptionFee')]
+    public function updateSubscriptionFee($key)
+    {
+        $subCategory = SubCategory::with('category')->find($this->sub_category_id);
+        if ($subCategory->name == "Team") {
+            $currencyId = $this->receiptAmounts[$key]['currency_id'];
+            $team = Team::with('levelCategory')->find($this->team_id);
+            $tournamentCategory = TournamentLevelCategory::where('tournament_id', $this->tournament_id)->where('level_category_id', $team->level_category_id)->first();
+            $subscriptionFee = $tournamentCategory?->subscription_fee;
+            if ($subscriptionFee) {
+                if ($currencyId != $this->defaultCurrency->id) {
+                    $currency = $this->currencies->where('id', $currencyId)->first();
+                    $amount = $subscriptionFee / $currency?->rate;
+                    $this->receiptAmounts[$key]['amount'] = number_format($amount, 2);
+                } else {
+                    $this->receiptAmounts = [
+                        [
+                            'amount' => number_format($subscriptionFee, 2),
+                            'currency_id' => $this->defaultCurrency->id,
+                        ]
+                    ];
+                }
+            }
+        }
     }
 
     #[On('getSubCategories')]

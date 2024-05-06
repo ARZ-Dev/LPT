@@ -12,7 +12,7 @@
                     <form class="row g-3">
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="till_id">Tills<span class="text-danger">*</span></label>
+                            <label class="form-label" for="till_id">Tills <span class="text-danger">*</span></label>
                             <select wire:model="till_id"  class="form-select selectpicker w-100" aria-label="Default select example" name="till_id" title="Select Till" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                 @foreach($tills as $till)
                                     <option value="{{ $till->id }}" @selected($till->id == $till_id)>{{ $till->name . " / " . $till->user?->full_name }}</option>
@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label" for="paid_by">From Customer<span class="text-danger">*</span></label>
+                            <label class="form-label" for="paid_by">From Customer <span class="text-danger">*</span></label>
                             <input
                                 wire:model="paid_by"
                                 type="text"
@@ -71,7 +71,7 @@
                         <div class="col-12 col-md-6">
                             <div class="tournaments-teams {{ $selectedSubCategory?->name == "Team" ? "" : "d-none" }}" wire:ignore>
                                 <label class="form-label" for="team_id">Teams <span class="text-danger">*</span></label>
-                                <select wire:model="team_id" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-size="5" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                                <select wire:model="team_id" wire:change="getSubscriptionFee" class="form-select selectpicker w-100" id="team_id" title="Select Team" data-size="5" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
                                     @foreach($teams as $team)
                                         <option value="{{ $team->id }}" @selected($team->id == $team_id)>{{ $team->nickname }} / {{ $team->levelCategory?->name }}</option>
                                     @endforeach
@@ -115,6 +115,7 @@
                                             <select wire:model="receiptAmounts.{{ $key }}.currency_id"
                                                 aria-label="Default select example"
                                                 id="currency-{{$key}}"
+                                                data-key="{{ $key }}"
                                                 class="w-100 currency selectpicker"
                                                 title="Select Currency"
                                                 data-style="btn-default"
@@ -179,6 +180,13 @@
             $wire.dispatch('getSubCategories')
         })
 
+        $(document).on('change', '.currency', function() {
+            const key = $(this).data('key');
+            if (key !== undefined) {
+                $wire.dispatch('updateSubscriptionFee', { key: key })
+            }
+        })
+
         $(document).on('change', '#sub_category_id', function() {
             if($('#sub_category_id option:selected').text() === "Team") {
                 $('.tournaments-teams').removeClass('d-none');
@@ -186,9 +194,6 @@
                 $('.tournaments-teams').addClass('d-none');
             }
         })
-
-
-
 
         $wire.on('refreshSubCategories', function (event) {
             let subCategories = event[0];
