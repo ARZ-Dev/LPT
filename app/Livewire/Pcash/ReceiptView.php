@@ -19,7 +19,7 @@ class ReceiptView extends Component
     {
         $this->authorize('receipt-list');
 
-        $this->receipts = Receipt::with(['user', 'category', 'subCategory'])
+        $this->receipts = Receipt::with(['user', 'category', 'subCategory', 'tournament', 'team'])
             ->when(!auth()->user()->hasPermissionTo('receipt-viewAll'), function ($query) {
                 $query->where('user_id', auth()->id());
             })

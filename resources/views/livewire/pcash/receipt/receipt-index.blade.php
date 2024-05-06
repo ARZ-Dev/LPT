@@ -17,6 +17,7 @@
                     <th>From Customer</th>
                     <th>Category</th>
                     <th>Sub Category</th>
+                    <th>Tournament / Team</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -24,15 +25,16 @@
                 <tbody>
                 @foreach($receipts as $receipt)
                     <tr>
-                        <td>{{ $receipt->id }}</td>
-                        <td>{{ $receipt->user?->full_name }}</td>
-                        <td>{{ $receipt->till?->name }} / {{ $receipt->till?->user?->full_name }}</td>
-                        <td>{{ $receipt->paid_by }}</td>
-                        <td>{{ $receipt->category?->name }}</td>
-                        <td>{{ $receipt->subCategory?->name }}</td>
-                        <td>{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
+                        <td class="text-nowrap">{{ $receipt->id }}</td>
+                        <td class="text-nowrap">{{ $receipt->user?->full_name }}</td>
+                        <td class="text-nowrap">{{ $receipt->till?->name }} / {{ $receipt->till?->user?->full_name }}</td>
+                        <td class="text-nowrap">{{ $receipt->paid_by }}</td>
+                        <td class="text-nowrap">{{ $receipt->category?->name }}</td>
+                        <td class="text-nowrap">{{ $receipt->subCategory?->name }}</td>
+                        <td class="text-nowrap">{{ $receipt->tournament?->name }} / {{ $receipt->team?->nickname }}</td>
+                        <td class="text-nowrap">{{ $receipt->created_at->format('d-m-Y h:i a') }}</td>
 
-                        <td>
+                        <td class="text-nowrap"0.>
                             @can('receipt-view')
                                 <a href="{{ route('receipt.view', ['id' => $receipt->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
                             @endcan

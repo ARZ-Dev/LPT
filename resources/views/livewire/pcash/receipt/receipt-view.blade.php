@@ -30,6 +30,18 @@
                             <span class="fw-bold text-dark">Sub Category:</span>
                             <span class="text-dark" id="sub_category">{{ $receipt->subCategory?->name }}</span>
                         </div>
+                        @if($receipt->tournament)
+                            <div class="col-12 col-md-6 mt-5">
+                                <span class="fw-bold text-dark">Tournament:</span>
+                                <span class="text-dark" id="category">{{ $receipt->tournament?->name }}</span>
+                            </div>
+                        @endif
+                        @if($receipt->team)
+                            <div class="col-12 col-md-6 mt-5">
+                                <span class="fw-bold text-dark">Team:</span>
+                                <span class="text-dark" id="sub_category">{{ $receipt->team?->nickname }}</span>
+                            </div>
+                        @endif
                         <div class="col-12 col-md-6 mt-5">
                             <span class="fw-bold text-dark">Paid By:</span>
                             <span class="text-dark" id="sub_category">{{ $receipt->paid_by }}</span>
@@ -73,9 +85,9 @@
     @script
     <script>
            $('#print-receipt').on('click', function() {
-           
+
            var printWindow = window.open('', '_blank');
-   
+
            printWindow.document.write('<html><head><title>Receipt #{{ $receipt->id }}</title>');
            printWindow.document.write('<style>');
            printWindow.document.write('body { font-family: Arial, sans-serif; font-size: 14px; }');
@@ -85,7 +97,7 @@
            printWindow.document.write('.invoice .fw-bold { font-weight: bold; }');
            printWindow.document.write('</style>');
            printWindow.document.write('</head><body>');
-   
+
            printWindow.document.write('<div class="invoice">');
            printWindow.document.write('<h1>Receipt #{{ $receipt->id }}</h1>');
            printWindow.document.write('<span class="fw-bold">Created By:</span>');
@@ -112,10 +124,10 @@
 
 
            printWindow.document.write('</div>');
-   
+
            printWindow.document.write('</body></html>');
            printWindow.document.close();
-           
+
            printWindow.print();
           });
 
