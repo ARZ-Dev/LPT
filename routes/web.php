@@ -65,6 +65,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/close-month-reminder', [\App\Http\Controllers\CronJobController::class, 'closeMonthReminder']);
+
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', DashboardView::class)->name('dashboard');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Till;
+use App\Services\MailService;
 use Illuminate\Http\Request;
 
 class CronJobController extends Controller
@@ -16,8 +17,10 @@ class CronJobController extends Controller
             ->with(['user'])
             ->get();
 
-        foreach ($unclosedTills as $unclosedTill) {
+        $mailService = new MailService();
 
+        foreach ($unclosedTills as $till) {
+            $mailService->notify($till->user, "Close Month Reminder", "Please, this is a reminder to close your month before it ends.");
         }
     }
 }
