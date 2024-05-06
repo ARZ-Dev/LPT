@@ -12,10 +12,12 @@ class CronJobController extends Controller
         $unclosedTills = Till::whereHas('monthlyEntries', function ($query) {
                 $query->where('open_date', now()->startOfMonth()->format('Y-m-d'))
                     ->whereNull('close_date');
-            })->get();
+            })
+            ->with(['user'])
+            ->get();
 
         foreach ($unclosedTills as $unclosedTill) {
-            
+
         }
     }
 }
