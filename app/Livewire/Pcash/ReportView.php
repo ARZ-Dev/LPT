@@ -122,10 +122,15 @@ class ReportView extends Component
                     'monthlyEntry.user', 'monthlyEntry.monthlyEntryAmounts', 'monthlyEntry.till' => ['user']
                 ])
                 ->whereHas('monthlyEntry', function ($query) use ($tillId) {
-                    $query->where('till_id', $tillId);
-                })
-                ->when($this->filterByDate, function ($query) {
-                    $query->whereBetween('created_at', [$this->startDate . " 00:00", $this->endDate . " 23:59"]);
+                    $query->where('till_id', $tillId)
+                        ->when($this->filterByDate, function ($query) {
+                            $query->where('open_date', '>=', $this->startDate)
+                                ->where('open_date', '<=', $this->endDate)
+                                ->where(function ($query) {
+                                    $query->whereNull('close_date')
+                                        ->orWhere('close_date', '<=', $this->endDate);
+                                });
+                        });
                 })
                 ->get();
 
@@ -177,12 +182,21 @@ class ReportView extends Component
                 $sectionId = "";
                 $url = "";
                 $bgColor = "";
+
+                $createdAt = $entry->created_at;
+
                 if ($entry instanceof MonthlyEntryAction) {
                     $bgColor = "bg-lighter";
                     $section = "Monthly " . ucfirst($entry->action);
                     $sectionId = Carbon::parse($entry->monthlyEntry?->open_date)->format('M Y') . " " . ucfirst($entry->action);
 
                     $url = route('monthly-openings-closings.view', [$entry->monthlyEntry?->id, Constants::VIEW_STATUS]);
+
+                    if ($entry->action == "opening") {
+                        $createdAt = Carbon::parse($entry->monthlyEntry?->open_date);
+                    } else {
+                        $createdAt = Carbon::parse($entry->monthlyEntry?->close_date);
+                    }
 
                     foreach ($entry->monthlyEntry?->monthlyEntryAmounts ?? [] as $monthlyEntryAmount) {
                         if ($entry->action == "opening") {
@@ -313,7 +327,7 @@ class ReportView extends Component
                     'user' => $entry->user ?? $entry->monthlyEntry?->user,
                     'paid_by' => $entry->paid_by,
                     'paid_to' => $entry->paid_to,
-                    'date' => $entry->created_at,
+                    'date' => $createdAt,
                     'category' => $entry->category,
                     'sub_category' => $entry->subCategory,
                     'description' => $entry->description,
