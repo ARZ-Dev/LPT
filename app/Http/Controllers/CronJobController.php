@@ -11,7 +11,7 @@ class CronJobController extends Controller
     public static function closeMonthReminder()
     {
         $unclosedTills = Till::whereHas('monthlyEntries', function ($query) {
-                $query->where('open_date', now()->startOfMonth()->format('Y-m-d'))
+                $query->whereDate('open_date', '<=', now()->startOfMonth()->format('Y-m-d'))
                     ->whereNull('close_date');
             })
             ->with(['user'])
@@ -20,7 +20,7 @@ class CronJobController extends Controller
         $mailService = new MailService();
 
         foreach ($unclosedTills as $till) {
-            $mailService->notify($till->user, "Close Month Reminder", "Please, this is a reminder to close your month before it ends.");
+            $mailService->notify($till->user, "Close Month Reminder", "Please, this is a reminder to close your $till->name month before it ends.");
         }
     }
 }
