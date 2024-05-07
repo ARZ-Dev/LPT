@@ -23,7 +23,7 @@ class CronJobController extends Controller
             $mailService = new MailService();
 
             foreach ($unclosedTills as $till) {
-                $mailService->notify($till->user, "Close Month Reminder", "Please, this is a reminder to close your $till->name month before it ends.");
+                $mailService->notify($till->user, "Close Month Reminder", "Please, this is a reminder to close your $till->name till month before it ends.");
             }
 
             CronJobLog::create([
