@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService {
 
-    public function notify($user, $subject, $body, $type = "email")
+    public function notify($user, $subject, $body)
     {
         $mail = new PHPMailer(true);
         try {

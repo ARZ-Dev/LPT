@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
     {
         $beforeLastMonthDay = now()->endOfMonth()->subDay()->day;
 
-        $schedule->call(CronJobController::closeMonthReminder())->monthlyOn($beforeLastMonthDay, '0:00');
+        $schedule->call(function () {
+            (new CronJobController())->closeMonthReminder();
+        })->monthlyOn($beforeLastMonthDay);
     }
 
     /**
