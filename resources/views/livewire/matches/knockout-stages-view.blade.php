@@ -34,11 +34,13 @@
                             </span>
 
                         <td>
-                            @if(!count($knockoutStage->startedGroupStagesGames) && !count($knockoutStage->startedGames))
-                                <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}">
-                                    <i class="ti ti-settings ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Settings"></i>
-                                </a>
-                            @endif
+                            @can('tournamentCategory-stagesSettings')
+                                @if(!count($knockoutStage->startedGroupStagesGames) && !count($knockoutStage->startedGames))
+                                    <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#actions{{$knockoutStage->id}}">
+                                        <i class="ti ti-settings ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Settings"></i>
+                                    </a>
+                                @endif
+                            @endcan
                         </td>
                     </tr>
 

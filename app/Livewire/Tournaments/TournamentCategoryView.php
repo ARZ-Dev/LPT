@@ -9,17 +9,21 @@ use App\Models\KnockoutStage;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentLevelCategory;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class TournamentCategoryView extends Component
 {
+    use AuthorizesRequests;
     public $tournamentCategories = [];
     public $tournament;
 
     public function mount($tournamentId)
     {
+        $this->authorize('tournament-categories');
+
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->tournamentCategories = TournamentLevelCategory::where('tournament_id', $tournamentId)
             ->with(['levelCategory', 'type', 'knockoutsMatches', 'groupStageMatches'])
@@ -29,6 +33,8 @@ class TournamentCategoryView extends Component
     #[On('generateMatches')]
     public function generateMatches($categoryId)
     {
+        $this->authorize('tournamentCategory-generateMatches');
+
         DB::beginTransaction();
         try {
             $category = TournamentLevelCategory::with(['teams', 'groups' => ['teams']])->findOrFail($categoryId);

@@ -96,7 +96,7 @@ class TournamentForm extends Component
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
         ];
 
-        if (!$this->is_free) {
+        if (!$this->is_free && auth()->user()->hasPermissionTo('tournament-setSubscriptionFees')) {
             $data['subscriptionFees'] = ['required', 'array', 'min:1'];
             foreach ($this->selectedCategoriesIds ?? [] as $categoryId) {
                 $data['subscriptionFees.'. $categoryId . '.' . $this->defaultCurrency->id] = ['required', 'numeric'];

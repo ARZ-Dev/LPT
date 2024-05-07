@@ -55,6 +55,7 @@
                                 <input wire:model="endDate" type="date" class="form-control dt-input">
                                 @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+                            @can('tournament-setSubscriptionFees')
                             <div class="col-12 col-sm-12 mt-3">
                                 <label class="switch switch-primary">
                                     <input wire:model.live="is_free" @checked($is_free ?? false) type="checkbox" class="switch-input" />
@@ -69,41 +70,42 @@
                                     <span class="switch-label">Free of Charges?</span>
                                 </label>
                             </div>
+                            @endcan
                         </div>
                     </div>
                 </div>
 
-                @if(!$is_free)
-
-                    @foreach($selectedCategoriesIds as $key => $categoryId)
-                        <div class="card mt-2 mb-2">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">{{ $levelCategories->where('id', $categoryId)->first()->name }} Subscrition Fees</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    @foreach($currencies as $currency)
-                                        <div class="col-12 col-md-4">
-                                            <label class="form-label" for="subscription-fee-{{ $categoryId }}-{{ $currency->id }}">Subscription Fee in {{ $currency->name }} *</label>
-                                            <input
-                                                wire:model="subscriptionFees.{{ $categoryId }}.{{ $currency->id }}"
-                                                wire:keyup.debounce.500ms="getExchangedFees({{ $categoryId }})"
-                                                type="text"
-                                                id="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
-                                                name="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
-                                                class="form-control cleave-input"
-                                                placeholder="Subscription Fee"
-                                                @disabled(!$currency->is_default)
-                                            />
-                                            @error('subscriptionFees.' . $categoryId . '.' . $currency->id) <div class="text-danger">{{ $message }}</div> @enderror
-                                        </div>
-                                    @endforeach
+                @can('tournament-setSubscriptionFees')
+                    @if(!$is_free)
+                        @foreach($selectedCategoriesIds as $key => $categoryId)
+                            <div class="card mt-2 mb-2">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">{{ $levelCategories->where('id', $categoryId)->first()->name }} Subscrition Fees</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        @foreach($currencies as $currency)
+                                            <div class="col-12 col-md-4">
+                                                <label class="form-label" for="subscription-fee-{{ $categoryId }}-{{ $currency->id }}">Subscription Fee in {{ $currency->name }} *</label>
+                                                <input
+                                                    wire:model="subscriptionFees.{{ $categoryId }}.{{ $currency->id }}"
+                                                    wire:keyup.debounce.500ms="getExchangedFees({{ $categoryId }})"
+                                                    type="text"
+                                                    id="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
+                                                    name="subscription-fee-{{ $categoryId }}-{{ $currency->id }}"
+                                                    class="form-control cleave-input"
+                                                    placeholder="Subscription Fee"
+                                                    @disabled(!$currency->is_default)
+                                                />
+                                                @error('subscriptionFees.' . $categoryId . '.' . $currency->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-
-                @endif
+                        @endforeach
+                    @endif
+                @endcan
 
 
                 @if(!$status)

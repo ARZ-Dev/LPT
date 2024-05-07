@@ -108,9 +108,20 @@ class PermissionsSeeder extends Seeder
             'tournament-view',
             'tournament-delete',
             'tournament-viewAll',
+            'tournament-setSubscriptionFees',
+            'tournament-categories',
+
+            'tournamentCategory-edit',
+            'tournamentCategory-delete',
+            'tournamentCategory-generateMatches',
+            'tournamentCategory-stages',
+            'tournamentCategory-stagesSettings',
+            'tournamentCategory-knockoutMap',
 
             'matches-list',
             'matches-view',
+            'matches-scoring',
+            'matches-setDate',
 
 
         ];

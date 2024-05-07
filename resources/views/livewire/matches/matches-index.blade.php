@@ -52,22 +52,25 @@
                             {{-- <a href="{{ route('matches.view', ['id' => $match->id, 'status' => \App\Utils\Constants::VIEW_STATUS]) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>--}}
                             @endcan
 
-                            @if($match->homeTeam && $match->awayTeam && $match->datetime)
-                                <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body">
-                                    @if($match->is_completed)
-                                        <i class="ti ti-report ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></i>
-                                    @else
-                                        <i class="ti ti-player-play ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></i>
-                                    @endif
-                                </a>
-                            @endif
+                            @can('matches-scoring')
+                                @if($match->homeTeam && $match->awayTeam && $match->datetime)
+                                    <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body">
+                                        @if($match->is_completed)
+                                            <i class="ti ti-report ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></i>
+                                        @else
+                                            <i class="ti ti-player-play ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></i>
+                                        @endif
+                                    </a>
+                                @endif
+                            @endcan
 
-                            @if(!$match->is_started)
-                            <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}">
-                                <i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $match->datetime ? "Edit" : "Add" }} Date/Time"></i>
-                            </a>
-{{--                            <a href="#" class="text-body view-user-button" data-bs-toggle="modal" data-bs-target="#userModal{{$match->id}}"><i class="ti ti-wand ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Choose Winner"></i></a>--}}
-                            @endif
+                            @can('matches-setDate')
+                                @if(!$match->is_started)
+                                <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}">
+                                    <i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $match->datetime ? "Edit" : "Add" }} Date/Time"></i>
+                                </a>
+                                @endif
+                            @endcan
                             @if($match->is_started)
                                 <a href="{{ route('matches.details', [$match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
