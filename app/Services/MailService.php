@@ -21,7 +21,7 @@ class MailService {
             // $mail->SMTPDebug  = 1;
 
             // Recipients
-            $mail->setFrom('contact@arzgt.com', 'LPT');
+            $mail->setFrom(config('mail.mailers.smtp.username'), 'LPT');
             $mail->addAddress($user->email, $user->username);
 
             // Content
