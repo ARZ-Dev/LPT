@@ -10,6 +10,7 @@ use App\Models\KnockoutStage;
 use App\Models\Receipt;
 use App\Models\Team;
 use App\Models\Tournament;
+use App\Models\TournamentDeuceType;
 use App\Models\TournamentLevelCategory;
 use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
@@ -36,6 +37,8 @@ class TournamentCategoryForm extends Component
     public string $teams_filter_search = "";
     public int $knockout_teams = 0;
     public array $fullPayedTeamsIds = [];
+    public array $stagesDetails = [];
+    public $deuceTypes = [];
     public $defaultCurrency;
 
     public function mount($tournamentId, $categoryId)
@@ -46,6 +49,18 @@ class TournamentCategoryForm extends Component
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
 
+        $this->deuceTypes = TournamentDeuceType::all();
+
+        foreach ($this->category->knockoutStages as $knockoutStage) {
+            $this->stagesDetails[$knockoutStage->id] = [
+                'id' => $knockoutStage->id,
+                'tournament_deuce_type_id' => $knockoutStage->tournament_deuce_type_id,
+                'nb_of_sets' => $knockoutStage->nb_of_sets,
+                'nb_of_games' => $knockoutStage->nb_of_games,
+                'tie_break' => $knockoutStage->tie_break,
+            ];
+        }
+
         $this->type_id = $this->category->tournament_type_id;
         $this->nb_of_teams = $this->category->number_of_teams;
         $this->start_date = $this->category->start_date;
@@ -55,7 +70,7 @@ class TournamentCategoryForm extends Component
         $this->nb_of_groups = $this->category->number_of_groups;
         $this->nb_of_winners_per_group = $this->category->number_of_winners_per_group;
 
-        // Get the teams that have payed the subscription fee for this tournament
+        // Get the teams that have paid the subscription fee for this tournament
         $this->defaultCurrency = Currency::where('is_default', true)->first();
         $subscriptionFee = $this->category->subscription_fee;
 
@@ -368,6 +383,16 @@ class TournamentCategoryForm extends Component
             $nbOfTeams /= 2;
             $matchesPerRound /= 2;
         }
+    }
+
+    public function storeStages()
+    {
+        $this->validate([
+            'stagesDetails.*.tournament_deuce_type_id' => ['required'],
+            'stagesDetails.*.nb_of_sets' => ['required'],
+            'stagesDetails.*.nb_of_games' => ['required'],
+            'stagesDetails.*.tie_break' => ['required'],
+        ]);
     }
 
     public function render()
