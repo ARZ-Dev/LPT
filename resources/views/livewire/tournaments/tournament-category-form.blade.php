@@ -14,7 +14,7 @@
                             aria-controls="navs-pills-justified-home"
                             aria-selected="true">
                             <i class="tf-icons ti ti-home ti-xs me-1"></i>
-                            {{ $tournamentLevelCategory->levelCategory?->name }} Details
+                            {{ $category->levelCategory?->name }} Details
                         </button>
                     </li>
                     <li class="nav-item">
@@ -23,9 +23,11 @@
                             class="nav-link"
                             role="tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-messages"
-                            aria-controls="navs-pills-justified-messages"
-                            aria-selected="false">
+                            data-bs-target="#navs-pills-justified-stages"
+                            aria-controls="navs-pills-justified-stages"
+                            aria-selected="false"
+                            @disabled(!count($category->knockoutStages))
+                        >
                             <i class="tf-icons ti ti-settings ti-xs me-1"></i>
                             Stages Settings
                         </button>
@@ -36,9 +38,11 @@
                             class="nav-link"
                             role="tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-messages"
-                            aria-controls="navs-pills-justified-messages"
-                            aria-selected="false">
+                            data-bs-target="#navs-pills-justified-map"
+                            aria-controls="navs-pills-justified-map"
+                            aria-selected="false"
+                            @disabled(!$category->is_knockout_matches_generated)
+                        >
                             <i class="tf-icons ti ti-tournament ti-xs me-1"></i>
                             Knockout Map
                         </button>
@@ -49,9 +53,11 @@
                             class="nav-link"
                             role="tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-messages"
-                            aria-controls="navs-pills-justified-messages"
-                            aria-selected="false">
+                            data-bs-target="#navs-pills-justified-matches"
+                            aria-controls="navs-pills-justified-matches"
+                            aria-selected="false"
+                            @disabled(!count($category->knockoutsMatches) && !count($category->groupStageMatches))
+                        >
                             <i class="tf-icons ti ti-list-numbers ti-xs me-1"></i>
                             Matches
                         </button>
@@ -59,7 +65,6 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-
 
                         <div class="row g-3">
                             <div class="col-12 col-sm-6">
@@ -157,13 +162,42 @@
                             </div>
                         </div>
 
+                        <div class="col-12 text-end mt-4">
+                            <button wire:click="update" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+
+                            @if(
+                                (
+                                    ($category->has_group_stage && !$category->is_group_matches_generated) ||
+                                    (!$category->has_group_stage && !$category->is_knockout_matches_generated) ||
+                                    ($category->has_group_stage && $category->is_group_stages_completed && !$category->is_knockout_matches_generated)
+                                )
+                                    && $category->number_of_teams > 0
+                            )
+                                @can('tournamentCategory-generateMatches')
+                                    <button wire:click="generateMatches({{ $category->id }})" type="button" class="btn btn-primary me-sm-3 me-1">
+                                        Generate Matches
+                                    </button>
+                                @endcan
+                            @endif
+                        </div>
 
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
+                    <div class="tab-pane fade" id="navs-pills-justified-stages" role="tabpanel">
 
 
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-justified-messages" role="tabpanel">
+                    <div class="tab-pane fade" id="navs-pills-justified-map" role="tabpanel">
+                        <p>
+                            Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
+                            cupcake gummi bears cake chocolate.
+                        </p>
+                        <p class="mb-0">
+                            Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
+                            roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
+                            jelly-o tart brownie jelly.
+                        </p>
+                    </div>
+                    <div class="tab-pane fade" id="navs-pills-justified-matches" role="tabpanel">
                         <p>
                             Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
                             cupcake gummi bears cake chocolate.
@@ -178,9 +212,7 @@
             </div>
         </div>
 
-        <div class="col-12 text-end mt-4">
-            <button wire:click="update" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
-        </div>
+
 
     </form>
 
