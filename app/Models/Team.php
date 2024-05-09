@@ -32,4 +32,9 @@ class Team extends Model
         return $this->belongsToMany(Group::class);
     }
 
+    public function currentPlayers()
+    {
+        return $this->hasMany(Player::class, 'current_team_id');
+    }
+
 }
