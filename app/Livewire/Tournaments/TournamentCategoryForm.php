@@ -45,7 +45,7 @@ class TournamentCategoryForm extends Component
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
-                'type', 'teams', 'knockoutStages', 'knockoutsMatches', 'groupStageMatches'
+                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches'
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
 
@@ -392,6 +392,21 @@ class TournamentCategoryForm extends Component
             'stagesDetails.*.nb_of_sets' => ['required'],
             'stagesDetails.*.nb_of_games' => ['required'],
             'stagesDetails.*.tie_break' => ['required'],
+        ]);
+
+        foreach ($this->stagesDetails as $stagesDetail) {
+            $stage = KnockoutStage::find($stagesDetail['id']);
+            $stage->update([
+                'tournament_deuce_type_id' => $stagesDetail['tournament_deuce_type_id'],
+                'nb_of_sets' => $stagesDetail['nb_of_sets'],
+                'nb_of_games' => $stagesDetail['nb_of_games'],
+                'tie_break' => $stagesDetail['tie_break'],
+            ]);
+        }
+
+        return $this->dispatch('swal:success', [
+            'title' => 'Great!',
+            'text'  => "Stages settings has been updated successfully!",
         ]);
     }
 

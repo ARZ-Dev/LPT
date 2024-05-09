@@ -200,6 +200,7 @@
                                                 <label class="form-label" for="stage">Tournament Deuce Type</label>
                                                 <div wire:ignore>
                                                     <select
+                                                        wire:model="stagesDetails.{{ $stage->id }}.tournament_deuce_type_id"
                                                         id="tournament_deuce_type_id"
                                                         class="form-select selectpicker w-100"
                                                         aria-label="Default select example"
@@ -210,7 +211,7 @@
                                                         data-tick-icon="ti-check text-white"
                                                     >
                                                         @foreach($deuceTypes as $type)
-                                                            <option value="{{ $type->id }}" @selected(($knockoutStages[$stage->id]['tournament_deuce_type_id'] ?? "") == $type->id)>{{ $type->name }}</option>
+                                                            <option value="{{ $type->id }}" @selected(($stagesDetails[$stage->id]['tournament_deuce_type_id'] ?? "") == $type->id)>{{ $type->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -262,15 +263,7 @@
 
                     </div>
                     <div class="tab-pane fade" id="navs-pills-justified-map" role="tabpanel">
-                        <p>
-                            Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
-                            cupcake gummi bears cake chocolate.
-                        </p>
-                        <p class="mb-0">
-                            Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
-                            roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
-                            jelly-o tart brownie jelly.
-                        </p>
+                        <div class="my_gracket mt-4"></div>
                     </div>
                     <div class="tab-pane fade" id="navs-pills-justified-matches" role="tabpanel">
                         <p>
@@ -291,7 +284,7 @@
     <script>
 
         $(document).on('change', '.selectpicker', function() {
-            @this.set($(this).attr('wire:model'), $(this).val())
+            $wire.set($(this).attr('wire:model'), $(this).val(), false)
         })
 
         $('#stagesForm').submit(function(event) {
@@ -313,8 +306,48 @@
                     isValid = false;
                 }
             });
+
+            if (isValid) {
+                @this.storeStages();
+            }
+
         });
 
+        initializeBracket();
+
+        function initializeBracket() {
+
+            let data = [
+
+                    @foreach($category->knockoutStages as $knockoutStage)
+
+                [
+
+                        @foreach($knockoutStage->games as $game)
+
+                    [
+                        { name: "{{ $game->homeTeam?->nickname ?? "Winner of " . $game->relatedHomeGame?->knockoutRound?->name }}", id: "{{ $game->homeTeam?->id }}"},
+                        { name: "{{ $game->awayTeam?->nickname ?? "Winner of " . $game->relatedAwayGame?->knockoutRound?->name }}", id: "{{ $game->awayTeam?->id }}"},
+                    ],
+
+                    @endforeach
+
+                ],
+
+                @endforeach
+
+                // WINNER
+                [
+                    [
+                        { name: "{{ $category->winnerTeam?->nickname ?? "N/A" }}", id: "{{ $category->winner_team_id }}",}
+                    ]
+                ],
+            ];
+
+            // initializer
+            $(".my_gracket").gracket({ src: data });
+
+        }
     </script>
     @endscript
 </div>
