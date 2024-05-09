@@ -50,6 +50,21 @@
                                 <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="ti ti-edit ti-sm me-2"></i></a>
                             @endcan
 
+                            @if(
+                                    (
+                                        ($category->has_group_stage && !$category->is_group_matches_generated) ||
+                                        (!$category->has_group_stage && !$category->is_knockout_matches_generated) ||
+                                        ($category->has_group_stage && $category->is_group_stages_completed && !$category->is_knockout_matches_generated)
+                                    )
+                                        && $category->number_of_teams > 0
+                                )
+                                @can('tournamentCategory-generateMatches')
+                                    <a href="#" class="text-body generate-matches" data-id="{{ $category->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Matches">
+                                        <i class="ti ti-layout-grid-add ti-sm me-2"></i>
+                                    </a>
+                                @endcan
+                            @endif
+
                             @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
                                 @can('matches-list')
                                 <a href="{{ route('matches', $category->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
@@ -63,7 +78,7 @@
                                 <a href="{{ route('tournaments-categories.knockoutMap', [$category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Knockout Map"><i class="ti ti-tournament ti-sm me-2"></i></a>
                                 @endcan
                             @endif
-                                
+
                             @if(!$category->is_group_matches_generated && !$category->is_knockout_matches_generated)
                                 @can('tournamentCategory-delete')
                                     <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>

@@ -6,7 +6,7 @@
                     <li class="nav-item">
                         <button
                             type="button"
-                            class="nav-link active"
+                            class="nav-link navs-pills-justified-home nav-btn {{ $lastNav == "home" ? "active" : "" }}"
                             role="tab"
                             data-bs-toggle="tab"
                             data-bs-target="#navs-pills-justified-home"
@@ -19,7 +19,7 @@
                     <li class="nav-item">
                         <button
                             type="button"
-                            class="nav-link"
+                            class="nav-link navs-pills-justified-stages nav-btn {{ $lastNav == "stages" ? "active" : "" }}"
                             role="tab"
                             data-bs-toggle="tab"
                             data-bs-target="#navs-pills-justified-stages"
@@ -31,10 +31,24 @@
                             Stages Settings
                         </button>
                     </li>
+                    <li class="nav-item">
+                        <button
+                            type="button"
+                            class="nav-link navs-pills-justified-matches nav-btn {{ $lastNav == "matches" ? "active" : "" }}"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-justified-matches"
+                            aria-controls="navs-pills-justified-matches"
+                            aria-selected="false"
+                            @disabled(!count($category->knockoutsMatches) && !count($category->groupStageMatches))
+                        >
+                            <i class="tf-icons ti ti-list-numbers ti-xs me-1"></i>
+                            Matches
+                        </button>
+                    </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-
+                    <div class="tab-pane fade {{ $lastNav == "home" ? "show active" : "" }}" id="navs-pills-justified-home" role="tabpanel">
                         <form>
 
                             <div class="row g-3">
@@ -163,9 +177,8 @@
                             </div>
 
                         </form>
-
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-justified-stages" role="tabpanel">
+                    <div class="tab-pane fade {{ $lastNav == "stages" ? "show active" : "" }}" id="navs-pills-justified-stages" role="tabpanel">
 
                         <form id="stagesForm">
 
@@ -241,12 +254,24 @@
                                 </div>
                             @endforeach
 
-                            <div class="col-12 text-end mt-4">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                            </div>
+                            @if(!$category->is_completed)
+                                <div class="col-12 text-end mt-4">
+                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                </div>
+                            @endif
 
                         </form>
 
+                    </div>
+                    <div class="tab-pane fade {{ $lastNav == "matches" ? "show active" : "" }}" id="navs-pills-justified-matches" role="tabpanel">
+                        <div class="row">
+                            @foreach($category->groupStageMatches as $match)
+                                @include('livewire.partials.match-card', ['match' => $match])
+                            @endforeach
+                            @foreach($category->knockoutsMatches as $match)
+                                @include('livewire.partials.match-card', ['match' => $match])
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,6 +279,12 @@
 
     @script
     <script>
+
+        let lastPage = "navs-pills-justified-home";
+
+        $(document).on('click', '.nav-btn', function () {
+            lastPage = $(this).attr('aria-controls');
+        })
 
         $(document).on('change', '.selectpicker', function() {
             $wire.set($(this).attr('wire:model'), $(this).val(), false)
@@ -291,43 +322,13 @@
 
         });
 
-        $(document).ready(function () {
-            initializeBracket();
+        $(document).on('click', '.store-date-btn', function () {
+            let matchId = $(this).data('match-id');
+            let date = $('#date-' + matchId).val()
+            if (date !== "" && date !== undefined) {
+                $('.date-modal').modal('hide');
+            }
         })
-
-        function initializeBracket() {
-
-            let data = [
-
-                @foreach($category->knockoutStages as $knockoutStage)
-
-                [
-
-                    @foreach($knockoutStage->games as $game)
-
-                    [
-                        { name: "{{ $game->homeTeam?->nickname ?? "Winner of " . $game->relatedHomeGame?->knockoutRound?->name }}", id: "{{ $game->homeTeam?->id }}"},
-                        { name: "{{ $game->awayTeam?->nickname ?? "Winner of " . $game->relatedAwayGame?->knockoutRound?->name }}", id: "{{ $game->awayTeam?->id }}"},
-                    ],
-
-                    @endforeach
-
-                ],
-
-                @endforeach
-
-                // WINNER
-                [
-                    [
-                        { name: "{{ $category->winnerTeam?->nickname ?? "N/A" }}", id: "{{ $category->winner_team_id }}",}
-                    ]
-                ],
-            ];
-
-            // initializer
-            $(".my_gracket").gracket({ src: data });
-
-        }
     </script>
     @endscript
 </div>

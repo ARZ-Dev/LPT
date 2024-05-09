@@ -41,6 +41,8 @@ class TournamentCategoryForm extends Component
     public $deuceTypes = [];
     public $defaultCurrency;
     public bool $canEditDetails = true;
+    public $matchDate;
+    public $lastNav = "home";
 
     public function mount($tournamentId, $categoryId)
     {
@@ -102,6 +104,25 @@ class TournamentCategoryForm extends Component
             }
         }
 
+    }
+
+    public function storeDateTime($matchId)
+    {
+        $this->validate([
+            'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
+        ]);
+
+        $match = Game::findOrFail($matchId);
+        $match->update([
+            'datetime' => $this->matchDate,
+        ]);
+
+        $this->dispatch('swal:success', [
+            'title' => 'Great!',
+            'text'  => "Match date has been saved successfully!",
+        ]);
+
+        $this->lastNav = "matches";
     }
 
     public function toggleTeam($teamId)
@@ -194,7 +215,7 @@ class TournamentCategoryForm extends Component
 
         return $this->dispatch('swal:success', [
             'title' => 'Great!',
-            'text'  => "Details has been saved successfully!",
+            'text'  => "Teams has been saved successfully!",
         ]);
     }
 
@@ -308,7 +329,7 @@ class TournamentCategoryForm extends Component
             ]);
         }
 
-        return to_route('matches', [$this->category->id])->with('success', 'Matches has been generated!');
+        return to_route('tournaments-categories.edit', [$this->category->tournament_id, $this->category->id])->with('success', 'Matches has been generated, please set the stage settings before playing the matches!!');
     }
 
     /**
