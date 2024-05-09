@@ -18,8 +18,8 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'nickname' => $this->faker->word, // Random nickname for the team
-            'level_category_id' => 1, // Generate a level category using LevelCategory factory
+            'nickname' => $this->faker->unique()->word,
+            'level_category_id' => 1,
         ];
     }
 }
