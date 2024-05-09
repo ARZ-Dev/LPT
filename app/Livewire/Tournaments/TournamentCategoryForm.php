@@ -40,6 +40,7 @@ class TournamentCategoryForm extends Component
     public array $stagesDetails = [];
     public $deuceTypes = [];
     public $defaultCurrency;
+    public bool $canEditDetails = true;
 
     public function mount($tournamentId, $categoryId)
     {
@@ -60,6 +61,8 @@ class TournamentCategoryForm extends Component
                 'tie_break' => $knockoutStage->tie_break,
             ];
         }
+
+        $this->canEditDetails = !$this->category->is_group_matches_generated && !$this->category->is_knockout_matches_generated;
 
         $this->type_id = $this->category->tournament_type_id;
         $this->nb_of_teams = $this->category->number_of_teams;
@@ -142,6 +145,8 @@ class TournamentCategoryForm extends Component
 
         DB::beginTransaction();
         try {
+
+            throw_if(!$this->canEditDetails, new \Exception("Something went wrong!"));
 
             $this->category->update([
                 'start_date' => $this->start_date,

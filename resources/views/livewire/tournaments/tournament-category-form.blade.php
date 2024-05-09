@@ -31,36 +31,6 @@
                             Stages Settings
                         </button>
                     </li>
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            class="nav-link"
-                            role="tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-map"
-                            aria-controls="navs-pills-justified-map"
-                            aria-selected="false"
-                            @disabled(!$category->is_knockout_matches_generated)
-                        >
-                            <i class="tf-icons ti ti-tournament ti-xs me-1"></i>
-                            Knockout Map
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            class="nav-link"
-                            role="tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-matches"
-                            aria-controls="navs-pills-justified-matches"
-                            aria-selected="false"
-                            @disabled(!count($category->knockoutsMatches) && !count($category->groupStageMatches))
-                        >
-                            <i class="tf-icons ti ti-list-numbers ti-xs me-1"></i>
-                            Matches
-                        </button>
-                    </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
@@ -70,12 +40,12 @@
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
                                     <label class="form-label">Start Date *</label>
-                                    <input wire:model="start_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}">
+                                    <input wire:model="start_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
                                     @error('start_date') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <label class="form-label">End Date *</label>
-                                    <input wire:model="end_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}">
+                                    <input wire:model="end_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
                                     @error('end_date') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -90,7 +60,10 @@
                                             data-live-search="true"
                                             data-icon-base="ti"
                                             data-size="5"
-                                            data-tick-icon="ti-check text-white" required>
+                                            data-tick-icon="ti-check text-white"
+                                            required
+                                            @disabled(!$canEditDetails)
+                                        >
                                             @foreach($tournamentTypes as $tournamentType)
                                                 <option value="{{ $tournamentType->id }}" @selected(($type_id ?? null) == $tournamentType->id)>{{ $tournamentType->name }}</option>
                                             @endforeach
@@ -105,33 +78,36 @@
                                 </div>
                                 <div class="col-12 col-sm-12 mt-4">
                                     <label class="switch switch-primary">
-                                        <input wire:model.live="has_group_stages" @checked($has_group_stages ?? false) type="checkbox" class="switch-input" />
+                                        <input wire:model.live="has_group_stages" @checked($has_group_stages ?? false) type="checkbox" class="switch-input" @disabled(!$canEditDetails)/>
                                         <span class="switch-toggle-slider">
-                                    <span class="switch-on">
-                                      <i class="ti ti-check"></i>
-                                    </span>
-                                    <span class="switch-off">
-                                      <i class="ti ti-x"></i>
-                                    </span>
-                                </span>
+                                            <span class="switch-on">
+                                              <i class="ti ti-check"></i>
+                                            </span>
+                                            <span class="switch-off">
+                                              <i class="ti ti-x"></i>
+                                            </span>
+                                        </span>
                                         <span class="switch-label">Has Group Stages?</span>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
                                     <label for="nb-of-teams" class="form-label">Number of Groups:</label>
-                                    <input wire:model="nb_of_groups" id="nb-of-groups" type="number" class="form-control dt-input" placeholder="Number of Groups">
+                                    <input wire:model="nb_of_groups" id="nb-of-groups" type="number" class="form-control dt-input" placeholder="Number of Groups" @disabled(!$canEditDetails)>
                                     @error('nb_of_groups') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-6 col-sm-12 {{ ($has_group_stages ?? false) ? "" : "d-none" }}">
                                     <label for="nb-of-teams" class="form-label">Number of Winners per Group:</label>
-                                    <input wire:model="nb_of_winners_per_group" id="nb-of-winners" type="number" class="form-control dt-input" placeholder="Number of Winners per Group">
+                                    <input wire:model="nb_of_winners_per_group" id="nb-of-winners" type="number" class="form-control dt-input" placeholder="Number of Winners per Group" @disabled(!$canEditDetails)>
                                     @error('nb_of_winners_per_group') <div class="text-danger">{{ $message }}</div> @enderror
                                     @error('knockout_teams') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
                             <div class="row g-3 mt-2">
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h4>Teams</h4>
+                                    </div>
                                     <div class="col-2 mb-2">
                                         <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
                                     </div>
@@ -144,9 +120,11 @@
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
                                                             <h5 class="card-title">{{ $team->nickname }}</h5>
-                                                            <a wire:click="toggleTeam({{ $team->id }})" class="btn rounded-pill btn-{{ in_array($team->id, $selectedTeamsIds) ? "warning" : "success" }} text-nowrap text-white">
-                                                                {{ in_array($team->id, $selectedTeamsIds) ? "Remove" : "Select" }}
-                                                            </a>
+                                                            @if($canEditDetails)
+                                                                <a wire:click="toggleTeam({{ $team->id }})" class="btn rounded-pill btn-{{ in_array($team->id, $selectedTeamsIds) ? "warning" : "success" }} text-nowrap text-white">
+                                                                    {{ in_array($team->id, $selectedTeamsIds) ? "Remove" : "Select" }}
+                                                                </a>
+                                                            @endif
                                                         </div>
                                                         <p class="card-text">Players: {{ count($team->players) }}</p>
                                                     </div>
@@ -164,23 +142,25 @@
                             </div>
 
                             <div class="col-12 text-end mt-4">
-                            <button wire:click="update" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                @if($canEditDetails)
+                                    <button wire:click="update" type="button" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                @endif
 
-                            @if(
-                                (
-                                    ($category->has_group_stage && !$category->is_group_matches_generated) ||
-                                    (!$category->has_group_stage && !$category->is_knockout_matches_generated) ||
-                                    ($category->has_group_stage && $category->is_group_stages_completed && !$category->is_knockout_matches_generated)
+                                @if(
+                                    (
+                                        ($category->has_group_stage && !$category->is_group_matches_generated) ||
+                                        (!$category->has_group_stage && !$category->is_knockout_matches_generated) ||
+                                        ($category->has_group_stage && $category->is_group_stages_completed && !$category->is_knockout_matches_generated)
+                                    )
+                                        && $category->number_of_teams > 0
                                 )
-                                    && $category->number_of_teams > 0
-                            )
-                                @can('tournamentCategory-generateMatches')
-                                    <button wire:click="generateMatches({{ $category->id }})" type="button" class="btn btn-primary me-sm-3 me-1">
-                                        Generate Matches
-                                    </button>
-                                @endcan
-                            @endif
-                        </div>
+                                    @can('tournamentCategory-generateMatches')
+                                        <button wire:click="generateMatches({{ $category->id }})" type="button" class="btn btn-primary me-sm-3 me-1">
+                                            Generate Matches
+                                        </button>
+                                    @endcan
+                                @endif
+                            </div>
 
                         </form>
 
@@ -202,7 +182,7 @@
                                                     <select
                                                         wire:model="stagesDetails.{{ $stage->id }}.tournament_deuce_type_id"
                                                         id="tournament_deuce_type_id"
-                                                        class="form-select selectpicker w-100"
+                                                        class="form-select selectpicker w-100 required"
                                                         aria-label="Default select example"
                                                         title="Select Deuce Type"
                                                         data-style="btn-default"
@@ -250,6 +230,12 @@
                                                 />
                                                 @error('stagesDetails.' . $stage->id . '.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
+                                            <div class="col-2">
+                                                <label class="form-label" for="stage">Status</label>
+                                                <span class="badge bg-label-{{ $stage->is_completed  == 0 ? "warning" : "info" }} form-control mt-2">
+                                                    {{ $stage->is_completed == 0 ? "Pending" : "Completed" }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -261,20 +247,6 @@
 
                         </form>
 
-                    </div>
-                    <div class="tab-pane fade" id="navs-pills-justified-map" role="tabpanel">
-                        <div class="my_gracket mt-4"></div>
-                    </div>
-                    <div class="tab-pane fade" id="navs-pills-justified-matches" role="tabpanel">
-                        <p>
-                            Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
-                            cupcake gummi bears cake chocolate.
-                        </p>
-                        <p class="mb-0">
-                            Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
-                            roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
-                            jelly-o tart brownie jelly.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -302,8 +274,14 @@
                 let inputValue = input.val().trim();
 
                 if (inputValue === '') {
-                    input.after('<div class="text-danger">This field is required.</div>');
-                    isValid = false;
+                    if (input.attr('wire:model') !== undefined) {
+                        if (input.hasClass('selectpicker')) {
+                            input.next().after('<div class="text-danger">This field is required.</div>');
+                        } else {
+                            input.after('<div class="text-danger">This field is required.</div>');
+                        }
+                        isValid = false;
+                    }
                 }
             });
 
@@ -313,17 +291,19 @@
 
         });
 
-        initializeBracket();
+        $(document).ready(function () {
+            initializeBracket();
+        })
 
         function initializeBracket() {
 
             let data = [
 
-                    @foreach($category->knockoutStages as $knockoutStage)
+                @foreach($category->knockoutStages as $knockoutStage)
 
                 [
 
-                        @foreach($knockoutStage->games as $game)
+                    @foreach($knockoutStage->games as $game)
 
                     [
                         { name: "{{ $game->homeTeam?->nickname ?? "Winner of " . $game->relatedHomeGame?->knockoutRound?->name }}", id: "{{ $game->homeTeam?->id }}"},

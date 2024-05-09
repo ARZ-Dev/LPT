@@ -47,14 +47,8 @@
                         <td>
 
                             @can('tournamentCategory-edit')
-                                <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Teams"><i class="ti ti-edit ti-sm me-2"></i></a>
+                                <a href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="ti ti-edit ti-sm me-2"></i></a>
                             @endcan
-
-                            @if(count($category->knockoutStages))
-                                @can('tournamentCategory-stages')
-                                <a href="{{ route('knockoutStage.view', $category->id) }}" class="text-body me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Stages"><i class="ti ti-article ti-sm"></i></a>
-                                @endcan
-                            @endif
 
                             @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
                                 @can('matches-list')
@@ -69,6 +63,7 @@
                                 <a href="{{ route('tournaments-categories.knockoutMap', [$category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Knockout Map"><i class="ti ti-tournament ti-sm me-2"></i></a>
                                 @endcan
                             @endif
+                                
                             @if(!$category->is_group_matches_generated && !$category->is_knockout_matches_generated)
                                 @can('tournamentCategory-delete')
                                     <a href="#" class="text-body delete-record delete-button" data-id="{{ $category->id }}"><i class="ti ti-trash ti-sm me-2 text-danger"></i></a>
