@@ -166,7 +166,7 @@ class TournamentCategoryForm extends Component
                 throw_if(count($team->players) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
 
                 foreach ($team->players as $player) {
-//                    throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
+                    // throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
                     $playersIds[] = $player->id;
                 }
 
@@ -308,10 +308,7 @@ class TournamentCategoryForm extends Component
             ]);
         }
 
-        return $this->dispatch('swal:success', [
-            'title' => 'Great!',
-            'text'  => "Matches has been generated successfully!",
-        ]);
+        return to_route('matches', [$this->category->id])->with('success', 'Matches has been generated!');
     }
 
     /**
