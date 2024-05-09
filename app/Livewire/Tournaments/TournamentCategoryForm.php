@@ -141,7 +141,7 @@ class TournamentCategoryForm extends Component
                 throw_if(count($team->players) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
 
                 foreach ($team->players as $player) {
-                    throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
+//                    throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
                     $playersIds[] = $player->id;
                 }
 
