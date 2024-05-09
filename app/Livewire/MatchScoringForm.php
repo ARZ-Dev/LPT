@@ -82,10 +82,10 @@ class MatchScoringForm extends Component
             throw_if($match->is_completed, new \Exception("Match is already completed!"));
 
             $stageName = $this->stage->name;
-            $settingsLink = route('knockoutStage.view', $this->category->id);
+            $settingsLink = route('tournaments-categories.edit', [$this->category->tournament_id, $this->category->id]);
 
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
-                new \Exception($stageName . " scoring settings are required, please go to <a href='$settingsLink'>this link</a> to add them!"));
+                new \Exception($stageName . " scoring settings are required, please go to the stage settings by clicking on <a href='$settingsLink'>this link</a> to add them!"));
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;

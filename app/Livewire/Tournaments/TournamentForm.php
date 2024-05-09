@@ -30,7 +30,7 @@ class TournamentForm extends Component
     public array $selectedCategoriesIds = [];
     public $startDate;
     public $endDate;
-    public bool $is_free = false;
+    public bool $is_free = true;
 
     public array $categoriesInfo = [];
     public array $subscriptionFees = [];
