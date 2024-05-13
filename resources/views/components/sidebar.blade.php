@@ -27,7 +27,7 @@
         </li>
 
         @canany(['role-list', 'permission-list', 'user-list'])
-        <li class="menu-item {{ request()->is('roles') || request()->is('permissions') || request()->is('users*') ? "active open" : "" }}">
+        <li class="menu-item {{ request()->is('roles') || request()->is('permissions') || request()->is('users*') || request()->is('tournaments/types*') ? "active open" : "" }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 			    <i class="menu-icon tf-icons ti ti-settings"></i>
@@ -58,6 +58,14 @@
 						<div data-i18n="Users">Users</div>
 					</a>
 				</li>
+                @endcan
+
+                @can('tournamentType-list')
+                    <li class="menu-item {{ request()->is('tournaments/types*') ? "active" : "" }}">
+                        <a href="{{ route('types') }}" class="menu-link">
+                            <div data-i18n="Tournament Types">Tournament Types</div>
+                        </a>
+                    </li>
                 @endcan
 			</ul>
 		</li>
@@ -119,7 +127,7 @@
         @endcan
 
         @can('tournament-list')
-        <li class="menu-item {{ request()->is('tournaments*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('tournaments') ? "active" : "" }}">
             <a href="{{ route('tournaments') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-tournament"></i>
                 <div data-i18n="Tournaments">Tournaments</div>

@@ -51,13 +51,15 @@ use App\Livewire\Tournaments\TournamentCategoryView;
 use App\Livewire\Tournaments\TournamentCategoryForm;
 use App\Livewire\Tournaments\TournamentCategoryKnockoutMap;
 
-
 use App\Livewire\Matches\MatchesView;
 use App\Livewire\Matches\MatchesForm;
 use App\Livewire\Matches\MatchDetails;
 
 use App\Livewire\MatchScoringForm;
 use App\Livewire\Matches\KnockoutStageView;
+
+use App\Livewire\Tournaments\TournamentTypeView;
+use App\Livewire\Tournaments\TournamentTypeForm;
 
 Route::get('/login', Login::class)->name('login');
 
@@ -231,11 +233,12 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
+
+        Route::group(['prefix' => 'types'], function() {
+            Route::get('/', TournamentTypeView::class)->name('types');
+            Route::get('/edit/{typeId}', TournamentTypeForm::class)->name('types.edit');
+        });
     });
-
-
-
-
 
 });
 

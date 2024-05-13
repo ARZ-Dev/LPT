@@ -123,7 +123,8 @@ class PermissionsSeeder extends Seeder
             'matches-scoring',
             'matches-setDate',
 
-
+            'tournamentType-list',
+            'tournamentType-edit',
         ];
 
         $permissionsIds = [];

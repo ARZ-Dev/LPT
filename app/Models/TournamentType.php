@@ -11,4 +11,10 @@ class TournamentType extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function settings()
+    {
+        return $this->hasMany(TournamentTypeSettings::class);
+    }
+
 }

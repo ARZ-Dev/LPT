@@ -32,6 +32,7 @@
                             <span class="badge bg-label-{{ $knockoutStage->is_completed  == 0 ? "warning" : "info" }}">
                                 {{ $knockoutStage->is_completed == 0 ? "Pending" : "Completed" }}
                             </span>
+                        </td>
 
                         <td>
                             @can('tournamentCategory-stagesSettings')
