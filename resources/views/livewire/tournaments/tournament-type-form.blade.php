@@ -54,7 +54,7 @@
                                             <tr>
                                                 <td class="text-center">{{ $stagePoint['stage'] }}</td>
                                                 <td class="text-center">
-                                                    <input wire:model="stagePoints.{{ $key }}.points" type="text" class="form-control cleave-input">
+                                                    <input wire:model="stagePoints.{{ $key }}.points" type="number" class="form-control number-input">
                                                     @error('stagePoints.' . $key . '.points') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </td>
                                             </tr>

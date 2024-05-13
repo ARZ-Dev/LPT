@@ -151,10 +151,10 @@ class TournamentCategoryForm extends Component
 
         if ($this->has_group_stages) {
             $this->knockout_teams = $this->nb_of_groups * $this->nb_of_winners_per_group;
-            $rules['knockout_teams'] = ['required', 'gte:2', new PowerOfTwo()];
+            $rules['knockout_teams'] = ['required', 'gte:2', new PowerOfTwo(), 'max:32'];
             $rules['selectedTeamsIds'] = ['required', 'array', 'min:' . ($this->nb_of_groups ?? 0) * 2];
         } else {
-            $rules['selectedTeamsIds'] = ['required', 'array', 'min:2', new PowerOfTwoArray()];
+            $rules['selectedTeamsIds'] = ['required', 'array', 'min:2', new PowerOfTwoArray(), 'max:32'];
         }
 
         return $rules;

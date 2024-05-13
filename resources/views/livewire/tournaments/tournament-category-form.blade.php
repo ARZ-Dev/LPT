@@ -120,7 +120,7 @@
                             <div class="row g-3 mt-2">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h4>Teams</h4>
+                                        <h4>Teams @error('selectedTeamsIds') - <div class="text-danger">{{ $message }}</div> @enderror</h4>
                                     </div>
                                     <div class="col-2 mb-2">
                                         <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
