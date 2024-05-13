@@ -68,9 +68,9 @@
                                         </table>
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 16px;">
                                             Not sure why you received this email? Please
-                                            <a href="mailto:contact@tradeflow.arzdev.com" class="hover-underline" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; color: #7367f0; text-decoration: none;">let us know</a>.
+                                            <a href="mailto:contact@lpt.arzgt.com" class="hover-underline" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; color: #7367f0; text-decoration: none;">let us know</a>.
                                         </p>
-                                        <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 16px;">Thanks, <br>The TradeFlow Team</p>
+                                        <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 16px;">Thanks, <br>The LPT Team</p>
                                     </td>
                                 </tr>
                                 <tr>
