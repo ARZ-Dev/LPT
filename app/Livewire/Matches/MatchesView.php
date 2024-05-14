@@ -8,6 +8,7 @@ use App\Models\GroupTeam;
 use App\Models\KnockoutRound;
 use App\Models\Team;
 use App\Models\TournamentLevelCategory;
+use App\Models\TournamentTypeSettings;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -84,10 +85,6 @@ class MatchesView extends Component
     }
 
 
-    public function render()
-    {
-        return view('livewire.matches.matches-index');
-    }
 
     /**
      * @param $matchId
@@ -96,7 +93,7 @@ class MatchesView extends Component
      */
     public static function updateMatchWinner($matchId, $winnerId): mixed
     {
-        $match = Game::with('homeTeam', 'awayTeam')->findOrFail($matchId);
+        $match = Game::with('homeTeam', 'awayTeam', 'knockoutRound', 'group')->findOrFail($matchId);
         $category = $match->type == "Knockouts" ? $match->knockoutRound->tournamentLevelCategory : $match->group->tournamentLevelCategory;
         $tournament = $category->tournament;
 
@@ -132,6 +129,11 @@ class MatchesView extends Component
                     'away_team_id' => $winnerId
                 ]);
             }
+
+            $roundPoints = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
+                ->where('stage', $match->knockoutRound->knockoutStage->name)
+                ->first()?->points ?? 0;
+            $match->loserTeam->increment('points', $roundPoints);
 
             $match->knockoutRound->update([
                 'is_completed' => true,
@@ -207,4 +209,11 @@ class MatchesView extends Component
         }
         return $category;
     }
+
+
+    public function render()
+    {
+        return view('livewire.matches.matches-index');
+    }
+
 }
