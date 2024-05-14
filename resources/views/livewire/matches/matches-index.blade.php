@@ -23,7 +23,7 @@
                     @foreach($matches as $match)
                     <tr>
                         <td>{{ $match->id }}</td>
-                        <td>{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
+                        <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
 
                         <td>
                             @if($match->homeTeam)
