@@ -131,7 +131,7 @@ class MatchesView extends Component
             }
 
             $roundPoints = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
-                ->where('stage', $match->knockoutRound->knockoutStage->name)
+                ->where('stage', $match->knockoutRound?->knockoutStage?->name)
                 ->first()?->points ?? 0;
             $match->loserTeam->increment('points', $roundPoints);
 
