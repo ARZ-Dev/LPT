@@ -329,6 +329,14 @@
                 $('.date-modal').modal('hide');
             }
         })
+
+        $(document).on('click', '.store-absent-btn', function () {
+            let matchId = $(this).data('match-id');
+            let absentTeamId = $('#absent-team-' + matchId).val()
+            if (absentTeamId !== "" && absentTeamId !== undefined) {
+                $('.absent-modal').modal('hide');
+            }
+        })
     </script>
     @endscript
 </div>

@@ -6,6 +6,7 @@ use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\KnockoutRound;
+use App\Models\Set;
 use App\Models\Team;
 use App\Models\TournamentLevelCategory;
 use App\Models\TournamentTypeSettings;
@@ -21,8 +22,8 @@ class MatchesView extends Component
     public $match ;
     public $category;
     public $tournament;
-    public $datetimeModel ;
-    public $wael ;
+    public $matchDate;
+    public $absentTeamId;
 
 
     public function mount($categoryId)
@@ -65,15 +66,74 @@ class MatchesView extends Component
     public function storeDateTime($matchId)
     {
         $this->validate([
-            'datetimeModel' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
+            'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
         ]);
 
         $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
         $this->match->update([
-            'datetime'=>$this->datetimeModel,
+            'datetime'=>$this->matchDate,
         ]);
         return to_route('matches', $this->category->id)->with('success', 'date/time has been updated successfully!');
+    }
 
+    #[On('storeAbsent')]
+    public function storeAbsent($matchId)
+    {
+        $this->validate([
+            'absentTeamId' => ['required']
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            self::chooseAbsentTeam($matchId, $this->absentTeamId);
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+
+        return to_route('matches', $this->category->id)->with('success', 'Absent team has been updated successfully!');
+    }
+
+    public static function chooseAbsentTeam($matchId, $absentTeamId)
+    {
+        $match = Game::findOrFail($matchId);
+        $winnerTeam = $absentTeamId == $match->home_team_id ? $match->awayTeam : $match->homeTeam;
+        $match->update([
+            'winner_team_id' => $winnerTeam->id,
+            'loser_team_id' => $absentTeamId,
+            'is_started' => 1,
+            'started_at' => now(),
+            'started_by' => auth()->id(),
+            'is_completed' => 1,
+            'completed_at' => now(),
+        ]);
+
+        $stageSettings = $match->type == "Knockouts" ? $match->knockoutRound->knockoutStage : $match->group->groupStage;
+        throw_if(!$stageSettings->nb_of_sets || !$stageSettings->nb_of_games, new \Exception($stageSettings->name . " settings are required!"));
+
+        for ($i = 1; $i <= $stageSettings->nb_of_sets; $i++) {
+
+            $homeTeamScore = $winnerTeam->id == $match->home_team_id ? $stageSettings->nb_of_games : 0;
+            $awayTeamScore = $winnerTeam->id == $match->away_team_id ? $stageSettings->nb_of_games : 0;
+
+            Set::create([
+                'game_id' => $match->id,
+                'set_number' => $i,
+                'home_team_score' => $homeTeamScore,
+                'away_team_score' => $awayTeamScore,
+                'winner_team_id' => $winnerTeam->id,
+                'is_completed' => true,
+                'completed_at' => now(),
+            ]);
+        }
+
+        self::updateMatchWinner($matchId, $winnerTeam->id);
     }
 
     public static function updateTeamsRank($levelCategoryId)

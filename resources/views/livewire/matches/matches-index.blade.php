@@ -39,15 +39,15 @@
                             Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
                             @endif
                         </td>
-                        <td>{{ $match->datetime }}</td>
-                        <td>
+                        <td class="text-nowrap">{{ $match->datetime }}</td>
+                        <td class="text-nowrap">
                             @if($match->is_started)
                                 {{ Carbon\Carbon::parse($match->started_at)->format('d-m-Y H:i') }} / {{ $match->startedBy?->full_name }}
                             @endif
                         </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
 
-                        <td>
+                        <td class="text-nowrap">
 
                             @can('matches-scoring')
                                 @if($match->homeTeam && $match->awayTeam && $match->datetime)
@@ -68,6 +68,13 @@
                                 </a>
                                 @endif
                             @endcan
+
+                            @if(!$match->is_started && $match->datetime)
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$match->id}}" class="text-body">
+                                    <i class="ti ti-hand-stop ti-sm me-2"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></i>
+                                </a>
+                            @endif
+
                             @if($match->is_started)
                                 <a href="{{ route('matches.details', [$match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
@@ -75,25 +82,8 @@
                         </td>
                     </tr>
 
-                    <!-- date/time -->
-                    <div wire:ignore.self class="modal fade" id="dateTime{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="userModalLabel{{$match->id}}">Choose Date/Time:</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <input wire:model="datetimeModel" type="datetime-local" class="form-control" min="{{ $category->start_date . " 00:00" }}" max="{{ $category->end_date . " 23:59" }}">
-                                    @error('datetimeModel') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary storeDateTime-btn">Submit</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('modals.matches-datetime', ['match' => $match])
+                    @include('modals.matches-absent', ['match' => $match])
 
                     @endforeach
                 </tbody>
@@ -119,15 +109,21 @@
             $wire.dispatch('chooseWinner', data)
         })
 
-        $(document).on('click', '.storeDateTime-btn', function() {
+        $(document).on('click', '.store-date-btn', function() {
             let matchId = $(this).data('match-id');
-            let datetime = $('#datetime-' + matchId).val();
             let data = {
                 matchId
-                , matchId
             };
 
             $wire.dispatch('storeDateTime', data)
+        })
+
+        $(document).on('click', '.store-absent-btn', function () {
+            let matchId = $(this).data('match-id');
+            let absentTeamId = $('#absent-team-' + matchId).val()
+            if (absentTeamId !== "" && absentTeamId !== undefined) {
+                $('.absent-modal').modal('hide');
+            }
         })
 
     </script>

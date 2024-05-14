@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Tournaments;
 
+use App\Livewire\Matches\MatchesView;
 use App\Models\Currency;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\KnockoutRound;
 use App\Models\KnockoutStage;
 use App\Models\Receipt;
+use App\Models\Set;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentDeuceType;
@@ -43,6 +45,7 @@ class TournamentCategoryForm extends Component
     public bool $canEditDetails = true;
     public $matchDate;
     public $lastNav = "home";
+    public $absentTeamId;
 
     public function mount($tournamentId, $categoryId)
     {
@@ -122,6 +125,33 @@ class TournamentCategoryForm extends Component
             'text'  => "Match date has been saved successfully!",
         ]);
 
+        $this->lastNav = "matches";
+    }
+
+    public function storeAbsent($matchId)
+    {
+        $this->validate([
+            'absentTeamId' => ['required'],
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            MatchesView::chooseAbsentTeam($matchId, $this->absentTeamId);
+
+            $this->dispatch('swal:success', [
+                'title' => 'Great!',
+                'text'  => "Absent team has been saved successfully!",
+            ]);
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
         $this->lastNav = "matches";
     }
 

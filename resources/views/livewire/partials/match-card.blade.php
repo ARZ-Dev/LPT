@@ -15,10 +15,18 @@
                             <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
                         @endif
                     </a>
+
+                    @if(!$match->is_started)
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$match->id}}" class="btn rounded-pill btn-icon btn-danger waves-effect waves-light">
+                            <span class="ti ti-hand-stop text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></span>
+                        </a>
+                    @endif
                 @else
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
-                        <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Time"></span>
-                    </a>
+                    @can('matches-setDate')
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
+                            <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Time"></span>
+                        </a>
+                    @endcan
                 @endif
             </div>
         </div>
@@ -27,7 +35,13 @@
                 <div class="col-12 text-center">
                     <h5>
                         @if($match->homeTeam)
-                            {{ $match->homeTeam->nickname }}
+                            @if($match->is_completed)
+                                <span class="badge rounded-pill bg-{{ $match->winner_team_id == $match->home_team_id ? "success" : "danger" }}">
+                                    {{ $match->homeTeam->nickname }}
+                                </span>
+                            @else
+                                {{ $match->homeTeam->nickname }}
+                            @endif
                         @elseif($match->relatedHomeGame)
                             Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
                         @endif
@@ -39,7 +53,13 @@
                 <div class="col-12 text-center">
                     <h5>
                         @if($match->awayTeam)
-                            {{ $match->awayTeam->nickname }}
+                            @if($match->is_completed)
+                                <span class="badge rounded-pill bg-{{ $match->winner_team_id == $match->away_team_id ? "success" : "danger" }}">
+                                    {{ $match->awayTeam->nickname }}
+                                </span>
+                            @else
+                                {{ $match->awayTeam->nickname }}
+                            @endif
                         @elseif($match->relatedAwayGame)
                             Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
                         @endif
@@ -50,24 +70,6 @@
     </div>
 </div>
 
-<div wire:ignore.self class="modal fade date-modal" id="dateTime{{$match->id}}" tabindex="-1" aria-labelledby="dateTime{{$match->id}}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form wire:submit.prevent="storeDateTime({{ $match->id }})">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userModalLabel{{$match->id}}">Choose Date/Time:</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input id="date-{{ $match->id }}" wire:model="matchDate" type="datetime-local" class="form-control" required min="{{ $category->start_date . " 00:00" }}" max="{{ $category->end_date . " 23:59" }}">
-                    @error('matchDate') <div class="text-danger">{{ $message }}</div> @enderror
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary store-date-btn">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@include('modals.matches-datetime', ['match' => $match])
+@include('modals.matches-absent', ['match' => $match])
 
