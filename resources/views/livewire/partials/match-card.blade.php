@@ -9,11 +9,15 @@
             <div>
                 @if($match->datetime)
                     <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="btn rounded-pill btn-icon btn-success waves-effect waves-light">
-                        <span class="ti ti-player-play text-white"></span>
+                        @if($match->is_started)
+                            <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
+                        @else
+                            <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
+                        @endif
                     </a>
                 @else
                     <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
-                        <span class="ti ti-calendar text-white"></span>
+                        <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Time"></span>
                     </a>
                 @endif
             </div>
