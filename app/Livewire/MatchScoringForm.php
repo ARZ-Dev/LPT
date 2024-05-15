@@ -27,6 +27,7 @@ class MatchScoringForm extends Component
     public $tiebreakPointsToWin;
     public $category;
     public $stage;
+    public $lastActionTeamId;
 
     public function mount($matchId)
     {
@@ -86,6 +87,8 @@ class MatchScoringForm extends Component
 
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
                 new \Exception($stageName . " scoring settings are required, please go to the stage settings by clicking on <a href='$settingsLink'>this link</a> to add them!"));
+
+            $this->lastActionTeamId = $teamId;
 
             $match->loadMissing('sets');
             $team = $teamId == $this->homeTeam->id ? $this->homeTeam : $this->awayTeam;

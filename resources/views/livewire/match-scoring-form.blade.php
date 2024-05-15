@@ -96,10 +96,17 @@
                                                     @endif
                                                 @endif
                                             </td>
+                                            <td style="min-width: 60px">
+                                                @if(!$match->is_completed && $lastActionTeamId == $match->home_team_id)
+                                                    <button wire:click="undoPoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light">
+                                                        <span class="ti ti-arrow-back"></span>
+                                                    </button>
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             @if(!$match->is_completed)
-                                                <td style="min-width: 60px">
+                                                <td style="min-width: 70px">
                                                     @if($servingTeamId == $awayTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
@@ -134,6 +141,13 @@
                                                             Loser!
                                                         </span>
                                                     @endif
+                                                @endif
+                                            </td>
+                                            <td style="min-width: 70px">
+                                                @if(!$match->is_completed && $lastActionTeamId == $match->away_team_id)
+                                                    <button wire:click="undoPoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light">
+                                                        <span class="ti ti-arrow-back"></span>
+                                                    </button>
                                                 @endif
                                             </td>
                                         </tr>
