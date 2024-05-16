@@ -27,8 +27,8 @@ class PlayerFormData extends Form
     #[Validate('required|date')]
     public string $birthdate = '';
 
-    #[Validate('required|email')]
-    public string $email = '';
+    #[Validate('nullable|email')]
+    public $email = '';
 
     #[Validate('required')]
     public string $phone_number = '';

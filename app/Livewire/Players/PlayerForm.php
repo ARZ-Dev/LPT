@@ -47,7 +47,7 @@ class PlayerForm extends Component
             $this->player = Player::with(['teams' => ['levelCategory', 'players']])->findOrFail($id);
             $this->editing = true;
             $this->form->setPlayer($this->player);
-            $this->teamPlayersIds = $this->player->currentTeam->players->pluck('id')->toArray();
+            $this->teamPlayersIds = $this->player->currentTeam?->players->pluck('id')->toArray() ?? [];
             $this->playerTeams = $this->player->teams;
 
         } else {

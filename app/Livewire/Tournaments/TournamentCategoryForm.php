@@ -213,10 +213,10 @@ class TournamentCategoryForm extends Component
             $playersIds = [];
             foreach ($this->selectedTeamsIds as $teamId) {
 
-                $team = Team::with('currentPlayers')->find($teamId);
-                throw_if(count($team->currentPlayers) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
+                $team = Team::with('players')->find($teamId);
+                throw_if(count($team->players) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
 
-                foreach ($team->currentPlayers as $player) {
+                foreach ($team->players as $player) {
                     // throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exist in multiple teams in the same tournament!"));
                     $playersIds[] = $player->id;
                 }
@@ -224,7 +224,7 @@ class TournamentCategoryForm extends Component
                 $categoryTeam = TournamentLevelCategoryTeam::updateOrCreate([
                     'tournament_level_category_id' => $this->category->id,
                     'team_id' => $teamId,
-                    'players_ids' => json_encode($team->currentPlayers->pluck('id')->toArray()),
+                    'players_ids' => json_encode($team->players->pluck('id')->toArray()),
                 ]);
                 $categoryTeamsIds[] = $categoryTeam->id;
             }
@@ -471,7 +471,7 @@ class TournamentCategoryForm extends Component
             ->when(!$this->tournament->is_free, function ($query) {
                 $query->whereIn('id', $this->fullPayedTeamsIds);
             })
-            ->with(['receipts' => ['receiptAmounts']])
+            ->with(['receipts' => ['receiptAmounts'], 'currentPlayers', 'players'])
             ->get();
 
         $data['teams'] = $teams;
