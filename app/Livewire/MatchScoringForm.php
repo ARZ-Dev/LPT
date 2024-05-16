@@ -28,6 +28,7 @@ class MatchScoringForm extends Component
     public $category;
     public $stage;
     public $lastActionTeamId;
+    public bool $canUndo = false;
 
     public function mount($matchId)
     {
@@ -174,11 +175,79 @@ class MatchScoringForm extends Component
                 ]);
             }
 
+            $this->canUndo = true;
 
             DB::commit();
 
         } catch (\Exception $exception) {
 
+            DB::rollBack();
+
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    public function undoPoint($teamId)
+    {
+        DB::beginTransaction();
+        try {
+
+            $match = Game::find($this->matchId);
+            $lastGamePoint = SetGamePoint::where('point_team_id', $teamId)
+                ->whereHas('setGame', function ($query) {
+                    $query->whereRelation('set', 'game_id', $this->matchId);
+                })
+                ->latest()
+                ->with(['setGame', 'setGame.set'])
+                ->first();
+            throw_if(!$lastGamePoint, new \Exception("Cannot find the last game point to undo it!"));
+
+            if ($teamId == $match->home_team_id) {
+                $teamScore = $lastGamePoint->home_team_score;
+                $scoreKey = "home_team_score";
+            } else {
+                $teamScore = $lastGamePoint->away_team_score;
+                $scoreKey = "away_team_score";
+            }
+
+            $beforeLastGamePoint = SetGamePoint::where('set_game_id', $lastGamePoint->set_game_id)
+                ->where('point_number', $lastGamePoint->point_number - 1)
+                ->first();
+
+            if ($beforeLastGamePoint) {
+                $nextHomeScore = $beforeLastGamePoint->home_team_score;
+                $nextAwayScore = $beforeLastGamePoint->away_team_score;
+            } else {
+                $nextHomeScore = 0;
+                $nextAwayScore = 0;
+            }
+
+            $lastGamePoint->setGame->update([
+                'is_completed' => false,
+                'completed_at' => NULL,
+                'winner_team_id' => NULL,
+                'home_team_score' => $nextHomeScore,
+                'away_team_score' => $nextAwayScore,
+            ]);
+
+            if ($teamScore == "won") {
+                $lastGamePoint->setGame->set->update([
+                    'is_completed' => false,
+                    'completed_at' => NULL,
+                    'winner_team_id' => NULL,
+                    $scoreKey => $lastGamePoint->setGame->set->$scoreKey - 1,
+                ]);
+            }
+
+            $lastGamePoint->delete();
+
+            $this->canUndo = false;
+
+            DB::commit();
+        } catch (\Exception $exception) {
             DB::rollBack();
 
             return $this->dispatch('swal:error', [

@@ -55,19 +55,19 @@
                     <div class="col-12 col-sm-12">
                         <div class="d-flex justify-content-center">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table">
                                     <tbody>
                                         <tr>
                                             @if(!$match->is_completed)
-                                                <td style="min-width: 60px">
+                                                <td style="min-width: 60px" class="border text-center">
                                                     @if($servingTeamId == $homeTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
                                                 </td>
                                             @endif
-                                            <th>{{ $homeTeam->nickname }}</th>
+                                            <th class="border text-center">{{ $homeTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
-                                                <td>
+                                                <td class="border">
                                                     {{ $set->home_team_score }}
                                                     @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
                                                         <sup>
@@ -76,10 +76,10 @@
                                                     @endif
                                                 </td>
                                                 @if(!$set->is_completed)
-                                                    <td>{{ $set->setGames()->where('is_completed', false)->first()?->home_team_score ?? 0 }}</td>
+                                                    <td class="border">{{ $set->setGames()->where('is_completed', false)->first()?->home_team_score ?? 0 }}</td>
                                                 @endif
                                             @endforeach
-                                            <td>
+                                            <td class="border">
                                                 @if(!$match->is_completed)
                                                     <button wire:click="scorePoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
                                                         <span class="ti ti-plus"></span>
@@ -96,8 +96,8 @@
                                                     @endif
                                                 @endif
                                             </td>
-                                            <td style="min-width: 60px">
-                                                @if(!$match->is_completed && $lastActionTeamId == $match->home_team_id)
+                                            <td style="min-width: 60px" class="border-0">
+                                                @if(!$match->is_completed && $lastActionTeamId == $match->home_team_id && $canUndo)
                                                     <button wire:click="undoPoint({{ $homeTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light">
                                                         <span class="ti ti-arrow-back"></span>
                                                     </button>
@@ -106,15 +106,15 @@
                                         </tr>
                                         <tr>
                                             @if(!$match->is_completed)
-                                                <td style="min-width: 70px">
+                                                <td style="min-width: 70px" class="border text-center">
                                                     @if($servingTeamId == $awayTeam->id)
                                                         <i class="ti ti-ball-tennis ti-xs"></i>
                                                     @endif
                                                 </td>
                                             @endif
-                                            <th>{{ $awayTeam->nickname }}</th>
+                                            <th class="border text-center">{{ $awayTeam->nickname }}</th>
                                             @foreach($match?->sets ?? [] as $set)
-                                                <td>
+                                                <td class="border">
                                                     {{ $set->away_team_score }}
                                                     @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
                                                         <sup>
@@ -123,10 +123,10 @@
                                                     @endif
                                                 </td>
                                                 @if(!$set->is_completed)
-                                                    <td>{{ $set->setGames()->where('is_completed', false)->first()?->away_team_score ?? 0 }}</td>
+                                                    <td class="border">{{ $set->setGames()->where('is_completed', false)->first()?->away_team_score ?? 0 }}</td>
                                                 @endif
                                             @endforeach
-                                            <td>
+                                            <td class="border">
                                                 @if(!$match->is_completed)
                                                     <button wire:click="scorePoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
                                                         <span class="ti ti-plus"></span>
@@ -143,8 +143,8 @@
                                                     @endif
                                                 @endif
                                             </td>
-                                            <td style="min-width: 70px">
-                                                @if(!$match->is_completed && $lastActionTeamId == $match->away_team_id)
+                                            <td style="min-width: 70px" class="border-0">
+                                                @if(!$match->is_completed && $lastActionTeamId == $match->away_team_id && $canUndo)
                                                     <button wire:click="undoPoint({{ $awayTeam->id }})" type="button" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light">
                                                         <span class="ti ti-arrow-back"></span>
                                                     </button>
