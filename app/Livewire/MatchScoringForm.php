@@ -200,7 +200,7 @@ class MatchScoringForm extends Component
                 ->whereHas('setGame', function ($query) {
                     $query->whereRelation('set', 'game_id', $this->matchId);
                 })
-                ->latest()
+                ->latest('id')
                 ->with(['setGame', 'setGame.set'])
                 ->first();
             throw_if(!$lastGamePoint, new \Exception("Cannot find the last game point to undo it!"));
@@ -240,6 +240,10 @@ class MatchScoringForm extends Component
                     'winner_team_id' => NULL,
                     $scoreKey => $lastGamePoint->setGame->set->$scoreKey - 1,
                 ]);
+            }
+
+            if ($lastGamePoint->setGame->set->home_team_score == $this->nbOfGamesToWin && $lastGamePoint->setGame->set->away_team_score == $this->nbOfGamesToWin) {
+                $this->tiebreak = true;
             }
 
             $lastGamePoint->delete();
