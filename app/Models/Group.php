@@ -22,6 +22,11 @@ class Group extends Model
         return $this->belongsToMany(Team::class, 'group_teams');
     }
 
+    public function groupTeams()
+    {
+        return $this->hasMany(GroupTeam::class);
+    }
+
     public function games()
     {
         return $this->hasMany(Game::class);

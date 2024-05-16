@@ -247,11 +247,6 @@ class MatchesView extends Component
             if ($matchesPlayedCount == $groupTeams->count()) {
 
                 $group->update(['is_completed' => true]);
-
-                GroupTeam::where('group_id', $match->group_id)
-                    ->orderBy('rank')
-                    ->take($category->number_of_winners_per_group)
-                    ->update(['has_qualified' => true]);
             }
 
             $stage = $match->group->knockoutStage;
