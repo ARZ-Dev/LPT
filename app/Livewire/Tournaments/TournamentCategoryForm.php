@@ -213,18 +213,18 @@ class TournamentCategoryForm extends Component
             $playersIds = [];
             foreach ($this->selectedTeamsIds as $teamId) {
 
-                $team = Team::with('players')->find($teamId);
-                throw_if(count($team->players) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
+                $team = Team::with('currentPlayers')->find($teamId);
+                throw_if(count($team->currentPlayers) != 2, new \Exception($team->nickname . " team must have exactly 2 players."));
 
-                foreach ($team->players as $player) {
-                    // throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exists in multiple teams in the same tournament!"));
+                foreach ($team->currentPlayers as $player) {
+                    // throw_if(in_array($player->id, $playersIds), new \Exception("The player: ". $player->full_name . ", cannot exist in multiple teams in the same tournament!"));
                     $playersIds[] = $player->id;
                 }
 
                 $categoryTeam = TournamentLevelCategoryTeam::updateOrCreate([
                     'tournament_level_category_id' => $this->category->id,
                     'team_id' => $teamId,
-                    'players_ids' => json_encode($team->players->pluck('id')->toArray()),
+                    'players_ids' => json_encode($team->currentPlayers->pluck('id')->toArray()),
                 ]);
                 $categoryTeamsIds[] = $categoryTeam->id;
             }
