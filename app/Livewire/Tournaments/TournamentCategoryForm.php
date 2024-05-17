@@ -320,39 +320,15 @@ class TournamentCategoryForm extends Component
 
                         throw_if(!$group->is_completed, new \Exception("$group->name is not completed yet!"));
 
-                        $sortedTeams = $group->groupTeams()->orderBy('rank')->get();
-                        $consecutiveTeams = [];
-
-                        foreach ($sortedTeams as $index => $team) {
-                            if ($index > 0 && $team->wins === $sortedTeams[$index - 1]->wins) {
-                                $consecutiveTeams[] = $team;
-                            } else {
-                                $consecutiveTeams = [$team];
-                            }
-                        }
-
-                        if (count($consecutiveTeams) >= $category->number_of_winners_per_group) {
-                            $topTeams = collect($consecutiveTeams)->sortByDesc(function ($team) use ($category) {
-                                $teamScore = $this->getTeamGamesScore($category->id, $team->team_id);
-                                return $teamScore;
-                            })->take($category->number_of_winners_per_group);
-
-                            $firstTopTeamScore = $this->getTeamGamesScore($category->id, $topTeams->first()->team_id);
-                            $lastTopTeamScore = $this->getTeamGamesScore($category->id, $topTeams->last()->team_id);
-
-                            if ($topTeams->count() > 1 && $firstTopTeamScore === $lastTopTeamScore) {
-                                $topTeams = $topTeams->random($category->number_of_winners_per_group);
-                            }
-
-                            foreach ($topTeams as $topTeam) {
-                                $qualifiedTeamsIds[] = $topTeam->team_id;
-                            }
+                        $qualifiedTeams = $group->teams()->where('has_qualified', true)->get();
+                        foreach ($qualifiedTeams as $qualifiedTeam) {
+                            $qualifiedTeamsIds[] = $qualifiedTeam->id;
                         }
                     }
 
+                    throw_if($category->number_of_groups * $category->number_of_winners_per_group !== count($qualifiedTeamsIds), new \Exception("Something went wrong, please try again later."));
 
                     $qualifiedTeams = Team::find($qualifiedTeamsIds);
-                    dd($qualifiedTeams->pluck('nickname')->toArray());
                     $this->generateKnockoutMatches($category, $qualifiedTeams);
 
                     $category->update([
@@ -386,22 +362,6 @@ class TournamentCategoryForm extends Component
         }
 
         return to_route('tournaments-categories.edit', [$this->category->tournament_id, $this->category->id])->with('success', 'Matches has been generated, please set the stage settings before playing the matches!!');
-    }
-
-    public function getTeamGamesScore($categoryId, $teamId)
-    {
-        $score = 0;
-        $category = TournamentLevelCategory::with('groupStageMatches')->findOrFail($categoryId);
-        $matches = $category->groupStageMatches()->where('home_team_id', $teamId)->orWhere('away_team_id', $teamId)->get();
-        foreach ($matches as $match) {
-            if ($teamId == $match->home_team_id) {
-                $score += $match->sets()->sum('home_team_score') - $match->sets()->sum('away_team_score');
-            } else {
-                $score += $match->sets()->sum('away_team_score') - $match->sets()->sum('home_team_score');
-            }
-        }
-
-        return $score;
     }
 
     /**

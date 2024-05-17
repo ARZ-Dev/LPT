@@ -228,7 +228,6 @@ class MatchesView extends Component
 
         } else {
             $group = Group::findOrFail($match->group_id);
-            $groupTeams = GroupTeam::where('group_id', $match->group_id)->orderBy('wins', 'desc')->get();
 
             $groupTeamWinner = GroupTeam::where('team_id', $winnerId)->where('group_id', $match->group_id)->first();
             $groupTeamLoser = GroupTeam::where('team_id', $loserTeamId)->where('group_id', $match->group_id)->first();
@@ -238,15 +237,39 @@ class MatchesView extends Component
             $groupTeamLoser->increment('losses');
             $groupTeamLoser->increment('matches_played');
 
-            $groupTeams->each(function ($team, $index) {
-                $team->update(['rank' => $index + 1]);
-            });
+            self::updateTeamsScore($group->id, $match->id);
+
+            // update group rankings - start
+            $groupTeams = GroupTeam::where('group_id', $match->group_id)
+                ->orderByDesc('wins')
+                ->orderByDesc('score')
+                ->get();
+
+            $currentRank = 1;
+            $previousTeam = null;
+
+            foreach ($groupTeams as $team) {
+                if ($previousTeam && $previousTeam->wins === $team->wins && $previousTeam->score === $team->score) {
+                    $team->update(['rank' => $previousTeam->rank]);
+                } else {
+                    $team->update(['rank' => $currentRank]);
+                }
+
+                $previousTeam = $team;
+                $currentRank++;
+            }
+            // update group rankings - end
 
             $matchesPlayedCount = GroupTeam::where('group_id', $match->group_id)->where('matches_played', $groupTeams->count() - 1)->count();
 
             if ($matchesPlayedCount == $groupTeams->count()) {
 
                 $group->update(['is_completed' => true]);
+
+                GroupTeam::where('group_id', $match->group_id)
+                    ->orderBy('rank')
+                    ->take($category->number_of_winners_per_group)
+                    ->update(['has_qualified' => true]);
             }
 
             $stage = $match->group->knockoutStage;
@@ -265,6 +288,19 @@ class MatchesView extends Component
         return $category;
     }
 
+    public static function updateTeamsScore($groupId, $matchId)
+    {
+        $group = Group::with('groupTeams')->findOrFail($groupId);
+        $match = Game::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
+
+        $homeTeam = $match->homeTeam;
+        $homeTeamScore = $match->sets()->sum('home_team_score') - $match->sets()->sum('away_team_score');
+        $awayTeam = $match->awayTeam;
+        $awayTeamScore = $match->sets()->sum('away_team_score') - $match->sets()->sum('home_team_score');
+
+        $group->groupTeams()->where('team_id', $homeTeam->id)->increment('score', $homeTeamScore);
+        $group->groupTeams()->where('team_id', $awayTeam->id)->increment('score', $awayTeamScore);
+    }
 
     public function render()
     {
