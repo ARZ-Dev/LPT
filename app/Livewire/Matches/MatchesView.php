@@ -144,8 +144,6 @@ class MatchesView extends Component
         });
     }
 
-
-
     /**
      * @param $matchId
      * @param $winnerId
@@ -239,37 +237,60 @@ class MatchesView extends Component
 
             self::updateTeamsScore($group->id, $match->id);
 
-            // update group rankings - start
             $groupTeams = GroupTeam::where('group_id', $match->group_id)
                 ->orderByDesc('wins')
                 ->orderByDesc('score')
                 ->get();
 
-            $currentRank = 1;
-            $previousTeam = null;
-
-            foreach ($groupTeams as $team) {
-                if ($previousTeam && $previousTeam->wins === $team->wins && $previousTeam->score === $team->score) {
-                    $team->update(['rank' => $previousTeam->rank]);
-                } else {
-                    $team->update(['rank' => $currentRank]);
-                }
-
-                $previousTeam = $team;
-                $currentRank++;
-            }
-            // update group rankings - end
+            self::updateGroupTeamRanks($groupTeams);
 
             $matchesPlayedCount = GroupTeam::where('group_id', $match->group_id)->where('matches_played', $groupTeams->count() - 1)->count();
 
             if ($matchesPlayedCount == $groupTeams->count()) {
 
-                $group->update(['is_completed' => true]);
-
-                GroupTeam::where('group_id', $match->group_id)
+                $teamsToQualify = GroupTeam::where('group_id', $match->group_id)
                     ->orderBy('rank')
-                    ->take($category->number_of_winners_per_group)
-                    ->update(['has_qualified' => true]);
+                    ->whereBetween('rank', [1, $category->number_of_winners_per_group])
+                    ->get();
+
+                if (count($teamsToQualify) == $category->number_of_winners_per_group) {
+
+                    $group->update([
+                        'is_completed' => true,
+                        'qualification_status' => 'completed',
+                    ]);
+
+                    GroupTeam::where('group_id', $match->group_id)
+                        ->orderBy('rank')
+                        ->take($category->number_of_winners_per_group)
+                        ->update([
+                            'has_qualified' => true
+                        ]);
+
+                } else {
+
+                    // Find drawn teams
+                    $doubleRank = null;
+                    foreach ($teamsToQualify as $team) {
+                        $sameRankTeams = $groupTeams->where('rank', $team->rank);
+                        if ($sameRankTeams->count() > 1) {
+                            $doubleRank = $team->rank;
+                        }
+                    }
+
+                    $drawnTeamsIds = $groupTeams->where('rank', $doubleRank)->pluck('team_id')->toArray();
+
+                    GroupTeam::where('group_id', $match->group_id)
+                        ->where('rank', '<', $category->number_of_winners_per_group)
+                        ->update([
+                            'has_qualified' => true
+                        ]);
+
+                    $group->update([
+                        'qualification_status' => 'draw',
+                        'drawn_teams_ids' => json_encode($drawnTeamsIds),
+                    ]);
+                }
             }
 
             $stage = $match->group->knockoutStage;
@@ -286,6 +307,27 @@ class MatchesView extends Component
             }
         }
         return $category;
+    }
+
+    /**
+     * @param $groupTeams
+     * @return void
+     */
+    public static function updateGroupTeamRanks($groupTeams): void
+    {
+        $currentRank = 1;
+        $previousTeam = null;
+
+        foreach ($groupTeams as $team) {
+            if ($previousTeam && $previousTeam->wins === $team->wins && $previousTeam->score === $team->score) {
+                $team->update(['rank' => $previousTeam->rank]);
+            } else {
+                $team->update(['rank' => $currentRank]);
+            }
+
+            $previousTeam = $team;
+            $currentRank++;
+        }
     }
 
     public static function updateTeamsScore($groupId, $matchId)

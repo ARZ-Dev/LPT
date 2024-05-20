@@ -61,4 +61,9 @@ class TournamentLevelCategory extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    public function groupStage()
+    {
+        return $this->hasOne(KnockoutStage::class)->where('name', 'Group Stages');
+    }
 }
