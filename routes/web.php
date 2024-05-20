@@ -61,6 +61,8 @@ use App\Livewire\Matches\KnockoutStageView;
 use App\Livewire\Tournaments\TournamentTypeView;
 use App\Livewire\Tournaments\TournamentTypeForm;
 
+use App\Livewire\GroupStages\GroupStageRanking;
+
 Route::get('/login', Login::class)->name('login');
 
 Route::get('/', function () {
@@ -234,10 +236,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
 
-        Route::group(['prefix' => 'types'], function() {
-            Route::get('/', TournamentTypeView::class)->name('types');
-            Route::get('/edit/{typeId}', TournamentTypeForm::class)->name('types.edit');
+
+
+        Route::group(['prefix' => 'group-stages'], function() {
+            Route::get('/{categoryId}', GroupStageRanking::class)->name('group-stages.rankings');
         });
+    });
+
+    Route::group(['prefix' => 'tournament-types'], function() {
+        Route::get('/', TournamentTypeView::class)->name('types');
+        Route::get('/edit/{typeId}', TournamentTypeForm::class)->name('types.edit');
     });
 
 });

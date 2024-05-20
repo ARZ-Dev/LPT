@@ -114,8 +114,8 @@ class MatchesView extends Component
             'completed_at' => now(),
         ]);
 
-        $stageSettings = $match->type == "Knockouts" ? $match->knockoutRound->knockoutStage : $match->group->groupStage;
-        throw_if(!$stageSettings->nb_of_sets || !$stageSettings->nb_of_games, new \Exception($stageSettings->name . " settings are required!"));
+        $stageSettings = $match->type == "Knockouts" ? $match->knockoutRound->knockoutStage : $match->group->knockoutStage;
+        throw_if(!$stageSettings?->nb_of_sets || !$stageSettings?->nb_of_games, new \Exception($stageSettings?->name . " settings are required!"));
 
         for ($i = 1; $i <= $stageSettings->nb_of_sets; $i++) {
 

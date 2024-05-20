@@ -186,6 +186,9 @@
                                 <div class="card mt-2 mb-2 shadow-lg">
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0">{{ $stage->name }}</h5>
+                                        @if($stage->name == "Group Stages")
+                                            <a class="btn btn-primary h-50" href="{{ route('group-stages.rankings', $stage->tournament_level_category_id) }}">Rankings</a>
+                                        @endif
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
@@ -202,6 +205,7 @@
                                                         data-live-search="true"
                                                         data-icon-base="ti"
                                                         data-tick-icon="ti-check text-white"
+                                                        @disabled($stage->is_completed)
                                                     >
                                                         @foreach($deuceTypes as $type)
                                                             <option value="{{ $type->id }}" @selected(($stagesDetails[$stage->id]['tournament_deuce_type_id'] ?? "") == $type->id)>{{ $type->name }}</option>
@@ -218,6 +222,7 @@
                                                     id="stage"
                                                     name="stage"
                                                     class="form-control number-input required"
+                                                    @disabled($stage->is_completed)
                                                 />
                                                 @error('stagesDetails.' . $stage->id . '.nb_of_sets') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
@@ -229,6 +234,7 @@
                                                     id="stage"
                                                     name="stage"
                                                     class="form-control number-input required"
+                                                    @disabled($stage->is_completed)
                                                 />
                                                 @error('stagesDetails.' . $stage->id . '.nb_of_games') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
@@ -240,6 +246,7 @@
                                                     id="stage"
                                                     name="stage"
                                                     class="form-control number-input required"
+                                                    @disabled($stage->is_completed)
                                                 />
                                                 @error('stagesDetails.' . $stage->id . '.tie_break') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
