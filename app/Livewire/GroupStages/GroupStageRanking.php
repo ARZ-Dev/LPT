@@ -51,7 +51,7 @@ class GroupStageRanking extends Component
                 ]);
 
                 $qualifiedTeamsCount = GroupTeam::where('group_id', $groupId)->where('has_qualified', true)->count();
-                throw_if($qualifiedTeamsCount > $this->category->number_of_winners_per_group, new \Exception("Only " . $this->category->number_of_winners_per_group . " must qualify from each group!"));
+                throw_if($qualifiedTeamsCount > $this->category->number_of_winners_per_group, new \Exception("Only " . $this->category->number_of_winners_per_group . " teams must qualify from each group!"));
 
                 Group::where('id', $groupId)->update([
                     'is_completed' => true,
@@ -70,8 +70,9 @@ class GroupStageRanking extends Component
                 ]);
             }
 
-
             DB::commit();
+
+            return to_route('group-stages.rankings', $this->category->id)->with('success', 'Teams has been qualified successfully!');
         } catch (\Exception $exception) {
             DB::rollBack();
             $this->dispatch('swal:error', [
@@ -80,7 +81,6 @@ class GroupStageRanking extends Component
             ]);
         }
 
-        return to_route('group-stages.rankings', $this->category->id)->with('success', 'Teams has been qualified successfully!');
     }
 
     public function render()

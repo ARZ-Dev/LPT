@@ -23,6 +23,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @php($showSubmitButton = false)
                     @foreach($category->groups as $group)
                         <tr class="group bg-light text-center">
                             <td colspan="9">
@@ -60,6 +61,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
+                                        @php($showSubmitButton = true)
                                         <input wire:click="toggleQualifyTeam({{ $group->id }}, {{ $groupTeam->team_id }})" type="checkbox" name="qualified-team-{{ $group->id }}" class="form-check-input">
                                     @endif
                                 </td>
@@ -71,9 +73,11 @@
             </div>
         </div>
 
-        <div class="col-12 text-end mt-4">
-            <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-        </div>
+        @if($showSubmitButton)
+            <div class="col-12 text-end mt-4">
+                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+            </div>
+        @endif
     </form>
 
     @script
