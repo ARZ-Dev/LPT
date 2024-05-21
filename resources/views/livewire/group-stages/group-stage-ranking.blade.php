@@ -2,7 +2,7 @@
 
     <form wire:submit.prevent="submit">
 
-        <div wire:ignore class="card">
+        <div class="card">
             <div class="card-header border-bottom d-flex justify-content-between">
                 <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} - Groups</h4>
                 <a class="btn btn-primary h-50" href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}">{{ $category->levelCategory?->name }} Category</a>
@@ -27,10 +27,11 @@
                         <tr class="group bg-light text-center">
                             <td colspan="9">
                                 {{ $group->name }}
+                                @error('qualifiedTeams.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
                             </td>
                         </tr>
                         @foreach($group->groupTeams as $groupTeam)
-                            <tr>
+                            <tr wire:ignore>
                                 <td class="text-center">
                                     {{ $groupTeam->id }}
                                 </td>
@@ -59,7 +60,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
-                                        <input wire:click="toggleQualifyTeam({{ $group->id }}, {{ $groupTeam->team_id }})" type="radio" name="qualified-team-{{ $group->id }}" class="form-check-input">
+                                        <input wire:click="toggleQualifyTeam({{ $group->id }}, {{ $groupTeam->team_id }})" type="checkbox" name="qualified-team-{{ $group->id }}" class="form-check-input">
                                     @endif
                                 </td>
                             </tr>

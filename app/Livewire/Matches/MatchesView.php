@@ -270,18 +270,19 @@ class MatchesView extends Component
                 } else {
 
                     // Find drawn teams
-                    $doubleRank = null;
+                    $multipleRank = null;
                     foreach ($teamsToQualify as $team) {
                         $sameRankTeams = $groupTeams->where('rank', $team->rank);
                         if ($sameRankTeams->count() > 1) {
-                            $doubleRank = $team->rank;
+                            $multipleRank = $team->rank;
                         }
                     }
 
-                    $drawnTeamsIds = $groupTeams->where('rank', $doubleRank)->pluck('team_id')->toArray();
+                    $drawnTeamsIds = $groupTeams->where('rank', $multipleRank)->pluck('team_id')->toArray();
 
                     GroupTeam::where('group_id', $match->group_id)
                         ->where('rank', '<', $category->number_of_winners_per_group)
+                        ->whereNot('rank', $multipleRank)
                         ->update([
                             'has_qualified' => true
                         ]);
