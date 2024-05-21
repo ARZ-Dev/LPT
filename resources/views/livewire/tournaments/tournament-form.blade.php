@@ -47,12 +47,12 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label class="form-label">Start Date *</label>
-                                <input wire:model="startDate" type="date" class="form-control dt-input">
+                                <input wire:model="startDate" value="{{ $startDate }}" type="text" class="form-control flatpickr-date" placeholder="YYYY-MM-DD">
                                 @error('startDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label class="form-label">End Date *</label>
-                                <input wire:model="endDate" type="date" class="form-control dt-input">
+                                <input wire:model="endDate" value="{{ $endDate }}" type="text" class="form-control flatpickr-date" placeholder="YYYY-MM-DD">
                                 @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             @can('tournament-setSubscriptionFees')

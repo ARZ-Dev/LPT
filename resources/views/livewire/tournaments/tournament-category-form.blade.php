@@ -54,12 +54,12 @@
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
                                     <label class="form-label">Start Date *</label>
-                                    <input wire:model="start_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
+                                    <input wire:model="start_date" id="start_date" type="text" value="{{ $start_date }}" class="form-control flatpickr-date" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
                                     @error('start_date') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <label class="form-label">End Date *</label>
-                                    <input wire:model="end_date" type="date" class="form-control" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
+                                    <input wire:model="end_date" id="end_date" type="text" value="{{ $end_date }}" class="form-control flatpickr-date" min="{{ $tournament->start_date }}" max="{{ $tournament->end_date }}" @disabled(!$canEditDetails)>
                                     @error('end_date') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -344,6 +344,23 @@
                 $('.absent-modal').modal('hide');
             }
         })
+
+        $(document).ready(function () {
+
+            $('#start_date').flatpickr({
+                dateFormat: "Y-m-d",
+                minDate: "{{ $tournament->start_date }}",
+                maxDate: "{{ $tournament->end_date }}",
+            })
+
+            $('#end_date').flatpickr({
+                dateFormat: "Y-m-d",
+                minDate: "{{ $tournament->start_date }}",
+                maxDate: "{{ $tournament->end_date }}",
+            })
+            
+        })
+
     </script>
     @endscript
 </div>
