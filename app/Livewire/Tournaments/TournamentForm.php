@@ -37,6 +37,8 @@ class TournamentForm extends Component
     public $defaultCurrency;
 
     public $currencies = [];
+    public $submitting = false;
+
     public function mount($id = 0, $status = 0)
     {
         $this->levelCategories = LevelCategory::has('teams')->get();
@@ -109,6 +111,11 @@ class TournamentForm extends Component
     public function store()
     {
         $this->validate();
+
+        if ($this->submitting) {
+            return false;
+        }
+        $this->submitting = true;
 
         $tournament = Tournament::create([
             'created_by' => auth()->id(),
