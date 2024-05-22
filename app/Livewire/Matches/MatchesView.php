@@ -134,6 +134,10 @@ class MatchesView extends Component
         }
 
         self::updateMatchWinner($matchId, $winnerTeam->id);
+
+        $match->update([
+            'status' => 'forfeited',
+        ]);
     }
 
     public static function updateTeamsRank($levelCategoryId)
@@ -166,6 +170,7 @@ class MatchesView extends Component
             'loser_team_id' => $loserTeamId,
             'is_completed' => 1,
             'completed_at' => now(),
+            'status' => 'completed',
         ]);
 
         $match->homeTeam->increment('matches');

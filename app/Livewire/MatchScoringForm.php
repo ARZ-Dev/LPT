@@ -100,6 +100,7 @@ class MatchScoringForm extends Component
                     'is_started' => true,
                     'started_at' => now(),
                     'started_by' => auth()->id(),
+                    'status' => 'started',
                 ]);
             }
 

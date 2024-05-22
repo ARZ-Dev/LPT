@@ -2,7 +2,7 @@
     <div class="card bg-light rounded">
         <div class="card-header d-flex justify-content-between">
             <div>
-                <span>Match #{{ $match->id }}</span> <br>
+                <span>Match #{{ $match->id }} - Status: {{ ucfirst($match->status) }}</span> <br>
                 <span>{{ $match->type == "Knockouts" ? $match->knockoutRound->name : $match->group->name }} Round</span> <br>
                 <span>Date: {{ $match->datetime ?? "N/A" }}</span>
             </div>

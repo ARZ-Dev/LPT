@@ -16,6 +16,7 @@
                         <th>Datetime</th>
                         <th>Started At / By</th>
                         <th>Winner Team</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -46,6 +47,19 @@
                             @endif
                         </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
+                        <td>
+                            @php($badgeLabel = "warning")
+                            @if($match->status == "started")
+                                @php($badgeLabel = "info")
+                            @elseif($match->status == "completed")
+                                @php($badgeLabel = "success")
+                            @elseif($match->status == "forfeited")
+                                @php($badgeLabel = "danger")
+                            @endif
+                            <span class="badge bg-label-{{ $badgeLabel }}">
+                                {{ ucfirst($match->status) }}
+                            </span>
+                        </td>
 
                         <td class="text-nowrap">
 
@@ -75,7 +89,7 @@
                                 </a>
                             @endif
 
-                            @if($match->is_started)
+                            @if($match->is_started && $match->status != 'forfeited')
                                 <a href="{{ route('matches.details', [$match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
 
