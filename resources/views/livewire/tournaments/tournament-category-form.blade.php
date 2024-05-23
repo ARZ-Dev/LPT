@@ -140,7 +140,7 @@
                                                                 </a>
                                                             @endif
                                                         </div>
-                                                        <p class="card-text">Players: {{ count($team->players) }}</p>
+                                                        <p class="card-text">Players: {{ implode(', ', $team->players->pluck('full_name')->toArray()) }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -358,7 +358,7 @@
                 minDate: "{{ $tournament->start_date }}",
                 maxDate: "{{ $tournament->end_date }}",
             })
-            
+
         })
 
     </script>

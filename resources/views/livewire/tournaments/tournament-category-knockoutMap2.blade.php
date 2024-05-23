@@ -4,7 +4,7 @@
         <a class="btn btn-primary" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
     </div>
 
-    <div class="my_gracket mt-4"></div>
+    <div class="my_gracket mt-4 w-auto"></div>
 
     @script
     <script type="text/javascript">
