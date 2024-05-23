@@ -208,6 +208,10 @@
                 subCategorySelector.selectpicker('refresh');
             }
         })
+
+        $(document).on('change', '#sub_category_id', function() {
+            $wire.dispatch('setCharge')
+        })
     </script>
     @endscript
 </div>

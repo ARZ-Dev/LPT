@@ -35,14 +35,18 @@ class CategoryForm extends Component
         if ($id) {
             $this->editing = true;
             $this->category = Category::with('subCategories','user')->findOrFail($id);
-
-
-
             $this->user_id = $this->category->user_id;
             $this->name = $this->category->name;
             $this->type = $this->category->type;
 
-            $this->subCategories = $this->category->subCategories->toArray();
+            $this->subCategories = [];
+            foreach ($this->category->subCategories as $subCategory) {
+                $this->subCategories[] = [
+                    'id' => $subCategory->id,
+                    'name' => $subCategory->name,
+                    'charge' => !empty($subCategory->charge) ? number_format($subCategory->charge, 2) : NULL,
+                ];
+            }
         }
 
     }
@@ -54,6 +58,7 @@ class CategoryForm extends Component
             'type' => ['required', 'in:payment,receipt'],
             'subCategories' => ['array'],
             'subCategories.*.name' => ['required', 'string', 'max:255', 'distinct'],
+            'subCategories.*.charge' => ['nullable'],
         ];
     }
 
@@ -61,7 +66,8 @@ class CategoryForm extends Component
     public function addRow()
     {
         $this->subCategories[] = [
-            'name' => ''
+            'name' => '',
+            'charge' => '',
         ];
     }
 
@@ -93,6 +99,7 @@ class CategoryForm extends Component
             SubCategory::create([
                 'category_id' => $categoryId,
                 'name' => $subCategory['name'],
+                'charge' => !empty($subCategory['charge']) ? sanitizeNumber($subCategory['charge']) : NULL,
             ]);
         }
 
@@ -121,6 +128,7 @@ class CategoryForm extends Component
             ],[
                 'category_id' => $this->category->id,
                 'name' => $subCategory['name'],
+                'charge' => !empty($subCategory['charge']) ? sanitizeNumber($subCategory['charge']) : NULL,
             ]);
 
             $subCategoryIds[] = $newSubCategory->id;

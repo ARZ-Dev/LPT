@@ -175,6 +175,20 @@ class ReceiptForm extends Component
         }
     }
 
+    #[On('setCharge')]
+    public function setCharge()
+    {
+        $subCategory = SubCategory::with('category')->find($this->sub_category_id);
+        if ($subCategory->charge) {
+            $this->receiptAmounts = [
+                [
+                    'amount' => number_format($subCategory->charge, 2),
+                    'currency_id' => $this->defaultCurrency->id,
+                ]
+            ];
+        }
+    }
+
     #[On('getSubCategories')]
     public function getSubCategories()
     {

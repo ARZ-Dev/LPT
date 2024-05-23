@@ -37,18 +37,50 @@
 
                     @foreach($subCategories as $index => $subcategory)
                     <div wire:key="subcategory-{{ $index }}">
-                        <label class="form-label" for="sub_category[{{ $index }}][name]">Sub Category Name <span class="text-danger">*</span> </label>
-                        <div class="d-flex flex-row">
-                            <input class="form-control w-50 me-2" wire:model="subCategories.{{ $index }}.name" type="text" id="sub_category[{{ $index }}][name]" name="sub_category[{{ $index }}][name]" placeholder="Sub Category Name" required>
+
+                        <div class="row ">
+                            <div class="col-5">
+                                <label class="form-label" for="sub_category[{{ $index }}][name]">Sub Category Name <span class="text-danger">*</span> </label>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label" for="charge-{{$index}}">Charge</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-12 col-md-5 col-sm-12 sm-mb">
+                                <input class="form-control"
+                                       wire:model="subCategories.{{ $index }}.name"
+                                       type="text" id="sub_category[{{ $index }}][name]"
+                                       name="sub_category[{{ $index }}][name]"
+                                       placeholder="Sub Category Name"
+                                       required
+                                >
+                                @error('subCategories.'. $index .'.name') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="col-12 col-md-5 col-sm-12 sm-mb">
+                                <input
+                                    wire:model="subCategories.{{ $index }}.charge"
+                                    class="form-control cleave-input"
+                                    type="text" id="sub_category[{{ $index }}][charge]"
+                                    name="sub_category[{{ $index }}][charge]"
+                                    placeholder="Charge"
+                                >
+                                @error('subCategories.'. $index .'.charge') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+
                             @if(!$status)
-                                @if($index == 0)
-                                    <button type="button" class="btn btn-success" wire:click="addRow">Add Sub Category</button>
-                                @else
-                                    <button type="button" class="btn btn-danger" wire:click="removeSubCategory({{ $index }})">Remove</button>
-                                @endif
+                                <div class="col-12 col-md-2 col-sm-12 sm-mb">
+                                    @if($index == 0)
+                                        <button type="button" class="btn btn-success ms-2" wire:click="addRow">Add Sub Category</button>
+                                    @else
+                                        <button type="button" class="btn btn-danger ms-2" wire:click="removeSubCategory({{ $index }})">Remove</button>
+                                    @endif
+                                </div>
                             @endif
                         </div>
-                        @error('subCategories.'. $index .'.name') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     @endforeach
 
@@ -71,6 +103,11 @@
     @script
     <script>
 
+        triggerCleave()
+
+        Livewire.hook('morph.added', ({ el }) => {
+            triggerCleave()
+        })
 
     </script>
     @endscript
