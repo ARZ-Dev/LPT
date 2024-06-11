@@ -63,13 +63,15 @@ use App\Livewire\Tournaments\TournamentTypeForm;
 
 use App\Livewire\GroupStages\GroupStageRanking;
 
+use App\Http\Controllers\CronJobController;
+use App\Http\Controllers\HomePageController;
+
+// |--------------------------------------------------------------------------|
+// | Backend - Start                                                          |
+// |--------------------------------------------------------------------------|
 Route::get('/login', Login::class)->name('login');
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/close-month-reminder', [\App\Http\Controllers\CronJobController::class, 'closeMonthReminder']);
+Route::get('/close-month-reminder', [CronJobController::class, 'closeMonthReminder']);
 
 Route::middleware('auth')->group(function () {
 
@@ -249,6 +251,28 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+// |--------------------------------------------------------------------------|
+// | Backend - End                                                            |
+// |--------------------------------------------------------------------------|
+
+// |--------------------------------------------------------------------------|
+// | Frontend - Start                                                         |
+// |--------------------------------------------------------------------------|
+
+Route::get('/home', [HomePageController::class, 'index'])->name('home');
+
+// |--------------------------------------------------------------------------|
+// | Frontend - End                                                           |
+// |--------------------------------------------------------------------------|
+
+
+Route::get('/', function () {
+    return redirect('/home');
+});
+
+Route::get('/{any}', function () {
+    return view('frontend.misc.404');
+})->where('any', '.*');
 
 
 

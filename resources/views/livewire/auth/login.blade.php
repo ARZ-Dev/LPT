@@ -8,24 +8,26 @@
         background-attachment: fixed;
         }
     </style>
-    
+
     <div class="container-xxl" >
 
         <div class="authentication-wrapper authentication-basic container-p-y">
 
             <div class="authentication-inner py-4" >
-
-
-
                 <!-- Login -->
                 <div class="card" >
                     <div class="card-body">
-
                         <!-- Logo -->
-                        <img src="" style="max-width: 100%;" >
-
-                        <!-- <h4 class="mb-1 pt-2">Welcome to lpt! ☕</h4> -->
-                        <!-- <p class="mb-4">Please sign-in to your account</p> -->
+                        <div class="app-brand justify-content-center mb-4 mt-2">
+                            <a href="{{ route('home') }}" class="app-brand-link gap-2">
+                                <button type="button" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light">
+                                    <span class="ti ti-home"></span>
+                                </button>
+                            </a>
+                        </div>
+                        <!-- /Logo -->
+                        <h4 class="mb-1 pt-2">Welcome to LPT! 👋</h4>
+                        <p class="mb-4">Please sign-in to your account</p>
 
                         <div id="formAuthentication" class="mb-3">
                             <div class="mb-3">
