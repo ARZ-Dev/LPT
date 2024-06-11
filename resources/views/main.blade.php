@@ -72,7 +72,7 @@
                         <div class="rd-navbar-main-top">
                             <div class="rd-navbar-main-container container">
                                 <!-- RD Navbar Brand-->
-                                <div class="rd-navbar-brand"><a class="brand" href="../landing"><img class="brand-logo " src="{{ asset('assets/frontend/images/tennis/logo-default-144x126.png') }}" alt="" width="95" height="126"/></a>
+                                <div class="rd-navbar-brand"><a class="brand" href="{{ route('home') }}"><img class="brand-logo " src="{{ asset('assets/frontend/images/tennis/logo-default-144x126.png') }}" alt="" width="95" height="126"/></a>
                                 </div>
                                 <!-- RD Navbar List-->
                                 <ul class="rd-navbar-list">
@@ -116,111 +116,78 @@
                                                     <!-- Heading Component-->
                                                     <article class="heading-component heading-component-simple">
                                                         <div class="heading-component-inner">
-                                                            <h5 class="heading-component-title">Latest News
-                                                            </h5><a class="button button-xs button-gray-outline" href="news-1.html">See all News</a>
+                                                            <h5 class="heading-component-title">Latest Tournaments
+                                                            </h5><a class="button button-xs button-gray-outline" href="news-1.html">See all Tournaments</a>
                                                         </div>
                                                     </article>
                                                     <div class="row row-20">
-                                                        <div class="col-lg-6">
-                                                            <!-- Post Classic-->
-                                                            <article class="post-classic">
-                                                                <div class="post-classic-aside"><a class="post-classic-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/megamenu-post-1-93x94.jpg') }}" alt="" width="93" height="94"/></a></div>
-                                                                <div class="post-classic-main">
-                                                                    <!-- Badge-->
-                                                                    <div class="badge badge-secondary">The Team
-                                                                    </div>
-                                                                    <p class="post-classic-title"><a href="blog-post.html">Raheem Sterling turns the tide for Manchester</a></p>
-                                                                    <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
-                                                                        <time datetime="2024">April 15, 2024</time>
-                                                                    </div>
-                                                                </div>
-                                                            </article>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <!-- Post Classic-->
-                                                            <article class="post-classic">
-                                                                <div class="post-classic-aside"><a class="post-classic-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/megamenu-post-2-93x94.jpg') }}" alt="" width="93" height="94"/></a></div>
-                                                                <div class="post-classic-main">
-                                                                    <!-- Badge-->
-                                                                    <div class="badge badge-primary">The League
-                                                                    </div>
-                                                                    <p class="post-classic-title"><a href="blog-post.html">Prem in 90 seconds: Chelsea's crisis is over!</a></p>
-                                                                    <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
-                                                                        <time datetime="2024">April 15, 2024</time>
+                                                        @php($tournaments = \App\Models\Tournament::orderBy('start_date', 'desc')->take(4)->with('levelCategories.levelCategory')->get())
+                                                        @foreach($tournaments as $tournament)
+                                                            <div class="col-lg-6">
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                        <!-- Post Classic-->
+                                                                        <article class="post-classic">
+                                                                            <div class="post-classic-main">
+                                                                                <!-- Badge-->
+                                                                                <div class="badge badge-primary">{{ $tournament->name }}</div>
+                                                                                <p class="post-classic-title">
+                                                                                    <a href="blog-post.html">
+                                                                                        {{ implode(', ', $tournament->levelCategories->pluck('levelCategory.name')->toArray()) }}
+                                                                                    </a>
+                                                                                </p>
+                                                                                <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
+                                                                                    From:<time datetime="2024">{{ Carbon\Carbon::parse($tournament->start_date)->format('M d, Y') }}</time>
+                                                                                </div>
+                                                                                <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
+                                                                                    To:<time datetime="2024">{{ Carbon\Carbon::parse($tournament->end_date)->format('M d, Y') }}</time>
+                                                                                </div>
+                                                                            </div>
+                                                                        </article>
                                                                     </div>
                                                                 </div>
-                                                            </article>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <!-- Post Classic-->
-                                                            <article class="post-classic">
-                                                                <div class="post-classic-aside"><a class="post-classic-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/megamenu-post-3-93x94.jpg') }}" alt="" width="93" height="94"/></a></div>
-                                                                <div class="post-classic-main">
-                                                                    <!-- Badge-->
-                                                                    <div class="badge badge-primary">The League
-                                                                    </div>
-                                                                    <p class="post-classic-title"><a href="blog-post.html">Good vibes back at struggling Schalke</a></p>
-                                                                    <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
-                                                                        <time datetime="2024">April 15, 2024</time>
-                                                                    </div>
-                                                                </div>
-                                                            </article>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <!-- Post Classic-->
-                                                            <article class="post-classic">
-                                                                <div class="post-classic-aside"><a class="post-classic-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/megamenu-post-4-93x94.jpg') }}" alt="" width="93" height="94"/></a></div>
-                                                                <div class="post-classic-main">
-                                                                    <!-- Badge-->
-                                                                    <div class="badge badge-primary">The League
-                                                                    </div>
-                                                                    <p class="post-classic-title"><a href="blog-post.html">Liverpool in desperate need of backup players</a></p>
-                                                                    <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
-                                                                        <time datetime="2024">April 15, 2024</time>
-                                                                    </div>
-                                                                </div>
-                                                            </article>
-                                                        </div>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Event Teaser-->
-                                            <article class="event-teaser rd-megamenu-footer">
-                                                <div class="event-teaser-header">
-                                                    <div class="event-teaser-caption">
-                                                        <h5 class="event-teaser-title">Final Europa League 2024</h5>
-                                                        <time class="event-teaser-time" datetime="2024">Saturday, December 31, 2024</time>
-                                                    </div>
-                                                    <div class="event-teaser-teams">
-                                                        <div class="event-teaser-team">
-                                                            <div class="unit unit-spacing-xs unit-horizontal align-items-center">
-                                                                <div class="unit-left"><img class="event-teaser-team-image" src="{{ asset('assets/frontend/images/team-bavaria-fc-38x50') }}.png" alt="" width="38" height="50"/>
+                                            @php($upcomingMatch = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with('group.tournamentLevelCategory.levelCategory', 'knockoutRound.tournamentLevelCategory.levelCategory')->first())
+                                            @if($upcomingMatch)
+                                                <!-- Event Teaser-->
+                                                <article class="event-teaser rd-megamenu-footer">
+                                                    <div class="event-teaser-header">
+                                                        <div class="event-teaser-caption">
+                                                            <h5 class="event-teaser-title">
+                                                                {{ getMatchCategory($upcomingMatch)->name }}
+                                                            </h5>
+                                                            <time class="event-teaser-time" datetime="2024">{{ Carbon\Carbon::parse($tournament->datetime)->format('D, M d, Y') }}</time>
+                                                        </div>
+                                                        <div class="event-teaser-teams">
+                                                            <div class="event-teaser-team">
+                                                                <div class="unit unit-spacing-xs unit-horizontal align-items-center">
+                                                                    <div class="unit-body">
+                                                                        <p class="heading-7">{{ $upcomingMatch->homeTeam->nickname }}</p>
+                                                                        <p class="text-style-1">Home Team</p>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="unit-body">
-                                                                    <p class="heading-7">Bavaria</p>
-                                                                    <p class="text-style-1">Germany</p>
+                                                            </div>
+                                                            <div class="event-teaser-team-divider"><span class="event-teaser-team-divider-text">VS</span></div>
+                                                            <div class="event-teaser-team">
+                                                                <div class="unit unit-spacing-xs unit-horizontal align-items-center">
+                                                                    <div class="unit-body">
+                                                                        <p class="heading-7">{{ $upcomingMatch->awayTeam->nickname }}</p>
+                                                                        <p class="text-style-1">Away Team</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="event-teaser-team-divider"><span class="event-teaser-team-divider-text">VS</span></div>
-                                                        <div class="event-teaser-team">
-                                                            <div class="unit unit-spacing-xs unit-horizontal align-items-center">
-                                                                <div class="unit-left"><img class="event-teaser-team-image" src="{{ asset('assets/frontend/images/team-sportland-41x55.png') }}" alt="" width="41" height="55"/>
-                                                                </div>
-                                                                <div class="unit-body">
-                                                                    <p class="heading-7">sportland</p>
-                                                                    <p class="text-style-1">USA</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="event-teaser-countdown event-teaser-highlighted">
-                                                    <!-- Countdown-->
-                                                    <div class="countdown countdown-classic" data-type="until" data-time="31 Dec 2024 16:00" data-format="dhms" data-style="short"></div>
-                                                </div>
-                                                <div class="event-teaser-aside"><a class="event-teaser-link" href="#">Buy Tickets</a></div>
-                                            </article>
+                                                    <div class="event-teaser-countdown event-teaser-highlighted">
+                                                        <!-- Countdown-->
+                                                        <div class="countdown countdown-classic" data-type="until" data-time="{{ Carbon\Carbon::parse($upcomingMatch->datetime)->format('d M Y H:i') }}" data-format="dhms" data-style="short"></div>
+                                                    </div>
+                                                </article>
+                                            @endif
                                         </article>
                                     </li>
                                     <li class="rd-nav-item"><a class="rd-nav-link" href="#">Matches</a>

@@ -92,7 +92,7 @@
                                         <time class="promo-new-time lh-1" datetime="2023-12-31"><span class="heading-3">02</span><span class="heading-5">Apr</span></time>
                                         <div class="promo-new-meta-description small"><span class="d-block text-nowrap">08:30 pm</span><span class="d-block">Saturday</span></div>
                                     </div>
-                                    <div class="promo-new-figure"><img src="{{ asset('assets/frontend/images/tennis/sport-elements-1-470x353.jpg') }}" alt="" width="470" height="353"/>
+                                    <div class="promo-new-figure"><img src="{{ asset('assets/frontend/images/padel-stad.jpg') }}" alt="" width="470" height="353"/>
                                     </div>
                                 </div>
                             </div>
