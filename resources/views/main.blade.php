@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/style-tennis.css') }}" id="main-styles-link">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
 </head>
 <body>
     <div class="preloader">
@@ -188,11 +189,11 @@
                                             @endif
                                         </article>
                                     </li>
-                                    <li class="rd-nav-item">
-                                        <a class="rd-nav-link" href="#">Matches</a>
+                                    <li class="rd-nav-item {{ request()->is('matches') ? "active" : "" }}">
+                                        <a class="rd-nav-link" href="{{ route('frontend.matches') }}">Matches</a>
                                     </li>
                                     <li class="rd-nav-item {{ request()->is('teams-standings') ? "active" : "" }}">
-                                        <a class="rd-nav-link" href="{{ route('teams-standings') }}">Teams</a>
+                                        <a class="rd-nav-link" href="{{ route('frontend.teams-standings') }}">Teams</a>
                                     </li>
                                     <li class="rd-nav-item">
                                         <a class="rd-nav-link" href="#">Players</a>
@@ -304,6 +305,7 @@
     <!-- Javascript-->
     <script src="{{ asset('assets/frontend/js/core.min.js') }}"></script>
     <script src="{{ asset('assets/frontend/js/script.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     @yield('script')
 </body>
 </html>

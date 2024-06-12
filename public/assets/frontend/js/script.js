@@ -332,7 +332,7 @@
 				})
 			}
 		}
-		
+
 		/**
 		 * toggleSwiperCaptionAnimation
 		 * @description  toggle swiper animations on active slides
@@ -340,7 +340,7 @@
 		function toggleSwiperCaptionAnimation(swiper) {
 			let prevSlide = $(swiper.$el[0]),
 				nextSlide = $(swiper.slides[swiper.activeIndex]);
-			
+
 			prevSlide
 				.find("[data-caption-animate]")
 				.each(function () {
@@ -350,14 +350,14 @@
 						.removeClass($this.attr("data-caption-animate"))
 						.addClass("not-animated");
 				});
-			
+
 			nextSlide
 				.find("[data-caption-animate]")
 				.each(function () {
 					let $this = $(this),
 						delay = $this.attr("data-caption-delay");
-					
-					
+
+
 					if (!isNoviBuilder) {
 						setTimeout(function () {
 							$this
@@ -1299,7 +1299,7 @@
 						init: function () {
 							setBackgrounds(this);
 							setHoverAutoplay(this);
-							
+
 							toggleSwiperCaptionAnimation(this);
 							initLightGalleryItem($(node).find('[data-lightgallery="item"]'), 'lightGallery-in-carousel');
 
@@ -1866,3 +1866,38 @@
 		}
 	});
 }());
+
+function showPopupMsg(type, message){
+    Swal.fire({
+        title: type.charAt(0).toUpperCase() + type.slice(1),
+        text: message,
+        icon: type,
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        },
+        buttonsStyling: false,
+    });
+}
+
+function ajax_error_display(xhr, textStatus, errorThrown) {
+    // START: Laravel validation error
+    if (typeof (xhr.responseJSON) != "undefined") {
+        if (xhr.responseJSON.errors && typeof xhr.responseJSON.errors == 'object') {
+            Object.entries(xhr.responseJSON.errors).forEach(function ([key, errors]) {
+                Object.entries(errors).forEach(function ([index, error]) {
+                    showPopupMsg("error", error);
+                });
+            });
+        }
+        else if (xhr.responseJSON.message) {
+            showPopupMsg("error", xhr.responseJSON.message);
+        }
+        else {
+            showPopupMsg("error", errorThrown);
+        }
+    }
+    // END: Laravel validation error
+    else {
+        showPopupMsg("error", errorThrown);
+    }
+}

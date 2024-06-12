@@ -67,6 +67,7 @@ use App\Http\Controllers\CronJobController;
 
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\MatchController;
 
 // |--------------------------------------------------------------------------|
 // | Backend - Start                                                          |
@@ -240,8 +241,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/knockout-stages/{categoryId}', KnockoutStageView::class)->name('knockoutStage.view');
 
-
-
         Route::group(['prefix' => 'group-stages'], function() {
             Route::get('/{categoryId}', GroupStageRanking::class)->name('group-stages.rankings');
         });
@@ -262,7 +261,11 @@ Route::middleware('auth')->group(function () {
 // |--------------------------------------------------------------------------|
 
 Route::get('/home', [HomePageController::class, 'index'])->name('home');
-Route::get('/teams-standings', [TeamController::class, 'index'])->name('teams-standings');
+
+Route::get('/teams-standings', [TeamController::class, 'index'])->name('frontend.teams-standings');
+
+Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
+Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
 
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |
