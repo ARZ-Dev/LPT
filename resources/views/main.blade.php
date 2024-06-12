@@ -191,7 +191,7 @@
                                     <li class="rd-nav-item">
                                         <a class="rd-nav-link" href="#">Matches</a>
                                     </li>
-                                    <li class="rd-nav-item">
+                                    <li class="rd-nav-item {{ request()->is('teams-standings') ? "active" : "" }}">
                                         <a class="rd-nav-link" href="{{ route('teams-standings') }}">Teams</a>
                                     </li>
                                     <li class="rd-nav-item">

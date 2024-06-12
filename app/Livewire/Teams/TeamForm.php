@@ -69,7 +69,7 @@ class TeamForm extends Component
         }
         $this->submitting = true;
 
-        $rank = Team::max('rank') + 1;
+        $rank = Team::where('level_category_id', $this->levelCategoryId)->max('rank') + 1;
         $team = Team::create([
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
