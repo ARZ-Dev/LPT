@@ -132,9 +132,7 @@
                                                                                 <!-- Badge-->
                                                                                 <div class="badge badge-primary">{{ $tournament->name }}</div>
                                                                                 <p class="post-classic-title">
-                                                                                    <a href="blog-post.html">
-                                                                                        {{ implode(', ', $tournament->levelCategories->pluck('levelCategory.name')->toArray()) }}
-                                                                                    </a>
+                                                                                    {{ implode(', ', $tournament->levelCategories->pluck('levelCategory.name')->toArray()) }}
                                                                                 </p>
                                                                                 <div class="post-classic-time"><span class="icon mdi mdi-clock"></span>
                                                                                     From:<time datetime="2024">{{ Carbon\Carbon::parse($tournament->start_date)->format('M d, Y') }}</time>
@@ -158,7 +156,7 @@
                                                     <div class="event-teaser-header">
                                                         <div class="event-teaser-caption">
                                                             <h5 class="event-teaser-title">
-                                                                {{ getMatchCategory($upcomingMatch)->name }}
+                                                                Upcoming Match in {{ getMatchCategory($upcomingMatch)->name }}
                                                             </h5>
                                                             <time class="event-teaser-time" datetime="2024">{{ Carbon\Carbon::parse($tournament->datetime)->format('D, M d, Y') }}</time>
                                                         </div>
@@ -190,63 +188,14 @@
                                             @endif
                                         </article>
                                     </li>
-                                    <li class="rd-nav-item"><a class="rd-nav-link" href="#">Matches</a>
-                                        <ul class="rd-menu rd-navbar-dropdown">
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="blog-elements.html">Blog Elements</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="news-1.html">News 1</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="news-2.html">News 2</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="news-3.html">News 3</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="news-4.html">News 4</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="news-5.html">News 5</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="blog-post.html">Blog post</a>
-                                            </li>
-                                        </ul>
+                                    <li class="rd-nav-item">
+                                        <a class="rd-nav-link" href="#">Matches</a>
                                     </li>
-                                    <li class="rd-nav-item"><a class="rd-nav-link" href="#">Teams</a>
-                                        <ul class="rd-menu rd-navbar-dropdown">
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="sport-elements.html">Sport Elements</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="game-overview.html">Game Overview</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="roster.html">Roster</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="standings.html">Standings</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="latest-results-1.html">Latest Results 1</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="latest-results-2.html">Latest Results 2</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="game-schedule.html">Game schedule</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="player-page.html">Player Page</a>
-                                            </li>
-                                        </ul>
+                                    <li class="rd-nav-item">
+                                        <a class="rd-nav-link" href="{{ route('teams-standings') }}">Teams</a>
                                     </li>
-                                    <li class="rd-nav-item"><a class="rd-nav-link" href="#">Players</a>
-                                        <ul class="rd-menu rd-navbar-dropdown">
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="sport-elements.html">Sport Elements</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="game-overview.html">Game Overview</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="roster.html">Roster</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="standings.html">Standings</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="latest-results-1.html">Latest Results 1</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="latest-results-2.html">Latest Results 2</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="game-schedule.html">Game schedule</a>
-                                            </li>
-                                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="player-page.html">Player Page</a>
-                                            </li>
-                                        </ul>
+                                    <li class="rd-nav-item">
+                                        <a class="rd-nav-link" href="#">Players</a>
                                     </li>
                                 </ul>
                                 <div class="rd-navbar-main-element">

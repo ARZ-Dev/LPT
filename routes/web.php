@@ -64,7 +64,9 @@ use App\Livewire\Tournaments\TournamentTypeForm;
 use App\Livewire\GroupStages\GroupStageRanking;
 
 use App\Http\Controllers\CronJobController;
+
 use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\TeamController;
 
 // |--------------------------------------------------------------------------|
 // | Backend - Start                                                          |
@@ -260,6 +262,7 @@ Route::middleware('auth')->group(function () {
 // |--------------------------------------------------------------------------|
 
 Route::get('/home', [HomePageController::class, 'index'])->name('home');
+Route::get('/teams-standings', [TeamController::class, 'index'])->name('teams-standings');
 
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |
