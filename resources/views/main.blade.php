@@ -43,20 +43,15 @@
                                     <div class="owl-carousel-inline-wrap">
                                         <div class="owl-carousel owl-carousel-inline" data-items="1" data-dots="false" data-nav="true" data-autoplay="true" data-autoplay-speed="3200" data-stage-padding="0" data-loop="true" data-margin="10" data-mouse-drag="false" data-touch-drag="false" data-nav-custom=".owl-carousel-navbar">
                                             <!-- Post Inline-->
-                                            <article class="post-inline">
-                                                <time class="post-inline-time" datetime="2024">April 15, 2024</time>
-                                                <p class="post-inline-title">Sportland vs Dream Team</p>
-                                            </article>
-                                            <!-- Post Inline-->
-                                            <article class="post-inline">
-                                                <time class="post-inline-time" datetime="2024">April 15, 2024</time>
-                                                <p class="post-inline-title">Sportland vs Real Madrid</p>
-                                            </article>
-                                            <!-- Post Inline-->
-                                            <article class="post-inline">
-                                                <time class="post-inline-time" datetime="2024">April 15, 2024</time>
-                                                <p class="post-inline-title">Sportland vs Barcelona</p>
-                                            </article>
+                                            @php($upcomingMatches = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with(['homeTeam', 'awayTeam'])->get())
+                                            @foreach($upcomingMatches as $match)
+                                                @if($match->homeTeam && $match->awayTeam)
+                                                <article class="post-inline">
+                                                    <time class="post-inline-time" datetime="{{ \Carbon\Carbon::parse($match->datetime)->format('Y') }}">{{ \Carbon\Carbon::parse($match->datetime)->format('M d, Y') }}</time>
+                                                    <p class="post-inline-title">{{ $match->homeTeam->nickname }} vs {{ $match->awayTeam->nickname }}</p>
+                                                </article>
+                                                @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +184,7 @@
                                             @endif
                                         </article>
                                     </li>
-                                    <li class="rd-nav-item {{ request()->is('matches') ? "active" : "" }}">
+                                    <li class="rd-nav-item {{ request()->is('matches*') ? "active" : "" }}">
                                         <a class="rd-nav-link" href="{{ route('frontend.matches') }}">Matches</a>
                                     </li>
                                     <li class="rd-nav-item {{ request()->is('teams-standings') ? "active" : "" }}">

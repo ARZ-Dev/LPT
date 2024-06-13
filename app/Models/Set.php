@@ -20,4 +20,9 @@ class Set extends Model
     {
         return $this->hasMany(SetGame::class);
     }
+
+    public function points()
+    {
+        return $this->hasManyThrough(SetGamePoint::class, SetGame::class);
+    }
 }

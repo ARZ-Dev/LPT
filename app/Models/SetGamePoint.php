@@ -15,4 +15,9 @@ class SetGamePoint extends Model
     {
         return $this->belongsTo(SetGame::class);
     }
+
+    public function pointTeam()
+    {
+        return $this->belongsTo(Team::class, 'point_team_id');
+    }
 }

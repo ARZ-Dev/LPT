@@ -266,6 +266,7 @@ Route::get('/teams-standings', [TeamController::class, 'index'])->name('frontend
 
 Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
 Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
+Route::get('/matches/{matchId}', [MatchController::class, 'view'])->name('frontend.matches.view');
 
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |

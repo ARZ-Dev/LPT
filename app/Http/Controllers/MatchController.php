@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\LevelCategory;
+use App\Models\SetGamePoint;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
@@ -49,5 +50,13 @@ class MatchController extends Controller
         return response()->json([
             'matchesHtml' => $matchesHtml,
         ]);
+    }
+
+    public function view($matchId)
+    {
+        $match = Game::with(['sets' => ['setGames', 'points' => ['pointTeam']]])->findOrFail($matchId);
+        $points = $match->sets->pluck('points')->flatten();
+
+        return view('frontend.matches.view', compact('match', 'points'));
     }
 }
