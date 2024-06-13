@@ -9,7 +9,7 @@
                     <!-- Heading Component-->
                     <article class="heading-component">
                         <div class="heading-component-inner">
-                            <h5 class="heading-component-title">Game schedule
+                            <h5 class="heading-component-title">Matches schedule
                             </h5>
                             <div class="heading-component-aside">
                                 <form id="filtersForm">

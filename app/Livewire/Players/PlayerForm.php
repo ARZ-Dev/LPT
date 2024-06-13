@@ -39,6 +39,7 @@ class PlayerForm extends Component
     public $phone_number = '';
     public $country_id = '';
     public $nickname = '';
+    public $gender = '';
     public $playing_side = '';
     // form fields - end
 
@@ -80,6 +81,7 @@ class PlayerForm extends Component
         $this->phone_number = $player->phone_number;
         $this->country_id = $player->country_id;
         $this->nickname = $player->nickname;
+        $this->gender = $player->gender;
         $this->playing_side = $player->playing_side;
     }
 
@@ -95,6 +97,7 @@ class PlayerForm extends Component
             'phone_number' => ['required'],
             'country_id' => ['required'],
             'nickname' => ['required'],
+            'gender' => ['required', 'in:male,female'],
             'playing_side' => ['required', 'in:left,right'],
             'nationalIdFile' => ['nullable', 'file', 'max:2048']
         ];
@@ -127,6 +130,7 @@ class PlayerForm extends Component
                 'phone_number' => $this->phone_number,
                 'country_id' => $this->country_id,
                 'nickname' => $this->nickname,
+                'gender' => $this->gender,
                 'playing_side' => $this->playing_side,
             ];
 
@@ -190,6 +194,7 @@ class PlayerForm extends Component
                 'phone_number' => $this->phone_number,
                 'country_id' => $this->country_id,
                 'nickname' => $this->nickname,
+                'gender' => $this->gender,
                 'playing_side' => $this->playing_side,
             ];
 

@@ -118,6 +118,25 @@
                                 />
                                 @error('nickname') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="gender">Gender *</label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model="gender"
+                                        id="gender"
+                                        class="selectpicker w-100 @error('team_id') invalid-validation-select @enderror"
+                                        title="Select Gender"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-tick-icon="ti-check text-white" required>
+                                        <option value="male" @selected("male" == $gender)>Male</option>
+                                        <option value="female" @selected("female" == $gender)>Female</option>
+                                    </select>
+                                </div>
+                                @error('gender') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
 

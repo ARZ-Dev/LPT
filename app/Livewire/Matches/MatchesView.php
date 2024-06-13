@@ -6,9 +6,11 @@ use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\KnockoutRound;
+use App\Models\Player;
 use App\Models\Set;
 use App\Models\Team;
 use App\Models\TournamentLevelCategory;
+use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentTypeSettings;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -146,6 +148,11 @@ class MatchesView extends Component
         $teams->each(function ($team, $index) {
             $team->update(['rank' => $index + 1]);
         });
+
+        $players = Player::orderBy('points', 'desc')->get();
+        $players->each(function ($player, $index) {
+            $player->update(['rank' => $index + 1]);
+        });
     }
 
     /**
@@ -175,8 +182,22 @@ class MatchesView extends Component
 
         $match->homeTeam->increment('matches');
         $match->awayTeam->increment('matches');
+
+        $homeTeamPlayersIds = json_decode(TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->where('team_id', $match->home_team_id)->first()->players_ids ?? "[]");
+        $awayTeamPlayersIds = json_decode(TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->where('team_id', $match->away_team_id)->first()->players_ids ?? "[]");
+
+        Player::whereIn('id', $homeTeamPlayersIds)->orWhereIn('id', $awayTeamPlayersIds)->increment('matches');
+
         $match->winnerTeam->increment('wins');
         $match->loserTeam->increment('losses');
+
+        if ($match->home_team_id == $match->winner_team_id) {
+            Player::whereIn('id', $homeTeamPlayersIds)->increment('wins');
+            Player::whereIn('id', $awayTeamPlayersIds)->increment('losses');
+        } else {
+            Player::whereIn('id', $homeTeamPlayersIds)->increment('losses');
+            Player::whereIn('id', $awayTeamPlayersIds)->increment('wins');
+        }
 
         if ($match->type == "Knockouts") {
             $relatedHomeGame = Game::where('related_home_game_id', $match->id)->first();
@@ -197,6 +218,12 @@ class MatchesView extends Component
                 ->where('stage', $match->knockoutRound?->knockoutStage?->name)
                 ->first()?->points ?? 0;
             $match->loserTeam->increment('points', $roundPoints);
+
+            if ($match->home_team_id == $match->loser_team_id) {
+                Player::whereIn('id', $homeTeamPlayersIds)->increment('points', $roundPoints);
+            } else {
+                Player::whereIn('id', $awayTeamPlayersIds)->increment('points', $roundPoints);
+            }
 
             $match->knockoutRound->update([
                 'is_completed' => true,
@@ -219,7 +246,11 @@ class MatchesView extends Component
 
                 $match->winnerTeam->increment('points', $category->type->points);
 
-                self::updateTeamsRank($category->level_category_id);
+                if ($match->home_team_id == $match->winner_team_id) {
+                    Player::whereIn('id', $homeTeamPlayersIds)->increment('points', $category->type->points);
+                } else {
+                    Player::whereIn('id', $awayTeamPlayersIds)->increment('points', $category->type->points);
+                }
 
                 $completedCategoriesCount = $tournament->levelCategories()->where('is_completed', true)->count();
                 if (count($tournament->levelCategories) == $completedCategoriesCount) {
@@ -228,6 +259,8 @@ class MatchesView extends Component
                     ]);
                 }
             }
+
+            self::updateTeamsRank($category->level_category_id);
 
         } else {
             $group = Group::findOrFail($match->group_id);

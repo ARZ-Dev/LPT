@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\KnockoutRound;
 use App\Models\KnockoutStage;
+use App\Models\Player;
 use App\Models\Receipt;
 use App\Models\Set;
 use App\Models\Team;
