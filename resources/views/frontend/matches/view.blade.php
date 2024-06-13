@@ -44,13 +44,17 @@
                                         <div class="table-game-info-main table-custom-responsive">
                                             <table class="table-custom table-game-info">
                                                 <tbody>
-                                                @foreach($match->sets as $set)
+                                                @forelse($match->sets as $set)
                                                     <tr>
                                                         <td class="table-game-info-number">{{ $set->home_team_score }}</td>
                                                         <td class="table-game-info-category">Set {{ $set->set_number }}</td>
                                                         <td class="table-game-info-number">{{ $set->away_team_score }}</td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="3" class="text-center">No info available.</td>
+                                                    </tr>
+                                                @endforelse
                                                 </tbody>
                                             </table>
                                         </div>
@@ -123,6 +127,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-4">
                     <div class="row row-50">
                         <div class="col-md-6 col-lg-12">
@@ -136,38 +141,46 @@
                             <!-- Game Highlights-->
                             <div class="game-highlights overflow-x-auto" style="height: {{ count($points) ? "500px" : "auto" }}">
                                 <ul class="game-highlights-list">
-                                    <li>
-                                        <p class="game-highlights-title">Start of the Match
-                                        </p><span class="game-highlights-minute">0’</span>
-                                    </li>
-                                    @php
-                                        $previousTime = null;
-                                        $totalElapsedTime = 0;
-                                    @endphp
-                                    @foreach($points as $index => $point)
-                                        @php
-                                            if ($index === 0) {
-                                                // The first point, time is 0
-                                                $time = 0;
-                                                $previousTime = $point->created_at;
-                                            } else {
-                                                // Calculate the difference in minutes from the previous point
-                                                $currentTime = $point->created_at;
-                                                $elapsedTime = \Carbon\Carbon::parse($previousTime)->diffInMinutes($currentTime);
-                                                $totalElapsedTime += $elapsedTime;
-                                                $time = $totalElapsedTime;
-                                                $previousTime = $currentTime;
-                                            }
-                                        @endphp
-                                        <li class="team-primary">
-                                            <p class="game-highlights-title">
-                                                <span class="icon icon-xxs icon-primary fa fa-table-tennis-paddle-ball-o"></span>
-                                                <span class="game-highlights-goal">Point</span> {{ $point->home_team_score }} - {{ $point->away_team_score }}
-                                            </p>
-                                            <p class="game-highlights-description">{{ $point->pointTeam->nickname }} scores!</p>
-                                            <span class="game-highlights-minute">{{ $time }}’</span>
+                                    @if(count($points))
+                                        <li>
+                                            <p class="game-highlights-title">Start of the Match
+                                            </p><span class="game-highlights-minute">0’</span>
                                         </li>
-                                    @endforeach
+                                        @php
+                                            $previousTime = null;
+                                            $totalElapsedTime = 0;
+                                        @endphp
+                                        @foreach($points as $index => $point)
+                                            @php
+                                                if ($index === 0) {
+                                                    // The first point, time is 0
+                                                    $time = 0;
+                                                    $previousTime = $point->created_at;
+                                                } else {
+                                                    // Calculate the difference in minutes from the previous point
+                                                    $currentTime = $point->created_at;
+                                                    $elapsedTime = \Carbon\Carbon::parse($previousTime)->diffInMinutes($currentTime);
+                                                    $totalElapsedTime += $elapsedTime;
+                                                    $time = $totalElapsedTime;
+                                                    $previousTime = $currentTime;
+                                                }
+                                            @endphp
+                                            <li class="team-primary">
+                                                <p class="game-highlights-title">
+                                                    <span class="icon icon-xxs icon-primary fa fa-table-tennis-paddle-ball-o"></span>
+                                                    <span class="game-highlights-goal">Point</span> {{ $point->home_team_score }} - {{ $point->away_team_score }}
+                                                </p>
+                                                <p class="game-highlights-description">{{ $point->pointTeam->nickname }} scores!</p>
+                                                <span class="game-highlights-minute">{{ $time }}’</span>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li>
+                                            <p class="game-highlights-title">
+                                                No highlights available.
+                                            </p>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
