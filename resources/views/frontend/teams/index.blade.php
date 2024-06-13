@@ -14,7 +14,7 @@
                             </div>
                         </article>
                         <!-- Table Players-->
-                        <div class="table-custom-responsive overflow-x-auto" style="height: 500px">
+                        <div class="table-custom-responsive overflow-x-auto" style="height: {{ count($levelCategory->teams) > 5 ? "500px" : "auto" }}">
                             <table class="table-custom table-standings table-modern dataTable">
                                 <thead>
                                 <tr>

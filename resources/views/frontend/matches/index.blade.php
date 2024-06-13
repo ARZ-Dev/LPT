@@ -56,7 +56,7 @@
                         </div>
                     </article>
                     <div id="matches">
-                        @foreach($matches as $match)
+                        @forelse($matches as $match)
                             <!-- Game Result Bug-->
                             <article class="game-result">
                                 @php($time = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('H:i') : "N/A")
@@ -107,7 +107,11 @@
                                     </div>
                                 </div>
                             </article>
-                        @endforeach
+                        @empty
+                            <div class="d-flex justify-content-center">
+                                <h6>No matches available.</h6>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -133,58 +137,8 @@
             success: function(data)
             {
                 matchesDivSelector.empty();
-                let matches = data.matches;
-                for (let i = 0; i < matches.length; i++) {
-                    let match = matches[i];
-                    let matchHtml = `
-                        <article class="game-result">
-                            <div class="game-info">
-                                <p class="game-info-subtitle">
-                                    Time: <time> {{ $time }}</time>
-                                </p>
-                                <h3 class="game-info-title">{{ getMatchCategory($match)->name }} - {{ getMatchRound($match) }}</h3>
-                                <div class="game-info-main">
-                                    <div class="game-info-team game-info-team-first">
-                                        <div class="game-result-team-name">
-                                            @if($match->homeTeam)
-                                            {{ $match->homeTeam->nickname }}
-                                            @elseif($match->relatedHomeGame)
-                                            Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
-                                            @endif
-                                        </div>
-                                        <div class="game-result-team-country">Home</div>
-                                    </div>
-                                    <div class="game-info-middle game-info-middle-vertical">
-                                        <time class="time-big">
-                                            <span class="heading-3">{{ $day }}</span> {{ $month }}
-                                        </time>
-                                        <div class="game-result-divider-wrap"><span class="game-info-team-divider">VS</span></div>
-                                        <div class="group-sm">
-                                            <div class="button button-sm button-share-outline">Share
-                                                <ul class="game-info-share">
-                                                    <li class="game-info-share-item"><a class="icon fa fa-facebook" href="#"></a></li>
-                                                    <li class="game-info-share-item"><a class="icon fa fa-twitter" href="#"></a></li>
-                                                    <li class="game-info-share-item"><a class="icon fa fa-google-plus" href="#"></a></li>
-                                                    <li class="game-info-share-item"><a class="icon fa fa-instagram" href="#"></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="game-info-team game-info-team-second">
-                                        <div class="game-result-team-name">
-                                            @if($match->awayTeam)
-                                            {{ $match->awayTeam->nickname }}
-                                            @elseif($match->relatedAwayGame)
-                                            Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
-                                            @endif
-                                        </div>
-                                        <div class="game-result-team-country">Away</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>`;
-                    matchesDivSelector.append(matchHtml);
-                }
+                let matchesHtml = data.matchesHtml;
+                matchesDivSelector.append(matchesHtml);
             },
             error: function (xhr, textStatus, errorThrown) {
                 ajax_error_display(xhr, textStatus, errorThrown);
