@@ -120,6 +120,8 @@ class PlayerForm extends Component
                 $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
             }
 
+            $rank = Player::max('rank') + 1;
+
             $data = [
                 'first_name' => $this->first_name,
                 'middle_name' => $this->middle_name,
@@ -132,6 +134,7 @@ class PlayerForm extends Component
                 'nickname' => $this->nickname,
                 'gender' => $this->gender,
                 'playing_side' => $this->playing_side,
+                'rank' => $rank,
             ];
 
             if ($path) {

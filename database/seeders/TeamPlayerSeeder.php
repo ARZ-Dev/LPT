@@ -23,11 +23,13 @@ class TeamPlayerSeeder extends Seeder
         // Attach 2 players to each team
         $playersPerTeam = 2;
 
+        $usedPlayersIds = [];
         foreach ($teams as $team) {
             // Select 2 random players and attach them to the team
-            $randomPlayers = $players->random($playersPerTeam);
+            $randomPlayers = $players->whereNotIn('id', $usedPlayersIds)->random($playersPerTeam);
             // Attach each player to the team with a specified playing_side
             foreach ($randomPlayers as $player) {
+                $usedPlayersIds[] = $player->id;
                 // Randomly assign 'left' or 'right' playing_side
                 $team->players()->attach($player->id, ['playing_side' => "right"]);
             }

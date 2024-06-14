@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Country;
+use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,6 +19,8 @@ class PlayerFactory extends Factory
      */
     public function definition(): array
     {
+        static $rank = 1;
+
         return [
             'first_name' => $this->faker->firstName,
             'middle_name' => $this->faker->firstName, // Optional field
@@ -29,6 +32,7 @@ class PlayerFactory extends Factory
             'country_id' => 123, // Generate a country using the Country factory
             'nickname' => $this->faker->word, // Generate a random nickname
             'playing_side' => $this->faker->randomElement(['left', 'right']), // Assuming playing side can be 'left' or 'right'
+            'rank' => $rank++,
         ];
     }
 }
