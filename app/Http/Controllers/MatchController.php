@@ -27,7 +27,16 @@ class MatchController extends Controller
     public function getMatches(Request $request)
     {
         $matches = Game::when($request->category_id != "All Categories", function ($query) use ($request) {
-                $query->where('level_category_id', $request->level_category_id);
+                $query->whereHas('group', function ($query) use ($request) {
+                    $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
+                        $query->where('level_category_id', $request->level_category_id);
+                    });
+                })
+                ->orWhereHas('knockoutRound', function ($query) use ($request) {
+                    $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
+                        $query->where('level_category_id', $request->level_category_id);
+                    });
+                });
             })
             ->when($request->month != "All", function ($query) use ($request) {
                 $date = CarbonImmutable::parse($request->year . "-" . $request->month . "-01");

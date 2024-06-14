@@ -16,7 +16,7 @@
                                 @csrf
                                     <ul class="list-inline list-inline-xs list-inline-middle">
                                         <li>
-                                            <select name="category_id" class="select filter-input" data-placeholder="Select an option" data-container-class="select-minimal-xl">
+                                            <select name="level_category_id" class="select filter-input" data-placeholder="Select an option" data-container-class="select-minimal-xl">
                                                 <option label="placeholder"></option>
                                                 <option value="All Categories" selected="">All Categories</option>
                                                 @foreach($levelCategories as $levelCategory)
@@ -84,6 +84,7 @@
         let matchesDivSelector = $('#matches');
         let spinnerContainer = $('#spinner-container');
 
+        matchesDivSelector.empty();
         spinnerContainer.removeClass('d-none')
         $.ajax({
             url: "{{ route('frontend.get-matches') }}",
@@ -97,7 +98,6 @@
             data: new FormData(document.getElementById('filtersForm')),
             success: function(data)
             {
-                matchesDivSelector.empty();
                 let matchesHtml = data.matchesHtml;
                 matchesDivSelector.append(matchesHtml);
             },
