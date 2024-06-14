@@ -34,27 +34,29 @@
                         <!-- RD Navbar Panel-->
                         <div class="rd-navbar-panel-inner container">
                             <div class="rd-navbar-collapse rd-navbar-panel-item rd-navbar-panel-item-left">
+                                @php($upcomingMatches = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with(['homeTeam', 'awayTeam'])->get())
+                                @if(count($upcomingMatches))
                                 <!-- Owl Carousel-->
                                 <div class="owl-carousel-navbar owl-carousel-inline-outer">
                                     <div class="owl-inline-nav">
                                         <button class="owl-arrow owl-arrow-prev"></button>
                                         <button class="owl-arrow owl-arrow-next"></button>
                                     </div>
-                                    <div class="owl-carousel-inline-wrap">
-                                        <div class="owl-carousel owl-carousel-inline" data-items="1" data-dots="false" data-nav="true" data-autoplay="true" data-autoplay-speed="3200" data-stage-padding="0" data-loop="true" data-margin="10" data-mouse-drag="false" data-touch-drag="false" data-nav-custom=".owl-carousel-navbar">
-                                            <!-- Post Inline-->
-                                            @php($upcomingMatches = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with(['homeTeam', 'awayTeam'])->get())
-                                            @foreach($upcomingMatches as $match)
-                                                @if($match->homeTeam && $match->awayTeam)
-                                                <article class="post-inline">
-                                                    <time class="post-inline-time" datetime="{{ \Carbon\Carbon::parse($match->datetime)->format('Y') }}">{{ \Carbon\Carbon::parse($match->datetime)->format('M d, Y') }}</time>
-                                                    <p class="post-inline-title">{{ $match->homeTeam->nickname }} vs {{ $match->awayTeam->nickname }}</p>
-                                                </article>
-                                                @endif
-                                            @endforeach
+                                        <div class="owl-carousel-inline-wrap">
+                                            <div class="owl-carousel owl-carousel-inline" data-items="1" data-dots="false" data-nav="true" data-autoplay="true" data-autoplay-speed="3200" data-stage-padding="0" data-loop="true" data-margin="10" data-mouse-drag="false" data-touch-drag="false" data-nav-custom=".owl-carousel-navbar">
+                                                <!-- Post Inline-->
+                                                @foreach($upcomingMatches as $match)
+                                                    @if($match->homeTeam && $match->awayTeam)
+                                                    <article class="post-inline">
+                                                        <time class="post-inline-time" datetime="{{ \Carbon\Carbon::parse($match->datetime)->format('Y') }}">{{ \Carbon\Carbon::parse($match->datetime)->format('M d, Y') }}</time>
+                                                        <p class="post-inline-title">{{ $match->homeTeam->nickname }} vs {{ $match->awayTeam->nickname }}</p>
+                                                    </article>
+                                                    @endif
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="rd-navbar-panel-item rd-navbar-panel-item-right">
                                 <ul class="list-inline list-inline-bordered">
