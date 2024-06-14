@@ -281,6 +281,9 @@ Route::group(['prefix' => 'u'], function() {
 Route::get('/', function () {
     return redirect('/home');
 });
+Route::get('/u', function () {
+    return redirect('/home');
+});
 
 Route::get('/{any}', function () {
     return view('frontend.misc.404');
