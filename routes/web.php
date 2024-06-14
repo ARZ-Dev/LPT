@@ -68,6 +68,7 @@ use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\MatchController;
+use App\Http\Controllers\PlayerController;
 
 // |--------------------------------------------------------------------------|
 // | Backend - Start                                                          |
@@ -262,12 +263,16 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', [HomePageController::class, 'index'])->name('home');
 
-Route::get('/teams-standings', [TeamController::class, 'index'])->name('frontend.teams-standings');
+Route::group(['prefix' => 'u'], function() {
+    Route::get('/teams-standings', [TeamController::class, 'index'])->name('frontend.teams-standings');
 
-Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
-Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
-Route::get('/matches/{matchId}', [MatchController::class, 'view'])->name('frontend.matches.view');
+    Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
+    Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
+    Route::get('/matches/{matchId}', [MatchController::class, 'view'])->name('frontend.matches.view');
 
+    Route::get('/players', [PlayerController::class, 'index'])->name('frontend.players');
+    Route::get('/players/{player}', [PlayerController::class, 'view'])->name('frontend.players.view');
+});
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |
 // |--------------------------------------------------------------------------|
