@@ -66,6 +66,7 @@
     </section>
 
     <!-- Upcoming events-->
+    @if(count($upcomingMatches))
     <section class="section section-xl bg-white">
         <div class="container">
             <div class="row row-50">
@@ -73,7 +74,7 @@
                     <!-- Heading Component-->
                     <article class="heading-component heading-component-lg no-decor">
                         <div class="heading-component-inner">
-                            <h5 class="heading-component-title">Upcoming events
+                            <h5 class="heading-component-title">Upcoming Tournaments
                             </h5>
                             <div class="owl-carousel-arrows-outline owl-carousel-arrows-sm owl-carousel-arrows-secondary">
                                 <div class="owl-nav">
@@ -85,101 +86,50 @@
                     </article>
                     <!-- Owl Carousel-->
                     <div class="owl-carousel" data-items="1" data-autoplay="false" data-autoplay-speed="6500" data-dots="false" data-nav="true" data-stage-padding="0" data-loop="true" data-margin="30" data-mouse-drag="false" data-nav-custom=".owl-carousel-outer-navigation">
+                        @foreach($upcomingMatches as $match)
                         <div class="promo-new row row-30">
                             <div class="col-md-6">
                                 <div class="promo-new-wrap">
                                     <div class="promo-new-meta context-dark align-items-start">
-                                        <time class="promo-new-time lh-1" datetime="2023-12-31"><span class="heading-3">02</span><span class="heading-5">Apr</span></time>
-                                        <div class="promo-new-meta-description small"><span class="d-block text-nowrap">08:30 pm</span><span class="d-block">Saturday</span></div>
+                                        <time class="promo-new-time lh-1" datetime="2023-12-31">
+                                            <span class="heading-3">{{ \Carbon\Carbon::parse($match->datetime)->format('d') }}</span>
+                                            <span class="heading-5">{{ \Carbon\Carbon::parse($match->datetime)->format('M') }}</span>
+                                        </time>
+                                        <div class="promo-new-meta-description small">
+                                            <span class="d-block text-nowrap">{{ \Carbon\Carbon::parse($match->datetime)->format('H:i') }}</span>
+                                            <span class="d-block">{{ \Carbon\Carbon::parse($match->datetime)->format('l') }}</span>
+                                        </div>
                                     </div>
-                                    <div class="promo-new-figure"><img src="{{ asset('assets/frontend/images/padel-stad.jpg') }}" alt="" width="470" height="353"/>
+                                    <div class="promo-new-figure">
+                                        <img src="{{ asset('assets/frontend/images/padel-stad.jpg') }}" alt="" width="470" height="353"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xl-5 offset-xl-1">
                                 <div class="promo-new-details">
-                                    <h3 class="promo-new-title">Credit One Charleston Open</h3>
+                                    <h3 class="promo-new-title">{{ getMatchTournament($match)->name }}</h3>
                                     <p class="promo-new-location ls-normal">
-                                        <svg class="promo-new-svg-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none">
-                                            <path d="M12.0011 0C6.92264 0 2.79102 4.13162 2.79102 9.21006C2.79102 11.301 3.47688 13.2734 4.77579 14.9158L12.0011 24L19.2278 14.9141C20.5254 13.2734 21.2112 11.3009 21.2112 9.21006C21.2112 4.13162 17.0796 0 12.0011 0ZM18.0359 13.9688L12.0011 21.5561L5.9677 13.9704C4.88477 12.6011 4.31229 10.955 4.31229 9.21006C4.31234 4.97048 7.7615 1.52133 12.0011 1.52133C16.2408 1.52133 19.6899 4.97048 19.6899 9.21006C19.6899 10.955 19.1175 12.6011 18.0359 13.9688Z"></path>
-                                            <path d="M12.0025 5.29395C9.90539 5.29395 8.19922 7.00011 8.19922 9.09726C8.19922 11.1944 9.90539 12.9006 12.0025 12.9006C14.0997 12.9006 15.8059 11.1944 15.8059 9.09726C15.8059 7.00011 14.0997 5.29395 12.0025 5.29395ZM12.0025 11.3793C10.7443 11.3793 9.72055 10.3556 9.72055 9.09726C9.72055 7.83897 10.7443 6.81527 12.0025 6.81527C13.2608 6.81527 14.2845 7.83897 14.2845 9.09726C14.2845 10.3556 13.2608 11.3793 12.0025 11.3793Z"></path>
-                                        </svg><span class="text-primary">Charleston, United States</span>
+                                        <span class="text-primary">{{ getMatchCategory($match)->name }}</span>
                                     </p>
                                     <div class="promo-main promo-new-main">
-                                        <div class="promo-team promo-new-team">
-                                            <figure class="promo-team-figure"><img src="{{ asset('assets/frontend/images/tennis/usa-70x48.jpg') }}" alt="" width="70" height="48"/>
-                                            </figure>
-                                            <div class="promo-team-title">
-                                                <div class="promo-team-name">John Isner</div>
-                                                <div class="promo-team-country">Usa</div>
-                                            </div>
+                                        <div class="promo-team-title">
+                                            <div class="promo-team-name">{{ $match->homeTeam?->nickname }}</div>
                                         </div>
                                         <div class="promo-new-middle">VS</div>
-                                        <div class="promo-team promo-new-team">
-                                            <figure class="promo-team-figure"><img src="{{ asset('assets/frontend/images/tennis/ned-70x48.jpg') }}" alt="" width="70" height="48"/>
-                                            </figure>
-                                            <div class="promo-team-title">
-                                                <div class="promo-team-name">GIJS Brouwer</div>
-                                                <div class="promo-team-country">Ned</div>
-                                            </div>
+                                        <div class="promo-team-title">
+                                            <div class="promo-team-name">{{ $match->awayTeam?->nickname }}</div>
                                         </div>
-                                    </div>
-                                    <div class="promo-new-tickets group-md text-gray-800"><a class="button button-secondary button-sm" href="#">Buy tickets</a>
-                                        <p class="ls-normal">Only&nbsp;<span class="text-primary">89</span>&nbsp;tickets left, hurry up!</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="promo-new row row-30">
-                            <div class="col-md-6">
-                                <div class="promo-new-wrap">
-                                    <div class="promo-new-meta context-dark align-items-start">
-                                        <time class="promo-new-time lh-1" datetime="2023-12-31"><span class="heading-3">08</span><span class="heading-5">Apr</span></time>
-                                        <div class="promo-new-meta-description small"><span class="d-block text-nowrap">09:30 pm</span><span class="d-block">Saturday</span></div>
-                                    </div>
-                                    <div class="promo-new-figure"><img src="{{ asset('assets/frontend/images/tennis/sport-elements-2-470x353.jpg') }}" alt="" width="470" height="353"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-xl-5 offset-xl-1">
-                                <div class="promo-new-details">
-                                    <h3 class="promo-new-title">THE KING OF CLAY COUNTDOWN</h3>
-                                    <p class="promo-new-location ls-normal">
-                                        <svg class="promo-new-svg-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none">
-                                            <path d="M12.0011 0C6.92264 0 2.79102 4.13162 2.79102 9.21006C2.79102 11.301 3.47688 13.2734 4.77579 14.9158L12.0011 24L19.2278 14.9141C20.5254 13.2734 21.2112 11.3009 21.2112 9.21006C21.2112 4.13162 17.0796 0 12.0011 0ZM18.0359 13.9688L12.0011 21.5561L5.9677 13.9704C4.88477 12.6011 4.31229 10.955 4.31229 9.21006C4.31234 4.97048 7.7615 1.52133 12.0011 1.52133C16.2408 1.52133 19.6899 4.97048 19.6899 9.21006C19.6899 10.955 19.1175 12.6011 18.0359 13.9688Z"></path>
-                                            <path d="M12.0025 5.29395C9.90539 5.29395 8.19922 7.00011 8.19922 9.09726C8.19922 11.1944 9.90539 12.9006 12.0025 12.9006C14.0997 12.9006 15.8059 11.1944 15.8059 9.09726C15.8059 7.00011 14.0997 5.29395 12.0025 5.29395ZM12.0025 11.3793C10.7443 11.3793 9.72055 10.3556 9.72055 9.09726C9.72055 7.83897 10.7443 6.81527 12.0025 6.81527C13.2608 6.81527 14.2845 7.83897 14.2845 9.09726C14.2845 10.3556 13.2608 11.3793 12.0025 11.3793Z"></path>
-                                        </svg><span class="text-primary">Charleston, United States</span>
-                                    </p>
-                                    <div class="promo-main promo-new-main">
-                                        <div class="promo-team promo-new-team">
-                                            <figure class="promo-team-figure"><img src="{{ asset('assets/frontend/images/tennis/tun-70x48.jpg') }}" alt="" width="70" height="48"/>
-                                            </figure>
-                                            <div class="promo-team-title">
-                                                <div class="promo-team-name">Wade Warren</div>
-                                                <div class="promo-team-country">TUN</div>
-                                            </div>
-                                        </div>
-                                        <div class="promo-new-middle">VS</div>
-                                        <div class="promo-team promo-new-team">
-                                            <figure class="promo-team-figure"><img src="{{ asset('assets/frontend/images/tennis/usa-70x48.jpg') }}" alt="" width="70" height="48"/>
-                                            </figure>
-                                            <div class="promo-team-title">
-                                                <div class="promo-team-name">Robert Fox</div>
-                                                <div class="promo-team-country">USA</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="promo-new-tickets group-md text-gray-800"><a class="button button-secondary button-sm" href="#">Buy tickets</a>
-                                        <p class="ls-normal">Only&nbsp;<span class="text-primary">89</span>&nbsp;tickets left, hurry up!</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Latest News-->
     <section class="section section-xl bg-white">
@@ -249,60 +199,6 @@
         <div class="container">
             <div class="row row-50">
                 <div class="col-lg-8">
-                    <div class="main-component offset-xl">
-                        <!-- Heading Component-->
-                        <article class="heading-component heading-component-lg no-decor">
-                            <div class="heading-component-inner">
-                                <h5 class="heading-component-title">STORY OF THE SEASON
-                                </h5>
-                            </div>
-                        </article>
-                        <!-- Post grace-->
-                        <article class="post-grace"><a class="post-grace-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/tennis/post-grace-1-270x200.jpg') }}" alt="" width="270" height="200"/></a>
-                            <div class="post-grace-main">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Match Report
-                                </div>
-                                <h4 class="post-grace-title ls-normal"><a href="blog-post.html">#NextGenATP Q1 Review: Shelton, Fils Enjoy Strong Starts To Season</a></h4>
-                                <div class="post-grace-text">
-                                    <p>The first quarter of the 2023 ATP Tour season marked breakthrough runs, career-best wins and titles on the ATP Challenger Tour.</p>
-                                </div>
-                                <div class="post-grace-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">January 15, 2023</time>
-                                </div>
-                            </div>
-                        </article>
-                        <!-- Post grace-->
-                        <article class="post-grace"><a class="post-grace-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/tennis/post-grace-2-270x200.jpg') }}" alt="" width="270" height="200"/></a>
-                            <div class="post-grace-main">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Match Report
-                                </div>
-                                <h4 class="post-grace-title ls-normal"><a href="blog-post.html">Scouting Report: Ruud, Tiafoe &amp; Musetti Headline In Estoril, Houston &amp; Marrakech</a></h4>
-                                <div class="post-grace-text">
-                                    <p>ATP Tour returns to clay this week with events in Estoril, Houston and Marrakech. Ruud is the top seed at the Millennium EstorIL Open.</p>
-                                </div>
-                                <div class="post-grace-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">January 13, 2023</time>
-                                </div>
-                            </div>
-                        </article>
-                        <!-- Post grace-->
-                        <article class="post-grace"><a class="post-grace-figure" href="blog-post.html"><img src="{{ asset('assets/frontend/images/tennis/post-grace-3-270x200.jpg') }}" alt="" width="270" height="200"/></a>
-                            <div class="post-grace-main">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Off Court
-                                </div>
-                                <h4 class="post-grace-title ls-normal"><a href="blog-post.html">Nadal Receives Replica Of Roland Garros Statue</a></h4>
-                                <div class="post-grace-text">
-                                    <p>On Thursday at the Rafa Nadal Academy by Movistar, Rafael Nadal received a replica of the sculpture that was unveiled in May 2024.</p>
-                                </div>
-                                <div class="post-grace-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">January 11, 2023</time>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
                     <div class="main-component owl-carousel-outer-navigation offset-xl">
                         <!-- Heading Component-->
                         <article class="heading-component heading-component-lg no-decor">
@@ -650,159 +546,6 @@
                 <!-- Aside Block-->
                 <div class="col-lg-4">
                     <aside class="aside-components">
-                        <div class="aside-component">
-                            <div class="rd-mailform-corporate-wrap">
-                                <h4 class="rd-mailform-corporate-title">Sign Up to our News!</h4>
-                                <h5 class="small rd-mailform-corporate-subtitle">Get the latest tennis news</h5>
-                                <!-- Mail Form corporate-->
-                                <form class="form-xs rd-mailform rd-mailform-corporate" data-form-output="form-output-global" data-form-type="subscribe" method="post" action="bat/rd-mailform.php">
-                                    <div class="form-wrap">
-                                        <label class="form-label" for="subscribe-email">Enter Your E-mail</label>
-                                        <input class="form-input" id="subscribe-email" type="email" name="email" data-constraints="info@arzgt.com">
-                                    </div>
-                                    <div class="form-wrap">
-                                        <button class="button button-block button-secondary button-sm" type="submit">Subscribe</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="aside-component aside-component-bordered">
-                            <!-- Heading Component-->
-                            <article class="heading-component heading-component-sm heading-component-primary no-decor">
-                                <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Recomended
-                                    </h5>
-                                </div>
-                            </article>
-                            <!-- List Post minimal-->
-                            <!-- Post tiny-->
-                            <article class="post-tiny">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Match Report
-                                </div>
-                                <h6 class="post-tiny-title"><a href="blog-post.html">DIY TENNIS: HOW AN UNORTHODOX STYLE THRIVES IN MODERN GAME</a></h6>
-                                <div class="post-tiny-text">
-                                </div>
-                                <div class="post-tiny-meta small fw-medium">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">Janyary 15, 2023</time>
-                                </div>
-                            </article>
-                            <!-- Post tiny-->
-                            <article class="post-tiny">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Match Report
-                                </div>
-                                <h6 class="post-tiny-title"><a href="blog-post.html">Cerundolo &amp; Etcheverry Score Slam Dunk Meeting With Manu Ginobili</a></h6>
-                                <div class="post-tiny-text">
-                                </div>
-                                <div class="post-tiny-meta small fw-medium">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">Janyary 15, 2023</time>
-                                </div>
-                            </article>
-                            <!-- Post tiny-->
-                            <article class="post-tiny">
-                                <!-- Badge-->
-                                <div class="badge badge-sm badge-secondary">Match Report
-                                </div>
-                                <h6 class="post-tiny-title"><a href="blog-post.html">Miami Open Unites Campaign Returns for A Third Year</a></h6>
-                                <div class="post-tiny-text">
-                                </div>
-                                <div class="post-tiny-meta small fw-medium">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                    <time datetime="2024">Janyary 15, 2023</time>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="aside-component aside-component-bordered">
-                            <!-- Heading Component-->
-                            <article class="heading-component heading-component-sm heading-component-primary no-decor">
-                                <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Stay connected
-                                    </h5>
-                                </div>
-                            </article>
-                            <div class="group-icon-media fz-0"><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-facebook" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-instagram" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-twitter" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-youtube" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-linkedin" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-gitlab" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-github" href="#"></a><a class="icon-media icon-media-bordered icon-media-round icon-media-sm icomoon-google" href="#"></a></div>
-                        </div>
-                        <div class="aside-component aside-component-bordered">
-                            <!-- Heading Component-->
-                            <article class="heading-component heading-component-sm heading-component-primary no-decor">
-                                <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Latest &amp; popular news
-                                    </h5>
-                                </div>
-                            </article>
-                            <div class="tabs-custom tabs-horizontal tabs-modern tabs-modern_2">
-                                <!-- Nav tabs-->
-                                <ul class="nav nav-tabs" role="tablist">
-                                    <li class="nav-item" role="tab"><a class="nav-link active" href="#tabs-product-1" data-bs-toggle="tab">recent</a></li>
-                                    <li class="nav-item" role="tab"><a class="nav-link" href="#tabs-product-2" data-bs-toggle="tab">popular</a></li>
-                                </ul>
-                                <!-- Tab panes-->
-                                <div class="tab-content">
-                                    <div class="tab-pane active show fade" id="tabs-product-1" role="tabpanel">
-                                        <div class="post-simple-list">
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-13-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Bonzi Advances In Rainy Marrakech</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-8-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Really Excited' Wolf Makes Fast Start In Houston</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-14-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Nominations Open For Tom Perrotta Journalism Award</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="tabs-product-2" role="tabpanel">
-                                        <div class="post-simple-list">
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-15-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">BARCELONA OPEN BANC SABADELL</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-16-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">DJOKOVIC ISSUES FITNESS UPDATE, ADMITS ELBOW 'NOT IN IDEAL SHAPE’</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <!-- Post simple-->
-                                            <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-17-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                                <div class="post-simple-main">
-                                                    <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Djokovic tested but prevails in Banja Luka opener</a></h6>
-                                                    <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                        <time datetime="2023">January 15, 2023</time>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="aside-component aside-component-bordered">
                             <!-- Heading Component-->
                             <article class="heading-component heading-component-sm heading-component-primary no-decor">

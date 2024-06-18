@@ -205,7 +205,8 @@
         });
 
         $('.flatpickr-date').flatpickr({
-            monthSelectorType: 'static'
+            monthSelectorType: 'static',
+            minDate: "today",
         });
     </script>
 
