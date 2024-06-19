@@ -138,7 +138,7 @@
                 <!-- Heading Component-->
                 <article class="heading-component heading-component-lg no-decor">
                     <div class="heading-component-inner">
-                        <h5 class="heading-component-title">THIS WEEK IN TENNIS
+                        <h5 class="heading-component-title">THIS WEEK IN PADEL
                         </h5><a class="button button-sm button-gray-outline mb-0" href="sport-elements.html">Read more</a>
                     </div>
                 </article>
@@ -230,7 +230,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-5 overflow-x-auto" style="height: 325px !important;">
                                     <div class="table-custom-responsive table-rankings-wrap">
                                         <table class="table-custom table-rankings">
                                             <thead>
@@ -269,7 +269,7 @@
                             <!-- Heading Component-->
                             <article class="heading-component heading-component-lg no-decor">
                                 <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Men Rankings
+                                    <h5 class="heading-component-title">Women Rankings
                                     </h5>
                                 </div>
                             </article>
@@ -295,7 +295,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-5 overflow-x-auto" style="height: 325px !important;">
                                     <div class="table-custom-responsive table-rankings-wrap">
                                         <table class="table-custom table-rankings">
                                             <thead>
@@ -434,57 +434,59 @@
                     </div>
                 </div>
                 <!-- Aside Block-->
-                <div class="col-lg-4">
-                    <aside class="aside-components">
-                        <div class="aside-component aside-component-bordered">
-                            <!-- Heading Component-->
-                            <article class="heading-component heading-component-sm heading-component-primary no-decor">
-                                <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Last matches results
-                                    </h5>
-                                </div>
-                            </article>
-                            @foreach($lastMatches as $match)
-                                <div class="game-result-boxed">
-                                    <div class="game-result-boxed-meta group-xs">
-                                        <div class="game-result-boxed-meta-item">{{ getMatchRound($match) }}</div>
-                                        <div class="game-result-boxed-meta-item">{{ $match->datetime }}</div>
+                @if(count($lastMatches))
+                    <div class="col-lg-4">
+                        <aside class="aside-components">
+                            <div class="aside-component aside-component-bordered">
+                                <!-- Heading Component-->
+                                <article class="heading-component heading-component-sm heading-component-primary no-decor">
+                                    <div class="heading-component-inner">
+                                        <h5 class="heading-component-title">Last matches results
+                                        </h5>
                                     </div>
-                                    <div class="table-custom-responsive">
-                                        <table class="table-game-result-boxed">
-                                            <tr>
-                                                <td>
-                                                    <div class="game-result-boxed-player">
-                                                        <span>{{ $match->homeTeam?->nickname }}</span>
-                                                    </div>
-                                                    @if($match->winner_team_id == $match->home_team_id)
-                                                        <span class="icon icomoon-check icon-success"></span>
-                                                    @endif
-                                                </td>
-                                                @foreach($match->sets as $set)
-                                                    <td>{{ $set->home_team_score }}</td>
-                                                @endforeach
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="game-result-boxed-player">
-                                                        <span>{{ $match->awayTeam?->nickname }}</span>
-                                                    </div>
-                                                    @if($match->winner_team_id == $match->away_team_id)
-                                                        <span class="icon icomoon-check icon-success"></span>
-                                                    @endif
-                                                </td>
-                                                @foreach($match->sets as $set)
-                                                    <td>{{ $set->away_team_score }}</td>
-                                                @endforeach
-                                            </tr>
-                                        </table>
+                                </article>
+                                @foreach($lastMatches as $match)
+                                    <div class="game-result-boxed">
+                                        <div class="game-result-boxed-meta group-xs">
+                                            <div class="game-result-boxed-meta-item">{{ getMatchRound($match) }}</div>
+                                            <div class="game-result-boxed-meta-item">{{ $match->datetime }}</div>
+                                        </div>
+                                        <div class="table-custom-responsive">
+                                            <table class="table-game-result-boxed">
+                                                <tr>
+                                                    <td>
+                                                        <div class="game-result-boxed-player">
+                                                            <span>{{ $match->homeTeam?->nickname }}</span>
+                                                        </div>
+                                                        @if($match->winner_team_id == $match->home_team_id)
+                                                            <span class="icon icomoon-check icon-success"></span>
+                                                        @endif
+                                                    </td>
+                                                    @foreach($match->sets as $set)
+                                                        <td>{{ $set->home_team_score }}</td>
+                                                    @endforeach
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="game-result-boxed-player">
+                                                            <span>{{ $match->awayTeam?->nickname }}</span>
+                                                        </div>
+                                                        @if($match->winner_team_id == $match->away_team_id)
+                                                            <span class="icon icomoon-check icon-success"></span>
+                                                        @endif
+                                                    </td>
+                                                    @foreach($match->sets as $set)
+                                                        <td>{{ $set->away_team_score }}</td>
+                                                    @endforeach
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </aside>
-                </div>
+                                @endforeach
+                            </div>
+                        </aside>
+                    </div>
+                @endif
             </div>
         </div>
     </section>

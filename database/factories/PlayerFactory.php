@@ -19,7 +19,16 @@ class PlayerFactory extends Factory
      */
     public function definition(): array
     {
-        static $rank = 1;
+        static $maleRank = 1;
+        static $femaleRank = 1;
+
+        $gender = $this->faker->randomElement(['male', 'female']);
+
+        if ($gender == "male") {
+            $rank = $maleRank++;
+        } else {
+            $rank = $femaleRank++;
+        }
 
         return [
             'first_name' => $this->faker->firstName,
@@ -32,7 +41,8 @@ class PlayerFactory extends Factory
             'country_id' => 123, // Generate a country using the Country factory
             'nickname' => $this->faker->word, // Generate a random nickname
             'playing_side' => $this->faker->randomElement(['left', 'right']), // Assuming playing side can be 'left' or 'right'
-            'rank' => $rank++,
+            'rank' => $rank,
+            'gender' => $gender,
         ];
     }
 }

@@ -88,7 +88,7 @@
                             <div class="rd-navbar-main-container container">
                                 <!-- RD Navbar Nav-->
                                 <ul class="rd-navbar-nav">
-                                    <li class="rd-nav-item {{ request()->is('u/home') ? "active" : "" }}"><a class="rd-nav-link" href="{{ route('home') }}">Home</a>
+                                    <li class="rd-nav-item {{ request()->is('u/home', 'home') ? "active" : "" }}"><a class="rd-nav-link" href="{{ route('home') }}">Home</a>
                                     </li>
                                     <li class="rd-nav-item"><a class="rd-nav-link" href="#">Tournaments</a>
                                         <article class="rd-menu rd-navbar-megamenu rd-megamenu-2-columns context-light">
