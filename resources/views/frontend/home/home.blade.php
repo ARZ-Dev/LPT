@@ -199,114 +199,136 @@
         <div class="container">
             <div class="row row-50">
                 <div class="col-lg-8">
-                    <div class="main-component owl-carousel-outer-navigation offset-xl">
-                        <!-- Heading Component-->
-                        <article class="heading-component heading-component-lg no-decor">
-                            <div class="heading-component-inner">
-                                <h5 class="heading-component-title">WTA Rankings
-                                </h5>
-                            </div>
-                        </article>
-                        <div class="row row-eight row-30">
-                            <div class="col-md-3">
-                                <div class="player-info-rank context-dark">
-                                    <div class="player-info-rank-main">
-                                        <div class="player-info-rank-figure"><img src="{{ asset('assets/frontend/images/tennis/iga-swiatek-270x200.jpg') }}" alt="" width="270" height="200"/>
+                    @if(count($menPlayers))
+                        <div class="main-component owl-carousel-outer-navigation offset-xl">
+                            <!-- Heading Component-->
+                            <article class="heading-component heading-component-lg no-decor">
+                                <div class="heading-component-inner">
+                                    <h5 class="heading-component-title">Men Rankings
+                                    </h5>
+                                </div>
+                            </article>
+                            <div class="row row-eight row-30">
+                                <div class="col-md-3">
+                                    <div class="player-info-rank context-dark">
+                                        <div class="player-info-rank-main">
+                                            <div class="player-info-rank-body">
+                                                <div class="player-info-rank-desc heading-4 text-black-50">Singles</div>
+                                                <div class="player-info-rank-pos heading-2 text-primary">#1</div>
+                                                <div class="player-info-rank-points">
+                                                    <div class="small text-gray-500 fw-medium">Points</div>
+                                                    <div class="heading-4 text-black-50">{{ number_format($menFirstRankPlayer?->points) }}</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="player-info-rank-body">
-                                            <div class="player-info-rank-desc heading-4">Singles</div>
-                                            <div class="player-info-rank-pos heading-2 text-primary">#1</div>
-                                            <div class="player-info-rank-points">
-                                                <div class="small text-gray-500 fw-medium">Points</div>
-                                                <div class="heading-4">8976</div>
+                                        <div class="player-info-rank-footer">
+                                            <div class="player-info-rank-name heading-5 lh-1">{{ $menFirstRankPlayer?->first_name }}</div>
+                                            <div class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $menFirstRankPlayer?->last_name }}</div>
+                                            <div class="player-info-rank-country">
+                                                <span class="small">{{ $menFirstRankPlayer?->country?->name }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="player-info-rank-footer">
-                                        <div class="player-info-rank-name heading-5 lh-1">Iga</div>
-                                        <div class="player-info-rank-surname heading-4 lh-1 mt-0">Swiatek</div>
-                                        <div class="player-info-rank-country"><img src="{{ asset('assets/frontend/images/tennis/pol-18x12.jpg') }}" alt="" width="18" height="12"/><span class="small">Pol</span>
-                                        </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="table-custom-responsive table-rankings-wrap">
+                                        <table class="table-custom table-rankings">
+                                            <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Player</th>
+                                                <th>Points</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($menPlayers as $player)
+                                                <tr>
+                                                    <td class="heading-4">{{ $player->rank }}<span>-</span></td>
+                                                    <td>
+                                                        <div class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                            <div class="unit-body">
+                                                                <p class="heading-7 lh-1">{{ $player->full_name }}</p>
+                                                                <p class="mt-0 small lh-1">
+                                                                    <span class="fw-medium ps-1 align-middle">{{ $player->country?->name }}</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="heading-4 text-primary">{{ number_format($player->points) }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
-                                <div class="table-custom-responsive table-rankings-wrap">
-                                    <table class="table-custom table-rankings">
-                                        <thead>
-                                        <tr>
-                                            <th>Rank</th>
-                                            <th>Player</th>
-                                            <th>Points</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="heading-4">2<span>-</span></td>
-                                            <td>
-                                                <div class="unit unit-spacing-sm unit-horizontal align-items-center">
-                                                    <div class="unit-left"><img src="{{ asset('assets/frontend/images/tennis/player-1-32x32.jpg') }}" alt="" width="32" height="32"/>
-                                                    </div>
-                                                    <div class="unit-body">
-                                                        <p class="heading-7 lh-1">A.Sabalenka</p>
-                                                        <p class="mt-0 small lh-1"><img src="{{ asset('assets/frontend/images/tennis/usa-18x12.jpg') }}" alt="" width="18" height="12"/><span class="fw-medium ps-1 align-middle">BLR</span>
-                                                        </p>
-                                                    </div>
+                        </div>
+                    @endif
+                    @if(count($womenPlayers))
+                        <div class="main-component owl-carousel-outer-navigation offset-xl">
+                            <!-- Heading Component-->
+                            <article class="heading-component heading-component-lg no-decor">
+                                <div class="heading-component-inner">
+                                    <h5 class="heading-component-title">Men Rankings
+                                    </h5>
+                                </div>
+                            </article>
+                            <div class="row row-eight row-30">
+                                <div class="col-md-3">
+                                    <div class="player-info-rank context-dark">
+                                        <div class="player-info-rank-main">
+                                            <div class="player-info-rank-body">
+                                                <div class="player-info-rank-desc heading-4 text-black-50">Singles</div>
+                                                <div class="player-info-rank-pos heading-2 text-primary">#1</div>
+                                                <div class="player-info-rank-points">
+                                                    <div class="small text-gray-500 fw-medium">Points</div>
+                                                    <div class="heading-4 text-black-50">{{ number_format($womenFirstRankPlayer?->points) }}</div>
                                                 </div>
-                                            </td>
-                                            <td class="heading-4 text-primary">6987</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="heading-4">3<span>-</span></td>
-                                            <td>
-                                                <div class="unit unit-spacing-sm unit-horizontal align-items-center">
-                                                    <div class="unit-left"><img src="{{ asset('assets/frontend/images/tennis/player-2-32x32.jpg') }}" alt="" width="32" height="32"/>
-                                                    </div>
-                                                    <div class="unit-body">
-                                                        <p class="heading-7 lh-1">J.PEGULA</p>
-                                                        <p class="mt-0 small lh-1"><img src="{{ asset('assets/frontend/images/tennis/usa-18x12.jpg') }}" alt="" width="18" height="12"/><span class="fw-medium ps-1 align-middle">USA</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="heading-4 text-primary">5605</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="heading-4">4<span>-</span></td>
-                                            <td>
-                                                <div class="unit unit-spacing-sm unit-horizontal align-items-center">
-                                                    <div class="unit-left"><img src="{{ asset('assets/frontend/images/tennis/player-3-32x32.jpg') }}" alt="" width="32" height="32"/>
-                                                    </div>
-                                                    <div class="unit-body">
-                                                        <p class="heading-7 lh-1">C. GARCIA</p>
-                                                        <p class="mt-0 small lh-1"><img src="{{ asset('assets/frontend/images/tennis/fra-18x12.jpg') }}" alt="" width="18" height="12"/><span class="fw-medium ps-1 align-middle">FRA</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="heading-4 text-primary">4990</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="heading-4">5<span>-</span></td>
-                                            <td>
-                                                <div class="unit unit-spacing-sm unit-horizontal align-items-center">
-                                                    <div class="unit-left"><img src="{{ asset('assets/frontend/images/tennis/player-4-32x32.jpg') }}" alt="" width="32" height="32"/>
-                                                    </div>
-                                                    <div class="unit-body">
-                                                        <p class="heading-7 lh-1">O. JABEUR</p>
-                                                        <p class="mt-0 small lh-1"><img src="{{ asset('assets/frontend/images/tennis/tun-18x12.jpg') }}" alt="" width="18" height="12"/><span class="fw-medium ps-1 align-middle">TUN</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="heading-4 text-primary">4567</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                            </div>
+                                        </div>
+                                        <div class="player-info-rank-footer">
+                                            <div class="player-info-rank-name heading-5 lh-1">{{ $womenFirstRankPlayer?->first_name }}</div>
+                                            <div class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $womenFirstRankPlayer?->last_name }}</div>
+                                            <div class="player-info-rank-country">
+                                                <span class="small">{{ $womenFirstRankPlayer?->country?->name }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="table-custom-responsive table-rankings-wrap">
+                                        <table class="table-custom table-rankings">
+                                            <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Player</th>
+                                                <th>Points</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($womenPlayers as $player)
+                                                <tr>
+                                                    <td class="heading-4">{{ $player->rank }}<span>-</span></td>
+                                                    <td>
+                                                        <div class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                            <div class="unit-body">
+                                                                <p class="heading-7 lh-1">{{ $player->full_name }}</p>
+                                                                <p class="mt-0 small lh-1">
+                                                                    <span class="fw-medium ps-1 align-middle">{{ $player->country?->name }}</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="heading-4 text-primary">{{ number_format($player->points) }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="main-component owl-carousel-outer-navigation offset-xl">
                         <!-- Heading Component-->
                         <article class="heading-component heading-component-lg no-decor">
@@ -410,138 +432,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="main-component owl-carousel-outer-navigation offset-xl">
-                        <!-- Heading Component-->
-                        <article class="heading-component heading-component-lg no-decor">
-                            <div class="heading-component-inner">
-                                <h5 class="heading-component-title">HOT NEWS
-                                </h5>
-                                <div class="owl-carousel-arrows-outline owl-carousel-arrows-sm owl-carousel-arrows-secondary">
-                                    <div class="owl-nav">
-                                        <button class="owl-arrow owl-arrow-prev"></button>
-                                        <button class="owl-arrow owl-arrow-next"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <!-- Owl Carousel-->
-                        <div class="owl-carousel" data-items="1" data-md-items="2" data-autoplay-speed="4000" data-dots="false" data-nav="true" data-stage-padding="0" data-margin="30" data-mouse-drag="false" data-nav-custom=".owl-carousel-outer-navigation">
-                            <div class="post-simple-list">
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-1-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Nadal Receives Replica Of Roland Garros Statue</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-2-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Djokovic Set For No. 1 Return Monday</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-3-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Wawrinka, Fognini Awarded Monte Carlo Wild Cards</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-4-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">ITF RESUMES TENNIS IN CHINA, WITH STILL NO WORD ON PENG SHUAI</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="post-simple-list">
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-5-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">ITALIAN OPEN TO AWARD WOMEN EQUAL PRIZE MONEY BY 2025</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-6-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">The Last Time With… Francisco Cerundolo</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-7-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Jack Sock On Patrick Mahomes: 'Just An Awesome Dude'</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-8-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Federer: 'My Foundation Will Be At The Forefront Of My Priorities'</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="post-simple-list">
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-9-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">DAYS AFTER BEING ROBBED, GRIGOR WINS BARCELONA OPENER</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-10-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">SHELBY ROGERS, TOUR PLAYER AND TOUR GUIDE, HIGHLIGHTS</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-11-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Alcaraz brushes aside Borges in Barcelona</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                                <!-- Post simple-->
-                                <article class="post-simple"><img src="{{ asset('assets/frontend/images/tennis/post-simple-12-110x82.jpg') }}" alt="" width="110" height="82"/>
-                                    <div class="post-simple-main">
-                                        <h6 class="post-simple-title ls-normal"><a href="blog-post.html">Rebeka Mertena earns 102nd career singles victory</a></h6>
-                                        <div class="post-simple-meta small lh-1 ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                            <time datetime="2023">January 15, 2023</time>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- Aside Block-->
                 <div class="col-lg-4">
@@ -550,98 +440,48 @@
                             <!-- Heading Component-->
                             <article class="heading-component heading-component-sm heading-component-primary no-decor">
                                 <div class="heading-component-inner">
-                                    <h5 class="heading-component-title">Grand Prix Hassan II
+                                    <h5 class="heading-component-title">Last matches results
                                     </h5>
-                                    <p class="heading-component-subtitle text-capitalize text-primary ls-normal">Marrakech, Morocco</p>
                                 </div>
                             </article>
-                            <div class="game-result-boxed">
-                                <div class="game-result-boxed-meta group-xs">
-                                    <div class="game-result-boxed-meta-item">Round Of 16 - Center Court</div>
-                                    <div class="game-result-boxed-meta-item">01:18:24</div>
+                            @foreach($lastMatches as $match)
+                                <div class="game-result-boxed">
+                                    <div class="game-result-boxed-meta group-xs">
+                                        <div class="game-result-boxed-meta-item">{{ getMatchRound($match) }}</div>
+                                        <div class="game-result-boxed-meta-item">{{ $match->datetime }}</div>
+                                    </div>
+                                    <div class="table-custom-responsive">
+                                        <table class="table-game-result-boxed">
+                                            <tr>
+                                                <td>
+                                                    <div class="game-result-boxed-player">
+                                                        <span>{{ $match->homeTeam?->nickname }}</span>
+                                                    </div>
+                                                    @if($match->winner_team_id == $match->home_team_id)
+                                                        <span class="icon icomoon-check icon-success"></span>
+                                                    @endif
+                                                </td>
+                                                @foreach($match->sets as $set)
+                                                    <td>{{ $set->home_team_score }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="game-result-boxed-player">
+                                                        <span>{{ $match->awayTeam?->nickname }}</span>
+                                                    </div>
+                                                    @if($match->winner_team_id == $match->away_team_id)
+                                                        <span class="icon icomoon-check icon-success"></span>
+                                                    @endif
+                                                </td>
+                                                @foreach($match->sets as $set)
+                                                    <td>{{ $set->away_team_score }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
-                                <div class="table-custom-responsive">
-                                    <table class="table-game-result-boxed">
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/usa-32x22.jpg') }}" alt="" width="32" height="22"/><span>J.Isner</span>
-                                                </div><span class="icon icomoon-check icon-success"></span>
-                                            </td>
-                                            <td>0</td>
-                                            <td>4</td>
-                                            <td>6</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/ned-32x22.jpg') }}" alt="" width="32" height="22"/><span>G. Brouwer</span>
-                                                </div>
-                                            </td>
-                                            <td>0</td>
-                                            <td>6</td>
-                                            <td>5</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="game-result-boxed-footer small">The match has been suspended due to rain.</div>
-                            </div>
-                            <div class="game-result-boxed">
-                                <div class="game-result-boxed-meta group-xs">
-                                    <div class="game-result-boxed-meta-item">Round Of 16 - Center Court</div>
-                                    <div class="game-result-boxed-meta-item">01:18:24</div>
-                                </div>
-                                <div class="table-custom-responsive">
-                                    <table class="table-game-result-boxed">
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/ita-32x22.jpg') }}" alt="" width="32" height="22"/><span>L.Musetti</span>
-                                                </div><span class="icon icomoon-check icon-success"></span>
-                                            </td>
-                                            <td>6</td>
-                                            <td>6</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/fra-32x22.jpg') }}" alt="" width="32" height="22"/><span>H.Gaston</span>
-                                                </div>
-                                            </td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="game-result-boxed-footer small">Game Set and Match Lorenzo Musetti. Lorenzo Musetti wins the match 6-2 6-3 .</div>
-                            </div>
-                            <div class="game-result-boxed">
-                                <div class="game-result-boxed-meta group-xs">
-                                    <div class="game-result-boxed-meta-item">Round Of 32 - Court 7</div>
-                                    <div class="game-result-boxed-meta-item">02:07:31</div>
-                                </div>
-                                <div class="table-custom-responsive">
-                                    <table class="table-game-result-boxed">
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/aus-32x22.jpg') }}" alt="" width="32" height="22"/><span>M. Purcell</span>
-                                                </div>
-                                            </td>
-                                            <td>6</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="game-result-boxed-player"><img src="{{ asset('assets/frontend/images/tennis/ger-32x22.jpg') }}" alt="" width="32" height="22"/><span>D. Altmaier</span>
-                                                </div><span class="icon icomoon-check icon-success"></span>
-                                            </td>
-                                            <td>4</td>
-                                            <td>6</td>
-                                            <td>3</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="game-result-boxed-footer small">The match has been suspended due to rain.</div>
-                            </div>
+                            @endforeach
                         </div>
                     </aside>
                 </div>
