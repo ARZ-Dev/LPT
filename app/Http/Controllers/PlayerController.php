@@ -10,7 +10,8 @@ class PlayerController extends Controller
     public function index()
     {
         $data = [];
-        $data['players'] = Player::orderBy('rank')->get();
+        $data['malePlayers'] = Player::where('gender', 'male')->orderBy('rank')->get();
+        $data['femalePlayers'] = Player::where('gender', 'female')->orderBy('rank')->get();
 
         return view('frontend.players.index', $data);
     }

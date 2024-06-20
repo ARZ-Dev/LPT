@@ -274,8 +274,9 @@ Route::group(['prefix' => 'u'], function() {
     Route::get('/players', [PlayerController::class, 'index'])->name('frontend.players');
     Route::get('/players/{player}', [PlayerController::class, 'view'])->name('frontend.players.view');
 
-    Route::get('/tournaments', [TournamentController::class, 'index'])->name('frontend.tournaments');
-    Route::get('/tournaments/{tournament}', [TournamentController::class, 'view'])->name('frontend.tournaments.view');
+    Route::get('/tournaments/{levelCategoryId?}', [TournamentController::class, 'index'])->name('frontend.tournaments');
+    Route::post('/get-tournaments', [TournamentController::class, 'getTournaments'])->name('frontend.get-tournaments');
+    Route::get('/tournaments/categories/{categoryId}', [TournamentController::class, 'view'])->name('frontend.tournaments.categories.view');
 });
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |

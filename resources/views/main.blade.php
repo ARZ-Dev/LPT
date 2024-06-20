@@ -88,24 +88,27 @@
                             <div class="rd-navbar-main-container container">
                                 <!-- RD Navbar Nav-->
                                 <ul class="rd-navbar-nav">
-                                    <li class="rd-nav-item {{ request()->is('u/home', 'home') ? "active" : "" }}"><a class="rd-nav-link" href="{{ route('home') }}">Home</a>
+                                    <li class="rd-nav-item {{ request()->is('u/home', 'home') ? "active" : "" }}">
+                                        <a class="rd-nav-link" href="{{ route('home') }}">Home</a>
                                     </li>
-                                    <li class="rd-nav-item"><a class="rd-nav-link" href="#">Tournaments</a>
+                                    <li class="rd-nav-item {{ request()->is('u/tournaments*', 'tournaments*') ? "active" : "" }}">
+                                        <a class="rd-nav-link" href="#">Tournaments</a>
                                         <article class="rd-menu rd-navbar-megamenu rd-megamenu-2-columns context-light">
                                             <div class="rd-megamenu-main">
                                                 <div class="rd-megamenu-item rd-megamenu-item-nav">
                                                     <!-- Heading Component-->
                                                     <article class="heading-component heading-component-simple">
                                                         <div class="heading-component-inner">
-                                                            <h5 class="heading-component-title">Categories
-                                                            </h5>
+                                                            <h5 class="heading-component-title">Categories</h5>
                                                         </div>
                                                     </article>
                                                     <div class="rd-megamenu-list-outer">
                                                         <ul class="rd-megamenu-list">
                                                             @php($levelCategories = \App\Models\LevelCategory::all())
                                                             @foreach($levelCategories as $levelCategory)
-                                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="shortcodes.html">{{ $levelCategory->name }}</a></li>
+                                                                <li class="rd-megamenu-list-item">
+                                                                    <a class="rd-megamenu-list-link" href="{{ route('frontend.tournaments', $levelCategory->id) }}">{{ $levelCategory->name }}</a>
+                                                                </li>
                                                             @endforeach
                                                         </ul>
                                                     </div>
@@ -114,8 +117,8 @@
                                                     <!-- Heading Component-->
                                                     <article class="heading-component heading-component-simple">
                                                         <div class="heading-component-inner">
-                                                            <h5 class="heading-component-title">Latest Tournaments
-                                                            </h5><a class="button button-xs button-gray-outline" href="news-1.html">See all Tournaments</a>
+                                                            <h5 class="heading-component-title">Latest Tournaments</h5>
+                                                            <a class="button button-xs button-gray-outline" href="{{ route('frontend.tournaments') }}">See all Tournaments</a>
                                                         </div>
                                                     </article>
                                                     <div class="row row-20">

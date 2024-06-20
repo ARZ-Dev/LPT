@@ -27,14 +27,16 @@ class MatchController extends Controller
     public function getMatches(Request $request)
     {
         $matches = Game::when($request->level_category_id != "All Categories", function ($query) use ($request) {
-                $query->whereHas('group', function ($query) use ($request) {
-                    $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
-                        $query->where('level_category_id', $request->level_category_id);
-                    });
-                })
-                ->orWhereHas('knockoutRound', function ($query) use ($request) {
-                    $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
-                        $query->where('level_category_id', $request->level_category_id);
+                $query->where(function ($query) use ($request) {
+                    $query->whereHas('group', function ($query) use ($request) {
+                        $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
+                            $query->where('level_category_id', $request->level_category_id);
+                        });
+                    })
+                    ->orWhereHas('knockoutRound', function ($query) use ($request) {
+                        $query->whereHas('tournamentLevelCategory', function ($query) use ($request) {
+                            $query->where('level_category_id', $request->level_category_id);
+                        });
                     });
                 });
             })
