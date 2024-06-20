@@ -10,7 +10,7 @@
                         <!-- Heading Component-->
                         <article class="heading-component">
                             <div class="heading-component-inner">
-                                <h5 class="heading-component-title">{{ $levelCategory->name }} Standings</h5>
+                                <h5 class="heading-component-title">{{ $levelCategory->name }} Teams</h5>
                             </div>
                         </article>
                         <!-- Table Players-->
