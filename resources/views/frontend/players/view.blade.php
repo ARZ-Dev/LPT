@@ -49,7 +49,7 @@
                                     <table class="table-custom">
                                         <tr>
                                             <th>Current Team</th>
-                                            <th>{{ $player->currentTeam->nickname }}</th>
+                                            <th>{{ $player->currentTeam?->nickname }}</th>
                                             <th>Playing Side</th>
                                             <th>{{ $player->playing_side }}</th>
                                         </tr>
