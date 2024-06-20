@@ -149,7 +149,12 @@ class MatchesView extends Component
             $team->update(['rank' => $index + 1]);
         });
 
-        $players = Player::orderBy('points', 'desc')->get();
+        $players = Player::where('gender', 'male')->orderBy('points', 'desc')->get();
+        $players->each(function ($player, $index) {
+            $player->update(['rank' => $index + 1]);
+        });
+
+        $players = Player::where('gender', 'female')->orderBy('points', 'desc')->get();
         $players->each(function ($player, $index) {
             $player->update(['rank' => $index + 1]);
         });

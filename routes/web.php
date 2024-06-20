@@ -69,6 +69,7 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\MatchController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\TournamentController;
 
 // |--------------------------------------------------------------------------|
 // | Backend - Start                                                          |
@@ -272,6 +273,9 @@ Route::group(['prefix' => 'u'], function() {
 
     Route::get('/players', [PlayerController::class, 'index'])->name('frontend.players');
     Route::get('/players/{player}', [PlayerController::class, 'view'])->name('frontend.players.view');
+
+    Route::get('/tournaments', [TournamentController::class, 'index'])->name('frontend.tournaments');
+    Route::get('/tournaments/{tournament}', [TournamentController::class, 'view'])->name('frontend.tournaments.view');
 });
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |

@@ -21,42 +21,48 @@
             <div class="row row-30 justify-content-center">
                 <div class="col-sm-6 col-md-4">
                     <!-- Post Iris-->
-                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/tennis/post-iris-1-370x280.jpg') }}" alt="" width="370" height="280"/>
+                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/padel/padel1.jpg') }}" alt="" width="370" height="280"/>
                         <div class="post-iris-main">
                             <!-- Badge-->
                             <div class="badge badge-sm badge-secondary">Interview
                             </div>
-                            <h4 class="post-iris-title ls-normal"><a href="blog-post.html">JESSICA PEGULA IS THE &quot;EST&quot; OF THE WTA</a></h4>
-                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                <time datetime="2024">January 15, 2023</time>
+                            <h4 class="post-iris-title ls-normal text-white">
+                                Was the WPT better than Premier Padel for the second knives of the padel global?
+                            </h4>
+                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Xan Tafernaberry</span>,&nbsp;
+                                <time datetime="2024">18th June 2024</time>
                             </div>
                         </div>
                     </article>
                 </div>
                 <div class="col-sm-6 col-md-4">
                     <!-- Post Iris-->
-                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/tennis/post-iris-2-370x280.jpg') }}" alt="" width="370" height="280"/>
+                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/padel/padel2.jpg') }}" alt="" width="370" height="280"/>
                         <div class="post-iris-main">
                             <!-- Badge-->
                             <div class="badge badge-sm badge-secondary">facts &amp; stats
                             </div>
-                            <h4 class="post-iris-title ls-normal"><a href="blog-post.html">Pegula, Keys cruise into Charleston Round of 16</a></h4>
-                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                <time datetime="2024">January 13, 2023</time>
+                            <h4 class="post-iris-title ls-normal text-white">
+                                French Championships over 45 years old: the finalists are known
+                            </h4>
+                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Auxence Cams</span>,&nbsp;
+                                <time datetime="2024">16th June 2024</time>
                             </div>
                         </div>
                     </article>
                 </div>
                 <div class="col-sm-6 col-md-4">
                     <!-- Post Iris-->
-                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/tennis/post-iris-3-370x280.jpg') }}" alt="" width="370" height="280"/>
+                    <article class="post-iris"><img src="{{ asset('assets/frontend/images/padel/padel3.jpg') }}" alt="" width="370" height="280"/>
                         <div class="post-iris-main">
                             <!-- Badge-->
-                            <div class="badge badge-sm badge-secondary">WTA CHARLESTON
+                            <div class="badge badge-sm badge-secondary">Interview
                             </div>
-                            <h4 class="post-iris-title ls-normal"><a href="blog-post.html">SHELBY ROGERS, HUMBLE GIANT-KILLER, LACKS ONE THING ON HER RESUME</a></h4>
-                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                <time datetime="2024">January 11, 2023</time>
+                            <h4 class="post-iris-title ls-normal text-white">
+                                Alex Ruiz: “Whether we win or lose, we will go home happy”
+                            </h4>
+                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Gwenaelle Souyri</span>,&nbsp;
+                                <time datetime="2024">15th June 2024</time>
                             </div>
                         </div>
                     </article>
@@ -113,11 +119,11 @@
                                     </p>
                                     <div class="promo-main promo-new-main">
                                         <div class="promo-team-title">
-                                            <div class="promo-team-name">{{ $match->homeTeam?->nickname }}</div>
+                                            <h4 class="text-primary">{{ $match->homeTeam?->nickname }}</h4>
                                         </div>
                                         <div class="promo-new-middle">VS</div>
                                         <div class="promo-team-title">
-                                            <div class="promo-team-name">{{ $match->awayTeam?->nickname }}</div>
+                                            <h4 class="text-primary">{{ $match->awayTeam?->nickname }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -130,69 +136,6 @@
         </div>
     </section>
     @endif
-
-    <!-- Latest News-->
-    <section class="section section-xl bg-white">
-        <div class="container">
-            <div class="main-component">
-                <!-- Heading Component-->
-                <article class="heading-component heading-component-lg no-decor">
-                    <div class="heading-component-inner">
-                        <h5 class="heading-component-title">THIS WEEK IN PADEL
-                        </h5><a class="button button-sm button-gray-outline mb-0" href="sport-elements.html">Read more</a>
-                    </div>
-                </article>
-            </div>
-            <div class="row row-lg row-15 row-sm-30">
-                <div class="col-lg-8">
-                    <!-- Post Iris-->
-                    <article class="post-iris post-iris-lg"><img src="{{ asset('assets/frontend/images/tennis/post-iris-4-770x580.jpg') }}" alt="" width="770" height="580"/>
-                        <div class="post-iris-main">
-                            <!-- Badge-->
-                            <div class="badge badge-sm badge-secondary">Interview
-                            </div>
-                            <h4 class="post-iris-title ls-normal"><a href="blog-post.html">Evans Makes Winning Start In Marrakech</a></h4>
-                            <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                <time datetime="2024">January 15, 2023</time>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-lg-4">
-                    <div class="row row-15">
-                        <div class="col-sm-6 col-lg-12">
-                            <!-- Post Iris-->
-                            <article class="post-iris"><img src="{{ asset('assets/frontend/images/tennis/post-iris-5-370x280.jpg') }}" alt="" width="370" height="280"/>
-                                <div class="post-iris-main">
-                                    <!-- Badge-->
-                                    <div class="badge badge-sm badge-secondary">Match Report
-                                    </div>
-                                    <h4 class="post-iris-title ls-normal"><a href="blog-post.html">Thiem Reaches Maiden QF Of Season In Estoril</a></h4>
-                                    <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                        <time datetime="2024">January 15, 2023</time>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="col-sm-6 col-lg-12">
-                            <!-- Post Iris-->
-                            <article class="post-iris"><img src="{{ asset('assets/frontend/images/tennis/post-iris-6-370x280.jpg') }}" alt="" width="370" height="280"/>
-                                <div class="post-iris-main">
-                                    <!-- Badge-->
-                                    <div class="badge badge-sm badge-secondary">Off Court News
-                                    </div>
-                                    <h4 class="post-iris-title ls-normal"><a href="blog-post.html">Nadal Receives Replica Of Roland Garros Statue</a></h4>
-                                    <div class="post-iris-meta small ls-normal">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                        <time datetime="2024">January 15, 2023</time>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Story-->
     <section class="section section-xl bg-white">
@@ -329,109 +272,6 @@
                             </div>
                         </div>
                     @endif
-                    <div class="main-component owl-carousel-outer-navigation offset-xl">
-                        <!-- Heading Component-->
-                        <article class="heading-component heading-component-lg no-decor">
-                            <div class="heading-component-inner">
-                                <h5 class="heading-component-title">Video Highlights
-                                </h5><a class="button button-sm button-gray-outline mb-0" href="sport-elements.html">more videos</a>
-                            </div>
-                        </article>
-                        <div class="row row-eight row-30">
-                            <div class="col-md-5">
-                                <!-- Post mia-->
-                                <article class="post-mia post-mia-lg">
-                                    <div class="post-mia-figure"><img src="{{ asset('assets/frontend/images/tennis/post-mia-1-470x320.jpg') }}" alt="" width="470" height="320"/>
-                                        <!-- Post Video Button--><a class="post-video-button-2 post-video-button-lg" href="#modal1" data-bs-toggle="modal"><span class="icon material-icons-play_arrow"></span></a>
-                                    </div>
-                                    <div class="post-mia-main">
-                                        <h4 class="post-mia-title ls-normal"><a href="blog-post.html">Bogota: Sorribes Tormo rallies into first quarterfinal of season</a></h4>
-                                        <div class="post-mia-meta ls-normal small fw-medium">
-                                            <div class="post-meta-item pe-1">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                <time datetime="2024">January 15, 2023</time>
-                                            </div>
-                                            <div class="post-meta-item"><span class="time">01:43</span></div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="swiper-container swiper-slider swiper-post" data-swiper='{"autoplay":false,"loop":false,"simulateTouch":true,"slidesPerView":1,"spaceBetween":30,"scrollbar":{"el":".swiper-scrollbar","draggable":true},"breakpoints":{"576":{"slidesPerView":2},"768":{"spaceBetween":30,"slidesPerView":2,"direction":"vertical"}}}'>
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <!-- Post mia-->
-                                            <article class="post-mia">
-                                                <div class="post-mia-figure"><img src="{{ asset('assets/frontend/images/tennis/post-mia-2-240x166.jpg') }}" alt="" width="240" height="166"/>
-                                                    <!-- Post Video Button--><a class="post-video-button-2" href="#modal1" data-bs-toggle="modal"><span class="icon material-icons-play_arrow"></span></a>
-                                                </div>
-                                                <div class="post-mia-main">
-                                                    <h4 class="post-mia-title ls-normal"><a href="blog-post.html">Shot of the Month: Jabeur comes up big in March</a></h4>
-                                                    <div class="post-mia-meta ls-normal small fw-medium">
-                                                        <div class="post-meta-item pe-1">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                            <time datetime="2024">January 15, 2023</time>
-                                                        </div>
-                                                        <div class="post-meta-item"><span class="time">01:43</span></div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <!-- Post mia-->
-                                            <article class="post-mia">
-                                                <div class="post-mia-figure"><img src="{{ asset('assets/frontend/images/tennis/post-mia-3-240x166.jpg') }}" alt="" width="240" height="166"/>
-                                                    <!-- Post Video Button--><a class="post-video-button-2" href="#modal1" data-bs-toggle="modal"><span class="icon material-icons-play_arrow"></span></a>
-                                                </div>
-                                                <div class="post-mia-main">
-                                                    <h4 class="post-mia-title ls-normal"><a href="blog-post.html">TopCourt with Aryna Sabalenka</a></h4>
-                                                    <div class="post-mia-meta ls-normal small fw-medium">
-                                                        <div class="post-meta-item pe-1">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                            <time datetime="2024">January 15, 2023</time>
-                                                        </div>
-                                                        <div class="post-meta-item"><span class="time">01:43</span></div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <!-- Post mia-->
-                                            <article class="post-mia">
-                                                <div class="post-mia-figure"><img src="{{ asset('assets/frontend/images/tennis/post-mia-4-240x166.jpg') }}" alt="" width="240" height="166"/>
-                                                    <!-- Post Video Button--><a class="post-video-button-2" href="#modal1" data-bs-toggle="modal"><span class="icon material-icons-play_arrow"></span></a>
-                                                </div>
-                                                <div class="post-mia-main">
-                                                    <h4 class="post-mia-title ls-normal"><a href="blog-post.html">Tennis betting: We're backing Jannik Sinner to dominate in Barcelona</a></h4>
-                                                    <div class="post-mia-meta ls-normal small fw-medium">
-                                                        <div class="post-meta-item pe-1">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                            <time datetime="2024">January 15, 2023</time>
-                                                        </div>
-                                                        <div class="post-meta-item"><span class="time">01:43</span></div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <!-- Post mia-->
-                                            <article class="post-mia">
-                                                <div class="post-mia-figure"><img src="{{ asset('assets/frontend/images/tennis/post-mia-5-240x166.jpg') }}" alt="" width="240" height="166"/>
-                                                    <!-- Post Video Button--><a class="post-video-button-2" href="#modal1" data-bs-toggle="modal"><span class="icon material-icons-play_arrow"></span></a>
-                                                </div>
-                                                <div class="post-mia-main">
-                                                    <h4 class="post-mia-title ls-normal"><a href="blog-post.html">RACQUET REVIEW: VOLKL C10 PRO</a></h4>
-                                                    <div class="post-mia-meta ls-normal small fw-medium">
-                                                        <div class="post-meta-item pe-1">By&nbsp;<span>Frances Pruyn</span>,&nbsp;
-                                                            <time datetime="2024">January 15, 2023</time>
-                                                        </div>
-                                                        <div class="post-meta-item"><span class="time">01:43</span></div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-scrollbar"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- Aside Block-->
                 @if(count($lastMatches))
