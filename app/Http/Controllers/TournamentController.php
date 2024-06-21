@@ -66,7 +66,20 @@ class TournamentController extends Controller
     public function view($categoryId)
     {
         $data = [];
-        $data['category'] = TournamentLevelCategory::with(['levelCategory', 'type', 'teams', 'knockoutStages', 'groups' => ['groupTeams']])->findOrFail($categoryId);
+        $category = TournamentLevelCategory::with(['levelCategory', 'type', 'teams', 'knockoutStages' => ['tournamentDeuceType'], 'groups' => ['groupTeams' => function ($query) {
+            $query->orderBy('rank');
+        }]])->findOrFail($categoryId);
+        $data['category'] = $category;
+
+        $matches = Game::with('knockoutRound','homeTeam','awayTeam', 'startedBy')
+            ->whereHas('knockoutRound', function ($query) use ($category) {
+                $query->where('tournament_level_category_id', $category->id);
+            })
+            ->orWhereHas('group', function ($query) use ($category) {
+                $query->where('tournament_level_category_id', $category->id);
+            })
+            ->get();
+        $data['matches'] = $matches;
 
         return view('frontend.tournaments.category-view', $data);
     }
