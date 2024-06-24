@@ -70,7 +70,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="2">No info available.</td>
+                                    <td class="text-nowrap" colspan="2">No info available.</td>
                                 </tr>
                             @endforelse
                             </tbody>
