@@ -63,12 +63,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($category->type->settings as $setting)
+                            @forelse($category->type->settings as $setting)
                                 <tr>
                                     <td class="text-nowrap">{{ $setting->stage }}</td>
                                     <td class="text-nowrap">{{ $setting->points }}</td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="2">No info available.</td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
