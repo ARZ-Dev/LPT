@@ -13,35 +13,36 @@
                             </h5>
                         </div>
                     </article>
-                    <!-- Player Info Corporate-->
-                    <div class="player-info-corporate">
-                        <div class="player-info-main">
-                            <div class="player-info-table">
-                                <div class="table-custom-wrap">
-                                    <table class="table-custom">
-                                        <tr>
-                                            <th>Start Date</th>
-                                            <th>{{ Carbon\Carbon::parse($category->start_date)->format('d M Y') }}</th>
-                                            <th>End Date</th>
-                                            <th>{{ Carbon\Carbon::parse($category->end_date)->format('d M Y') }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Type</td>
-                                            <td>{{ $category->type?->name }}</td>
-                                            <td>Number of Teams</td>
-                                            <td>{{ $category->number_of_teams }}</td>
-                                        </tr>
-                                        @if($category->has_group_stage)
-                                            <tr>
-                                                <td>Number of Groups</td>
-                                                <td>{{ $category->number_of_groups }}</td>
-                                                <td>Number of Winners per Group</td>
-                                                <td>{{ $category->number_of_winners_per_group }}</td>
-                                            </tr>
-                                        @endif
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="list-statictics">
+                                <li>
+                                    <a href="#">Start Date</a>
+                                    <span class="list-statictics-counter">{{ Carbon\Carbon::parse($category->start_date)->format('d M Y') }}</span>
+                                </li>
+                                <li>
+                                    <a href="#">End Date</a>
+                                    <span class="list-statictics-counter">{{ Carbon\Carbon::parse($category->end_date)->format('d M Y') }}</span>
+                                </li>
+                                <li>
+                                    <a href="#">Type</a>
+                                    <span class="list-statictics-counter">{{ $category->type?->name }}</span>
+                                </li>
+                                <li>
+                                    <a href="#">Number of Teams</a>
+                                    <span class="list-statictics-counter">{{ $category->number_of_teams }}</span>
+                                </li>
+                                @if($category->has_group_stage)
+                                <li>
+                                    <a href="#">Number of Groups</a>
+                                    <span class="list-statictics-counter">{{ $category->number_of_groups }}</span>
+                                </li>
+                                <li>
+                                    <a href="#">Number of Winners per Group</a>
+                                    <span class="list-statictics-counter">{{ $category->number_of_winners_per_group }}</span>
+                                </li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
