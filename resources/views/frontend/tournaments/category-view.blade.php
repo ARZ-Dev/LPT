@@ -174,7 +174,7 @@
                         </div>
                     </article>
                     <!-- Table Players-->
-                    <div class="table-custom-responsive">
+                    <div class="table-custom-responsive overflow-x-auto" style="height: 500px">
                         <table class="table-custom table-standings table-modern">
                             <thead>
                             <tr>
