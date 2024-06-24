@@ -8,13 +8,15 @@ use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Utils\Constants;
+use Livewire\WithFileUploads;
 
 
 class TeamForm extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, WithFileUploads;
 
     public bool $editing = false;
     public int $status = 0;
@@ -27,6 +29,7 @@ class TeamForm extends Component
     public $oldPlayersIds = [];
     public $team = null;
     public bool $submitting = false;
+    public $image;
 
     public function mount($id = 0, $status = 0)
     {
@@ -46,6 +49,7 @@ class TeamForm extends Component
             $this->levelCategoryId = $this->team->level_category_id;
             $this->playersIds = $this->team->players->pluck('id')->toArray();
             $this->oldPlayersIds = $this->playersIds;
+            $this->image = $this->team->image;
         } else {
             $this->authorize('team-create');
         }
@@ -56,7 +60,8 @@ class TeamForm extends Component
         return [
             'nickname' => ['required', 'max:255', new Unique('teams', 'id')],
             'levelCategoryId' => ['required', new Exists('level_categories', 'id')],
-            'playersIds' => ['array', 'max:2']
+            'playersIds' => ['array', 'max:2'],
+            'image' => ['nullable', 'max:2048'],
         ];
     }
 
@@ -69,11 +74,17 @@ class TeamForm extends Component
         }
         $this->submitting = true;
 
+        $path = null;
+        if ($this->image && !is_string($this->image)) {
+            $path = $this->image->storePublicly(path: 'public/teams/images');
+        }
+
         $rank = Team::where('level_category_id', $this->levelCategoryId)->max('rank') + 1;
         $team = Team::create([
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
             'rank' => $rank,
+            'image' => $path,
         ]);
 
         Player::whereIn('id', $this->playersIds)->update([
@@ -97,10 +108,16 @@ class TeamForm extends Component
     {
         $this->validate();
 
-        $this->team->update([
+        $data = [
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
-        ]);
+        ];
+
+        if ($this->image && !is_string($this->image)) {
+            $data['image'] = $this->image->storePublicly(path: 'public/teams/images');
+        }
+
+        $this->team->update($data);
 
         Player::whereIn('id', $this->oldPlayersIds)->update([
             'current_team_id' => NULL,
@@ -121,6 +138,15 @@ class TeamForm extends Component
         $this->team->players()->sync($playersData);
 
         return to_route('teams')->with('success', 'Team has been updated successfully!');
+    }
+
+    #[On('deleteImage')]
+    public function deleteImage()
+    {
+        if ($this->team) {
+            $this->team->image = NULL;
+            $this->team->save();
+        }
     }
 
     public function render()

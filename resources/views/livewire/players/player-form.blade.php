@@ -4,7 +4,7 @@
             <form>
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Personal Informations</h5>
+                        <h5 class="mb-0">Personal Information</h5>
                         <a href="{{ route('players') }}"
                            class="btn btn-primary mb-2 text-nowrap"
                         >
@@ -198,6 +198,7 @@
                     </div>
 
                 </div>
+
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
@@ -219,9 +220,37 @@
                         <div class="row">
                             <div class="col-12 col-md-12">
                                 @php
-                                    $uploadedFile = $player?->national_id_upload ? [asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload))] : [];
+                                    $uploadedFile = $player?->national_id_upload ? asset(\Illuminate\Support\Facades\Storage::url($player->national_id_upload)) : null;
                                 @endphp
-                                <x-filepond :files="$uploadedFile" wire:model="nationalIdFile" delete-event="deleteNationalIdFile" />
+                                <x-filepond wire:model="nationalIdFile" delete-event="deleteNationalIdFile" file-path="{{ $uploadedFile }}" is-multiple="false" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header align-items-center">
+                        <h5 class="mb-0">
+                            Image Upload
+                            @if($image)
+                                - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($image)) }}" download>Download Link</a>
+                            @endif
+                        </h5>
+                        <h6>
+                            @error('desktopImage')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                @php
+                                    $uploadedFile = $image ? asset(\Illuminate\Support\Facades\Storage::url($image)) : null;
+                                @endphp
+                                <x-filepond wire:model="image" delete-event="deleteImage" file-path="{{ $uploadedFile }}" is-multiple="false" />
                             </div>
                         </div>
                     </div>

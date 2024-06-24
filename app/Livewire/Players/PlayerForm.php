@@ -41,6 +41,7 @@ class PlayerForm extends Component
     public $nickname = '';
     public $gender = '';
     public $playing_side = '';
+    public $image;
     // form fields - end
 
     public function mount($id = 0, $status = 0)
@@ -83,6 +84,7 @@ class PlayerForm extends Component
         $this->nickname = $player->nickname;
         $this->gender = $player->gender;
         $this->playing_side = $player->playing_side;
+        $this->image = $player->image;
     }
 
     public function rules()
@@ -99,7 +101,8 @@ class PlayerForm extends Component
             'nickname' => ['required'],
             'gender' => ['required', 'in:male,female'],
             'playing_side' => ['required', 'in:left,right'],
-            'nationalIdFile' => ['nullable', 'file', 'max:2048']
+            'nationalIdFile' => ['nullable', 'max:2048'],
+            'image' => ['nullable', 'max:2048']
         ];
     }
 
@@ -118,6 +121,11 @@ class PlayerForm extends Component
             $path = null;
             if ($this->nationalIdFile && !is_string($this->nationalIdFile)) {
                 $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
+            }
+
+            $imagePath = null;
+            if ($this->image && !is_string($this->image)) {
+                $imagePath = $this->image->storePublicly(path: 'public/players/images');
             }
 
             $rank = Player::max('rank') + 1;
@@ -139,6 +147,10 @@ class PlayerForm extends Component
 
             if ($path) {
                 $data['national_id_upload'] = $path;
+            }
+
+            if ($imagePath) {
+                $data['image'] = $imagePath;
             }
 
             $player = Player::create($data);
@@ -187,6 +199,11 @@ class PlayerForm extends Component
                 $path = $this->nationalIdFile->storePublicly(path: 'public/national_ids');
             }
 
+            $imagePath = null;
+            if ($this->image && !is_string($this->image)) {
+                $imagePath = $this->image->storePublicly(path: 'public/players/images');
+            }
+
             $data = [
                 'first_name' => $this->first_name,
                 'middle_name' => $this->middle_name,
@@ -203,6 +220,10 @@ class PlayerForm extends Component
 
             if ($path) {
                 $data['national_id_upload'] = $path;
+            }
+
+            if ($imagePath) {
+                $data['image'] = $imagePath;
             }
 
             $this->player->update($data);
@@ -243,6 +264,15 @@ class PlayerForm extends Component
     {
         if ($this->player) {
             $this->player->national_id_upload = NULL;
+            $this->player->save();
+        }
+    }
+
+    #[On('deleteImage')]
+    public function deleteImage()
+    {
+        if ($this->player) {
+            $this->player->image = NULL;
             $this->player->save();
         }
     }

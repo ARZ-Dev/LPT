@@ -157,9 +157,9 @@
                     <div class="row">
                         <div class="col-12 col-md-12">
                             @php
-                                $uploadedFile = $this->invoice ? [asset(\Illuminate\Support\Facades\Storage::url($this->invoice))] : [];
+                                $uploadedFile = $this->invoice ? asset(\Illuminate\Support\Facades\Storage::url($this->invoice)) : null;
                             @endphp
-                            <x-filepond :files="$uploadedFile" wire:model="invoice" delete-event="deleteInvoice"  />
+                            <x-filepond wire:model="invoice" delete-event="deleteInvoice" file-path="{{ $uploadedFile }}" is-multiple="false" />
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,10 @@
-<div wire:ignore class="filePondContainer">
+<div wire:ignore class="filePondContainer"
+     wire:model="{{ $attributes['wire:model'] }}"
+     delete-event="{{ $attributes['delete-event'] }}"
+     allow-remove="{{ $attributes['allow-remove'] }}"
+     file-path="{{ $attributes['file-path'] }}"
+     is-multiple="{{ $attributes['is-multiple'] }}"
+>
     <input type="file" class="fileInput" />
 </div>
 
@@ -11,29 +17,47 @@
         FilePond.registerPlugin(FilePondPluginImagePreview);
 
 
-            const filePondContainer = document.querySelector('.filePondContainer');
-            const fileInput = filePondContainer.querySelector('.fileInput');
+        const filePondContainers = document.querySelectorAll('.filePondContainer');
+
+        filePondContainers.forEach((container, index) => {
+
+            const fileInput = container.querySelector('.fileInput');
+            const wireModel = container.getAttribute('wire:model');
+            const deleteEvent = container.getAttribute('delete-event');
+            const allowRemove = container.getAttribute('allow-remove');
+            const uploadedFile = container.getAttribute('file-path');
+            const isMultiple = container.getAttribute('is-multiple');
 
             let options = {};
-
-            @if($attributes['allow-remove'] == "false")
+            if (allowRemove == "false") {
                 options.allowRemove = false;
-            @endif
+            }
 
             const pond = FilePond.create(fileInput, options);
 
             let files = [];
-            let uploadedFiles = @json($files);
 
-            if (uploadedFiles.length > 0) {
-                for (let i = 0; i < uploadedFiles.length; i++) {
-                    files.push({
-                        source: uploadedFiles[i],
-                        options: {
-                            type: 'local',
-                            load: true
-                        }
-                    })
+            if (isMultiple === "false" && uploadedFile !== "") {
+                files.push({
+                    source: uploadedFile,
+                    options: {
+                        type: 'local',
+                        load: true
+                    }
+                })
+            } else {
+                let uploadedFiles = @json($files ?? []);
+
+                if (uploadedFiles.length > 0) {
+                    for (let i = 0; i < uploadedFiles.length; i++) {
+                        files.push({
+                            source: uploadedFiles[i],
+                            options: {
+                                type: 'local',
+                                load: true
+                            }
+                        })
+                    }
                 }
             }
 
@@ -48,15 +72,15 @@
 
                     process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
                         // Upload logic...
-                        @this.upload('{{ $attributes['wire:model'] }}', file, load, error, progress)
+                    @this.upload(wireModel, file, load, error, progress)
                     },
                     revert: (filename, load) => {
-                        $wire.dispatch('{{ $attributes['delete-event'] }}');
+                        $wire.dispatch(deleteEvent);
                         // Revert logic...
-                        @this.removeUpload('{{ $attributes['wire:model'] }}', filename, load)
+                    @this.removeUpload(wireModel, filename, load)
                     },
                     remove: (source, load, error) => {
-                        $wire.dispatch('{{ $attributes['delete-event'] }}');
+                        $wire.dispatch(deleteEvent);
 
                         load()
                     },
@@ -64,6 +88,7 @@
                 files: files,
             });
 
+        });
 
     })
 

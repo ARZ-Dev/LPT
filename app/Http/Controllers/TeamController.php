@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LevelCategory;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -17,5 +18,12 @@ class TeamController extends Controller
             ->get();
 
         return view('frontend.teams.index', $data);
+    }
+
+    public function view(Team $team)
+    {
+        $data = [];
+
+        return view('frontend.teams.view', $data);
     }
 }

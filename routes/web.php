@@ -265,7 +265,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/home', [HomePageController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'u'], function() {
-    Route::get('/teams-standings', [TeamController::class, 'index'])->name('frontend.teams-standings');
+    Route::get('/teams', [TeamController::class, 'index'])->name('frontend.teams');
+    Route::get('/teams/{team}', [TeamController::class, 'view'])->name('frontend.teams.view');
 
     Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
     Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');

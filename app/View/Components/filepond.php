@@ -12,7 +12,7 @@ class filepond extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($files)
+    public function __construct($files = [])
     {
         $this->files = $files;
     }

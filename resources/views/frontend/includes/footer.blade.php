@@ -28,7 +28,7 @@
                                 <li><a class="link-light" href="{{ route('home') }}">Home</a></li>
                                 <li><a class="link-light" href="{{ route('frontend.tournaments') }}">Tournaments</a></li>
                                 <li><a class="link-light" href="{{ route('frontend.matches') }}">Matches</a></li>
-                                <li><a class="link-light" href="{{ route('frontend.teams-standings') }}">Teams</a></li>
+                                <li><a class="link-light" href="{{ route('frontend.teams') }}">Teams</a></li>
                                 <li><a class="link-light" href="{{ route('frontend.players') }}">Players</a></li>
                             </ul>
                         </div>

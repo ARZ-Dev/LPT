@@ -167,8 +167,8 @@
                             <li class="rd-nav-item {{ request()->is('u/matches*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('frontend.matches') }}">Matches</a>
                             </li>
-                            <li class="rd-nav-item {{ request()->is('u/teams-standings') ? "active" : "" }}">
-                                <a class="rd-nav-link" href="{{ route('frontend.teams-standings') }}">Teams</a>
+                            <li class="rd-nav-item {{ request()->is('u/teams') ? "active" : "" }}">
+                                <a class="rd-nav-link" href="{{ route('frontend.teams') }}">Teams</a>
                             </li>
                             <li class="rd-nav-item {{ request()->is('u/players*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('frontend.players') }}">Players</a>
