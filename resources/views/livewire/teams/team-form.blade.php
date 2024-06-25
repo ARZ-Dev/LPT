@@ -111,21 +111,10 @@
         </div>
     </div>
 
+    @script
     <script>
 
-        document.addEventListener('livewire:navigated', function () {
-
-            $(document).ready(function () {
-
-
-            });
-
-            var status={{$status}};
-            if (status=="1") {$('input').prop('disabled', true);}
-
-        })
-
     </script>
-
+    @endscript
 </div>
 

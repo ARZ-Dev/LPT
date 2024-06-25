@@ -135,6 +135,28 @@
         </li>
         @endcan
 
+        <li class="menu-item {{ request()->is('hero-section*', 'blogs*') ? 'active open' : '' }}">
+
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-webhook"></i>
+                <div data-i18n="Frontend">Frontend</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('hero-sections*') ? 'active' : '' }}">
+                    <a href="{{ route('hero-sections') }}" class="menu-link">
+                        <div data-i18n="Hero Sections">Hero Sections</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ request()->is('blogs*') ? "active" : "" }}">
+                    <a href="{{ route('blogs') }}" class="menu-link">
+                        <div data-i18n="Blogs">Blogs</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
 	</ul>
 
 	<script>

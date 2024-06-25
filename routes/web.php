@@ -61,6 +61,12 @@ use App\Livewire\Matches\KnockoutStageView;
 use App\Livewire\Tournaments\TournamentTypeView;
 use App\Livewire\Tournaments\TournamentTypeForm;
 
+use App\Livewire\HeroSection\HeroSectionIndex;
+use App\Livewire\HeroSection\HeroSectionForm;
+
+use App\Livewire\Blogs\BlogIndex;
+use App\Livewire\Blogs\BlogForm;
+
 use App\Livewire\GroupStages\GroupStageRanking;
 
 use App\Http\Controllers\CronJobController;
@@ -251,6 +257,26 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'tournament-types'], function() {
         Route::get('/', TournamentTypeView::class)->name('types');
         Route::get('/edit/{typeId}', TournamentTypeForm::class)->name('types.edit');
+    });
+
+    // |--------------------------------------------------------------------------
+    // | Hero Section
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'hero-sections'], function() {
+        Route::get('/', HeroSectionIndex::class)->name('hero-sections');
+        Route::get('/create', HeroSectionForm::class)->name('hero-sections.create');
+        Route::get('/edit/{id}', HeroSectionForm::class)->name('hero-sections.edit');
+    });
+
+    // |--------------------------------------------------------------------------
+    // | Blogs
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'blogs'], function() {
+        Route::get('/', BlogIndex::class)->name('blogs');
+        Route::get('/create', BlogForm::class)->name('blogs.create');
+        Route::get('/edit/{id}', BlogForm::class)->name('blogs.edit');
     });
 
 });
