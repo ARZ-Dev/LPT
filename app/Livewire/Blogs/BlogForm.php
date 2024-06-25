@@ -39,7 +39,7 @@ class BlogForm extends Component
         if ($this->image && !is_string($this->image)) {
             $data['image'] = ['required', 'file', 'max:2048'];
         } else {
-            $data['image'] = ['nullable', 'max:2048'];
+            $data['image'] = ['required', 'max:2048'];
         }
 
         return $data;

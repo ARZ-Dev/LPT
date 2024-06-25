@@ -147,12 +147,26 @@
                                                 <span class="text-primary">{{ getMatchCategory($match)->name }}</span>
                                             </p>
                                             <div class="promo-main promo-new-main">
-                                                <div class="promo-team-title">
-                                                    <h4 class="text-primary">{{ $match->homeTeam?->nickname }}</h4>
+                                                <div class="promo-team promo-new-team">
+                                                    @if($match->homeTeam?->image)
+                                                        <figure class="promo-team-figure">
+                                                            <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->homeTeam?->image)) }}" alt="" width="70" height="48"/>
+                                                        </figure>
+                                                    @endif
+                                                    <div class="promo-team-title">
+                                                        <h4 class="text-primary">{{ $match->homeTeam?->nickname }}</h4>
+                                                    </div>
                                                 </div>
                                                 <div class="promo-new-middle">VS</div>
-                                                <div class="promo-team-title">
-                                                    <h4 class="text-primary">{{ $match->awayTeam?->nickname }}</h4>
+                                                <div class="promo-team promo-new-team">
+                                                    @if($match->awayTeam?->image)
+                                                        <figure class="promo-team-figure">
+                                                            <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->awayTeam?->image)) }}" alt="" width="70" height="48"/>
+                                                        </figure>
+                                                    @endif
+                                                    <div class="promo-team-title">
+                                                        <h4 class="text-primary">{{ $match->awayTeam?->nickname }}</h4>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
