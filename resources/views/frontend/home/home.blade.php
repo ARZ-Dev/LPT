@@ -5,7 +5,7 @@
     <section class="section swiper-container swiper-slider swiper-modern bg-primary"
              data-swiper='{"autoplay":false,"simulateTouch":true,"effect":"fade"}'>
         <div class="swiper-wrapper">
-            @foreach($heroSections as $heroSection)
+            @forelse($heroSections as $heroSection)
                 <div class="swiper-slide"
                      data-slide-bg="{{ asset(\Illuminate\Support\Facades\Storage::url($heroSection->image)) }}">
                     <div class="container">
@@ -22,7 +22,16 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="swiper-slide" data-slide-bg="{{ asset('assets/frontend/images/tennis/slider-slide-1-1920x720.jpg') }}">
+                    <div class="container">
+                        <div class="swiper-slide-caption">
+                            <h2 class="lh-1 fst-normal ls-normal" style="max-width: 550px;" data-caption-animate="fadeInLeftSmall">Unique venue. Exceptional team. One passion</h2>
+                            <p class="mt-4" style="max-width: 320px;" data-caption-animate="fadeInLeftSmall" data-caption-delay="200">Tennis Blastship is your #1 space for everything concerning this breathtaking sport.</p><a class="button button-sm button-secondary button-offset-xl" data-caption-animate="fadeInLeftSmall" data-caption-delay="400" href="about-us.html">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            @endforelse
         </div>
         <div class="swiper-button swiper-button-prev"></div>
         <div class="swiper-button swiper-button-next"></div>
