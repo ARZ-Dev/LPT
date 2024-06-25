@@ -39,7 +39,7 @@
         <div class="swiper-pagination"></div>
     </section>
 
-    @if(count($blogs))
+    @if(count($blogs) || $firstBlog)
     <section class="section section-xl bg-white">
         <div class="container">
             <div class="main-component">
@@ -198,6 +198,11 @@
                                 <div class="col-md-3">
                                     <div class="player-info-rank context-dark">
                                         <div class="player-info-rank-main">
+                                            @if($menFirstRankPlayer->image)
+                                            <div class="player-info-rank-figure">
+                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($menFirstRankPlayer->image)) }}" alt="" width="270" height="200"/>
+                                            </div>
+                                            @endif
                                             <div class="player-info-rank-body">
                                                 <div class="player-info-rank-desc heading-4 text-black-50">Singles</div>
                                                 <div class="player-info-rank-pos heading-2 text-primary">#1</div>
@@ -209,10 +214,8 @@
                                             </div>
                                         </div>
                                         <div class="player-info-rank-footer">
-                                            <div
-                                                class="player-info-rank-name heading-5 lh-1">{{ $menFirstRankPlayer?->first_name }}</div>
-                                            <div
-                                                class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $menFirstRankPlayer?->last_name }}</div>
+                                            <div class="player-info-rank-name heading-5 lh-1">{{ $menFirstRankPlayer?->first_name }}</div>
+                                            <div class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $menFirstRankPlayer?->last_name }}</div>
                                             <div class="player-info-rank-country">
                                                 <span class="small">{{ $menFirstRankPlayer?->country?->name }}</span>
                                             </div>
@@ -234,13 +237,16 @@
                                                 <tr>
                                                     <td class="heading-4">{{ $player->rank }}<span>-</span></td>
                                                     <td>
-                                                        <div
-                                                            class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                        <div class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                            @if($player->image)
+                                                            <div class="unit-left">
+                                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($player->image)) }}" alt="" width="32" height="32"/>
+                                                            </div>
+                                                            @endif
                                                             <div class="unit-body">
                                                                 <p class="heading-7 lh-1">{{ $player->full_name }}</p>
                                                                 <p class="mt-0 small lh-1">
-                                                                    <span
-                                                                        class="fw-medium ps-1 align-middle">{{ $player->country?->name }}</span>
+                                                                    <span class="fw-medium ps-1 align-middle">{{ $player->country?->name }}</span>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -268,6 +274,11 @@
                                 <div class="col-md-3">
                                     <div class="player-info-rank context-dark">
                                         <div class="player-info-rank-main">
+                                            @if($womenFirstRankPlayer->image)
+                                                <div class="player-info-rank-figure">
+                                                    <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($womenFirstRankPlayer->image)) }}" alt="" width="270" height="200"/>
+                                                </div>
+                                            @endif
                                             <div class="player-info-rank-body">
                                                 <div class="player-info-rank-desc heading-4 text-black-50">Singles</div>
                                                 <div class="player-info-rank-pos heading-2 text-primary">#1</div>
@@ -279,10 +290,8 @@
                                             </div>
                                         </div>
                                         <div class="player-info-rank-footer">
-                                            <div
-                                                class="player-info-rank-name heading-5 lh-1">{{ $womenFirstRankPlayer?->first_name }}</div>
-                                            <div
-                                                class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $womenFirstRankPlayer?->last_name }}</div>
+                                            <div class="player-info-rank-name heading-5 lh-1">{{ $womenFirstRankPlayer?->first_name }}</div>
+                                            <div class="player-info-rank-surname heading-4 lh-1 mt-0">{{ $womenFirstRankPlayer?->last_name }}</div>
                                             <div class="player-info-rank-country">
                                                 <span class="small">{{ $womenFirstRankPlayer?->country?->name }}</span>
                                             </div>
@@ -304,8 +313,12 @@
                                                 <tr>
                                                     <td class="heading-4">{{ $player->rank }}<span>-</span></td>
                                                     <td>
-                                                        <div
-                                                            class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                        <div class="unit unit-spacing-sm unit-horizontal align-items-center">
+                                                            @if($player->image)
+                                                            <div class="unit-left">
+                                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($player->image)) }}" alt="" width="32" height="32"/>
+                                                            </div>
+                                                            @endif
                                                             <div class="unit-body">
                                                                 <p class="heading-7 lh-1">{{ $player->full_name }}</p>
                                                                 <p class="mt-0 small lh-1">
@@ -350,6 +363,9 @@
                                                 <tr>
                                                     <td>
                                                         <div class="game-result-boxed-player">
+                                                            @if($match->homeTeam?->image)
+                                                            <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->homeTeam?->image)) }}" alt="" width="32" height="22">
+                                                            @endif
                                                             <span>{{ $match->homeTeam?->nickname }}</span>
                                                         </div>
                                                         @if($match->winner_team_id == $match->home_team_id)
@@ -363,6 +379,9 @@
                                                 <tr>
                                                     <td>
                                                         <div class="game-result-boxed-player">
+                                                            @if($match->awayTeam?->image)
+                                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->awayTeam?->image)) }}" alt="" width="32" height="22">
+                                                            @endif
                                                             <span>{{ $match->awayTeam?->nickname }}</span>
                                                         </div>
                                                         @if($match->winner_team_id == $match->away_team_id)
