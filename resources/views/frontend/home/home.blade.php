@@ -27,7 +27,8 @@
                     <div class="container">
                         <div class="swiper-slide-caption">
                             <h2 class="lh-1 fst-normal ls-normal" style="max-width: 550px;" data-caption-animate="fadeInLeftSmall">Unique venue. Exceptional team. One passion</h2>
-                            <p class="mt-4" style="max-width: 320px;" data-caption-animate="fadeInLeftSmall" data-caption-delay="200">Tennis Blastship is your #1 space for everything concerning this breathtaking sport.</p><a class="button button-sm button-secondary button-offset-xl" data-caption-animate="fadeInLeftSmall" data-caption-delay="400" href="about-us.html">Read More</a>
+                            <p class="mt-4" style="max-width: 320px;" data-caption-animate="fadeInLeftSmall" data-caption-delay="200">Tennis Blastship is your #1 space for everything concerning this breathtaking sport.</p>
+                            <a class="button button-sm button-secondary button-offset-xl" data-caption-animate="fadeInLeftSmall" data-caption-delay="400" href="#">Read More</a>
                         </div>
                     </div>
                 </div>
