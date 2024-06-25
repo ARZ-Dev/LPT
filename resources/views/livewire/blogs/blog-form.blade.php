@@ -58,7 +58,7 @@
                 <div class="card mb-4 mt-2">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
-                            Image Upload *
+                            Image Upload (Large Size: 770x580 - Medium Size: 370x280) *
                             @if($image)
                                 - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($image)) }}" download>Download Link</a>
                             @endif
