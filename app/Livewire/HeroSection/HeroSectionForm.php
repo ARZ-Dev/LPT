@@ -14,7 +14,9 @@ class HeroSectionForm extends Component
 
     public $image;
     public $title;
+    public $titleTextColor;
     public $description;
+    public $descriptionTextColor;
     public $link;
     public $heroSection;
 
@@ -24,7 +26,9 @@ class HeroSectionForm extends Component
             $this->heroSection = HeroSection::findOrFail($id);
             $this->image = $this->heroSection?->image;
             $this->title = $this->heroSection?->title;
+            $this->titleTextColor = $this->heroSection?->title_text_color;
             $this->description = $this->heroSection?->description;
+            $this->descriptionTextColor = $this->heroSection?->description_text_color;
             $this->link = $this->heroSection?->link;
         }
     }
@@ -52,7 +56,9 @@ class HeroSectionForm extends Component
 
         $data = [
             'title' => $this->title,
+            'title_text_color' => $this->titleTextColor ?? "#FFFFFF",
             'description' => $this->description,
+            'description_text_color' => $this->descriptionTextColor ?? "#FFFFFF",
             'link' => $this->link,
         ];
 

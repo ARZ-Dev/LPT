@@ -25,6 +25,17 @@
                                 />
                                 @error('title') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+                            <div class="classic col-12 col-md-6">
+                                <label class="form-label" for="titleColor">Title Text Color</label>
+                                <input
+                                    wire:model="titleColor"
+                                    type="color"
+                                    id="titleColor"
+                                    name="titleColor"
+                                    class="form-control form-control-color"
+                                />
+                                @error('titleColor') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="link">Link</label>
                                 <input
@@ -37,7 +48,7 @@
                                 />
                                 @error('link') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-12 col-md-12 mt-3">
+                            <div class="col-lg-10 col-sm-12">
                                 <label class="form-label" for="description">Description *</label>
                                 <textarea
                                     wire:model="description"
@@ -49,6 +60,17 @@
                                 >
                                 </textarea>
                                 @error('description') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-lg-2 col-sm-12">
+                                <label class="form-label" for="descriptionColor">Description Text Color</label>
+                                <input
+                                    wire:model="descriptionColor"
+                                    type="color"
+                                    id="descriptionColor"
+                                    name="descriptionColor"
+                                    class="form-control form-control-color"
+                                />
+                                @error('descriptionColor') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                         </div>
                     </div>
@@ -93,6 +115,43 @@
 
     @script
     <script>
+
+        $(document).ready(function () {
+
+            let colorPicker = document.querySelector('#color-picker-classic')
+
+            pickr.create({
+                el: colorPicker,
+                theme: 'classic',
+                default: 'rgba(102, 108, 232, 1)',
+                swatches: [
+                    'rgba(102, 108, 232, 1)',
+                    'rgba(40, 208, 148, 1)',
+                    'rgba(255, 73, 97, 1)',
+                    'rgba(255, 145, 73, 1)',
+                    'rgba(30, 159, 242, 1)'
+                ],
+                components: {
+                    // Main components
+                    preview: true,
+                    opacity: true,
+                    hue: true,
+
+                    // Input / output Options
+                    interaction: {
+                        hex: true,
+                        rgba: true,
+                        hsla: true,
+                        hsva: true,
+                        cmyk: true,
+                        input: true,
+                        clear: true,
+                        save: true
+                    }
+                }
+            });
+        })
+
 
     </script>
     @endscript
