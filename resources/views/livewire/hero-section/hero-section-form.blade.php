@@ -26,15 +26,15 @@
                                 @error('title') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="classic col-12 col-md-6">
-                                <label class="form-label" for="titleColor">Title Text Color</label>
+                                <label class="form-label" for="titleTextColor">Title Text Color</label>
                                 <input
-                                    wire:model="titleColor"
+                                    wire:model="titleTextColor"
                                     type="color"
-                                    id="titleColor"
-                                    name="titleColor"
+                                    id="titleTextColor"
+                                    name="titleTextColor"
                                     class="form-control form-control-color"
                                 />
-                                @error('titleColor') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('titleTextColor') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="link">Link</label>
@@ -62,15 +62,15 @@
                                 @error('description') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-lg-2 col-sm-12">
-                                <label class="form-label" for="descriptionColor">Description Text Color</label>
+                                <label class="form-label" for="descriptionTextColor">Description Text Color</label>
                                 <input
-                                    wire:model="descriptionColor"
+                                    wire:model="descriptionTextColor"
                                     type="color"
-                                    id="descriptionColor"
-                                    name="descriptionColor"
+                                    id="descriptionTextColor"
+                                    name="descriptionTextColor"
                                     class="form-control form-control-color"
                                 />
-                                @error('descriptionColor') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('descriptionTextColor') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                         </div>
                     </div>

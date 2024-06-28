@@ -10,9 +10,9 @@
                      data-slide-bg="{{ asset(\Illuminate\Support\Facades\Storage::url($heroSection->image)) }}">
                     <div class="container">
                         <div class="swiper-slide-caption">
-                            <h2 class="lh-1 fst-normal ls-normal" style="max-width: 550px;"
+                            <h2 class="lh-1 fst-normal ls-normal" style="max-width: 550px; color: {{ $heroSection->title_text_color }}"
                                 data-caption-animate="fadeInLeftSmall">{{ $heroSection->title }}</h2>
-                            <p class="mt-4" style="max-width: 320px;" data-caption-animate="fadeInLeftSmall"
+                            <p class="mt-4" style="max-width: 320px; color: {{ $heroSection->description_text_color }}" data-caption-animate="fadeInLeftSmall"
                                data-caption-delay="200">{{ $heroSection->description }}</p>
                             @if($heroSection->link)
                                 <a class="button button-sm button-secondary button-offset-xl"

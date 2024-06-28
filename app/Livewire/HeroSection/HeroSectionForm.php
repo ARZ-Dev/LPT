@@ -60,6 +60,7 @@ class HeroSectionForm extends Component
             'description' => $this->description,
             'description_text_color' => $this->descriptionTextColor ?? "#FFFFFF",
             'link' => $this->link,
+            'is_active' => true,
         ];
 
         if ($this->image && !is_string($this->image)) {
