@@ -52,9 +52,12 @@
                                         <a href="{{ route('frontend.players.view', $player->id) }}" class="d-flex flex-column w-100">
                                             <!-- Player Info Modern-->
                                             <div class="player-info-modern-footer flex-grow-1">
+                                                @if($player->image)
+                                                    <img src="{{  \Illuminate\Support\Facades\Storage::url($player->image) }}" alt="" style="width: 35%"/>
+                                                @endif
                                                 <div class="player-info-modern-content">
                                                     <div class="player-info-modern-title">
-                                                        <h5>{{ $player->nickname }}</h5>
+                                                        <h5>{{ $player->first_name }} {{ $player->last_name }}</h5>
                                                         <p>Rank {{ $player->rank }}</p>
                                                     </div>
                                                 </div>
