@@ -23,7 +23,7 @@
                                             <div class="player-info-modern-footer flex-grow-1">
                                                 <div class="player-info-modern-content">
                                                     <div class="player-info-modern-title">
-                                                        <h5>{{ $player->nickname }}</h5>
+                                                        <h5>{{ $player->full_name }}</h5>
                                                         <p>Rank {{ $player->rank }}</p>
                                                     </div>
                                                 </div>

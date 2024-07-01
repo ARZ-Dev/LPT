@@ -14,6 +14,14 @@
                     </article>
                     <!-- Player Info Corporate-->
                     <div class="player-info-corporate">
+                        <div class="player-info-figure">
+                            <div class="player-img">
+                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($player->image)) }}" alt="" width="368" height="286"/>
+                            </div>
+                            <div class="team-logo-img">
+                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($player->currentTeam?->image)) }}" alt="" width="237" height="312"/>
+                            </div>
+                        </div>
                         <div class="player-info-main">
                             <h4 class="player-info-title">General Info</h4>
                             <hr/>

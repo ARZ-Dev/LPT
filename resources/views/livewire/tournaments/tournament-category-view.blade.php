@@ -29,7 +29,7 @@
                         <td>{{ $category->id }}</td>
                         <td>{{ $category->levelCategory?->name }}</td>
                         <td>{{ $category->type?->name }}</td>
-                        <td>{{ number_format($category->subscription_fees, 2) }}</td>
+                        <td>{{ number_format($category->subscription_fee, 2) }}</td>
                         <td>{{ $category->number_of_teams }}</td>
                         <td>
                             <span class="badge bg-label-{{ $category->has_group_stage ? "info" : "warning" }}">
