@@ -12,10 +12,13 @@
                 <tr>
                     <th>ID</th>
                     <th>Full Name</th>
+                    <th>Gender</th>
                     <th>Current Team</th>
                     <th>Teams</th>
                     <th>Birthdate</th>
                     <th>Phone Number</th>
+                    <th>Points</th>
+                    <th>Rank</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -24,6 +27,7 @@
                     <tr>
                         <td>{{ $player->id }}</td>
                         <td>{{ $player->full_name }}</td>
+                        <td>{{ ucfirst($player->gender) }}</td>
                         <td>{{ $player->currentTeam?->nickname }}</td>
                         <td>
                             @foreach($player->teams as $team)
@@ -32,6 +36,8 @@
                         </td>
                         <td>{{ $player->birthdate }}</td>
                         <td>{{ $player->phone_number }}</td>
+                        <td>{{ $player->points }}</td>
+                        <td>{{ $player->rank }}</td>
                         <td>
                             @can('player-view')
                                 <a href="{{ route('players.view', ['id' => $player->id, 'status' => '1']) }}" class="text-body view-user-button"><i class="ti ti-eye ti-sm me-2"></i></a>
