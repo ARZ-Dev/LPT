@@ -105,6 +105,16 @@ class MatchesView extends Component
     public static function chooseAbsentTeam($matchId, $absentTeamId)
     {
         $match = Game::findOrFail($matchId);
+
+        if ($match->type == "Knockouts") {
+            $category = getMatchTournamentCategory($match);
+            $typeSettingsLink = route('types.edit', $category->tournament_type_id);
+            $settings = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
+                ->where('stage', $match->knockoutRound?->knockoutStage?->name)
+                ->first();
+            throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
+        }
+
         $winnerTeam = $absentTeamId == $match->home_team_id ? $match->awayTeam : $match->homeTeam;
         $match->update([
             'winner_team_id' => $winnerTeam->id,
