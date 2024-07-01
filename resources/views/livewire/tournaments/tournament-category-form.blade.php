@@ -147,7 +147,7 @@
                                         @empty
                                             <div class="col-md-12">
                                                 <div class="alert alert-danger" role="alert">
-                                                    No teams available.
+                                                    No teams available / has paid yet.
                                                 </div>
                                             </div>
                                         @endforelse
