@@ -26,11 +26,11 @@
                                 </li>
                                 <li>
                                     <a href="#">Type</a>
-                                    <span class="list-statictics-counter">{{ $category->type?->name }}</span>
+                                    <span class="list-statictics-counter">{{ $category->type?->name ?? "N/A" }}</span>
                                 </li>
                                 <li>
                                     <a href="#">Number of Teams</a>
-                                    <span class="list-statictics-counter">{{ $category->number_of_teams }}</span>
+                                    <span class="list-statictics-counter">{{ $category->number_of_teams ?? "N/A" }}</span>
                                 </li>
                                 @if($category->has_group_stage)
                                 <li>
@@ -63,7 +63,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($category->type->settings as $setting)
+                            @forelse($category->type?->settings ?? [] as $setting)
                                 <tr>
                                     <td class="text-nowrap">{{ $setting->stage }}</td>
                                     <td class="text-nowrap">{{ $setting->points }}</td>
@@ -192,7 +192,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($matches as $match)
+                            @forelse($matches as $match)
                             <tr>
                                 <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
 
@@ -226,8 +226,13 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6">
+                                    No matches available.
+                                </td>
+                            </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
