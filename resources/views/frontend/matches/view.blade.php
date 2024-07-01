@@ -24,6 +24,9 @@
                                     <h3 class="game-info-title">{{ getMatchRound($match) }}</h3>
                                     <div class="game-info-main">
                                         <div class="game-info-team game-info-team-first">
+                                            <figure>
+                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->homeTeam?->image)) }}" alt=""/>
+                                            </figure>
                                             <div class="game-result-team-name">{{ $match->homeTeam?->nickname }}</div>
                                             <div class="game-result-team-country">Home</div>
                                         </div>
@@ -35,6 +38,9 @@
                                             <div class="game-result-divider-wrap"><span class="game-info-team-divider">VS</span></div>
                                         </div>
                                         <div class="game-info-team game-info-team-second">
+                                            <figure>
+                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->awayTeam?->image)) }}" alt=""/>
+                                            </figure>
                                             <div class="game-result-team-name">{{ $match->awayTeam?->nickname }}</div>
                                             <div class="game-result-team-country">Away</div>
                                         </div>

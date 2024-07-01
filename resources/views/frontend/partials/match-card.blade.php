@@ -3,9 +3,9 @@
         @php($time = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('H:i') : "N/A")
         @php($day = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('D j') : "N/A")
         @php($month = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('M Y') : "N/A")
-        <div class="game-info">
+        <div class="game-info game-info-classic">
             <p class="game-info-subtitle">
-                Time: <time> {{ $time }}</time>
+                {{ $day }}, {{ $month }} at {{ $time }}
             </p>
             <h3 class="game-info-title">
                 {{ getMatchTournament($match)->name }} - {{ getMatchCategory($match)->name }} - {{ getMatchRound($match) }}
@@ -16,8 +16,10 @@
                 @endif
             </h3>
             <div class="game-info-main">
-
-                <div class="game-result-team game-result-team-first game-result-team-win">
+                <div class="game-info-team game-info-team-first">
+                    <figure>
+                        <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->homeTeam?->image)) }}" alt=""/>
+                    </figure>
                     <div class="game-result-team-name">
                         @if($match->homeTeam)
                             {{ $match->homeTeam->nickname }}
@@ -26,27 +28,18 @@
                         @endif
                     </div>
                     <div class="game-result-team-country">Home</div>
-                    @if($match->is_completed && $match->winner_team_id == $match->home_team_id)
-                        <span class="game-result-team-label game-result-team-label-top">Won</span>
-                    @endif
                 </div>
-
-                <div class="game-info-middle game-info-middle-vertical">
-                    <time class="time-big">
-                        <span class="heading-3">{{ $day }}</span> {{ $month }}
-                    </time>
-                    @if($match->is_started)
-                        <div class="game-result-score-wrap">
-                            <div class="game-result-score">{{ $match->sets->where('winner_team_id', $match->home_team_id)->count() }}</div>
-                            <div class="game-result-score-divider">
-                                @include('svg.divider')
-                            </div>
-                            <div class="game-result-score">{{ $match->sets->where('winner_team_id', $match->away_team_id)->count() }}</div>
-                        </div>
-                    @endif
+                <div class="game-info-middle">
+                    <div class="game-result-score-wrap">
+                        <div class="game-info-score {{ $match->winner_team_id == $match->home_team_id ? "game-result-team-win" : "" }}">{{ $match->sets->where('winner_team_id', $match->home_team_id)->count() }}</div>
+                        <div class="game-info-score {{ $match->winner_team_id == $match->away_team_id ? "game-result-team-win" : "" }}">{{ $match->sets->where('winner_team_id', $match->away_team_id)->count() }}</div>
+                    </div>
+                    <div class="game-result-divider-wrap"><span class="game-info-team-divider">VS</span></div>
                 </div>
-
-                <div class="game-result-team game-result-team-first game-result-team-win">
+                <div class="game-info-team game-info-team-second">
+                    <figure>
+                        <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($match->awayTeam?->image)) }}" alt=""/>
+                    </figure>
                     <div class="game-result-team-name">
                         @if($match->awayTeam)
                             {{ $match->awayTeam->nickname }}
@@ -55,29 +48,26 @@
                         @endif
                     </div>
                     <div class="game-result-team-country">Away</div>
-                    @if($match->is_completed && $match->winner_team_id == $match->away_team_id)
-                        <span class="game-result-team-label game-result-team-label-top">Win</span>
-                    @endif
                 </div>
-
             </div>
+            <!-- Table Game Info-->
             @if($match->is_started)
-                <div class="table-game-info-wrap mt-2">
-                    <span class="table-game-info-title">Game statistics<span></span></span>
-                    <div class="table-game-info-main table-custom-responsive">
-                        <table class="table-custom table-game-info">
-                            <tbody>
-                            @foreach($match->sets as $set)
-                                <tr>
-                                    <td class="table-game-info-number">{{ $set->home_team_score }}</td>
-                                    <td class="table-game-info-category">Set {{ $set->set_number }}</td>
-                                    <td class="table-game-info-number">{{ $set->away_team_score }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="table-game-info-wrap mt-2">
+                <span class="table-game-info-title">Game statistics<span></span></span>
+                <div class="table-game-info-main table-custom-responsive">
+                    <table class="table-custom table-game-info">
+                        <tbody>
+                        @foreach($match->sets as $set)
+                            <tr>
+                                <td class="table-game-info-number">{{ $set->home_team_score }}</td>
+                                <td class="table-game-info-category">Set {{ $set->set_number }}</td>
+                                <td class="table-game-info-number">{{ $set->away_team_score }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
+            </div>
             @endif
         </div>
     </a>

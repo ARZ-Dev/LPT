@@ -15,7 +15,7 @@
                         </article>
                         <!-- Table Players-->
                         <div class="table-custom-responsive overflow-x-auto" style="height: {{ count($levelCategory->teams) > 5 ? "500px" : "auto" }}">
-                            <table class="table-custom table-standings table-modern dataTable">
+                            <table class="table-custom table-standings table-modern table-custom-striped">
                                 <thead>
                                 <tr>
                                     <th colspan="2">Team Position</th>
@@ -28,10 +28,15 @@
                                 <tbody>
                                 @foreach($levelCategory->teams as $team)
                                     <tr>
-                                        <td><span class="table-counter">{{ $team->rank }}</span></td>
-                                        <td class="player-inline">
-                                            <div class="player-title">
-                                                <div class="player-name">{{ $team->nickname }}</div>
+                                        <td>{{ $team->rank }}</td>
+                                        <td class="team-inline">
+                                            @if($team->image)
+                                            <div class="team-figure">
+                                                <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($team->image)) }}" alt="" width="60" height="41">
+                                            </div>
+                                            @endif
+                                            <div class="team-title">
+                                                <div class="team-name">{{ $team->nickname }}</div>
                                             </div>
                                         </td>
                                         <td>{{ $team->matches }}</td>

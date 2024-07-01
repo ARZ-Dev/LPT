@@ -125,7 +125,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @php($upcomingMatch = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with('group.tournamentLevelCategory.levelCategory', 'knockoutRound.tournamentLevelCategory.levelCategory')->first())
+                                    @php($upcomingMatch = \App\Models\Game::where('is_started', false)->where('datetime', '>', now())->whereNotNull('home_team_id')->whereNotNull('away_team_id')->orderBy('datetime')->with('group.tournamentLevelCategory.levelCategory', 'knockoutRound.tournamentLevelCategory.levelCategory')->first())
                                     @if($upcomingMatch)
                                         <!-- Event Teaser-->
                                         <article class="event-teaser rd-megamenu-footer">
@@ -139,6 +139,11 @@
                                                 <div class="event-teaser-teams">
                                                     <div class="event-teaser-team">
                                                         <div class="unit unit-spacing-xs unit-horizontal align-items-center">
+                                                            @if($upcomingMatch->homeTeam->image)
+                                                            <div class="unit-left">
+                                                                <img class="event-teaser-team-image" src="{{ asset(\Illuminate\Support\Facades\Storage::url($upcomingMatch->homeTeam->image)) }}" alt="" width="60" height="50">
+                                                            </div>
+                                                            @endif
                                                             <div class="unit-body">
                                                                 <p class="heading-7">{{ $upcomingMatch->homeTeam->nickname }}</p>
                                                                 <p class="text-style-1">Home Team</p>
@@ -148,6 +153,11 @@
                                                     <div class="event-teaser-team-divider"><span class="event-teaser-team-divider-text">VS</span></div>
                                                     <div class="event-teaser-team">
                                                         <div class="unit unit-spacing-xs unit-horizontal align-items-center">
+                                                            @if($upcomingMatch->awayTeam->image)
+                                                            <div class="unit-left">
+                                                                <img class="event-teaser-team-image" src="{{ asset(\Illuminate\Support\Facades\Storage::url($upcomingMatch->awayTeam->image)) }}" alt="" width="60" height="50">
+                                                            </div>
+                                                            @endif
                                                             <div class="unit-body">
                                                                 <p class="heading-7">{{ $upcomingMatch->awayTeam->nickname }}</p>
                                                                 <p class="text-style-1">Away Team</p>
