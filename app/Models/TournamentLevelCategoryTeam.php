@@ -12,7 +12,7 @@ class TournamentLevelCategoryTeam extends Model
 
     protected $guarded = [];
 
-    public function tournamentlevelCategory()
+    public function tournamentLevelCategory()
     {
         return $this->belongsTo(TournamentLevelCategory::class);
     }

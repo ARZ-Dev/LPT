@@ -37,4 +37,9 @@ class Team extends Model
         return $this->hasMany(Player::class, 'current_team_id');
     }
 
+    public function rankings()
+    {
+        return $this->hasMany(TournamentLevelCategoryTeam::class);
+    }
+
 }

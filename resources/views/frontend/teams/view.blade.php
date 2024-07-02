@@ -59,8 +59,8 @@
                                     <p class="team-statistic-title">Rank</p>
                                 </td>
                                 <td>
-                                    <p class="team-statistic-counter">{{ $team->matches }}</p>
-                                    <p class="team-statistic-title">Matches</p>
+                                    <p class="team-statistic-counter">{{ $team->points }}</p>
+                                    <p class="team-statistic-title">Points</p>
                                 </td>
                             </tr>
                             <tr>
@@ -77,21 +77,36 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <!-- Player Info Corporate-->
-                    <div class="player-info-corporate">
-                        <div class="player-info-main">
-                            <h4 class="player-info-title">Tournaments Records</h4>
-                            <hr/>
-                            <div class="player-info-table">
-                                <div class="table-custom-wrap">
-                                    <table class="table-custom">
-                                        <tr>
-                                            <th>Not available yet.</th>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
+                    <!-- Heading Component-->
+                    <article class="heading-component">
+                        <div class="heading-component-inner">
+                            <h5 class="heading-component-title">Tournaments Records
+                            </h5>
                         </div>
+                    </article>
+                    <div class="table-custom-responsive">
+                        <table class="table-custom table-standings table-modern table-custom-striped">
+                            <thead>
+                            <tr>
+                                <th>Tournament</th>
+                                <th>Last Rank</th>
+                                <th>Score</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($team->rankings as $ranking)
+                                <tr>
+                                    <td class="text-nowrap">{{ $ranking->tournamentLevelCategory?->tournament->name }} - {{ $ranking->tournamentLevelCategory?->levelCategory?->name }}</td>
+                                    <td>{{ $ranking->last_rank }}</td>
+                                    <td>{{ $ranking->score }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <th>Not available yet.</th>
+                                </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

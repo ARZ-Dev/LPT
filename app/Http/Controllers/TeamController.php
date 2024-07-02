@@ -23,6 +23,7 @@ class TeamController extends Controller
     public function view(Team $team)
     {
         $data = [];
+        $team->load('rankings.tournamentLevelCategory.tournament');
         $data['team'] = $team;
 
         return view('frontend.teams.view', $data);
