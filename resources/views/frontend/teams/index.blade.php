@@ -35,9 +35,11 @@
                                                 <img src="{{ asset(\Illuminate\Support\Facades\Storage::url($team->image)) }}" alt="" width="60" height="41">
                                             </div>
                                             @endif
-                                            <div class="team-title">
-                                                <div class="team-name">{{ $team->nickname }}</div>
-                                            </div>
+                                            <a href="{{ route('frontend.teams.view', $team->id) }}">
+                                                <div class="team-title">
+                                                    <div class="team-name">{{ $team->nickname }}</div>
+                                                </div>
+                                            </a>
                                         </td>
                                         <td>{{ $team->matches }}</td>
                                         <td>{{ $team->wins }}</td>
