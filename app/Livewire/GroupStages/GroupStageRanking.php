@@ -5,6 +5,7 @@ namespace App\Livewire\GroupStages;
 use App\Models\Group;
 use App\Models\GroupTeam;
 use App\Models\TournamentLevelCategory;
+use App\Models\TournamentLevelCategoryTeam;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -46,8 +47,16 @@ class GroupStageRanking extends Component
         try {
 
             foreach ($this->qualifiedTeams as $groupId => $teamsIds) {
+
+                $group = Group::find($groupId);
+
                 GroupTeam::where('group_id', $groupId)->whereIn('team_id', $teamsIds)->update([
                     'has_qualified' => true,
+                ]);
+
+                $notQualifiedTeamsIds = GroupTeam::where('group_id', $groupId)->where('has_qualified', false)->pluck('team_id')->toArray();
+                TournamentLevelCategoryTeam::where('tournament_level_category_id', $group->tournament_level_category_id)->whereIn('team_id', $notQualifiedTeamsIds)->update([
+                    'last_rank' => 'Group Stages',
                 ]);
 
                 $qualifiedTeamsCount = GroupTeam::where('group_id', $groupId)->where('has_qualified', true)->count();

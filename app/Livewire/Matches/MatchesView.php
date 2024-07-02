@@ -229,6 +229,10 @@ class MatchesView extends Component
                 ]);
             }
 
+            TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->where('team_id', $loserTeamId)->update([
+                'last_rank' => $match->knockoutRound?->knockoutStage?->name,
+            ]);
+
             $roundPoints = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
                 ->where('stage', $match->knockoutRound?->knockoutStage?->name)
                 ->first()?->points ?? 0;
@@ -259,6 +263,10 @@ class MatchesView extends Component
                     'silver_team_id' => $loserTeamId,
                 ]);
 
+                TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->where('team_id', $winnerId)->update([
+                    'last_rank' => 'Winner',
+                ]);
+
                 $match->winnerTeam->increment('points', $category->type->points);
 
                 if ($match->home_team_id == $match->winner_team_id) {
@@ -275,6 +283,7 @@ class MatchesView extends Component
                 }
             }
 
+            self::updateKnockoutsTeamsScore($category->id, $matchId);
             self::updateTeamsRank($category->level_category_id);
 
         } else {
@@ -319,6 +328,11 @@ class MatchesView extends Component
                         ->update([
                             'has_qualified' => true
                         ]);
+
+                    $notQualifiedTeamsIds = GroupTeam::where('group_id', $match->group_id)->where('has_qualified', false)->pluck('team_id')->toArray();
+                    TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->whereIn('team_id', $notQualifiedTeamsIds)->update([
+                        'last_rank' => 'Group Stages',
+                    ]);
 
                 } else {
 
@@ -396,6 +410,19 @@ class MatchesView extends Component
 
         $group->groupTeams()->where('team_id', $homeTeam->id)->increment('score', $homeTeamScore);
         $group->groupTeams()->where('team_id', $awayTeam->id)->increment('score', $awayTeamScore);
+    }
+
+    public static function updateKnockoutsTeamsScore($categoryId, $matchId)
+    {
+        $match = Game::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
+
+        $homeTeam = $match->homeTeam;
+        $homeTeamScore = $match->sets()->sum('home_team_score') - $match->sets()->sum('away_team_score');
+        $awayTeam = $match->awayTeam;
+        $awayTeamScore = $match->sets()->sum('away_team_score') - $match->sets()->sum('home_team_score');
+
+        TournamentLevelCategoryTeam::where('tournament_level_category_id', $categoryId)->where('team_id', $homeTeam->id)->increment('score', $homeTeamScore);
+        TournamentLevelCategoryTeam::where('tournament_level_category_id', $categoryId)->where('team_id', $awayTeam->id)->increment('score', $awayTeamScore);
     }
 
     public function render()

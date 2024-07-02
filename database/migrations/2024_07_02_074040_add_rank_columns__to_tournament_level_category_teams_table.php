@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('tournament_level_category_teams', function (Blueprint $table) {
             $table->string('last_rank')->nullable()->after('players_ids');
-            $table->string('score')->nullable()->after('last_rank');
+            $table->integer('score')->default(0)->after('last_rank');
         });
     }
 
