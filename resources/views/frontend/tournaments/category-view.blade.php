@@ -254,8 +254,8 @@
         let matchesTable = $('#matchesTable');
 
         let searchRow = '<tr>';
-        matchesTable.find('thead th').each(function (key) {
-            searchRow += '<th><input type="text" class="form-control" placeholder="Search" /></th>';
+        matchesTable.find('thead th').each(function (index) {
+            searchRow += `<th><input type="text" class="form-control" placeholder="Search" data-index="${index}" /></th>`;
         });
         searchRow += '</tr>';
         matchesTable.find('thead').append(searchRow);
