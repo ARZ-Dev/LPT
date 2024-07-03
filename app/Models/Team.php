@@ -42,4 +42,9 @@ class Team extends Model
         return $this->hasMany(TournamentLevelCategoryTeam::class);
     }
 
+    public function monitorUser()
+    {
+        return $this->belongsTo(User::class, 'monitor_user_id');
+    }
+
 }

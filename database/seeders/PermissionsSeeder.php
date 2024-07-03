@@ -125,6 +125,8 @@ class PermissionsSeeder extends Seeder
 
             'tournamentType-list',
             'tournamentType-edit',
+
+            'team-monitor',
         ];
 
         $permissionsIds = [];

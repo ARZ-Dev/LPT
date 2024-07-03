@@ -68,6 +68,26 @@
                                 </div>
                                 @error('playersIds') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="monitorUserId">Monitor User *</label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model="monitorUserId"
+                                        id="monitorUserId"
+                                        class="selectpicker w-100 @error('monitorUserId') invalid-validation-select @enderror"
+                                        title="Select Monitor User"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-size="5"
+                                        data-tick-icon="ti-check text-white" required>
+                                        @foreach($monitorUsers as $monitorUser)
+                                            <option value="{{ $monitorUser->id }}" @selected($monitorUser->id == $monitorUserId)>{{ $monitorUser->full_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('monitorUserId') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
                         </div>
                     </div>
 
