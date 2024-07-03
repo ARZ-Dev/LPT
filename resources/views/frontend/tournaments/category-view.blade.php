@@ -170,72 +170,72 @@
         @endif
 
         <div class="container">
-                <div class="col-12">
-                    <!-- Heading Component-->
-                    <article class="heading-component">
-                        <div class="heading-component-inner">
-                            <h5 class="heading-component-title">Matches</h5>
-                        </div>
-                    </article>
-                    <!-- Table Players-->
-                    <div class="table-custom-responsive">
-                        <table class="table-custom table-standings table-modern" id="matchesTable">
-                            <thead>
-                            <tr>
-                                <th>Group / Round</th>
-                                <th>Home Team</th>
-                                <th>Away Team</th>
-                                <th>Datetime</th>
-                                <th>Winner Team</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @forelse($matches as $match)
-                            <tr>
-                                <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
-
-                                <td>
-                                    @if($match->homeTeam)
-                                        {{ $match->homeTeam->nickname }}
-                                    @elseif($match->relatedHomeGame)
-                                        Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($match->awayTeam)
-                                        {{ $match->awayTeam->nickname }}
-                                    @elseif($match->relatedAwayGame)
-                                        Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
-                                    @endif
-                                </td>
-                                <td class="text-nowrap">{{ $match->datetime }}</td>
-                                <td>{{ $match->winnerTeam?->nickname }}</td>
-                                <td>
-                                    @php($badgeLabel = "secondary")
-                                    @if($match->status == "started")
-                                        @php($badgeLabel = "blue")
-                                    @elseif($match->status == "completed")
-                                        @php($badgeLabel = "green")
-                                    @elseif($match->status == "forfeited")
-                                        @php($badgeLabel = "red")
-                                    @endif
-                                    <div class="badge badge-{{ $badgeLabel }}">
-                                        {{ ucfirst($match->status) }}
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6">
-                                    No matches available.
-                                </td>
-                            </tr>
-                            @endforelse
-                            </tbody>
-                        </table>
+            <div class="col-12">
+                <!-- Heading Component-->
+                <article class="heading-component">
+                    <div class="heading-component-inner">
+                        <h5 class="heading-component-title">Matches</h5>
                     </div>
+                </article>
+                <!-- Table Players-->
+                <div class="table-custom-responsive">
+                    <table class="table-custom table-standings table-modern" id="matchesTable">
+                        <thead>
+                        <tr>
+                            <th>Group / Round</th>
+                            <th>Home Team</th>
+                            <th>Away Team</th>
+                            <th>Datetime</th>
+                            <th>Winner Team</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse($matches as $match)
+                        <tr>
+                            <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
+
+                            <td>
+                                @if($match->homeTeam)
+                                    {{ $match->homeTeam->nickname }}
+                                @elseif($match->relatedHomeGame)
+                                    Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($match->awayTeam)
+                                    {{ $match->awayTeam->nickname }}
+                                @elseif($match->relatedAwayGame)
+                                    Winner of {{ $match->relatedAwayGame->knockoutRound?->name }}
+                                @endif
+                            </td>
+                            <td class="text-nowrap">{{ $match->datetime }}</td>
+                            <td>{{ $match->winnerTeam?->nickname }}</td>
+                            <td>
+                                @php($badgeLabel = "secondary")
+                                @if($match->status == "started")
+                                    @php($badgeLabel = "blue")
+                                @elseif($match->status == "completed")
+                                    @php($badgeLabel = "green")
+                                @elseif($match->status == "forfeited")
+                                    @php($badgeLabel = "red")
+                                @endif
+                                <div class="badge badge-{{ $badgeLabel }}">
+                                    {{ ucfirst($match->status) }}
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6">
+                                No matches available.
+                            </td>
+                        </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
                 </div>
+            </div>
         </div>
     </section>
 
@@ -253,12 +253,12 @@
 
         let matchesTable = $('#matchesTable');
 
-        let search_row = '<tr>';
+        let searchRow = '<tr>';
         matchesTable.find('thead th').each(function (key) {
-            search_row += '<th><input type="text" class="form-control" placeholder="Search" /></th>';
+            searchRow += '<th><input type="text" class="form-control" placeholder="Search" /></th>';
         });
-        search_row += '</tr>';
-        matchesTable.find('thead').append(search_row);
+        searchRow += '</tr>';
+        matchesTable.find('thead').append(searchRow);
 
         let matchesDatatable = matchesTable.DataTable({
             ordering: false,
