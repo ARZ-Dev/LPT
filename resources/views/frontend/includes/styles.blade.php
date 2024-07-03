@@ -4,3 +4,9 @@
 <link rel="stylesheet" href="{{ asset('assets/frontend/css/fonts.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/frontend/css/style-tennis.css') }}" id="main-styles-link">
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+
+
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-rowreorder/rowReorder.dataTables.css') }}" />

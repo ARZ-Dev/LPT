@@ -170,7 +170,6 @@
         @endif
 
         <div class="container">
-            <div class="row">
                 <div class="col-12">
                     <!-- Heading Component-->
                     <article class="heading-component">
@@ -179,8 +178,8 @@
                         </div>
                     </article>
                     <!-- Table Players-->
-                    <div class="table-custom-responsive overflow-x-auto" style="height: 500px">
-                        <table class="table-custom table-standings table-modern">
+                    <div class="table-custom-responsive">
+                        <table class="table-custom table-standings table-modern" id="matchesTable">
                             <thead>
                             <tr>
                                 <th>Group / Round</th>
@@ -237,12 +236,42 @@
                         </table>
                     </div>
                 </div>
-            </div>
         </div>
     </section>
 
+    <style>
+        #matchesTable_wrapper .row {
+            margin-top: 0 !important;
+        }
+    </style>
 @endsection
 
 @section('script')
+<script>
 
+    $(document).ready(function () {
+
+        let matchesTable = $('#matchesTable');
+
+        let search_row = '<tr>';
+        matchesTable.find('thead th').each(function (key) {
+            search_row += '<th><input type="text" class="form-control" placeholder="Search" /></th>';
+        });
+        search_row += '</tr>';
+        matchesTable.find('thead').append(search_row);
+
+        let matchesDatatable = matchesTable.DataTable({
+            ordering: false,
+        });
+
+        // Filter event handler
+        $(matchesDatatable.table().container()).on('keyup', 'thead input', function () {
+            matchesDatatable
+                .column($(this).data('index'))
+                .search(this.value)
+                .draw();
+        });
+    });
+
+</script>
 @endsection
