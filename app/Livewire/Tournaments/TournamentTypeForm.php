@@ -22,7 +22,7 @@ class TournamentTypeForm extends Component
         if (count($this->type->settings)) {
             $this->stagePoints = $this->type->settings->toArray();
         } else {
-            $stages = ['Round of 32', 'Round of 16', 'Quarter Final', 'Semi Final', 'Final'];
+            $stages = ['Group Stages', 'Round of 64', 'Round of 32', 'Round of 16', 'Quarter Final', 'Semi Final', 'Final'];
             foreach ($stages as $stage) {
                 $this->stagePoints[] = [
                     'stage' => $stage,

@@ -284,7 +284,6 @@ class MatchesView extends Component
             }
 
             self::updateKnockoutsTeamsScore($category->id, $matchId);
-            self::updateTeamsRank($category->level_category_id);
 
         } else {
             $group = Group::findOrFail($match->group_id);
@@ -334,6 +333,17 @@ class MatchesView extends Component
                         'last_rank' => 'Group Stages',
                     ]);
 
+                    $roundPoints = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
+                        ->where('stage', 'Group Stages')
+                        ->first()?->points ?? 0;
+
+                    Team::whereIn('id', $notQualifiedTeamsIds)->increment('points', $roundPoints);
+
+                    foreach ($notQualifiedTeamsIds as $notQualifiedTeamsId) {
+                        $playersIds = json_decode(TournamentLevelCategoryTeam::where('tournament_level_category_id', $category->id)->where('team_id', $notQualifiedTeamsId)->first()?->players_ids ?? "[]");
+                        Player::whereIn('id', $playersIds)->increment('points', $roundPoints);
+                    }
+
                 } else {
 
                     // Find drawn teams
@@ -374,6 +384,9 @@ class MatchesView extends Component
                 ]);
             }
         }
+
+        self::updateTeamsRank($category->level_category_id);
+
         return $category;
     }
 

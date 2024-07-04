@@ -4,8 +4,11 @@ namespace App\Livewire\GroupStages;
 
 use App\Models\Group;
 use App\Models\GroupTeam;
+use App\Models\Player;
+use App\Models\Team;
 use App\Models\TournamentLevelCategory;
 use App\Models\TournamentLevelCategoryTeam;
+use App\Models\TournamentTypeSettings;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -58,6 +61,17 @@ class GroupStageRanking extends Component
                 TournamentLevelCategoryTeam::where('tournament_level_category_id', $group->tournament_level_category_id)->whereIn('team_id', $notQualifiedTeamsIds)->update([
                     'last_rank' => 'Group Stages',
                 ]);
+
+                $roundPoints = TournamentTypeSettings::where('tournament_type_id', $this->category->tournament_type_id)
+                    ->where('stage', 'Group Stages')
+                    ->first()?->points ?? 0;
+
+                Team::whereIn('id', $notQualifiedTeamsIds)->increment('points', $roundPoints);
+
+                foreach ($notQualifiedTeamsIds as $notQualifiedTeamsId) {
+                    $playersIds = json_decode(TournamentLevelCategoryTeam::where('tournament_level_category_id', $this->category->id)->where('team_id', $notQualifiedTeamsId)->first()?->players_ids ?? "[]");
+                    Player::whereIn('id', $playersIds)->increment('points', $roundPoints);
+                }
 
                 $qualifiedTeamsCount = GroupTeam::where('group_id', $groupId)->where('has_qualified', true)->count();
                 throw_if($qualifiedTeamsCount > $this->category->number_of_winners_per_group, new \Exception("Only " . $this->category->number_of_winners_per_group . " teams must qualify from each group!"));
