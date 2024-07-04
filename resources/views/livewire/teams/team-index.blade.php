@@ -13,7 +13,6 @@
                     <th>ID</th>
                     <th>Nickname</th>
                     <th>Level Category</th>
-                    <th>Monitor User</th>
                     <th>Players</th>
                     <th>Matches / W / L</th>
                     <th>Rank</th>
@@ -27,7 +26,6 @@
                         <td>{{ $team->id }}</td>
                         <td>{{ $team->nickname }}</td>
                         <td>{{ $team->levelCategory?->name }}</td>
-                        <td>{{ $team->monitorUser?->full_name }}</td>
                         <td>
                             @foreach($team->players as $player)
                                 <span class='badge bg-label-warning m-1'>{{ $player->full_name }}</span>

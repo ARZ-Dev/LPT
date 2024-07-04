@@ -5,7 +5,6 @@ namespace App\Livewire\Teams;
 use App\Models\LevelCategory;
 use App\Models\Player;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
@@ -23,11 +22,9 @@ class TeamForm extends Component
     public int $status = 0;
     public $levelCategories = [];
     public $players = [];
-    public $monitorUsers = [];
 
     public string $nickname = "";
     public $levelCategoryId = null;
-    public $monitorUserId = null;
     public $playersIds = [];
     public $oldPlayersIds = [];
     public $team = null;
@@ -38,7 +35,6 @@ class TeamForm extends Component
     {
         $this->levelCategories = LevelCategory::all();
         $this->players = Player::all();
-        $this->monitorUsers = User::permission('team-monitor')->get();
 
         if ($id) {
             if ($status && $status == Constants::VIEW_STATUS) {
@@ -87,7 +83,6 @@ class TeamForm extends Component
         $team = Team::create([
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
-            'monitor_user_id' => $this->monitorUserId,
             'rank' => $rank,
             'image' => $path,
         ]);
@@ -116,7 +111,6 @@ class TeamForm extends Component
         $data = [
             'nickname' => $this->nickname,
             'level_category_id' => $this->levelCategoryId,
-            'monitor_user_id' => $this->monitorUserId,
         ];
 
         if ($this->image && !is_string($this->image)) {
