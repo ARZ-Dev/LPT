@@ -94,7 +94,7 @@ class TournamentForm extends Component
         $data = [
             'name' => ['required', 'max:255', Rule::unique('tournaments', 'id')->ignore($this->tournament?->id)],
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
-            'startDate' => ['required', 'date', 'after_or_equal:today'],
+            'startDate' => ['required', 'date', $this->editing ? '' : 'after_or_equal:today'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
         ];
 
