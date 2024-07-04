@@ -474,6 +474,9 @@ class TournamentCategoryForm extends Component
             ->when(!$this->tournament->is_free, function ($query) {
                 $query->whereIn('id', $this->fullPayedTeamsIds);
             })
+            ->when(!$this->canEditDetails, function ($query) {
+                $query->whereIn('id', $this->selectedTeamsIds);
+            })
             ->with(['receipts' => ['receiptAmounts'], 'currentPlayers', 'players'])
             ->get();
 
