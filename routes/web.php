@@ -67,6 +67,9 @@ use App\Livewire\HeroSection\HeroSectionForm;
 use App\Livewire\Blogs\BlogIndex;
 use App\Livewire\Blogs\BlogForm;
 
+use App\Livewire\Courts\CourtIndex;
+use App\Livewire\Courts\CourtForm;
+
 use App\Livewire\GroupStages\GroupStageRanking;
 
 use App\Http\Controllers\CronJobController;
@@ -277,6 +280,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/', BlogIndex::class)->name('blogs');
         Route::get('/create', BlogForm::class)->name('blogs.create');
         Route::get('/edit/{id}', BlogForm::class)->name('blogs.edit');
+    });
+
+    // |--------------------------------------------------------------------------
+    // | Courts
+    // |--------------------------------------------------------------------------
+
+    Route::group(['prefix' => 'courts'], function() {
+        Route::get('/', CourtIndex::class)->name('courts');
+        Route::get('/create', CourtForm::class)->name('courts.create');
+        Route::get('/edit/{id}/{status?}', CourtForm::class)->name('courts.edit');
     });
 
 });

@@ -126,6 +126,15 @@
         </li>
         @endcan
 
+        @can('court-list')
+        <li class="menu-item {{ request()->is('courts*') ? "active" : "" }}">
+            <a href="{{ route('courts') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-globe"></i>
+                <div data-i18n="Courts">Courts</div>
+            </a>
+        </li>
+        @endcan
+
         @can('tournament-list')
         <li class="menu-item {{ request()->is('tournaments*') ? "active" : "" }}">
             <a href="{{ route('tournaments') }}" class="menu-link">
