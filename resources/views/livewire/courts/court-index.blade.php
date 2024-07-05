@@ -13,6 +13,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Country</th>
+                    <th>Governorate</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -23,6 +24,7 @@
                         <td>{{ $court->id }}</td>
                         <td>{{ $court->name }}</td>
                         <td>{{ $court->country?->name }}</td>
+                        <td>{{ $court->governorate?->name }}</td>
                         <td>{{ $court->created_at->format('d-m-Y h:i') }}</td>
                         <td class="text-nowrap">
                             @can('court-edit')
