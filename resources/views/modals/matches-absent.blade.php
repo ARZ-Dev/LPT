@@ -28,7 +28,7 @@
                     @error('absentTeamId') <div class="text-danger">{{ $message }}</div> @enderror
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary store-absent-btn">Submit</button>
+                    <button type="button" data-match-id="{{ $match->id }}" wire:click="storeAbsent({{ $match->id }})" class="btn btn-primary store-absent-btn">Submit</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

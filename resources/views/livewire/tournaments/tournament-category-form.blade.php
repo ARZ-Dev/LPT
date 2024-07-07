@@ -274,96 +274,142 @@
                         @foreach($category->knockoutStages as $stage)
                             @if($stage->name == "Group Stages")
                                 @foreach($category->groups as $group)
-                                    <div class="card mt-2 mb-2 shadow-lg bg-lighter">
+                                    <div class="card mt-4 mb-4 bg-light">
                                         <div class="card-header d-flex justify-content-between align-items-center">
                                             <h5 class="mb-0">{{ $group->name }}</h5>
                                         </div>
                                         <div class="card-body">
-                                            <div class="row g-3">
-                                                <div class="col-12">
-                                                    <div class="table-responsive">
-                                                        <table class="dt-row-grouping table border table-striped table-bordered">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="text-center">Rank</th>
-                                                                <th class="text-center">Team</th>
-                                                                <th class="text-center">P/W/L</th>
-                                                                <th class="text-center">Score</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            @foreach($group->groupTeams as $groupTeam)
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        {{ $groupTeam->rank }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $groupTeam->team?->nickname }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $groupTeam->score }}
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                            </tbody>
-                                                        </table>
+                                            <div class="row d-flex align-items-stretch">
+                                                <div class="col-lg-6 col-sm-12 d-flex">
+                                                    <div class="card m-2 flex-fill d-flex flex-column">
+                                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="mb-0">Rankings</h5>
+                                                        </div>
+                                                        <div class="card-body flex-fill">
+                                                            <div class="col-12">
+                                                                <div class="table-responsive">
+                                                                    <table class="dt-row-grouping table border table-striped table-bordered">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">Rank</th>
+                                                                            <th class="text-center">Team</th>
+                                                                            <th class="text-center">P/W/L</th>
+                                                                            <th class="text-center">Score</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        @foreach($group->groupTeams as $groupTeam)
+                                                                            <tr>
+                                                                                <td class="text-center">{{ $groupTeam->rank }}</td>
+                                                                                <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
+                                                                                <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>
+                                                                                <td class="text-center">{{ $groupTeam->score }}</td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <h5>Matches</h5>
-                                                <div class="col-12">
-                                                    <div class="table-responsive">
-                                                        <table class="dt-row-grouping table border table-striped table-bordered">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="text-center">Home Team</th>
-                                                                <th class="text-center">Away Team</th>
-                                                                <th class="text-center">Date</th>
-                                                                <th class="text-center">Referee</th>
-                                                                <th class="text-center">Winner</th>
-                                                                <th class="text-center">Status</th>
-                                                                <th class="text-center">Actions</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            @foreach($group->games as $game)
+                                                <div class="col-lg-6 col-sm-12 d-flex">
+                                                    <div class="card m-2 flex-fill d-flex flex-column">
+                                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="mb-0">Court</h5>
+                                                        </div>
+                                                        <div class="card-body flex-fill">
+                                                            <div class="col-12">
+                                                                <h6>Court details goes here</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card m-2">
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <h5 class="mb-0">Matches</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="col-12">
+                                                        <div class="table-responsive">
+                                                            <table class="dt-row-grouping table border table-striped table-bordered">
+                                                                <thead>
                                                                 <tr>
-                                                                    <td class="text-center">
-                                                                        {{ $game->homeTeam?->nickname }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $game->awayTeam?->nickname }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $game->datetime }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        @if($game->is_started)
-                                                                            {{ Carbon\Carbon::parse($game->started_at)->format('d-m-Y H:i') }} / {{ $game->startedBy?->full_name }}
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {{ $game->winnerTeam?->nickname }}
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        @php($badgeLabel = "warning")
-                                                                        @if($game->status == "started")
-                                                                            @php($badgeLabel = "info")
-                                                                        @elseif($game->status == "completed")
-                                                                            @php($badgeLabel = "success")
-                                                                        @elseif($game->status == "forfeited")
-                                                                            @php($badgeLabel = "danger")
-                                                                        @endif
-                                                                        <span class="badge bg-label-{{ $badgeLabel }}">
-                                                                            {{ ucfirst($game->status) }}
-                                                                        </span>
-                                                                    </td>
+                                                                    <th class="text-center">Home Team</th>
+                                                                    <th class="text-center">Away Team</th>
+                                                                    <th class="text-center">Date</th>
+                                                                    <th class="text-center">Started By</th>
+                                                                    <th class="text-center">Winner</th>
+                                                                    <th class="text-center">Status</th>
+                                                                    <th class="text-center">Actions</th>
                                                                 </tr>
-                                                            @endforeach
-                                                            </tbody>
-                                                        </table>
+                                                                </thead>
+                                                                <tbody>
+                                                                @foreach($group->games as $game)
+                                                                    <tr>
+                                                                        <td class="text-center">
+                                                                            {{ $game->homeTeam?->nickname }}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {{ $game->awayTeam?->nickname }}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {{ $game->datetime }}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if($game->is_started)
+                                                                                {{ $game->startedBy?->full_name }}
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {{ $game->winnerTeam?->nickname }}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @php($badgeLabel = "warning")
+                                                                            @if($game->status == "started")
+                                                                                @php($badgeLabel = "info")
+                                                                            @elseif($game->status == "completed")
+                                                                                @php($badgeLabel = "success")
+                                                                            @elseif($game->status == "forfeited")
+                                                                                @php($badgeLabel = "danger")
+                                                                            @endif
+                                                                            <span class="badge bg-label-{{ $badgeLabel }}">
+                                                                                {{ ucfirst($game->status) }}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            @if($game->datetime)
+                                                                                <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
+                                                                                    @if($game->is_started)
+                                                                                        <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
+                                                                                    @else
+                                                                                        <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
+                                                                                    @endif
+                                                                                </a>
+
+                                                                                @if(!$game->is_started)
+                                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$game->id}}" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light btn-sm">
+                                                                                        <span class="ti ti-hand-stop text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></span>
+                                                                                    </a>
+                                                                                @endif
+                                                                            @else
+                                                                                @can('matches-setDate')
+                                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$game->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
+                                                                                        <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Time"></span>
+                                                                                    </a>
+                                                                                @endcan
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    @include('modals.matches-datetime', ['match' => $game])
+                                                                    @include('modals.matches-absent', ['match' => $game])
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

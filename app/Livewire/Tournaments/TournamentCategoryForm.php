@@ -53,7 +53,7 @@ class TournamentCategoryForm extends Component
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
-                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches'
+                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams']
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
 

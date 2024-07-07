@@ -24,7 +24,7 @@ class Group extends Model
 
     public function groupTeams()
     {
-        return $this->hasMany(GroupTeam::class);
+        return $this->hasMany(GroupTeam::class)->orderBy('rank');
     }
 
     public function games()
