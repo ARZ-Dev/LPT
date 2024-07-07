@@ -24,36 +24,36 @@
                     @foreach($games as $game)
                         <tr>
                             @if($stage->name != "Group Stages")
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 {{ $game->knockoutRound?->name }}
                             </td>
                             @endif
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @if($game->homeTeam)
                                     {{ $game->homeTeam->nickname }}
                                 @elseif($game->relatedHomeGame)
                                     Winner of {{ $game->relatedHomeGame->knockoutRound?->name }}
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @if($game->awayTeam)
                                     {{ $game->awayTeam->nickname }}
                                 @elseif($game->relatedAwayGame)
                                     Winner of {{ $game->relatedAwayGame->knockoutRound?->name }}
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 {{ $game->datetime }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @if($game->is_started)
                                     {{ $game->startedBy?->full_name }}
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 {{ $game->winnerTeam?->nickname }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @php($badgeLabel = "warning")
                                 @if($game->status == "started")
                                     @php($badgeLabel = "info")
@@ -66,7 +66,7 @@
                                                                                 {{ ucfirst($game->status) }}
                                                                             </span>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @if($game->datetime)
                                     <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
                                         @if($game->is_started)

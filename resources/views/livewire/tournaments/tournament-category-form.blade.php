@@ -334,7 +334,7 @@
                             @else
                                 <div class="card mt-4 mb-4 bg-light">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0">{{ $stage->name }}</h5>
+                                        <h5 class="mb-0">{{ $stage->name }}(s)</h5>
                                     </div>
                                     <div class="card-body">
 
