@@ -125,10 +125,12 @@ class TournamentCategoryForm extends Component
 
     }
 
+    #[On('storeDateTime')]
     public function storeDateTime($matchId)
     {
         $this->validate([
             'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
+            'courtId' => ['required'],
         ]);
 
         $match = Game::findOrFail($matchId);
@@ -145,6 +147,7 @@ class TournamentCategoryForm extends Component
         $this->lastNav = "matches";
     }
 
+    #[On('storeAbsent')]
     public function storeAbsent($matchId)
     {
         $this->validate([

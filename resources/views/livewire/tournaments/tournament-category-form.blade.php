@@ -428,8 +428,12 @@
 
         $(document).on('click', '.store-date-btn', function () {
             let matchId = $(this).data('match-id');
-            let date = $('#date-' + matchId).val()
-            if (date !== "" && date !== undefined) {
+            let date = $('#date-' + matchId).val();
+            let courtId = $('#court-id-' + matchId).val();
+            if (date !== "" && date !== undefined && courtId !== "" && courtId !== undefined) {
+                $wire.dispatch('storeDateTime', {
+                    matchId
+                })
                 $('.date-modal').modal('hide');
             }
         })
@@ -438,6 +442,9 @@
             let matchId = $(this).data('match-id');
             let absentTeamId = $('#absent-team-' + matchId).val()
             if (absentTeamId !== "" && absentTeamId !== undefined) {
+                $wire.dispatch('storeAbsent', {
+                    matchId
+                })
                 $('.absent-modal').modal('hide');
             }
         })

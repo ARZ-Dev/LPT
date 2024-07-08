@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade date-modal" id="dateTime{{$match->id}}" tabindex="-1" aria-labelledby="userModalLabel{{$match->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form wire:submit.prevent="storeDateTime({{ $match->id }})">
+            <form>
                 <div class="modal-header">
                     <h5 class="modal-title" id="userModalLabel{{$match->id}}">Match Info:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -19,6 +19,7 @@
                                 <div wire:ignore>
                                     <select
                                         wire:model="courtId"
+                                        id="court-id-{{ $match->id }}"
                                         class="form-select selectpicker w-100"
                                         aria-label="Default select example"
                                         title="Select Court"
@@ -39,7 +40,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary store-date-btn">Submit</button>
+                    <button type="button" data-match-id="{{ $match->id }}" class="btn btn-primary store-date-btn">Submit</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
