@@ -490,7 +490,7 @@ class TournamentCategoryForm extends Component
     {
         $group = Group::find($groupId);
         $group->update([
-            'court_id' => $this->courtsIds[$groupId],
+            'court_id' => $this->courtsIds[$groupId] ?? null,
         ]);
 
         $this->dispatch('swal:success', [
