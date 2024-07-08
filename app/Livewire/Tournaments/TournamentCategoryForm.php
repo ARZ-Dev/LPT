@@ -52,12 +52,13 @@ class TournamentCategoryForm extends Component
     public $courts = [];
     public $courtsIds = [];
     public $courtsDetails = [];
+    public $courtId;
 
     public function mount($tournamentId, $categoryId)
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
-                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']
+                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam', 'court']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
 
@@ -133,11 +134,12 @@ class TournamentCategoryForm extends Component
         $match = Game::findOrFail($matchId);
         $match->update([
             'datetime' => $this->matchDate,
+            'court_id' => $this->courtId,
         ]);
 
         $this->dispatch('swal:success', [
             'title' => 'Great!',
-            'text'  => "Match date has been saved successfully!",
+            'text'  => "Match info has been saved successfully!",
         ]);
 
         $this->lastNav = "matches";
@@ -481,7 +483,7 @@ class TournamentCategoryForm extends Component
 
     public function getCourtDetails($groupId, $courtId)
     {
-        $court = Court::with(['country', 'governorate', 'city'])->find($courtId);
+        $court = $this->courts->where('id', $courtId)->first();
         $this->courtsDetails[$groupId] = $court->country?->name . " / " . $court->governorate?->name . " / " . $court->city?->name;
         $this->lastNav = "matches";
     }

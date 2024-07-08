@@ -63,10 +63,10 @@
                     <div class="rd-navbar-main-container container">
                         <!-- RD Navbar Nav-->
                         <ul class="rd-navbar-nav">
-                            <li class="rd-nav-item {{ request()->is('u/home', 'home') ? "active" : "" }}">
+                            <li class="rd-nav-item {{ request()->is('home', 'home') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('home') }}">Home</a>
                             </li>
-                            <li class="rd-nav-item {{ request()->is('u/tournaments*', 'tournaments*') ? "active" : "" }}">
+                            <li class="rd-nav-item {{ request()->is('tournaments*', 'tournaments*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="#">Tournaments</a>
                                 <article class="rd-menu rd-navbar-megamenu rd-megamenu-2-columns context-light">
                                     <div class="rd-megamenu-main">
@@ -174,13 +174,13 @@
                                     @endif
                                 </article>
                             </li>
-                            <li class="rd-nav-item {{ request()->is('u/matches*') ? "active" : "" }}">
+                            <li class="rd-nav-item {{ request()->is('matches*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('frontend.matches') }}">Matches</a>
                             </li>
-                            <li class="rd-nav-item {{ request()->is('u/teams*') ? "active" : "" }}">
+                            <li class="rd-nav-item {{ request()->is('teams*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('frontend.teams') }}">Teams</a>
                             </li>
-                            <li class="rd-nav-item {{ request()->is('u/players*') ? "active" : "" }}">
+                            <li class="rd-nav-item {{ request()->is('players*') ? "active" : "" }}">
                                 <a class="rd-nav-link" href="{{ route('frontend.players') }}">Players</a>
                             </li>
                         </ul>

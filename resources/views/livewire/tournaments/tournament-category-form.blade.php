@@ -349,15 +349,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="card-footer">
-                                                            <div class="col-12 text-end mt-4">
-                                                                <button wire:click="storeGroupCourt({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Save</button>
-                                                            </div>
+                                                            @if(!$group->is_completed)
+                                                                <div class="col-12 text-end mt-4">
+                                                                    <button wire:click="storeGroupCourt({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Save</button>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            @include('livewire.partials.matches-table', ['games' => $group->games])
+                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts])
                                         </div>
                                     </div>
                                 @endforeach

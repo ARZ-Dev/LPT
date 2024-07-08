@@ -10,6 +10,7 @@
                     <tr>
                         @if($stage->name != "Group Stages")
                         <th class="text-center">Round</th>
+                        <th class="text-center">Court</th>
                         @endif
                         <th class="text-center">Home Team</th>
                         <th class="text-center">Away Team</th>
@@ -26,6 +27,9 @@
                             @if($stage->name != "Group Stages")
                             <td class="text-center text-nowrap">
                                 {{ $game->knockoutRound?->name }}
+                            </td>
+                            <td class="text-center text-nowrap">
+                                {{ $game->court?->name }}
                             </td>
                             @endif
                             <td class="text-center text-nowrap">
@@ -91,7 +95,7 @@
                             </td>
                         </tr>
 
-                        @include('modals.matches-datetime', ['match' => $game])
+                        @include('modals.matches-datetime', ['match' => $game, 'courts' => $courts])
                         @include('modals.matches-absent', ['match' => $game])
                     @endforeach
                     </tbody>

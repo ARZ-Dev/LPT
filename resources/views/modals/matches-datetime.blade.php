@@ -3,12 +3,40 @@
         <div class="modal-content">
             <form wire:submit.prevent="storeDateTime({{ $match->id }})">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userModalLabel{{$match->id}}">Choose Date/Time:</h5>
+                    <h5 class="modal-title" id="userModalLabel{{$match->id}}">Match Info:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input id="date-{{ $match->id }}" wire:model="matchDate" type="datetime-local" class="form-control" required min="{{ $category->start_date . " 00:00" }}" max="{{ $category->end_date . " 23:59" }}">
-                    @error('matchDate') <div class="text-danger">{{ $message }}</div> @enderror
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label" for="date-{{ $match->id }}">Date/Time</label>
+                            <input id="date-{{ $match->id }}" wire:model="matchDate" type="datetime-local" class="form-control" required min="{{ $category->start_date . " 00:00" }}" max="{{ $category->end_date . " 23:59" }}">
+                            @error('matchDate') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+                        @if($match->type == "Knockouts")
+                            <div class="col-12 mt-2">
+                                <label class="form-label">Court <span class="text-danger">*</span></label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model="courtId"
+                                        class="form-select selectpicker w-100"
+                                        aria-label="Default select example"
+                                        title="Select Court"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-tick-icon="ti-check text-white"
+                                        required
+                                    >
+                                        @foreach($courts as $court)
+                                            <option value="{{ $court->id }}">{{ $court->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('courtId') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" data-match-id="{{ $match->id }}" class="btn btn-primary store-date-btn">Submit</button>
