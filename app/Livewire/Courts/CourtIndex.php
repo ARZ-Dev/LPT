@@ -14,7 +14,7 @@ class CourtIndex extends Component
     public function mount()
     {
         $this->authorize('court-list');
-        $this->courts = Court::with(['country', 'governorate'])->get();
+        $this->courts = Court::with(['country', 'governorate', 'city'])->get();
     }
 
     #[On('delete')]

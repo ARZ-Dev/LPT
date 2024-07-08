@@ -87,7 +87,7 @@ Route::get('/login', Login::class)->name('login');
 
 Route::get('/close-month-reminder', [CronJobController::class, 'closeMonthReminder']);
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('/dashboard', DashboardView::class)->name('dashboard');
     Route::get('/permissions', PermissionView::class)->name('permissions');
@@ -303,30 +303,25 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', [HomePageController::class, 'index'])->name('home');
 
-Route::group(['prefix' => 'u'], function() {
-    Route::get('/teams', [TeamController::class, 'index'])->name('frontend.teams');
-    Route::get('/teams/{team}', [TeamController::class, 'view'])->name('frontend.teams.view');
+Route::get('/teams', [TeamController::class, 'index'])->name('frontend.teams');
+Route::get('/teams/{team}', [TeamController::class, 'view'])->name('frontend.teams.view');
 
-    Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
-    Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
-    Route::get('/matches/{matchId}', [MatchController::class, 'view'])->name('frontend.matches.view');
+Route::get('/matches', [MatchController::class, 'index'])->name('frontend.matches');
+Route::post('/get-matches', [MatchController::class, 'getMatches'])->name('frontend.get-matches');
+Route::get('/matches/{matchId}', [MatchController::class, 'view'])->name('frontend.matches.view');
 
-    Route::get('/players', [PlayerController::class, 'index'])->name('frontend.players');
-    Route::get('/players/{player}', [PlayerController::class, 'view'])->name('frontend.players.view');
+Route::get('/players', [PlayerController::class, 'index'])->name('frontend.players');
+Route::get('/players/{player}', [PlayerController::class, 'view'])->name('frontend.players.view');
 
-    Route::get('/tournaments/{levelCategoryId?}', [TournamentController::class, 'index'])->name('frontend.tournaments');
-    Route::post('/get-tournaments', [TournamentController::class, 'getTournaments'])->name('frontend.get-tournaments');
-    Route::get('/tournaments/categories/{categoryId}', [TournamentController::class, 'view'])->name('frontend.tournaments.categories.view');
-});
+Route::get('/tournaments/{levelCategoryId?}', [TournamentController::class, 'index'])->name('frontend.tournaments');
+Route::post('/get-tournaments', [TournamentController::class, 'getTournaments'])->name('frontend.get-tournaments');
+Route::get('/tournaments/categories/{categoryId}', [TournamentController::class, 'view'])->name('frontend.tournaments.categories.view');
 // |--------------------------------------------------------------------------|
 // | Frontend - End                                                           |
 // |--------------------------------------------------------------------------|
 
 
 Route::get('/', function () {
-    return redirect('/home');
-});
-Route::get('/u', function () {
     return redirect('/home');
 });
 

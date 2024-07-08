@@ -36,4 +36,9 @@ class Group extends Model
     {
         return $this->belongsTo(KnockoutStage::class);
     }
+
+    public function court()
+    {
+        return $this->belongsTo(Court::class);
+    }
 }

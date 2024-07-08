@@ -316,11 +316,41 @@
                                                 <div class="col-lg-6 col-sm-12 d-flex">
                                                     <div class="card m-2 flex-fill d-flex flex-column">
                                                         <div class="card-header d-flex justify-content-between align-items-center">
-                                                            <h5 class="mb-0">Court</h5>
+                                                            <h5 class="mb-0">Court Details</h5>
                                                         </div>
                                                         <div class="card-body flex-fill">
-                                                            <div class="col-12">
-                                                                <h6>Court details goes here</h6>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <label class="form-label" for="courtId">Court <span class="text-danger">*</span></label>
+                                                                    <div wire:ignore>
+                                                                        <select
+                                                                            wire:model="courtsIds.{{ $group->id }}"
+                                                                            wire:change="getCourtDetails({{ $group->id }}, $event.target.value)"
+                                                                            class="form-select selectpicker w-100"
+                                                                            aria-label="Default select example"
+                                                                            title="Select Court"
+                                                                            data-style="btn-default"
+                                                                            data-live-search="true"
+                                                                            data-icon-base="ti"
+                                                                            data-tick-icon="ti-check text-white"
+                                                                            required
+                                                                        >
+                                                                            @foreach($courts as $court)
+                                                                                <option value="{{ $court->id }}" @selected($group->court_id == $court->id)>{{ $court->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    @error('courtsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                                                </div>
+                                                                <div class="col-12 mt-4">
+                                                                    <label class="form-label" for="courtId">Location</label>
+                                                                    <input wire:model="courtsDetails.{{ $group->id }}" class="form-control" readonly disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <div class="col-12 text-end mt-4">
+                                                                <button wire:click="storeGroupCourt({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Save</button>
                                                             </div>
                                                         </div>
                                                     </div>

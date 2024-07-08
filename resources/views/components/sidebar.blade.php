@@ -19,7 +19,7 @@
 
 	<ul class="menu-inner py-1">
 
-        <li class="menu-item {{ request()->is('dashboard') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('admin/dashboard') ? "active" : "" }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-smart-home"></i>
                 <div data-i18n="Dashboard">Dashboard</div>
@@ -27,7 +27,7 @@
         </li>
 
         @canany(['role-list', 'permission-list', 'user-list'])
-        <li class="menu-item {{ request()->is('roles') || request()->is('permissions') || request()->is('users*') || request()->is('tournament-types*') ? "active open" : "" }}">
+        <li class="menu-item {{ request()->is('admin/roles') || request()->is('admin/permissions') || request()->is('admin/users*') || request()->is('admin/tournament-types*') ? "active open" : "" }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 			    <i class="menu-icon tf-icons ti ti-settings"></i>
@@ -37,7 +37,7 @@
 			<ul class="menu-sub">
 
                 @can('role-list')
-                <li class="menu-item {{ request()->is('roles') ? "active" : "" }}">
+                <li class="menu-item {{ request()->is('admin/roles') ? "active" : "" }}">
                     <a href="{{ route('roles') }}" class="menu-link">
                     <div data-i18n="Roles">Roles</div>
                     </a>
@@ -45,7 +45,7 @@
                 @endcan
 
                 @can('permission-list')
-                <li class="menu-item {{ request()->is('permissions') ? "active" : "" }}">
+                <li class="menu-item {{ request()->is('admin/permissions') ? "active" : "" }}">
                     <a href="{{ route('permissions') }}" class="menu-link">
                     <div data-i18n="Permissions">Permissions</div>
                     </a>
@@ -53,7 +53,7 @@
                 @endcan
 
                 @can('user-list')
-				<li class="menu-item {{ request()->is('users*') ? "active" : "" }}">
+				<li class="menu-item {{ request()->is('admin/users*') ? "active" : "" }}">
 					<a href="{{ route('users') }}" class="menu-link">
 						<div data-i18n="Users">Users</div>
 					</a>
@@ -61,7 +61,7 @@
                 @endcan
 
                 @can('tournamentType-list')
-                    <li class="menu-item {{ request()->is('tournament-types*') ? "active" : "" }}">
+                    <li class="menu-item {{ request()->is('admin/tournament-types*') ? "active" : "" }}">
                         <a href="{{ route('types') }}" class="menu-link">
                             <div data-i18n="Tournament Types">Tournament Types</div>
                         </a>
@@ -72,7 +72,7 @@
         @endcanany
 
         @canany(['category-list', 'currency-list'])
-        <li class="menu-item {{ request()->is('category*', 'currency*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('admin/category*', 'admin/currency*') ? 'active open' : '' }}">
 
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class="menu-icon tf-icons ti ti-file-settings"></i>
@@ -81,7 +81,7 @@
 
             <ul class="menu-sub">
                 @can('category-list')
-                    <li class="menu-item {{ request()->is('category*') ? 'active' : '' }}">
+                    <li class="menu-item {{ request()->is('admin/category*') ? 'active' : '' }}">
                         <a href="{{ route('category') }}" class="menu-link">
                             <div data-i18n="Category">Category</div>
                         </a>
@@ -89,7 +89,7 @@
                 @endcan
 
                 @can('currency-list')
-                    <li class="menu-item {{ request()->is('currency*') ? "active" : "" }}">
+                    <li class="menu-item {{ request()->is('admin/currency*') ? "active" : "" }}">
                         <a href="{{ route('currency') }}" class="menu-link">
                             <div data-i18n="Currency">Currency</div>
                         </a>
@@ -100,7 +100,7 @@
         @endcanany
 
         @can('pettyCashSummary-view')
-        <li class="menu-item {{ request()->is('petty-cash-summary*', 'till*', 'monthly-openings-closings*', 'payment*', 'receipt*', 'transfer*', 'exchange*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('admin/petty-cash-summary*', 'admin/till*', 'admin/monthly-openings-closings*', 'admin/payment*', 'admin/receipt*', 'admin/transfer*', 'admin/exchange*') ? "active" : "" }}">
             <a href="{{ route('petty-cash-summary') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-premium-rights"></i>
                 <div data-i18n="Petty Cash">Petty Cash</div>
@@ -109,7 +109,7 @@
         @endcan
 
         @can('team-list')
-            <li class="menu-item {{ request()->is('teams*') ? "active" : "" }}">
+            <li class="menu-item {{ request()->is('admin/teams*') ? "active" : "" }}">
                 <a href="{{ route('teams') }}" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-users"></i>
                     <div data-i18n="Teams">Teams</div>
@@ -118,7 +118,7 @@
         @endcan
 
         @can('player-list')
-        <li class="menu-item {{ request()->is('players*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('admin/players*') ? "active" : "" }}">
             <a href="{{ route('players') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-user"></i>
                 <div data-i18n="Players">Players</div>
@@ -127,7 +127,7 @@
         @endcan
 
         @can('court-list')
-        <li class="menu-item {{ request()->is('courts*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('admin/courts*') ? "active" : "" }}">
             <a href="{{ route('courts') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-globe"></i>
                 <div data-i18n="Courts">Courts</div>
@@ -136,7 +136,7 @@
         @endcan
 
         @can('tournament-list')
-        <li class="menu-item {{ request()->is('tournaments*') ? "active" : "" }}">
+        <li class="menu-item {{ request()->is('admin/tournaments*') ? "active" : "" }}">
             <a href="{{ route('tournaments') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-tournament"></i>
                 <div data-i18n="Tournaments">Tournaments</div>
@@ -144,7 +144,7 @@
         </li>
         @endcan
 
-        <li class="menu-item {{ request()->is('hero-section*', 'blogs*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('admin/hero-section*', 'admin/blogs*') ? 'active open' : '' }}">
 
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-webhook"></i>
@@ -152,13 +152,13 @@
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('hero-sections*') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('admin/hero-sections*') ? 'active' : '' }}">
                     <a href="{{ route('hero-sections') }}" class="menu-link">
                         <div data-i18n="Hero Sections">Hero Sections</div>
                     </a>
                 </li>
 
-                <li class="menu-item {{ request()->is('blogs*') ? "active" : "" }}">
+                <li class="menu-item {{ request()->is('admin/blogs*') ? "active" : "" }}">
                     <a href="{{ route('blogs') }}" class="menu-link">
                         <div data-i18n="Blogs">Blogs</div>
                     </a>

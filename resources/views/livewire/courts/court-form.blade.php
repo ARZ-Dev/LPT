@@ -46,7 +46,7 @@
                                 @error('countryId') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12 col-md-6">
-                                <label class="form-label" for="countryId">Governorate *</label>
+                                <label class="form-label" for="governorateId">Governorate *</label>
                                 <div wire:ignore>
                                     <select
                                         wire:model="governorateId"
@@ -64,6 +64,26 @@
                                     </select>
                                 </div>
                                 @error('governorateId') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="cityId">City *</label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model="cityId"
+                                        id="cityId"
+                                        class="selectpicker w-100 @error('cityId') invalid-validation-select @enderror"
+                                        title="Select City"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-size="5"
+                                        data-tick-icon="ti-check text-white" required>
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->id }}" @selected($city->id == $cityId)>{{ $city->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('cityId') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                         </div>
                     </div>
@@ -100,6 +120,12 @@
             let governorates = event[0];
             let selectedGovernorateId = event[1] ?? null;
             let governorateSelector = $('#governorateId');
+
+            let citySelector = $('#cityId');
+            citySelector.selectpicker('destroy');
+            citySelector.empty();
+            citySelector.selectpicker('refresh');
+
             governorateSelector.selectpicker('destroy');
             governorateSelector.empty();
             governorateSelector.selectpicker();
@@ -110,6 +136,26 @@
                 })
             }
             governorateSelector.selectpicker('refresh');
+        })
+
+        $(document).on('change', '#governorateId', function() {
+            $wire.dispatch('getCities')
+        })
+
+        $wire.on('refreshCities', function (event) {
+            let cities = event[0];
+            let selectedCityId = event[1] ?? null;
+            let citySelector = $('#cityId');
+            citySelector.selectpicker('destroy');
+            citySelector.empty();
+            citySelector.selectpicker();
+            if (cities.length > 0) {
+                Object.entries(cities).forEach(([key, value]) => {
+                    let isSelected = value.id == selectedCityId ? "selected" : "";
+                    citySelector.append(`<option value="${value.id}" ${isSelected}>${value.name}</option>`)
+                })
+            }
+            citySelector.selectpicker('refresh');
         })
 
     </script>

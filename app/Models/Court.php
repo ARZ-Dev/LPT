@@ -20,4 +20,9 @@ class Court extends Model
     {
         return $this->belongsTo(Governorate::class);
     }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 }

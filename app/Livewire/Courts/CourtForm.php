@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Courts;
 
+use App\Models\City;
 use App\Models\Country;
 use App\Models\Court;
 use App\Models\Governorate;
@@ -13,11 +14,13 @@ class CourtForm extends Component
     public bool $editing = false;
     public $countries = [];
     public $governorates = [];
+    public $cities = [];
     public $status;
     public $court;
     public $name;
     public $countryId;
     public $governorateId;
+    public $cityId;
 
     public function mount($id = 0, $status = 0)
     {
@@ -28,7 +31,10 @@ class CourtForm extends Component
             $this->court = Court::findOrFail($id);
             $this->name = $this->court->name;
             $this->countryId = $this->court->country_id;
+            $this->governorateId = $this->court->governorate_id;
+            $this->cityId = $this->court->city_id;
             $this->getGovernorates();
+            $this->getCities();
         }
     }
 
@@ -38,6 +44,7 @@ class CourtForm extends Component
             'name' => ['required', 'max:255'],
             'countryId' => ['required'],
             'governorateId' => ['required'],
+            'cityId' => ['required'],
         ];
     }
 
@@ -49,6 +56,7 @@ class CourtForm extends Component
             'name' => $this->name,
             'country_id' => $this->countryId,
             'governorate_id' => $this->governorateId,
+            'city_id' => $this->cityId,
         ];
 
         if ($this->editing) {
@@ -63,7 +71,6 @@ class CourtForm extends Component
     #[On('getGovernorates')]
     public function getGovernorates()
     {
-        $this->governorateId = null;
         $this->governorates = Governorate::where('country_id', $this->countryId)->get();
         $selectedGovernorateId = null;
         if ($this->court) {
@@ -75,6 +82,22 @@ class CourtForm extends Component
             }
         }
         $this->dispatch('refreshGovernorates', $this->governorates, $selectedGovernorateId);
+    }
+
+    #[On('getCities')]
+    public function getCities()
+    {
+        $this->cities = City::where('governorate_id', $this->governorateId)->get();
+        $selectedCityId = null;
+        if ($this->court) {
+            $selectedCityId = $this->court?->city_id;
+        } else {
+            if (count($this->cities) == 1) {
+                $selectedCityId = $this->cities[0]->id;
+                $this->cityId = $selectedCityId;
+            }
+        }
+        $this->dispatch('refreshCities', $this->cities, $selectedCityId);
     }
 
     public function render()

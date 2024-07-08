@@ -3,6 +3,7 @@
 namespace App\Livewire\Tournaments;
 
 use App\Livewire\Matches\MatchesView;
+use App\Models\Court;
 use App\Models\Currency;
 use App\Models\Game;
 use App\Models\Group;
@@ -48,16 +49,28 @@ class TournamentCategoryForm extends Component
     public $matchDate;
     public $lastNav = "home";
     public $absentTeamId;
+    public $courts = [];
+    public $courtsIds = [];
+    public $courtsDetails = [];
 
     public function mount($tournamentId, $categoryId)
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
-                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams']
+                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
 
+        foreach ($this->category->groups as $group) {
+            if ($group->court_id) {
+                $court = $group->court;
+                $this->courtsIds[$group->id] = $group->court_id;
+                $this->courtsDetails[$group->id] = $court->country?->name . " / " . $court->governorate?->name . " / " . $court->city?->name;
+            }
+        }
+
         $this->deuceTypes = TournamentDeuceType::all();
+        $this->courts = Court::all();
 
         foreach ($this->category->knockoutStages as $knockoutStage) {
             $this->stagesDetails[$knockoutStage->id] = [
@@ -464,6 +477,28 @@ class TournamentCategoryForm extends Component
             'title' => 'Great!',
             'text'  => "Stages settings has been updated successfully!",
         ]);
+    }
+
+    public function getCourtDetails($groupId, $courtId)
+    {
+        $court = Court::with(['country', 'governorate', 'city'])->find($courtId);
+        $this->courtsDetails[$groupId] = $court->country?->name . " / " . $court->governorate?->name . " / " . $court->city?->name;
+        $this->lastNav = "matches";
+    }
+
+    public function storeGroupCourt($groupId)
+    {
+        $group = Group::find($groupId);
+        $group->update([
+            'court_id' => $this->courtsIds[$groupId],
+        ]);
+
+        $this->dispatch('swal:success', [
+            'title' => 'Great!',
+            'text'  => "$group->name court has been saved successfully!",
+        ]);
+
+        $this->lastNav = "matches";
     }
 
     public function render()
