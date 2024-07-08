@@ -334,6 +334,7 @@
                                                                             data-icon-base="ti"
                                                                             data-tick-icon="ti-check text-white"
                                                                             required
+                                                                            @disabled($group->is_completed)
                                                                         >
                                                                             @foreach($courts as $court)
                                                                                 <option value="{{ $court->id }}" @selected($group->court_id == $court->id)>{{ $court->name }}</option>
