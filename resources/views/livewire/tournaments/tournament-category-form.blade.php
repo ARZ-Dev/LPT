@@ -428,9 +428,10 @@
 
         $(document).on('click', '.store-date-btn', function () {
             let matchId = $(this).data('match-id');
+            let type = $(this).data('type');
             let date = $('#date-' + matchId).val();
             let courtId = $('#court-id-' + matchId).val();
-            if (date !== "" && date !== undefined && courtId !== "" && courtId !== undefined) {
+            if (date !== "" && date !== undefined && (courtId !== "" && courtId !== undefined || type === "Group Stages")) {
                 $wire.dispatch('storeDateTime', {
                     matchId
                 })

@@ -130,7 +130,6 @@ class TournamentCategoryForm extends Component
     {
         $this->validate([
             'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
-            'courtId' => ['required'],
         ]);
 
         $match = Game::findOrFail($matchId);
@@ -297,6 +296,11 @@ class TournamentCategoryForm extends Component
                     ]);
 
                     $numberOfGroups = $category->number_of_groups;
+                    $numberOfWinnersPerGroup = $category->number_of_winners_per_group;
+                    $totalWinners = $numberOfGroups * $numberOfWinnersPerGroup;
+
+                    $this->generateFollowingStages($totalWinners, $category);
+
                     $teamsPerGroup = ceil($nbOfTeams / $numberOfGroups);
 
                     $shuffledTeams = $teams->shuffle();
@@ -383,6 +387,40 @@ class TournamentCategoryForm extends Component
         return to_route('tournaments-categories.edit', [$this->category->tournament_id, $this->category->id])->with('success', 'Matches has been generated, please set the stage settings before playing the matches!!');
     }
 
+    public function generateFollowingStages($totalWinners, $category)
+    {
+        $stages = ['Final'];
+
+        if ($totalWinners >= 4) {
+            $stages[] = 'Semi Final';
+        }
+
+        if ($totalWinners >= 8) {
+            $stages[] = 'Quarter Final';
+        }
+
+        if ($totalWinners >= 16) {
+            $stages[] = 'Round of 16';
+        }
+
+        if ($totalWinners >= 32) {
+            $stages[] = 'Round of 32';
+        }
+
+        if ($totalWinners >= 64) {
+            $stages[] = 'Round of 64';
+        }
+
+        $stages = array_reverse($stages);
+
+        foreach ($stages as $stage) {
+            KnockoutStage::create([
+                'tournament_level_category_id' => $category->id,
+                'name' => $stage,
+            ]);
+        }
+    }
+
     /**
      * @param $teams
      * @param $category
@@ -406,7 +444,7 @@ class TournamentCategoryForm extends Component
                 default => "Round of $nbOfTeams",
             };
 
-            $knockoutStage = KnockoutStage::create([
+            $knockoutStage = KnockoutStage::firstOrCreate([
                 'tournament_level_category_id' => $category->id,
                 'name' => $roundName,
             ]);

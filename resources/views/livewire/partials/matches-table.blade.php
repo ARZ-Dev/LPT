@@ -22,7 +22,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($games as $game)
+                    @forelse($games as $game)
                         <tr>
                             @if($stage->name != "Group Stages")
                             <td class="text-center text-nowrap">
@@ -99,7 +99,11 @@
 
                         @include('modals.matches-datetime', ['match' => $game, 'courts' => $courts])
                         @include('modals.matches-absent', ['match' => $game])
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="{{ $stage->name == "Group Stages" ? 7 : 9 }}" class="text-center">No matches available yet.</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
             </div>

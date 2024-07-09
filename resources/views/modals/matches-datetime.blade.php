@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-match-id="{{ $match->id }}" class="btn btn-primary store-date-btn">Submit</button>
+                    <button type="button" data-match-id="{{ $match->id }}" data-type="{{ $match->type }}" class="btn btn-primary store-date-btn">Submit</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
