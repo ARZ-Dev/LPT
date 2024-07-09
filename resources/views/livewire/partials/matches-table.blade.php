@@ -72,18 +72,20 @@
                             </td>
                             <td class="text-center text-nowrap">
                                 @if($game->datetime)
-                                    <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
-                                        @if($game->is_started)
-                                            <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
-                                        @else
-                                            <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
-                                        @endif
-                                    </a>
-
-                                    @if(!$game->is_started)
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$game->id}}" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light btn-sm">
-                                            <span class="ti ti-hand-stop text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></span>
+                                    @if($game->homeTeam && $game->awayTeam)
+                                        <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
+                                            @if($game->is_started)
+                                                <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
+                                            @else
+                                                <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
+                                            @endif
                                         </a>
+
+                                        @if(!$game->is_started)
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$game->id}}" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light btn-sm">
+                                                <span class="ti ti-hand-stop text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></span>
+                                            </a>
+                                        @endif
                                     @endif
                                 @else
                                     @can('matches-setDate')
