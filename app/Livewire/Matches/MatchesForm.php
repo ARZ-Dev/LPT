@@ -29,7 +29,7 @@ class MatchesForm extends Component
 
             if ($id == Constants::VIEW_STATUS) {
                 $this->authorize('matches-view');
-            } 
+            }
 
             $this->matches = Game::with(['knockoutRound','homeTeam','awayTeam'])->findOrFail($id);
 
@@ -39,9 +39,9 @@ class MatchesForm extends Component
             $this->home_team_id = $this->matches->home_team_id;
             $this->away_team_id = $this->matches->away_team_id;
 
-        } 
+        }
     }
-    
+
     public function render()
     {
         if ($this->status == Constants::VIEW_STATUS) {

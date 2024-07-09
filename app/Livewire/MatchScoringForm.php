@@ -91,8 +91,9 @@ class MatchScoringForm extends Component
                 new \Exception($stageName . " scoring settings are required, please go to the stage settings by clicking on <a href='$settingsLink'>this link</a> to add them!"));
 
             $typeSettingsLink = route('types.edit', $this->category->tournament_type_id);
+            $stageName = $match->type == "Knockouts" ? $match->knockoutRound?->knockoutStage?->name : "Group Stages";
             $settings = TournamentTypeSettings::where('tournament_type_id', $this->category->tournament_type_id)
-                ->where('stage', $match->knockoutRound?->knockoutStage?->name)
+                ->where('stage', $stageName)
                 ->first();
             throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
 

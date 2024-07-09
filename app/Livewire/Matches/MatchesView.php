@@ -109,8 +109,9 @@ class MatchesView extends Component
 
         $category = getMatchTournamentCategory($match);
         $typeSettingsLink = route('types.edit', $category->tournament_type_id);
+        $stageName = $match->type == "Knockouts" ? $match->knockoutRound?->knockoutStage?->name : "Group Stages";
         $settings = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
-            ->where('stage', $match->knockoutRound?->knockoutStage?->name)
+            ->where('stage', $stageName)
             ->first();
         throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
 
