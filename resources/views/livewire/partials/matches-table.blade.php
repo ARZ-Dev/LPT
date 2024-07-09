@@ -90,7 +90,7 @@
                                 @else
                                     @can('matches-setDate')
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$game->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
-                                            <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Time"></span>
+                                            <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Court"></span>
                                         </a>
                                     @endcan
                                 @endif
