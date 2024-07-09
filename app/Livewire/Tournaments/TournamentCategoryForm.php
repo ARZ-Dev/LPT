@@ -384,7 +384,7 @@ class TournamentCategoryForm extends Component
             ]);
         }
 
-        return to_route('tournaments-categories.edit', [$this->category->tournament_id, $this->category->id])->with('success', 'Matches has been generated, please set the stage settings before playing the matches!!');
+        return to_route('tournaments-categories.edit', [$category->tournament_id, $category->id])->with('success', 'Matches has been generated, please set the stage settings before playing the matches!!');
     }
 
     public function generateFollowingStages($totalWinners, $category)

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Matches;
 
+use App\Livewire\Tournaments\TournamentCategoryForm;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
@@ -106,14 +107,12 @@ class MatchesView extends Component
     {
         $match = Game::findOrFail($matchId);
 
-        if ($match->type == "Knockouts") {
-            $category = getMatchTournamentCategory($match);
-            $typeSettingsLink = route('types.edit', $category->tournament_type_id);
-            $settings = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
-                ->where('stage', $match->knockoutRound?->knockoutStage?->name)
-                ->first();
-            throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
-        }
+        $category = getMatchTournamentCategory($match);
+        $typeSettingsLink = route('types.edit', $category->tournament_type_id);
+        $settings = TournamentTypeSettings::where('tournament_type_id', $category->tournament_type_id)
+            ->where('stage', $match->knockoutRound?->knockoutStage?->name)
+            ->first();
+        throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
 
         $winnerTeam = $absentTeamId == $match->home_team_id ? $match->awayTeam : $match->homeTeam;
         $match->update([
@@ -382,6 +381,8 @@ class MatchesView extends Component
                 $stage->update([
                     'is_completed' => true,
                 ]);
+
+                (new \App\Livewire\Tournaments\TournamentCategoryForm)->generateMatches($category->id);
             }
         }
 

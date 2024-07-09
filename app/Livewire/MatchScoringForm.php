@@ -90,13 +90,11 @@ class MatchScoringForm extends Component
             throw_if(!$this->nbOfSetsToWin || !$this->nbOfGamesToWin || !$this->tiebreakPointsToWin || !$this->deuceType,
                 new \Exception($stageName . " scoring settings are required, please go to the stage settings by clicking on <a href='$settingsLink'>this link</a> to add them!"));
 
-            if ($match->type == "Knockouts") {
-                $typeSettingsLink = route('types.edit', $this->category->tournament_type_id);
-                $settings = TournamentTypeSettings::where('tournament_type_id', $this->category->tournament_type_id)
-                    ->where('stage', $match->knockoutRound?->knockoutStage?->name)
-                    ->first();
-                throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
-            }
+            $typeSettingsLink = route('types.edit', $this->category->tournament_type_id);
+            $settings = TournamentTypeSettings::where('tournament_type_id', $this->category->tournament_type_id)
+                ->where('stage', $match->knockoutRound?->knockoutStage?->name)
+                ->first();
+            throw_if(!$settings, new \Exception("Tournament type knockout settings are required, please go to <a href='$typeSettingsLink'>this link</a> to add them!"));
 
             $this->lastActionTeamId = $teamId;
 

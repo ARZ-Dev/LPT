@@ -288,7 +288,7 @@
                                                         <div class="card-body flex-fill">
                                                             <div class="col-12">
                                                                 <div class="table-responsive">
-                                                                    <table class="dt-row-grouping table border table-striped table-bordered">
+                                                                    <table class="dt-row-grouping table border table-bordered">
                                                                         <thead>
                                                                         <tr>
                                                                             <th class="text-center">Rank</th>
@@ -299,7 +299,7 @@
                                                                         </thead>
                                                                         <tbody>
                                                                         @foreach($group->groupTeams as $groupTeam)
-                                                                            <tr>
+                                                                            <tr class="{{ $groupTeam->has_qualified ? "bg-label-success" : "" }}">
                                                                                 <td class="text-center">{{ $groupTeam->rank }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>

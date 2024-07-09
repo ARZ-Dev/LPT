@@ -91,6 +91,8 @@ class GroupStageRanking extends Component
                 $this->category->groupStage->update([
                     'is_completed' => true,
                 ]);
+
+                (new \App\Livewire\Tournaments\TournamentCategoryForm)->generateMatches($this->category->id);
             }
 
             DB::commit();
