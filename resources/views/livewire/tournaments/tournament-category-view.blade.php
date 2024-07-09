@@ -65,14 +65,6 @@
                                 @endcan
                             @endif
 
-                            @if(count($category->knockoutsMatches) || count($category->groupStageMatches))
-                                @can('matches-list')
-                                <a href="{{ route('matches', $category->id) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Matches">
-                                    <i class="ti ti-crown ti-sm me-2"></i>
-                                </a>
-                                @endcan
-                            @endif
-
                             @if($category->is_knockout_matches_generated == 1)
                                 @can('tournamentCategory-knockoutMap')
                                 <a href="{{ route('tournaments-categories.knockoutMap', [$category->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Knockout Map"><i class="ti ti-tournament ti-sm me-2"></i></a>
