@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Http\Controllers\CronJobController;
+use App\Models\CronJobLog;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -18,6 +19,11 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             (new CronJobController())->closeMonthReminder();
         })->monthlyOn($beforeLastMonthDay);
+
+        CronJobLog::create([
+            'name' => 'Cron Jobs Schedule',
+            'status' => 'success',
+        ]);
     }
 
     /**
