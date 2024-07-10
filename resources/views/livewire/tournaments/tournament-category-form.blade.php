@@ -301,7 +301,13 @@
                                                                         </thead>
                                                                         <tbody>
                                                                         @foreach($group->groupTeams as $groupTeam)
-                                                                            <tr class="{{ $groupTeam->has_qualified ? "bg-label-success" : "" }}">
+                                                                            @php($rowBg = "")
+                                                                            @if($groupTeam->has_qualified)
+                                                                                @php($rowBg = "bg-label-success")
+                                                                            @elseif($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
+                                                                                @php($rowBg = "bg-label-warning")
+                                                                            @endif
+                                                                            <tr class="{{ $rowBg }}">
                                                                                 <td class="text-center">{{ $groupTeam->rank }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>
