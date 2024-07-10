@@ -386,7 +386,7 @@
                                                 </div>
                                             </div>
 
-                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts])
+                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts, 'group' => $group])
                                         </div>
                                     </div>
                                 @endforeach
@@ -397,7 +397,7 @@
                                     </div>
                                     <div class="card-body">
 
-                                        @include('livewire.partials.matches-table', ['games' => $stage->games, 'stage' => $stage])
+                                        @include('livewire.partials.matches-table', ['games' => $stage->games, 'courts' => $courts, 'stage' => $stage])
                                     </div>
                                 </div>
                             @endif
