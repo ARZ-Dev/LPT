@@ -273,6 +273,7 @@
                     <div class="tab-pane fade {{ $lastNav == "matches" ? "show active" : "" }}" id="navs-pills-justified-matches" role="tabpanel">
                         @foreach($category->knockoutStages as $stage)
                             @if($stage->name == "Group Stages")
+                                @php($showSubmitButton = false)
                                 @foreach($category->groups as $group)
                                     <div class="card mt-4 mb-4 bg-light">
                                         <div class="card-header d-flex justify-content-between align-items-center">
@@ -295,6 +296,7 @@
                                                                             <th class="text-center">Team</th>
                                                                             <th class="text-center">P/W/L</th>
                                                                             <th class="text-center">Score</th>
+                                                                            <th class="text-center">Action</th>
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -304,12 +306,30 @@
                                                                                 <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>
                                                                                 <td class="text-center">{{ $groupTeam->score }}</td>
+                                                                                <td class="text-center">
+                                                                                    @if($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
+                                                                                        @php($showSubmitButton = true)
+                                                                                        <input wire:click="toggleQualifiedTeams({{ $group->id }}, {{ $groupTeam->team_id }})" type="checkbox" name="qualified-team-{{ $group->id }}" class="form-check-input">
+                                                                                    @endif
+                                                                                </td>
                                                                             </tr>
                                                                         @endforeach
                                                                         </tbody>
                                                                     </table>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            @if($showSubmitButton)
+                                                                <div class="row">
+                                                                    <div class="col-8 mt-4">
+                                                                        @error('qualifiedTeamsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                                                    </div>
+                                                                    <div class="col-4 text-end mt-4">
+                                                                        <button wire:click="qualifyDrawnTeams({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Qualify</button>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>

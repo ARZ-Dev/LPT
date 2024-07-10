@@ -19,6 +19,7 @@ use App\Models\TournamentDeuceType;
 use App\Models\TournamentLevelCategory;
 use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
+use App\Models\TournamentTypeSettings;
 use App\Rules\EvenNumber;
 use App\Rules\PowerOfTwo;
 use App\Rules\PowerOfTwoArray;
@@ -53,6 +54,7 @@ class TournamentCategoryForm extends Component
     public $courtsIds = [];
     public $courtsDetails = [];
     public $courtId;
+    public $qualifiedTeamsIds = [];
 
     public function mount($tournamentId, $categoryId)
     {
@@ -164,6 +166,87 @@ class TournamentCategoryForm extends Component
             ]);
 
             DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
+        }
+        $this->lastNav = "matches";
+    }
+
+    public function toggleQualifiedTeams($groupId, $teamId)
+    {
+        $this->lastNav = "matches";
+        if (in_array($teamId, $this->qualifiedTeamsIds[$groupId] ?? [])) {
+            $index = array_search($teamId, $this->qualifiedTeamsIds[$groupId]);
+            unset($this->qualifiedTeamsIds[$groupId][$index]);
+        } else {
+            $this->qualifiedTeamsIds[$groupId][] = $teamId;
+        }
+    }
+
+    public function qualifyDrawnTeams($groupId)
+    {
+        $this->lastNav = "matches";
+        $this->validate([
+            'qualifiedTeamsIds.' . $groupId => ['required', 'array', 'min:1', 'max:' . $this->category->number_of_winners_per_group],
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            $group = Group::find($groupId);
+
+            GroupTeam::where('group_id', $groupId)->whereIn('team_id', $this->qualifiedTeamsIds[$groupId])->update([
+                'has_qualified' => true,
+            ]);
+
+            $notQualifiedTeamsIds = GroupTeam::where('group_id', $groupId)->where('has_qualified', false)->pluck('team_id')->toArray();
+            TournamentLevelCategoryTeam::where('tournament_level_category_id', $group->tournament_level_category_id)->whereIn('team_id', $notQualifiedTeamsIds)->update([
+                'last_rank' => 'Group Stages',
+            ]);
+
+            $roundPoints = TournamentTypeSettings::where('tournament_type_id', $this->category->tournament_type_id)
+                ->where('stage', 'Group Stages')
+                ->first()?->points ?? 0;
+
+            Team::whereIn('id', $notQualifiedTeamsIds)->increment('points', $roundPoints);
+
+            foreach ($notQualifiedTeamsIds as $notQualifiedTeamsId) {
+                $playersIds = json_decode(TournamentLevelCategoryTeam::where('tournament_level_category_id', $this->category->id)->where('team_id', $notQualifiedTeamsId)->first()?->players_ids ?? "[]");
+                Player::whereIn('id', $playersIds)->increment('points', $roundPoints);
+            }
+
+            $qualifiedTeamsCount = GroupTeam::where('group_id', $groupId)->where('has_qualified', true)->count();
+            throw_if($qualifiedTeamsCount > $this->category->number_of_winners_per_group, new \Exception("Only " . $this->category->number_of_winners_per_group . " teams must qualify from each group!"));
+
+            Group::where('id', $groupId)->update([
+                'is_completed' => true,
+                'qualification_status' => 'completed',
+            ]);
+
+            $groupsCount = Group::where('tournament_level_category_id', $this->category->id)->count();
+            $completedGroupsCount = Group::where('tournament_level_category_id', $this->category->id)->where('is_completed', true)->count();
+
+            if ($completedGroupsCount == $groupsCount) {
+                $this->category->update(['is_group_stages_completed' => true]);
+
+                $this->category->groupStage->update([
+                    'is_completed' => true,
+                ]);
+
+                (new \App\Livewire\Tournaments\TournamentCategoryForm)->generateMatches($this->category->id);
+            }
+
+            DB::commit();
+
+            return $this->dispatch('swal:success', [
+                'title' => 'Great!',
+                'text'  => "Selected teams has been qualified successfully!",
+            ]);
+
         } catch (\Exception $exception) {
             DB::rollBack();
             $this->dispatch('swal:error', [
