@@ -14,11 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $beforeLastMonthDay = now()->endOfMonth()->subDay()->day;
-
         $schedule->call(function () {
             (new CronJobController())->closeMonthReminder();
-        })->monthlyOn($beforeLastMonthDay);
+        })->lastDayOfMonth();
 
         CronJobLog::create([
             'name' => 'Cron Jobs Schedule',
