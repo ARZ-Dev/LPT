@@ -584,9 +584,9 @@ class TournamentCategoryForm extends Component
     {
         $this->validate([
             'stagesDetails.*.tournament_deuce_type_id' => ['required'],
-            'stagesDetails.*.nb_of_sets' => ['required'],
-            'stagesDetails.*.nb_of_games' => ['required'],
-            'stagesDetails.*.tie_break' => ['required'],
+            'stagesDetails.*.nb_of_sets' => ['required', 'integer'],
+            'stagesDetails.*.nb_of_games' => ['required', 'integer'],
+            'stagesDetails.*.tie_break' => ['required', 'integer'],
         ]);
 
         foreach ($this->stagesDetails as $stagesDetail) {
