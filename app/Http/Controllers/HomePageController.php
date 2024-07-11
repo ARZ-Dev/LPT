@@ -16,7 +16,7 @@ class HomePageController extends Controller
     {
         $data = [];
 
-        $data['upcomingMatches'] = Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with(['homeTeam', 'awayTeam'])->get();
+        $data['upcomingMatches'] = Game::where('is_started', false)->where('datetime', '>', now())->orderBy('datetime')->with(['homeTeam', 'awayTeam', 'court'])->get();
         $data['lastMatches'] = Game::where('is_completed', true)->orderBy('datetime', 'desc')->take(3)->with(['homeTeam', 'awayTeam', 'sets'])->get();
 
         $data['menFirstRankPlayer'] = Player::where('gender', 'male')->where('rank', 1)->first();

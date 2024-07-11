@@ -128,7 +128,7 @@
                         <!-- Heading Component-->
                         <article class="heading-component">
                             <div class="heading-component-inner">
-                                <h5 class="heading-component-title">{{ $group->name }}</h5>
+                                <h5 class="heading-component-title">{{ $group->name }} - {{ $group->court?->name }}</h5>
                             </div>
                         </article>
                         <!-- Table Players-->
@@ -182,12 +182,13 @@
                     <table class="table-custom table-standings table-modern" id="matchesTable">
                         <thead>
                         <tr>
-                            <th>Group / Round</th>
-                            <th>Home Team</th>
-                            <th>Away Team</th>
-                            <th>Datetime</th>
-                            <th>Winner Team</th>
-                            <th>Status</th>
+                            <th class="text-center">Group / Round</th>
+                            <th class="text-center">Court</th>
+                            <th class="text-center">Home Team</th>
+                            <th class="text-center">Away Team</th>
+                            <th class="text-center">Datetime</th>
+                            <th class="text-center">Winner Team</th>
+                            <th class="text-center">Status</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -195,6 +196,9 @@
                         <tr>
                             <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
 
+                            <td>
+                                {{ getMatchCourt($match)?->name }}
+                            </td>
                             <td>
                                 @if($match->homeTeam)
                                     {{ $match->homeTeam->nickname }}

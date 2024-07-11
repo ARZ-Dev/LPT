@@ -5,7 +5,7 @@
         @php($month = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('M Y') : "N/A")
         <div class="game-info game-info-classic">
             <p class="game-info-subtitle">
-                {{ $day }}, {{ $month }} at {{ $time }}
+                {{ $day }}, {{ $month }} at {{ $time }}, in {{ getMatchCourt($match)?->name }}
             </p>
             <h3 class="game-info-title">
                 {{ getMatchTournament($match)->name }} - {{ getMatchCategory($match)->name }} - {{ getMatchRound($match) }}

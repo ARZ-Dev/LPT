@@ -38,3 +38,8 @@ function getMatchTournamentCategory($match)
 {
     return $match->type == "Knockouts" ? $match->knockoutRound->tournamentLevelCategory : $match->group->tournamentLevelCategory;
 }
+
+function getMatchCourt($match)
+{
+    return $match->type == "Knockouts" ? $match->court : $match->group->court;
+}
