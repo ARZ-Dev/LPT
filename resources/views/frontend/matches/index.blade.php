@@ -129,8 +129,9 @@
             });
 
             var channel = pusher.subscribe('match' + matchId);
-            channel.bind('ScoreUpdated', function(data) {
-                alert(JSON.stringify(data));
+            channel.bind('App\\Events\\ScoreUpdated', function(data) {
+                console.log("data")
+                console.log(JSON.stringify(data));
             });
 
             console.log('test')
