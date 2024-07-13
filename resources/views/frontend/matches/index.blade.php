@@ -114,11 +114,23 @@
         $('.matches').each(function () {
             var matchId = $(this).data('match-id');
 
-            var channel = Echo.channel('match' + matchId);
-            channel.listen('.ScoreUpdated', function(data) {
-                let scoreContainer = $('#match-score-container-' + matchId);
-                console.log("data")
-                console.log(data)
+            // var channel = Echo.channel('match' + matchId);
+            // channel.listen('.ScoreUpdated', function(data) {
+            //     let scoreContainer = $('#match-score-container-' + matchId);
+            //     console.log("data")
+            //     console.log(data)
+            // });
+
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+
+            var pusher = new Pusher('134e03ea8967bdc8deb7', {
+                cluster: 'eu'
+            });
+
+            var channel = pusher.subscribe('match' + matchId);
+            channel.bind('ScoreUpdated', function(data) {
+                alert(JSON.stringify(data));
             });
 
             console.log('test')

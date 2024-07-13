@@ -9,7 +9,6 @@
     <meta charset="utf-8">
     <link rel="icon" href="{{ asset('assets/frontend/images/tennis/favicon.ico') }}" type="image/x-icon">
     @include('frontend.includes.styles')
-    @vite('resources/js/app.js')
 </head>
 <body>
     <div class="preloader">
