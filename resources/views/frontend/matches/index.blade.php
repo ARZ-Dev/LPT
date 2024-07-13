@@ -131,7 +131,8 @@
             var channel = pusher.subscribe('match' + matchId);
             channel.bind('App\\Events\\ScoreUpdated', function(data) {
                 console.log("data")
-                console.log(JSON.stringify(data));
+                console.log(data);
+                console.log(data.scoreBoardHtml);
             });
 
             console.log('test')
