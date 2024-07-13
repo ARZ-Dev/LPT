@@ -124,18 +124,18 @@
             // Enable pusher logging - don't include this in production
             Pusher.logToConsole = true;
 
+            let scoreBoardContainer = $('#match-score-container-' + matchId)
+
             var pusher = new Pusher('134e03ea8967bdc8deb7', {
                 cluster: 'eu'
             });
 
             var channel = pusher.subscribe('match' + matchId);
             channel.bind('App\\Events\\ScoreUpdated', function(data) {
-                console.log("data")
-                console.log(data);
-                console.log(data.scoreBoardHtml);
+                let scoreBoardHtml = data.scoreBoardHtml;
+                scoreBoardContainer.empty();
+                scoreBoardContainer.append(scoreBoardHtml);
             });
-
-            console.log('test')
         })
     });
 
