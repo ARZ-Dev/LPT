@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\ScoreUpdated;
 use App\Livewire\Matches\MatchesView;
 use App\Models\Game;
 use App\Models\Set;
@@ -186,7 +187,10 @@ class MatchScoringForm extends Component
 
             $this->canUndo = true;
 
+
             DB::commit();
+
+            ScoreUpdated::dispatch($this->matchId);
 
         } catch (\Exception $exception) {
 

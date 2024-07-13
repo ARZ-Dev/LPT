@@ -108,5 +108,22 @@
             spinnerContainer.addClass('d-none')
         });
     })
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        $('.matches').each(function () {
+            var matchId = $(this).data('match-id');
+
+            var channel = Echo.channel('match' + matchId);
+            channel.listen('.ScoreUpdated', function(data) {
+                let scoreContainer = $('#match-score-container-' + matchId);
+                console.log("data")
+                console.log(data)
+            });
+
+            console.log('test')
+        })
+    });
+
 </script>
 @endsection

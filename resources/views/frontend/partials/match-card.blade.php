@@ -1,4 +1,4 @@
-<article class="game-result hoverable-div">
+<article class="game-result hoverable-div matches" data-match-id="{{ $match->id }}">
     <a href="{{ route('frontend.matches.view', $match->id) }}">
         @php($time = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('H:i') : "N/A")
         @php($day = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('D j') : "N/A")
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <!-- Table Game Info-->
-            @if($match->is_started)
+            @if($match->is_started && $match->is_completed)
             <div class="table-game-info-wrap mt-2">
                 <span class="table-game-info-title">Game statistics<span></span></span>
                 <div class="table-game-info-main table-custom-responsive">
@@ -68,6 +68,12 @@
                     </table>
                 </div>
             </div>
+            @elseif($match->is_started && !$match->is_completed)
+                <div class="row d-flex justify-content-center mt-4" id="match-score-container-{{ $match->id }}">
+                    <div class="col-5">
+                        @include('frontend.partials.match-score-board', ['match' => $match])
+                    </div>
+                </div>
             @endif
         </div>
     </a>
