@@ -5,6 +5,13 @@
         @php($month = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('M Y') : "N/A")
 
         <div class="game-info game-info-classic">
+                <div class="d-lg-none d-sm-block">
+                    @if($match->is_started && !$match->is_completed)
+                        <div class="spinner-grow text-red" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    @endif
+                </div>
             <div class="d-flex justify-content-between">
                 <div></div>
                 <div>
@@ -16,11 +23,13 @@
                     </h3>
                 </div>
                 <div class="me-4">
-                    @if($match->is_started && !$match->is_completed)
-                        <div class="spinner-grow text-red" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    @endif
+                    <div class="d-none d-sm-none d-lg-block">
+                        @if($match->is_started && !$match->is_completed)
+                            <div class="spinner-grow text-red" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="game-info-main">
