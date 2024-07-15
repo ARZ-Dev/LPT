@@ -190,7 +190,9 @@ class MatchScoringForm extends Component
 
             DB::commit();
 
-            ScoreUpdated::dispatch($this->matchId);
+            if(env('APP_ENV') === "production") {
+                ScoreUpdated::dispatch($this->matchId);
+            }
 
         } catch (\Exception $exception) {
 
