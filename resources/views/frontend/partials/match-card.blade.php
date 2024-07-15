@@ -3,18 +3,26 @@
         @php($time = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('H:i') : "N/A")
         @php($day = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('D j') : "N/A")
         @php($month = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('M Y') : "N/A")
+
         <div class="game-info game-info-classic">
-            <p class="game-info-subtitle">
-                {{ $day }}, {{ $month }} at {{ $time }}, in {{ getMatchCourt($match)?->name }}
-            </p>
-            <h3 class="game-info-title">
-                {{ getMatchTournament($match)->name }} - {{ getMatchCategory($match)->name }} - {{ getMatchRound($match) }}
-                @if($match->is_started && !$match->is_completed)
-                    <div class="spinner-grow text-red" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                @endif
-            </h3>
+            <div class="d-flex justify-content-between">
+                <div></div>
+                <div>
+                    <p class="game-info-subtitle">
+                        {{ $day }}, {{ $month }} at {{ $time }}, in {{ getMatchCourt($match)?->name }}
+                    </p>
+                    <h3 class="game-info-title">
+                        {{ getMatchTournament($match)->name }} - {{ getMatchCategory($match)->name }} - {{ getMatchRound($match) }}
+                    </h3>
+                </div>
+                <div class="me-4">
+                    @if($match->is_started && !$match->is_completed)
+                        <div class="spinner-grow text-red" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
             <div class="game-info-main">
                 <div class="game-info-team game-info-team-first">
                     <figure>
@@ -70,9 +78,7 @@
             </div>
             @elseif($match->is_started && !$match->is_completed)
                 <div class="row d-flex justify-content-center mt-4" id="match-score-container-{{ $match->id }}">
-                    <div class="col-5">
-                        @include('frontend.partials.match-score-board', ['match' => $match])
-                    </div>
+                    @include('frontend.partials.match-score-board', ['match' => $match])
                 </div>
             @endif
         </div>

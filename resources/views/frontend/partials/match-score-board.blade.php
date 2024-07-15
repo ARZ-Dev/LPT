@@ -9,7 +9,7 @@
 @php($tiebreakPointsToWin = $stage->tie_break)
 @php($deuceType = $stage->tournamentDeuceType)
 
-<div class="col-5">
+<div class="col-lg-5 col-sm-12">
     <div class="table-custom-responsive">
         <table class="table-game-result-boxed">
             <tr>
