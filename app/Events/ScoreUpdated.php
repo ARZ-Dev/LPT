@@ -41,4 +41,9 @@ class ScoreUpdated implements ShouldBroadcast
             new Channel('match' . $this->matchId)
         ];
     }
+
+    public function broadcastAs()
+    {
+        return 'score.updated';
+    }
 }
