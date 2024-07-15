@@ -20,6 +20,7 @@ use App\Models\TournamentLevelCategory;
 use App\Models\TournamentLevelCategoryTeam;
 use App\Models\TournamentType;
 use App\Models\TournamentTypeSettings;
+use App\Models\User;
 use App\Rules\EvenNumber;
 use App\Rules\PowerOfTwo;
 use App\Rules\PowerOfTwoArray;
@@ -55,14 +56,17 @@ class TournamentCategoryForm extends Component
     public $courtsDetails = [];
     public $courtId;
     public $qualifiedTeamsIds = [];
+    public $scorekeepers = [];
+    public $scorekeeperId;
 
     public function mount($tournamentId, $categoryId)
     {
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
-                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam', 'court']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']
+                'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam', 'court', 'scorekeeper']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']
             ])->findOrFail($categoryId);
         $this->tournamentTypes = TournamentType::all();
+        $this->scorekeepers = User::permission('matches-scoring')->get();
 
         foreach ($this->category->groups as $group) {
             if ($group->court_id) {
@@ -132,12 +136,14 @@ class TournamentCategoryForm extends Component
     {
         $this->validate([
             'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
+            'scorekeeperId' => ['required']
         ]);
 
         $match = Game::findOrFail($matchId);
         $match->update([
             'datetime' => $this->matchDate,
             'court_id' => $this->courtId,
+            'scorekeeper_id' => $this->scorekeeperId,
         ]);
 
         $this->dispatch('swal:success', [

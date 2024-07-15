@@ -15,7 +15,7 @@
                         <th class="text-center">Home Team</th>
                         <th class="text-center">Away Team</th>
                         <th class="text-center">Date</th>
-                        <th class="text-center">Started By</th>
+                        <th class="text-center">Scorekeeper</th>
                         <th class="text-center">Winner</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
@@ -50,8 +50,8 @@
                                 {{ $game->datetime }}
                             </td>
                             <td class="text-center text-nowrap">
-                                @if($game->is_started)
-                                    {{ $game->startedBy?->full_name }}
+                                @if($game->scorekeeper_id)
+                                    {{ $game->scorekeeper?->full_name }}
                                 @endif
                             </td>
                             <td class="text-center text-nowrap">
@@ -73,13 +73,15 @@
                             <td class="text-center text-nowrap">
                                 @if($game->datetime)
                                     @if($game->homeTeam && $game->awayTeam)
-                                        <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
-                                            @if($game->is_started)
-                                                <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
-                                            @else
-                                                <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
-                                            @endif
-                                        </a>
+                                        @can('matches-scoring')
+                                            <a href="{{ route('matches.scoring', ['matchId' => $game->id]) }}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
+                                                @if($game->is_started)
+                                                    <span class="ti ti-report text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></span>
+                                                @else
+                                                    <span class="ti ti-player-play text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></span>
+                                                @endif
+                                            </a>
+                                        @endcan
 
                                         @if(!$game->is_started)
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$game->id}}" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light btn-sm">

@@ -386,7 +386,7 @@
                                                 </div>
                                             </div>
 
-                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts, 'group' => $group])
+                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts, 'group' => $group, 'scorekeepers' => $scorekeepers])
                                         </div>
                                     </div>
                                 @endforeach
@@ -397,7 +397,7 @@
                                     </div>
                                     <div class="card-body">
 
-                                        @include('livewire.partials.matches-table', ['games' => $stage->games, 'courts' => $courts, 'stage' => $stage])
+                                        @include('livewire.partials.matches-table', ['games' => $stage->games, 'courts' => $courts, 'stage' => $stage, 'scorekeepers' => $scorekeepers])
                                     </div>
                                 </div>
                             @endif
@@ -457,7 +457,8 @@
             let type = $(this).data('type');
             let date = $('#date-' + matchId).val();
             let courtId = $('#court-id-' + matchId).val();
-            if (date !== "" && date !== undefined && (courtId !== "" && courtId !== undefined || type === "Group Stages")) {
+            let scorekeeperId = $('#scorekeeper-' + matchId).val();
+            if (date !== "" && date !== undefined && (courtId !== "" && courtId !== undefined || type === "Group Stages") && scorekeeperId !== "" && scorekeeperId !== undefined) {
                 $wire.dispatch('storeDateTime', {
                     matchId
                 })

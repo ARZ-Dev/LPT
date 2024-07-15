@@ -37,6 +37,28 @@
                                 @error('courtId') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
                         @endif
+                        <div class="col-12 mt-2">
+                            <label class="form-label">Scorekeeper <span class="text-danger">*</span></label>
+                            <div wire:ignore>
+                                <select
+                                    wire:model="scorekeeperId"
+                                    id="scorekeeper-{{ $match->id }}"
+                                    class="form-select selectpicker w-100"
+                                    aria-label="Default select example"
+                                    title="Select Scorekeeper"
+                                    data-style="btn-default"
+                                    data-live-search="true"
+                                    data-icon-base="ti"
+                                    data-tick-icon="ti-check text-white"
+                                    required
+                                >
+                                    @foreach($scorekeepers as $scorekeeper)
+                                        <option value="{{ $scorekeeper->id }}">{{ $scorekeeper->full_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('scorekeeperId') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

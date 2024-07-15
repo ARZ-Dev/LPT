@@ -34,6 +34,7 @@ class MatchScoringForm extends Component
 
     public function mount($matchId)
     {
+        $this->authorize('matches-scoring');
         $this->matchId = $matchId;
         $match = Game::with(['homeTeam', 'awayTeam', 'knockoutRound', 'knockoutRound.knockoutStage', 'group', 'group.knockoutStage', 'sets' => [
                     'setGames' => [

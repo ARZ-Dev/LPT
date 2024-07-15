@@ -76,4 +76,9 @@ class Game extends Model
         return $this->belongsTo(Court::class);
     }
 
+    public function scorekeeper()
+    {
+        return $this->belongsTo(User::class, 'scorekeeper_id');
+    }
+
 }
