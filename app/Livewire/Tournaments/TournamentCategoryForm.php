@@ -61,6 +61,7 @@ class TournamentCategoryForm extends Component
 
     public function mount($tournamentId, $categoryId)
     {
+        $this->authorize('tournamentCategory-edit');
         $this->tournament = Tournament::findOrFail($tournamentId);
         $this->category = TournamentLevelCategory::with([
                 'type', 'teams', 'knockoutStages' => ['games' => ['homeTeam', 'awayTeam', 'winnerTeam', 'court', 'scorekeeper']], 'knockoutsMatches', 'groupStageMatches', 'groups' => ['groupTeams', 'court']

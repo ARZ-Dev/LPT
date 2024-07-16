@@ -6,7 +6,9 @@
                 <h5 class="mb-0">
                     {{ $homeTeam->nickname }} VS {{ $awayTeam->nickname }} Match Scoring - {{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}
                 </h5>
-                <a class="btn btn-primary h-50" href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}">{{ $category->levelCategory?->name }} Category</a>
+                @can('tournamentCategory-edit')
+                    <a class="btn btn-primary h-50" href="{{ route('tournaments-categories.edit', [$category->tournament_id, $category->id]) }}">{{ $category->levelCategory?->name }} Category</a>
+                @endcan
             </div>
             <div class="card-body">
                 <div class="row g-3">
