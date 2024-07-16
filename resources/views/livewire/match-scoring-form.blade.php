@@ -10,29 +10,29 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-12 col-sm-6">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <label class="form-label">Started At</label>
                         <input wire:model="startedAt" type="text" class="form-control" readonly disabled>
                     </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <label class="form-label">Referee</label>
                         <input wire:model="referee" type="text" class="form-control" readonly disabled>
                     </div>
                 </div>
                 <div class="row g-3 mt-2">
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
                         <label class="form-label">Deuce Type</label>
                         <input type="text" class="form-control" readonly disabled value="{{ $deuceType->name ?? "N/A" }}">
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
                         <label class="form-label">Number of Sets to Win the Match</label>
                         <input type="text" class="form-control" readonly disabled value="{{ $nbOfSetsToWin ?? "N/A" }}">
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
                         <label class="form-label">Number of Games to Win the Set</label>
                         <input type="text" class="form-control" readonly disabled value="{{ $nbOfGamesToWin ?? "N/A" }}">
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
                         <label class="form-label">Tiebreak Winning Points</label>
                         <input type="text" class="form-control" readonly disabled value="{{ $tiebreakPointsToWin ?? "N/A" }}">
                     </div>

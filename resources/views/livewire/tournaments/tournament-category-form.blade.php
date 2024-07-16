@@ -252,7 +252,7 @@
                                             </div>
                                             <div class="col-2">
                                                 <label class="form-label" for="stage">Status</label>
-                                                <span class="badge bg-label-{{ $stage->is_completed  == 0 ? "warning" : "info" }} form-control mt-2">
+                                                <span class="badge text-bg-{{ $stage->is_completed  == 0 ? "warning" : "info" }} form-control mt-2">
                                                     {{ $stage->is_completed == 0 ? "Pending" : "Completed" }}
                                                 </span>
                                             </div>
