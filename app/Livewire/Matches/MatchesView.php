@@ -29,54 +29,14 @@ class MatchesView extends Component
     public $absentTeamId;
 
 
-    public function mount($categoryId)
+    public function mount()
     {
         $this->authorize('matches-list');
-        $this->category = TournamentLevelCategory::with('tournament.levelCategories', 'type')->findOrFail($categoryId);
-        $this->tournament = $this->category->tournament;
-        $this->matches = Game::with('knockoutRound','homeTeam','awayTeam', 'startedBy')
-            ->whereHas('knockoutRound', function ($query) {
-                $query->where('tournament_level_category_id', $this->category->id);
-            })
-            ->orWhereHas('group', function ($query) {
-                $query->where('tournament_level_category_id', $this->category->id);
+        $this->matches = Game::with(['knockoutRound','homeTeam','awayTeam', 'scorekeeper', 'court', 'group' => ['court']])
+            ->when(!auth()->user()->hasRole('Super Admin'), function ($query) {
+                $query->where('scorekeeper_id', auth()->id());
             })
             ->get();
-     }
-
-    #[On('chooseWinner')]
-    public function chooseWinner($matchId, $winnerId)
-    {
-        DB::beginTransaction();
-        try {
-            $this->updateMatchWinner($matchId, $winnerId);
-
-            DB::commit();
-
-            return to_route('matches', $this->category->id)->with('success', 'Winner team has been updated successfully!');
-
-        } catch (\Exception $exception) {
-            DB::rollBack();
-
-            return $this->dispatch('swal:error', [
-                'title' => 'Error!',
-                'text'  => $exception->getMessage(),
-            ]);
-        }
-    }
-
-    #[On('storeDateTime')]
-    public function storeDateTime($matchId)
-    {
-        $this->validate([
-            'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
-        ]);
-
-        $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
-        $this->match->update([
-            'datetime'=>$this->matchDate,
-        ]);
-        return to_route('matches', $this->category->id)->with('success', 'date/time has been updated successfully!');
     }
 
     #[On('storeAbsent')]

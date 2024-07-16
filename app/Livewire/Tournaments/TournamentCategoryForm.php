@@ -410,6 +410,7 @@ class TournamentCategoryForm extends Component
                         for ($j = 0; $j < $teamCount - 1; $j++) {
                             for ($k = $j + 1; $k < $teamCount; $k++) {
                                 Game::create([
+                                    'tournament_level_category_id' => $category->id,
                                     'type' => 'Group Stages',
                                     'group_id' => $group->id,
                                     'home_team_id' => $teamIds[$j],
@@ -565,6 +566,7 @@ class TournamentCategoryForm extends Component
 
                 // Create a match for the current knockout round
                 $game = Game::create([
+                    'tournament_level_category_id' => $category->id,
                     'type' => 'Knockouts',
                     'knockout_round_id' => $knockoutRound->id,
                     'home_team_id' => $homeTeam?->id,
@@ -624,6 +626,14 @@ class TournamentCategoryForm extends Component
         $group->update([
             'court_id' => $this->courtsIds[$groupId] ?? null,
         ]);
+
+        if ($this->courtsIds[$groupId]) {
+            foreach ($group->games as $game) {
+                $game->update([
+                    'court_id' => $this->courtsIds[$groupId],
+                ]);
+            }
+        }
 
         $this->dispatch('swal:success', [
             'title' => 'Great!',

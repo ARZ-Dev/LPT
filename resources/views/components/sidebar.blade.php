@@ -144,6 +144,15 @@
         </li>
         @endcan
 
+        @can('matches-list')
+            <li class="menu-item {{ request()->is('admin/my-matches*') ? "active" : "" }}">
+                <a href="{{ route('matches') }}" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-device-gamepad-2"></i>
+                    <div data-i18n="My Matches">My Matches</div>
+                </a>
+            </li>
+        @endcan
+
         <li class="menu-item {{ request()->is('admin/hero-section*', 'admin/blogs*') ? 'active open' : '' }}">
 
             <a href="javascript:void(0);" class="menu-link menu-toggle">

@@ -2,19 +2,21 @@
 
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
-            <h4 class="card-title mb-3">{{ $category->tournament->name }} - {{ $category->levelCategory?->name }} - Matches</h4>
-            <a class="btn btn-primary h-50" href="{{ route('tournaments-categories', $category->tournament_id) }}">{{ $category->tournament->name }} Categories</a>
+            <h4 class="card-title mb-3">My Matches</h4>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-matches dataTable table border-top">
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Tournament</th>
+                        <th>Category</th>
                         <th>Group / Round</th>
+                        <th>Court</th>
                         <th>Home Team</th>
                         <th>Away Team</th>
                         <th>Datetime</th>
-                        <th>Started At / By</th>
+                        <th>Scorekeeper</th>
                         <th>Winner Team</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -24,8 +26,12 @@
                     @foreach($matches as $match)
                     <tr>
                         <td>{{ $match->id }}</td>
+                        <td>{{ getMatchTournament($match)->name }}</td>
+                        <td>{{ getMatchTournamentCategory($match)->levelCategory?->name }}</td>
                         <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
-
+                        <td>
+                            {{ $match->court?->name }}
+                        </td>
                         <td>
                             @if($match->homeTeam)
                             {{ $match->homeTeam->nickname }}
@@ -42,8 +48,8 @@
                         </td>
                         <td class="text-nowrap">{{ $match->datetime }}</td>
                         <td class="text-nowrap">
-                            @if($match->is_started)
-                                {{ Carbon\Carbon::parse($match->started_at)->format('d-m-Y H:i') }} / {{ $match->startedBy?->full_name }}
+                            @if($match->scorekeeper_id)
+                                {{ $match->scorekeeper?->full_name }}
                             @endif
                         </td>
                         <td>{{ $match->winnerTeam?->nickname }}</td>
@@ -75,29 +81,12 @@
                                 @endif
                             @endcan
 
-                            @can('matches-setDate')
-                                @if(!$match->is_started)
-                                <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}">
-                                    <i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $match->datetime ? "Edit" : "Add" }} Date/Time"></i>
-                                </a>
-                                @endif
-                            @endcan
-
-                            @if(!$match->is_started && $match->datetime)
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$match->id}}" class="text-body">
-                                    <i class="ti ti-hand-stop ti-sm me-2"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></i>
-                                </a>
-                            @endif
-
                             @if($match->is_started && $match->status != 'forfeited')
                                 <a href="{{ route('matches.details', [$match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
 
                         </td>
                     </tr>
-
-                    @include('modals.matches-datetime', ['match' => $match])
-                    @include('modals.matches-absent', ['match' => $match])
 
                     @endforeach
                 </tbody>
