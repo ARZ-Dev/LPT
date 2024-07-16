@@ -8,26 +8,24 @@
             <table class="datatables-matches dataTable table border-top">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Tournament</th>
-                        <th>Category</th>
-                        <th>Group / Round</th>
-                        <th>Court</th>
-                        <th>Home Team</th>
-                        <th>Away Team</th>
-                        <th>Datetime</th>
-                        <th>Scorekeeper</th>
-                        <th>Winner Team</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th class="text-nowrap">ID</th>
+                        <th class="text-nowrap">Tournament / Category</th>
+                        <th class="text-nowrap">Group / Round</th>
+                        <th class="text-nowrap">Court</th>
+                        <th class="text-nowrap">Home Team</th>
+                        <th class="text-nowrap">Away Team</th>
+                        <th class="text-nowrap">Datetime</th>
+                        <th class="text-nowrap">Scorekeeper</th>
+                        <th class="text-nowrap">Winner Team</th>
+                        <th class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($matches as $match)
                     <tr>
                         <td class="text-nowrap">{{ $match->id }}</td>
-                        <td class="text-nowrap">{{ getMatchTournament($match)->name }}</td>
-                        <td class="text-nowrap">{{ getMatchTournamentCategory($match)->levelCategory?->name }}</td>
+                        <td class="text-nowrap">{{ getMatchTournament($match)->name }} / {{ getMatchTournamentCategory($match)->levelCategory?->name }}</td>
                         <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
                         <td class="text-nowrap">
                             {{ $match->court?->name }}
