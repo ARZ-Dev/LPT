@@ -81,4 +81,9 @@ class Game extends Model
         return $this->belongsTo(User::class, 'scorekeeper_id');
     }
 
+    public function tournamentLevelCategory()
+    {
+        return $this->belongsTo(TournamentLevelCategory::class);
+    }
+
 }

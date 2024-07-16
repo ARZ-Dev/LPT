@@ -3,6 +3,7 @@
 namespace App\Livewire\Matches;
 
 use App\Livewire\Tournaments\TournamentCategoryForm;
+use App\Models\Court;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\GroupTeam;
@@ -28,15 +29,29 @@ class MatchesView extends Component
     public $matchDate;
     public $absentTeamId;
 
-
     public function mount()
     {
         $this->authorize('matches-list');
-        $this->matches = Game::with(['knockoutRound','homeTeam','awayTeam', 'scorekeeper', 'court', 'group' => ['court']])
+        $this->matches = Game::with(['knockoutRound','homeTeam','awayTeam', 'scorekeeper', 'court', 'group' => ['court'], 'tournamentLevelCategory'])
             ->when(!auth()->user()->hasRole('Super Admin'), function ($query) {
                 $query->where('scorekeeper_id', auth()->id());
             })
             ->get();
+    }
+
+    #[On('storeDateTime')]
+    public function storeDateTime($matchId)
+    {
+        $this->validate([
+            'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
+        ]);
+
+        $this->match = Game::with('homeTeam','awayTeam')->findOrFail($matchId);
+        $this->match->update([
+            'datetime' => $this->matchDate,
+        ]);
+
+        return to_route('matches', $this->category->id)->with('success', 'Match datetime has been updated successfully!');
     }
 
     #[On('storeAbsent')]
@@ -60,7 +75,7 @@ class MatchesView extends Component
             ]);
         }
 
-        return to_route('matches', $this->category->id)->with('success', 'Absent team has been updated successfully!');
+        return to_route('matches')->with('success', 'Absent team has been updated successfully!');
     }
 
     public static function chooseAbsentTeam($matchId, $absentTeamId)

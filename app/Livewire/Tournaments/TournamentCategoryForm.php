@@ -140,11 +140,17 @@ class TournamentCategoryForm extends Component
         ]);
 
         $match = Game::findOrFail($matchId);
-        $match->update([
+
+        $data = [
             'datetime' => $this->matchDate,
-            'court_id' => $this->courtId,
             'scorekeeper_id' => $this->scorekeeperId,
-        ]);
+        ];
+
+        if ($this->courtId) {
+            $data['court_id'] = $this->courtId;
+        }
+
+        $match->update($data);
 
         $this->dispatch('swal:success', [
             'title' => 'Great!',

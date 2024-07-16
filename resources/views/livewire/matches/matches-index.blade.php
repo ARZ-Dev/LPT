@@ -25,21 +25,21 @@
                 <tbody>
                     @foreach($matches as $match)
                     <tr>
-                        <td>{{ $match->id }}</td>
-                        <td>{{ getMatchTournament($match)->name }}</td>
-                        <td>{{ getMatchTournamentCategory($match)->levelCategory?->name }}</td>
+                        <td class="text-nowrap">{{ $match->id }}</td>
+                        <td class="text-nowrap">{{ getMatchTournament($match)->name }}</td>
+                        <td class="text-nowrap">{{ getMatchTournamentCategory($match)->levelCategory?->name }}</td>
                         <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
-                        <td>
+                        <td class="text-nowrap">
                             {{ $match->court?->name }}
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             @if($match->homeTeam)
                             {{ $match->homeTeam->nickname }}
                             @elseif($match->relatedHomeGame)
                             Winner of {{ $match->relatedHomeGame->knockoutRound?->name }}
                             @endif
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             @if($match->awayTeam)
                             {{ $match->awayTeam->nickname }}
                             @elseif($match->relatedAwayGame)
@@ -52,8 +52,8 @@
                                 {{ $match->scorekeeper?->full_name }}
                             @endif
                         </td>
-                        <td>{{ $match->winnerTeam?->nickname }}</td>
-                        <td>
+                        <td class="text-nowrap">{{ $match->winnerTeam?->nickname }}</td>
+                        <td class="text-nowrap">
                             @php($badgeLabel = "warning")
                             @if($match->status == "started")
                                 @php($badgeLabel = "info")
@@ -69,23 +69,40 @@
 
                         <td class="text-nowrap">
 
-                            @can('matches-scoring')
-                                @if($match->homeTeam && $match->awayTeam && $match->datetime)
-                                    <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body">
-                                        @if($match->is_completed)
-                                            <i class="ti ti-report ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></i>
-                                        @else
-                                            <i class="ti ti-player-play ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></i>
-                                        @endif
-                                    </a>
+                            @if($match->datetime)
+                                @if($match->homeTeam && $match->awayTeam)
+                                    @can('matches-scoring')
+                                        <a href="{{ route('matches.scoring', ['matchId' => $match->id]) }}" class="text-body">
+                                            @if($match->is_started)
+                                                <i class="ti ti-report ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Results"></i>
+                                            @else
+                                                <i class="ti ti-player-play ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Game"></i>
+                                            @endif
+                                        </a>
+                                    @endcan
+
+                                    @if(!$match->is_started)
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$match->id}}" class="text-body">
+                                            <i class="ti ti-hand-stop"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></i>
+                                        </a>
+                                    @endif
                                 @endif
-                            @endcan
+                            @else
+                                    @can('matches-setDate')
+{{--                                        <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#dateTime{{$match->id}}">--}}
+{{--                                            <i class="ti ti-calendar ti-sm me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $match->datetime ? "Edit" : "Add" }} Date/Time"></i>--}}
+{{--                                        </a>--}}
+                                    @endcan
+                            @endif
 
                             @if($match->is_started && $match->status != 'forfeited')
                                 <a href="{{ route('matches.details', [$match->id]) }}" class="text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Match Details"><i class="ti ti-ball-tennis ti-sm me-2"></i></a>
                             @endif
 
                         </td>
+
+                        @include('modals.matches-absent', ['match' => $match])
+{{--                        @include('modals.matches-datetime', ['match' => $match, 'courts' => $courts])--}}
                     </tr>
 
                     @endforeach
@@ -101,16 +118,6 @@
 
     @script
     <script>
-        $(document).on('click', '.submit-btn', function() {
-            let matchId = $(this).data('match-id');
-            let winnerId = $('#winner-' + matchId).val();
-            let data = {
-                matchId
-                , winnerId
-            };
-
-            $wire.dispatch('chooseWinner', data)
-        })
 
         $(document).on('click', '.store-date-btn', function() {
             let matchId = $(this).data('match-id');
@@ -125,6 +132,9 @@
             let matchId = $(this).data('match-id');
             let absentTeamId = $('#absent-team-' + matchId).val()
             if (absentTeamId !== "" && absentTeamId !== undefined) {
+                $wire.dispatch('storeAbsent', {
+                    matchId
+                })
                 $('.absent-modal').modal('hide');
             }
         })
