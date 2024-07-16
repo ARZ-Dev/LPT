@@ -231,7 +231,7 @@
                 <div class="card mb-4">
                     <div class="card-header align-items-center">
                         <h5 class="mb-0">
-                            Image Upload
+                            Image Upload (368x286)
                             @if($image)
                                 - <a href="{{ asset(\Illuminate\Support\Facades\Storage::url($image)) }}" download>Download Link</a>
                             @endif
