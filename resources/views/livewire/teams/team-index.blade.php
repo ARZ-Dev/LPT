@@ -14,7 +14,7 @@
                     <th>Nickname</th>
                     <th>Level Category</th>
                     <th>Players</th>
-                    <th>Matches / W / L</th>
+                    <th>P / W / L</th>
                     <th>Rank</th>
                     <th>Points</th>
                     <th>Actions</th>
@@ -24,7 +24,22 @@
                 @foreach($teams as $team)
                     <tr>
                         <td>{{ $team->id }}</td>
-                        <td>{{ $team->nickname }}</td>
+                        <td>
+                            <div class="d-flex justify-content-start align-items-center user-name">
+                                <div class="avatar-wrapper">
+                                    <div class="avatar me-2">
+                                        @if($team->image)
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($team->image) }}" alt="Avatar" class="rounded-circle">
+                                        @else
+                                            <span class="avatar-initial rounded-circle bg-label-primary">{{ getInitials($team->nickname) }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <span class="emp_name text-truncate">{{ $team->nickname }}</span>
+                                </div>
+                            </div>
+                        </td>
                         <td>{{ $team->levelCategory?->name }}</td>
                         <td>
                             @foreach($team->players as $player)

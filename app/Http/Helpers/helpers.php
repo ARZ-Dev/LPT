@@ -43,3 +43,14 @@ function getMatchCourt($match)
 {
     return $match->type == "Knockouts" ? $match->court : $match->group->court;
 }
+
+function getInitials($string) {
+    $words = explode(' ', $string);
+    $initials = '';
+
+    foreach ($words as $word) {
+        $initials .= strtoupper($word[0] ?? "");
+    }
+
+    return $initials;
+}

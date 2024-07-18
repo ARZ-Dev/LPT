@@ -91,7 +91,7 @@ class PlayerForm extends Component
     {
         return [
             'first_name' => ['required', 'max:255'],
-            'middle_name' => ['required', 'max:255'],
+            'middle_name' => ['nullable', 'max:255'],
             'last_name' => ['required', 'max:255'],
             'current_team_id' => ['nullable', new Exists('teams', 'id')],
             'birthdate' => ['required', 'date'],
@@ -132,7 +132,7 @@ class PlayerForm extends Component
 
             $data = [
                 'first_name' => $this->first_name,
-                'middle_name' => $this->middle_name,
+                'middle_name' => $this->middle_name ?? "",
                 'last_name' => $this->last_name,
                 'current_team_id' => $this->current_team_id,
                 'birthdate' => $this->birthdate,
@@ -206,7 +206,7 @@ class PlayerForm extends Component
 
             $data = [
                 'first_name' => $this->first_name,
-                'middle_name' => $this->middle_name,
+                'middle_name' => $this->middle_name ?? "",
                 'last_name' => $this->last_name,
                 'current_team_id' => $this->current_team_id,
                 'birthdate' => $this->birthdate,
