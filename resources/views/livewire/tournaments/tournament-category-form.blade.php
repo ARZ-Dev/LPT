@@ -122,25 +122,45 @@
                                     <div>
                                         <h4>Teams @error('selectedTeamsIds') - <div class="text-danger">{{ $message }}</div> @enderror</h4>
                                     </div>
-                                    <div class="col-2 mb-2">
+                                    <div class="col-lg-2 col-sm-3 mb-2">
                                         <input wire:model.live="teams_filter_search" type="text" placeholder="Search..." class="form-control" />
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-12">
                                     <div class="row overflow-auto h-px-400">
                                         @forelse($teams as $team)
-                                            <div class="col-md-3 my-2">
-                                                <div class="card bg-label-{{ in_array($team->id, $selectedTeamsIds) ? "linkedin" : "danger" }}">
-                                                    <div class="card-body">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h5 class="card-title">{{ $team->nickname }}</h5>
-                                                            @if($canEditDetails)
-                                                                <a wire:click="toggleTeam({{ $team->id }})" class="btn rounded-pill btn-{{ in_array($team->id, $selectedTeamsIds) ? "warning" : "success" }} text-nowrap text-white">
-                                                                    {{ in_array($team->id, $selectedTeamsIds) ? "Remove" : "Select" }}
-                                                                </a>
-                                                            @endif
+                                            <div class="col-md-4 my-2">
+                                                <div class="card bg-{{ in_array($team->id, $selectedTeamsIds) ? "label-linkedin" : "light" }}">
+                                                    <div class="row g-0">
+                                                        @if($team->image)
+                                                        <div class="col-md-4">
+                                                            <img class="card-img h-100 card-img-left" src="{{ \Illuminate\Support\Facades\Storage::url($team->image) }}" alt="Card image">
                                                         </div>
-                                                        <p class="card-text">Players: {{ implode(', ', $team->players->pluck('full_name')->toArray()) }}</p>
+                                                        @endif
+                                                        <div class="col-md-{{ $team->image ? "8" : "12" }}">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h5 class="card-title">{{ $team->nickname }}</h5>
+                                                                    @if($canEditDetails)
+                                                                        <label class="switch switch-lg">
+                                                                            <input wire:click="toggleTeam({{ $team->id }})" type="checkbox" class="switch-input" @checked(in_array($team->id, $selectedTeamsIds))>
+                                                                            <span class="switch-toggle-slider">
+                                                                                <span class="switch-on">
+                                                                                  <i class="ti ti-check"></i>
+                                                                                </span>
+                                                                                <span class="switch-off">
+                                                                                  <i class="ti ti-x"></i>
+                                                                                </span>
+                                                                            </span>
+                                                                            <span class="switch-label"></span>
+                                                                        </label>
+                                                                    @endif
+                                                                </div>
+                                                                <p class="card-text">
+                                                                    Players: {{ implode(', ', $team->players->pluck('full_name')->toArray()) }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
