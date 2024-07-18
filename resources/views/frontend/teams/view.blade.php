@@ -102,7 +102,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th>Not available yet.</th>
+                                    <td colspan="3">Not available yet.</td>
                                 </tr>
                             @endforelse
                             </tbody>

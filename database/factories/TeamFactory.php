@@ -21,7 +21,7 @@ class TeamFactory extends Factory
         static $rank = 1; // Static variable to keep track of the rank within this factory
 
         return [
-            'nickname' => $this->faker->unique()->word,
+            'nickname' => "Team $rank",
             'level_category_id' => 1,
             'rank' => $rank++, // Increment the rank for each new instance
         ];

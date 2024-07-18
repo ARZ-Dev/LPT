@@ -31,9 +31,9 @@ class PlayerFactory extends Factory
         }
 
         return [
-            'first_name' => $this->faker->firstName,
-            'middle_name' => $this->faker->firstName, // Optional field
-            'last_name' => $this->faker->lastName,
+            'first_name' => "Player",
+            'middle_name' => "",
+            'last_name' => $rank,
             'birthdate' => $this->faker->date('Y-m-d', '2003-01-01'), // Adjust the birthdate range as needed
             'email' => $this->faker->optional()->safeEmail, // Optional field
             'phone_number' => $this->faker->phoneNumber,
