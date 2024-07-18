@@ -21,6 +21,7 @@ class PlayerFactory extends Factory
     {
         static $maleRank = 1;
         static $femaleRank = 1;
+        static $counter = 1;
 
         $gender = $this->faker->randomElement(['male', 'female']);
 
@@ -33,7 +34,7 @@ class PlayerFactory extends Factory
         return [
             'first_name' => "Player",
             'middle_name' => "",
-            'last_name' => $rank,
+            'last_name' => $counter++,
             'birthdate' => $this->faker->date('Y-m-d', '2003-01-01'), // Adjust the birthdate range as needed
             'email' => $this->faker->optional()->safeEmail, // Optional field
             'phone_number' => $this->faker->phoneNumber,

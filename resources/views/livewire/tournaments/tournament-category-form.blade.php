@@ -156,9 +156,9 @@
                                                                         </label>
                                                                     @endif
                                                                 </div>
-                                                                <p class="card-text">
-                                                                    Players: {{ implode(', ', $team->players->pluck('full_name')->toArray()) }}
-                                                                </p>
+                                                                <div class="card-text text-truncate" style="width: 100%;">
+                                                                    {{ implode(', ', $team->players->pluck('short_full_name')->toArray()) }}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
