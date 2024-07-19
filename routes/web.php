@@ -41,9 +41,11 @@ use App\Livewire\Pcash\MonthlyEntryView;
 
 use App\Livewire\Teams\TeamView;
 use App\Livewire\Teams\TeamForm;
+use App\Livewire\Teams\TeamsRanking;
 
 use App\Livewire\Players\PlayerView;
 use App\Livewire\Players\PlayerForm;
+use App\Livewire\Players\PlayersRanking;
 
 use App\Livewire\Tournaments\TournamentView;
 use App\Livewire\Tournaments\TournamentForm;
@@ -212,6 +214,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/create', TeamForm::class)->name('teams.create');
         Route::get('/edit/{id}', TeamForm::class)->name('teams.edit');
         Route::get('/view/{id}/{status}', TeamForm::class)->name('teams.view');
+        Route::get('/rankings', TeamsRanking::class)->name('teams.rankings');
     });
 
     // |--------------------------------------------------------------------------
@@ -223,6 +226,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/create', PlayerForm::class)->name('players.create');
         Route::get('/edit/{id}', PlayerForm::class)->name('players.edit');
         Route::get('/view/{id}/{status}', PlayerForm::class)->name('players.view');
+        Route::get('/rankings', PlayersRanking::class)->name('players.rankings');
     });
 
     // |--------------------------------------------------------------------------

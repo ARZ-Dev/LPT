@@ -2,9 +2,12 @@
     <div class="card">
         <div class="card-header border-bottom d-flex justify-content-between">
             <h4 class="card-title mb-3">Players List</h4>
-            @can('player-create')
-                <a class="btn btn-primary h-50" href="{{ route('players.create') }}">Add Player</a>
-            @endcan
+            <div>
+                <a class="btn btn-primary" href="{{ route('players.rankings') }}">Rankings</a>
+                @can('player-create')
+                    <a class="btn btn-primary" href="{{ route('players.create') }}">Add Player</a>
+                @endcan
+            </div>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-players dataTable table border-top">
