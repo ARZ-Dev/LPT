@@ -90,7 +90,7 @@
                                         @endif
                                     @endif
                                 @else
-                                    @if(($group && $group->court_id) || !$group)
+                                    @if((isset($group) && $group->court_id) || !isset($group))
                                         @can('matches-setDate')
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#dateTime{{$game->id}}" class="btn rounded-pill btn-icon btn-primary waves-effect waves-light btn-sm">
                                                 <span class="ti ti-calendar text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Date/Court"></span>
