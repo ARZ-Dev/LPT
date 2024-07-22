@@ -192,7 +192,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse($matches as $match)
+                        @foreach($matches as $match)
                         <tr>
                             <td class="text-nowrap">{{ $match->type == "Knockouts" ? $match->knockoutRound?->name : $match->group?->name }}</td>
 
@@ -229,13 +229,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6">
-                                No matches available.
-                            </td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
