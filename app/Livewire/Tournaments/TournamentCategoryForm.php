@@ -25,6 +25,7 @@ use App\Rules\EvenNumber;
 use App\Rules\PowerOfTwo;
 use App\Rules\PowerOfTwoArray;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -135,12 +136,14 @@ class TournamentCategoryForm extends Component
     #[On('storeDateTime')]
     public function storeDateTime($matchId)
     {
+        $match = Game::findOrFail($matchId);
+
         $this->validate([
             'matchDate' => ['after_or_equal:' . $this->category->start_date . " 00:00", 'before_or_equal:' . $this->category->end_date . " 23:59"],
-            'scorekeeperId' => ['required']
+            'scorekeeperId' => ['required'],
+            'courtId' => [new RequiredIf($match->type == "Knockouts")]
         ]);
 
-        $match = Game::findOrFail($matchId);
 
         $data = [
             'datetime' => $this->matchDate,
@@ -159,6 +162,7 @@ class TournamentCategoryForm extends Component
         ]);
 
         $this->lastNav = "matches";
+        $this->reset('scorekeeperId', 'courtId');
     }
 
     #[On('storeAbsent')]
