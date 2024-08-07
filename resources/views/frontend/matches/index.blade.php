@@ -129,7 +129,11 @@
                 scoreBoardContainer.empty();
                 scoreBoardContainer.append(scoreBoardHtml);
 
+                console.log("data.matchStatus")
+                console.log(data.matchStatus)
                 if (data.matchStatus === "completed") {
+                    console.log('ttttt')
+                    console.log($('#live-indicator-' + matchId))
                     $('#live-indicator-' + matchId).addClass('d-none');
                 }
             });
