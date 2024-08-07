@@ -17,6 +17,7 @@ class ScoreUpdated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $matchId;
+    public $match;
     public $scoreBoardHtml;
 
     /**
@@ -27,6 +28,7 @@ class ScoreUpdated implements ShouldBroadcast
         $this->matchId = $matchId;
 
         $match = Game::with(['homeTeam', 'awayTeam', 'sets' => ['setGames'], 'setGames'])->find($matchId);
+        $this->match = $match;
         $this->scoreBoardHtml = View::make('frontend.partials.match-score-board', compact('match'))->render();
     }
 

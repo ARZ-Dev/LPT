@@ -22,6 +22,7 @@ use App\Models\TournamentType;
 use App\Models\TournamentTypeSettings;
 use App\Models\User;
 use App\Rules\EvenNumber;
+use App\Rules\OddNumber;
 use App\Rules\PowerOfTwo;
 use App\Rules\PowerOfTwoArray;
 use Illuminate\Support\Facades\DB;
@@ -601,9 +602,10 @@ class TournamentCategoryForm extends Component
 
     public function storeStages()
     {
+        $this->lastNav = "stages";
         $this->validate([
             'stagesDetails.*.tournament_deuce_type_id' => ['required'],
-            'stagesDetails.*.nb_of_sets' => ['required', 'integer'],
+            'stagesDetails.*.nb_of_sets' => ['required', 'integer', new OddNumber()],
             'stagesDetails.*.nb_of_games' => ['required', 'integer'],
             'stagesDetails.*.tie_break' => ['required', 'integer'],
         ]);

@@ -5,7 +5,7 @@
         @php($month = $match->datetime ? \Carbon\Carbon::parse($match->datetime)->format('M Y') : "N/A")
 
         <div class="game-info game-info-classic">
-                <div class="d-lg-none d-sm-block">
+                <div class="d-lg-none d-sm-block" id="live-indicator-{{ $match->id }}">
                     @if($match->is_started && !$match->is_completed)
                         <div class="spinner-grow text-red" role="status">
                             <span class="visually-hidden">Loading...</span>

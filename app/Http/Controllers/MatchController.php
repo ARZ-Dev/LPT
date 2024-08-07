@@ -45,7 +45,11 @@ class MatchController extends Controller
                 $query->whereBetween('datetime', [$date, $date->endOfMonth()]);
             })
             ->with(['homeTeam', 'awayTeam', 'knockoutRound' => ['tournamentLevelCategory' => ['levelCategory', 'tournament']], 'group' => ['tournamentLevelCategory' => ['levelCategory', 'tournament']], 'relatedHomeGame', 'relatedAwayGame', 'sets'])
-            ->orderBy('datetime', 'desc')
+            ->orderByRaw("
+                CASE
+                    WHEN status = 'started' THEN 1
+                    ELSE 0
+                END DESC, datetime DESC")
             ->get();
 
         $matchesHtml = "";

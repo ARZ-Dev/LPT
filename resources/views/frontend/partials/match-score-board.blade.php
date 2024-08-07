@@ -1,4 +1,4 @@
-@if ($match->type == "Knockouts") {
+@if ($match->type == "Knockouts")
     @php($stage = $match->knockoutRound?->knockoutStage)
 @else
     @php($stage = $match->group?->knockoutStage)

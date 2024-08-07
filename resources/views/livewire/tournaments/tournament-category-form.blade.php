@@ -235,7 +235,7 @@
                                                 @error('stagesDetails.' . $stage->id . '.tournament_deuce_type_id') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                             <div class="col-12 col-md-4">
-                                                <label class="form-label" for="stage">Nb of Sets to Win the Match</label>
+                                                <label class="form-label" for="stage">Nb of Sets to Win the Match (Odd Number)</label>
                                                 <input
                                                     wire:model="stagesDetails.{{ $stage->id }}.nb_of_sets"
                                                     type="number"

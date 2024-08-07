@@ -115,7 +115,7 @@
             var matchId = $(this).data('match-id');
 
             // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
+            // Pusher.logToConsole = true;
 
             let scoreBoardContainer = $('#match-score-container-' + matchId)
 
@@ -128,6 +128,10 @@
                 let scoreBoardHtml = data.scoreBoardHtml;
                 scoreBoardContainer.empty();
                 scoreBoardContainer.append(scoreBoardHtml);
+
+                if (data.match?.status === "completed") {
+                    $('#live-indicator-' + matchId).addClass('d-none');
+                }
             });
         })
     });
