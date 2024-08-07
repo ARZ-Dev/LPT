@@ -100,6 +100,7 @@
             {
                 let matchesHtml = data.matchesHtml;
                 matchesDivSelector.append(matchesHtml);
+                addListeners()
             },
             error: function (xhr, textStatus, errorThrown) {
                 ajax_error_display(xhr, textStatus, errorThrown);
@@ -109,8 +110,7 @@
         });
     })
 
-    document.addEventListener("DOMContentLoaded", function() {
-
+    function addListeners() {
         $('.matches').each(function () {
             var matchId = $(this).data('match-id');
 
@@ -134,6 +134,10 @@
                 }
             });
         })
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        addListeners()
     });
 
 </script>
