@@ -129,7 +129,7 @@
                 scoreBoardContainer.empty();
                 scoreBoardContainer.append(scoreBoardHtml);
 
-                if (data.match?.status === "completed") {
+                if (data.matchStatus === "completed") {
                     $('#live-indicator-' + matchId).addClass('d-none');
                 }
             });
