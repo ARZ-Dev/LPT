@@ -23,11 +23,12 @@ use Livewire\Attributes\On;
 class MatchesView extends Component
 {
     public $matches = [];
-    public $match ;
+    public $match;
     public $category;
     public $tournament;
     public $matchDate;
     public $absentTeamId;
+    public $statuses = [];
 
     public function mount()
     {
@@ -37,6 +38,7 @@ class MatchesView extends Component
                 $query->where('scorekeeper_id', auth()->id());
             })
             ->get();
+        $this->statuses = array_unique($this->matches->pluck('status')->toArray());
     }
 
     #[On('storeDateTime')]
