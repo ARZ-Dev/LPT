@@ -36,6 +36,13 @@
                                                 <div class="game-info-score {{ $match->winner_team_id == $match->away_team_id ? "game-result-team-win" : "" }}">{{ $match->sets->where('winner_team_id', $match->away_team_id)->count() }}</div>
                                             </div>
                                             <div class="game-result-divider-wrap"><span class="game-info-team-divider">VS</span></div>
+                                            <div class="mt-4 ive-indicator-{{ $match->id }}">
+                                                @if($match->is_started && !$match->is_completed)
+                                                    <div class="spinner-grow text-red" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="game-info-team game-info-team-second">
                                             <figure>
@@ -46,25 +53,28 @@
                                         </div>
                                     </div>
                                     <!-- Table Game Info-->
-                                    <div class="table-game-info-wrap"><span class="table-game-info-title">Game statistics<span></span></span>
-                                        <div class="table-game-info-main table-custom-responsive">
-                                            <table class="table-custom table-game-info">
-                                                <tbody>
-                                                @forelse($match->sets as $set)
-                                                    <tr>
-                                                        <td class="table-game-info-number">{{ $set->home_team_score }}</td>
-                                                        <td class="table-game-info-category">Set {{ $set->set_number }}</td>
-                                                        <td class="table-game-info-number">{{ $set->away_team_score }}</td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="3" class="text-center">No info available.</td>
-                                                    </tr>
-                                                @endforelse
-                                                </tbody>
-                                            </table>
+                                    @if($match->is_started && $match->is_completed)
+                                        <div class="table-game-info-wrap mt-2">
+                                            <span class="table-game-info-title">Game statistics<span></span></span>
+                                            <div class="table-game-info-main table-custom-responsive">
+                                                <table class="table-custom table-game-info">
+                                                    <tbody>
+                                                    @foreach($match->sets as $set)
+                                                        <tr>
+                                                            <td class="table-game-info-number">{{ $set->home_team_score }}</td>
+                                                            <td class="table-game-info-category">Set {{ $set->set_number }}</td>
+                                                            <td class="table-game-info-number">{{ $set->away_team_score }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @elseif($match->is_started && !$match->is_completed)
+                                        <div class="row d-flex justify-content-center mt-4" id="match-score-container-{{ $match->id }}">
+                                            @include('frontend.partials.match-score-board', ['match' => $match])
+                                        </div>
+                                    @endif
                                 </div>
                             </article>
                         </div>
@@ -201,5 +211,29 @@
 @section('script')
 <script>
 
+    $(document).ready(function () {
+        var matchId = "{{ $match->id }}";
+
+        // Enable pusher logging - don't include this in production
+        // Pusher.logToConsole = true;
+
+        let scoreBoardContainer = $('#match-score-container-' + matchId)
+
+        var pusher = new Pusher('134e03ea8967bdc8deb7', {
+            cluster: 'eu'
+        });
+
+        var channel = pusher.subscribe('match' + matchId);
+        channel.bind('score.updated', function(data) {
+            let scoreBoardHtml = data.scoreBoardHtml;
+            scoreBoardContainer.empty();
+            scoreBoardContainer.append(scoreBoardHtml);
+
+            if (data.matchStatus === "completed") {
+                $('.live-indicator-' + matchId).remove();
+            }
+        });
+
+    })
 </script>
 @endsection
