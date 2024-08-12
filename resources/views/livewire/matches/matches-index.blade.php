@@ -151,7 +151,7 @@
         })
 
         $(document).on('change', '#status', function () {
-        var table = $('.datatables-matches').DataTable(); // Initialize your DataTable if not already initialized
+            var table = $('.datatables-matches').DataTable(); // Initialize your DataTable if not already initialized
             var status = $(this).val(); // Get the selected value from the status dropdown
 
             if (status) {
