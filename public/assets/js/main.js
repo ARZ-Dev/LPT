@@ -438,3 +438,19 @@ function triggerCleave(decimals = 2)
         });
     }
 }
+
+function setOptions(selector, options) {
+    if (options.length > 0) {
+        selector.selectpicker('destroy');
+        selector.empty();
+        Object.entries(options).forEach(([key, value]) => {
+            let text = value.name;
+
+            if (value.name === undefined) {
+                text = `${value.first_name} ${value.last_name}`;
+            }
+            selector.append(`<option value="${value.id}">${text}</option>`)
+        })
+        selector.selectpicker();
+    }
+}

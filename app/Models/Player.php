@@ -24,7 +24,7 @@ class Player extends Model
 
     public function getShortFullNameAttribute()
     {
-        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
+        return "{$this->first_name} {$this->last_name}";
     }
 
     public function currentTeam()

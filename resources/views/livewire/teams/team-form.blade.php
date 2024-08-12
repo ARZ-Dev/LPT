@@ -114,6 +114,17 @@
     @script
     <script>
 
+        $(document).on('change', '#levelCategoryId', function () {
+            $wire.dispatch('getPlayers', {
+                levelCategoryId: $(this).val()
+            });
+        })
+
+        $wire.on('setPlayers', function (event) {
+            let players = event[0];
+            setOptions($('#playersIds'), players);
+        })
+
     </script>
     @endscript
 </div>

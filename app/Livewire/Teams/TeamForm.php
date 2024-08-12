@@ -35,7 +35,6 @@ class TeamForm extends Component
     public function mount($id = 0, $status = 0)
     {
         $this->levelCategories = LevelCategory::all();
-        $this->players = Player::all();
 
         if ($id) {
             if ($status && $status == Constants::VIEW_STATUS) {
@@ -44,10 +43,13 @@ class TeamForm extends Component
                 $this->authorize('team-edit');
             }
 
-            $this->team = Team::with('players')->findOrFail($id);
+            $this->team = Team::with(['players', 'levelCategory'])->findOrFail($id);
             $this->editing = true;
             $this->nickname = $this->team->nickname;
             $this->levelCategoryId = $this->team->level_category_id;
+            $this->players = Player::when($this->team->levelCategory?->gender, function ($query) {
+                $query->where('gender', $this->team->levelCategory?->gender);
+            })->get();
             $this->playersIds = $this->team->players->pluck('id')->toArray();
             $this->oldPlayersIds = $this->playersIds;
             $this->image = $this->team->image;
@@ -64,6 +66,17 @@ class TeamForm extends Component
             'playersIds' => ['array', 'max:2'],
             'image' => ['nullable', 'max:2048'],
         ];
+    }
+
+    #[On('getPlayers')]
+    public function getPlayers($levelCategoryId)
+    {
+        $levelCategory = LevelCategory::find($levelCategoryId);
+        $this->players = Player::when($levelCategory->gender, function ($query) use ($levelCategory) {
+            $query->where('gender', $levelCategory->gender);
+        })->get();
+
+        $this->dispatch('setPlayers', $this->players);
     }
 
     public function store()

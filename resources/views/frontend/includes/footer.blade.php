@@ -3,7 +3,7 @@
     <div class="footer-corporate-main">
         <div class="container">
             <div class="row row-50 justify-content-center justify-content-md-between">
-                <div class="col-md-5"><a class="brand" href="../landing"><img class="brand-logo " src="{{ asset('assets/frontend/images/tennis/logo-default-144x126.png') }}" alt="" width="144" height="126"/></a>
+                <div class="col-md-5"><a class="brand" href="{{ route('home') }}"><img class="brand-logo " src="{{ asset('assets/frontend/images/tennis/logo-default-144x126.png') }}" alt="" width="144" height="126"/></a>
                     <p class="lh-15 ls-normal">Tennis Blastship connects everyone passionate about tennis. Established in 2005, our website has been providing the best news and updates for tennis fans. From recent tennis matches to event announcements, we cover everything you may want to know about.</p>
                     <ul class="list-sm mt-4">
                         <li>
