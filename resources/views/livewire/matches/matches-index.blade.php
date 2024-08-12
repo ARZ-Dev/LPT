@@ -9,6 +9,7 @@
                 <div class="col-lg-3 col-sm-12">
                     <label class="form-label" for="status">Filter by Status:</label>
                     <select class="form-select selectpicker w-100" id="status" title="Filter by status" data-style="btn-default" data-live-search="true" data-icon-base="ti" data-tick-icon="ti-check text-white" required>
+                        <option value="">All</option>
                         @foreach($statuses as $status)
                             <option value="{{ $status }}">{{ ucfirst($status) }}</option>
                         @endforeach
@@ -160,7 +161,7 @@
                     .draw();
             } else {
                 // Clear the filter if no status is selected
-                table.column(3).search('').draw();
+                table.column(9).search('').draw();
             }
         });
 
