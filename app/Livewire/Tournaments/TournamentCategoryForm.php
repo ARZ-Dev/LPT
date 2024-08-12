@@ -163,7 +163,7 @@ class TournamentCategoryForm extends Component
         ]);
 
         $this->lastNav = "matches";
-        $this->reset('scorekeeperId', 'courtId');
+        $this->reset('scorekeeperId', 'courtId', 'matchDate');
     }
 
     #[On('storeAbsent')]
