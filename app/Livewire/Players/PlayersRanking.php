@@ -12,8 +12,8 @@ class PlayersRanking extends Component
 
     public function mount()
     {
-        $this->menPlayers = Player::where('gender', 'male')->get();
-        $this->womenPlayers = Player::where('gender', 'female')->get();
+        $this->menPlayers = Player::where('gender', 'male')->orderBy('rank')->get();
+        $this->womenPlayers = Player::where('gender', 'female')->orderBy('rank')->get();
     }
 
     public function render()

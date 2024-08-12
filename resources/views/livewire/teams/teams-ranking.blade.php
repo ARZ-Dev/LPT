@@ -24,7 +24,7 @@
                                             <td class="text-center">{{ $team->rank }}</td>
                                             <td class="text-center">{{ $team->nickname }}</td>
                                             <td class="text-center">{{ $team->matches }}/{{ $team->wins }}/{{ $team->losses }}</td>
-                                            <td class="text-center">{{ $team->points }}</td>
+                                            <td class="text-center">{{ number_format($team->points) }}</td>
                                         </tr>
                                     @empty
                                         <tr>

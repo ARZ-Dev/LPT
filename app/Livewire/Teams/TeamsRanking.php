@@ -11,7 +11,9 @@ class TeamsRanking extends Component
 
     public function mount()
     {
-        $this->categories = LevelCategory::with('teams')->get();
+        $this->categories = LevelCategory::with(['teams' => function ($query) {
+            $query->orderBy('rank');
+        }])->get();
     }
 
     public function render()

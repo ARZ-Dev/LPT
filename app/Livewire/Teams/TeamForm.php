@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Teams;
 
+use App\Livewire\Matches\MatchesView;
 use App\Models\LevelCategory;
 use App\Models\Player;
 use App\Models\Team;
@@ -117,6 +118,9 @@ class TeamForm extends Component
             $data['image'] = $this->image->storePublicly(path: 'public/teams/images');
         }
 
+        $oldCategoryId = $this->team->level_category_id;
+        $shouldRefreshRanks = $this->team->level_category_id != $this->levelCategoryId;
+
         $this->team->update($data);
 
         Player::whereIn('id', $this->oldPlayersIds)->update([
@@ -136,6 +140,11 @@ class TeamForm extends Component
         }
 
         $this->team->players()->sync($playersData);
+
+        if ($shouldRefreshRanks) {
+            MatchesView::updateTeamsRank($oldCategoryId);
+            MatchesView::updateTeamsRank($this->levelCategoryId);
+        }
 
         return to_route('teams')->with('success', 'Team has been updated successfully!');
     }

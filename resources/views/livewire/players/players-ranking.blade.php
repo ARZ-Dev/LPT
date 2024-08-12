@@ -23,7 +23,7 @@
                                         <td class="text-center">{{ $menPlayer->rank }}</td>
                                         <td class="text-center">{{ $menPlayer->full_name }}</td>
                                         <td class="text-center">{{ $menPlayer->matches }}/{{ $menPlayer->wins }}/{{ $menPlayer->losses }}</td>
-                                        <td class="text-center">{{ $menPlayer->points }}</td>
+                                        <td class="text-center">{{ number_format($menPlayer->points) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -60,7 +60,7 @@
                                         <td class="text-center">{{ $womenPlayer->rank }}</td>
                                         <td class="text-center">{{ $womenPlayer->full_name }}</td>
                                         <td class="text-center">{{ $womenPlayer->matches }}/{{ $womenPlayer->wins }}/{{ $womenPlayer->losses }}</td>
-                                        <td class="text-center">{{ $womenPlayer->points }}</td>
+                                        <td class="text-center">{{ number_format($womenPlayer->points) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
