@@ -21,8 +21,6 @@ class UserView extends Component
         }
 
         $user = User::findOrFail($id);
-        $user->till()->delete();
-        $user->receipt()->delete();
         $user->delete();
 
         return to_route('users')->with('success', 'User has been deleted successfully!');

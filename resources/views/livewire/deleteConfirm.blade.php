@@ -8,8 +8,8 @@ $(document).on('click', '.delete-button', function () {
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         customClass: {
-            confirmButton: 'btn btn-info me-3',
-            cancelButton: 'btn btn-label-secondary'
+            confirmButton: 'btn btn-default me-3',
+            cancelButton: 'btn btn-secondary'
         },
         buttonsStyling: false
     })

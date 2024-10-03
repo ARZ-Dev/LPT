@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('tills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

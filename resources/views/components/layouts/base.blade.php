@@ -24,7 +24,7 @@
     <title>LPT - {{ $title }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{url('/assets/images/favicon.ico')}}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.png') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
