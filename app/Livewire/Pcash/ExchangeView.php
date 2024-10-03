@@ -36,13 +36,13 @@ class ExchangeView extends Component
 
         if ($fromTillAmount) {
             $fromTillAmount->update([
-                'amount' => $fromTillAmount->amount - $exchange->amount,
+                'amount' => $fromTillAmount->amount + $exchange->amount,
             ]);
         }
 
         if ($toTillAmount) {
             $toTillAmount->update([
-                'amount' => $toTillAmount->amount + $exchange->result,
+                'amount' => $toTillAmount->amount - $exchange->result,
             ]);
         }
 
