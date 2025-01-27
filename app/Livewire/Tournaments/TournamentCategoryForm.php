@@ -132,6 +132,16 @@ class TournamentCategoryForm extends Component
             }
         }
 
+        $this->setDate();
+    }
+
+    public function setDate()
+    {
+        if (now()->gt($this->category->start_date) && now()->lt($this->category->end_date)) {
+            $this->matchDate = now();
+        } else {
+            $this->matchDate = $this->category->start_date . " " . now()->format('H:i');
+        }
     }
 
     #[On('storeDateTime')]
@@ -163,11 +173,31 @@ class TournamentCategoryForm extends Component
         ]);
 
         $this->lastNav = "matches";
-        $this->reset('scorekeeperId', 'courtId', 'matchDate');
+        $this->reset('scorekeeperId', 'courtId');
+        $this->setDate();
     }
 
     #[On('storeAbsent')]
     public function storeAbsent($matchId)
+    {
+        $this->validate([
+            'absentTeamId' => ['required'],
+        ]);
+
+        $this->dispatch('swal:confirm', [
+            'title' => 'Are you sure?',
+            'text'  => "Action cannot be reverted!",
+            'method' => 'confirmStoreAbsent',
+            'id' => $matchId,
+            'buttonText' => 'Yes, Confirm',
+            'type' => 'warning',
+        ]);
+
+        $this->lastNav = "matches";
+    }
+
+    #[On('confirmStoreAbsent')]
+    public function confirmStoreAbsent($matchId)
     {
         $this->validate([
             'absentTeamId' => ['required'],

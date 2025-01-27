@@ -513,6 +513,28 @@
 
         })
 
+        window.addEventListener('swal:confirm', event => {
+            Swal.fire({
+                title: event.detail[0].title,
+                text: event.detail[0].text,
+                icon: event.detail[0].type,
+                showCancelButton: true,
+                confirmButtonText: event.detail[0].buttonText ?? 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $wire.dispatch(event.detail[0].method, {
+                            matchId: event.detail[0].id
+                        });
+                    }
+                });
+        });
+
     </script>
     @endscript
 </div>
