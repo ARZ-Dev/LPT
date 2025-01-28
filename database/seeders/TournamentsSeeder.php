@@ -17,11 +17,8 @@ class TournamentsSeeder extends Seeder
                 'start_date' => '2024-04-10',
                 'end_date' => '2024-04-17',
                 'is_completed' => false,
+                'is_free' => true,
             ],
-           
-            
-            
-            
         ];
 
         foreach ($TournamentsData  as $TournamentData ) {

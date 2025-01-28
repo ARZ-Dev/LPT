@@ -163,25 +163,25 @@
 
 
 
-        window.addEventListener('swal:confirm', event => {
-            Swal.fire({
-                title: event.detail[0].title,
-                text: event.detail[0].text,
-                icon: event.detail[0].type,
-                showCancelButton: true,
-                confirmButtonText: event.detail[0].buttonText ?? 'Yes, delete it!',
-                customClass: {
-                    confirmButton: 'btn btn-primary me-3',
-                    cancelButton: 'btn btn-label-secondary'
-                },
-                buttonsStyling: false
-            })
-            .then((willDelete) => {
-                if (willDelete.isConfirmed) {
-                    window.livewire.emit(event.detail[0].method, event.detail[0].id);
-                }
-            });
-        });
+        // window.addEventListener('swal:confirm', event => {
+        //     Swal.fire({
+        //         title: event.detail[0].title,
+        //         text: event.detail[0].text,
+        //         icon: event.detail[0].type,
+        //         showCancelButton: true,
+        //         confirmButtonText: event.detail[0].buttonText ?? 'Yes, delete it!',
+        //         customClass: {
+        //             confirmButton: 'btn btn-primary me-3',
+        //             cancelButton: 'btn btn-label-secondary'
+        //         },
+        //         buttonsStyling: false
+        //     })
+        //     .then((willDelete) => {
+        //         if (willDelete.isConfirmed) {
+        //             window.livewire.emit(event.detail[0].method, event.detail[0].id);
+        //         }
+        //     });
+        // });
 
         window.addEventListener('swal:success', event => {
             Swal.fire({

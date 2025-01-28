@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Tournaments;
 
+use App\Models\Court;
 use App\Models\Currency;
 use App\Models\LevelCategory;
+use App\Models\SportCenter;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\TournamentLevelCategory;
@@ -14,12 +16,17 @@ use App\Utils\Constants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class TournamentForm extends Component
 {
     public bool $editing = false;
     public $levelCategories = [];
+    public $sportCenters = [];
+    public $courts = [];
+    public $sportCenterId;
+    public $courtsIds = [];
     public $status;
 
     public $tournament = null;
@@ -46,6 +53,7 @@ class TournamentForm extends Component
         $this->status = $status;
         $this->currencies = Currency::all();
         $this->defaultCurrency = Currency::where('is_default', true)->first();
+        $this->sportCenters = SportCenter::with('courts')->get();
 
         if ($id) {
 
@@ -65,6 +73,9 @@ class TournamentForm extends Component
             $this->is_free = $this->tournament->is_free;
             $levelCategories = $this->tournament->levelCategories;
             $this->selectedCategoriesIds = $levelCategories->pluck('level_category_id')->toArray();
+            $this->sportCenterId = $this->tournament->sport_center_id;
+            $this->courts = Court::where('sport_center_id', $this->sportCenterId)->get();
+            $this->courtsIds = json_decode($this->tournament->courts_ids ?? "[]");
 
             foreach ($levelCategories as $levelCategory) {
                 $this->subscriptionFees[$levelCategory->level_category_id][$this->defaultCurrency->id] = $levelCategory->subscription_fee;
@@ -89,6 +100,13 @@ class TournamentForm extends Component
         }
     }
 
+    #[On('getCourts')]
+    public function getCourts($sportCenterId)
+    {
+        $this->courts = $this->sportCenters->where('id', $sportCenterId)->first()?->courts;
+        $this->dispatch('setCourts', $this->courts);
+    }
+
     public function rules()
     {
         $data = [
@@ -96,6 +114,8 @@ class TournamentForm extends Component
             'selectedCategoriesIds' => ['required', 'array', 'min:1'],
             'startDate' => ['required', 'date', $this->editing ? '' : 'after_or_equal:today'],
             'endDate' => ['required', 'date', 'after_or_equal:startDate'],
+            'sportCenterId' => ['required'],
+            'courtsIds' => ['required', 'array', 'min:1']
         ];
 
         if (!$this->is_free && auth()->user()->hasPermissionTo('tournament-setSubscriptionFees')) {
@@ -123,6 +143,8 @@ class TournamentForm extends Component
             'start_date' => $this->startDate,
             'end_date' => $this->endDate,
             'is_free' => $this->is_free,
+            'sport_center_id' => $this->sportCenterId,
+            'courts_ids' => json_encode($this->courtsIds),
         ]);
 
         foreach ($this->selectedCategoriesIds as $categoryId) {
@@ -149,6 +171,8 @@ class TournamentForm extends Component
                 'start_date' => $this->startDate,
                 'end_date' => $this->endDate,
                 'is_free' => $this->is_free,
+                'sport_center_id' => $this->sportCenterId,
+                'courts_ids' => json_encode($this->courtsIds),
             ]);
 
             $categoriesIds = [];

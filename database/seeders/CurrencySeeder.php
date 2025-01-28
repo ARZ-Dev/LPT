@@ -15,18 +15,21 @@ class CurrencySeeder extends Seeder
                 'user_id'=> 2,
                 'name' => 'USD',
                 'symbol' => '$',
+                'is_default' => 1,
                 'list_order' => '2',
             ],
             [
                 'user_id'=> 3,
                 'name' => 'Euro',
                 'symbol' => '€',
+                'is_default' => 0,
                 'list_order' => '1',
             ],
             [
                 'user_id'=> 1,
                 'name' => 'LBP',
                 'symbol' => 'L£',
+                'is_default' => 0,
                 'list_order' => '3',
             ],
         ];

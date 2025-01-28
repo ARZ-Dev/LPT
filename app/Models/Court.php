@@ -11,18 +11,8 @@ class Court extends Model
 
     protected $guarded = [];
 
-    public function country()
+    public function sportCenter()
     {
-        return $this->belongsTo(Country::class);
-    }
-
-    public function governorate()
-    {
-        return $this->belongsTo(Governorate::class);
-    }
-
-    public function city()
-    {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(SportCenter::class);
     }
 }

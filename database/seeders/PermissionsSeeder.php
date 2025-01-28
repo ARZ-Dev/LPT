@@ -126,11 +126,11 @@ class PermissionsSeeder extends Seeder
             'tournamentType-list',
             'tournamentType-edit',
 
-            'court-list',
-            'court-create',
-            'court-edit',
-            'court-view',
-            'court-delete',
+            'sportCenter-list',
+            'sportCenter-create',
+            'sportCenter-edit',
+            'sportCenter-view',
+            'sportCenter-delete',
         ];
 
         $permissionsIds = [];

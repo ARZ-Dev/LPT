@@ -1,26 +1,28 @@
 <?php
 
-namespace App\Livewire\Courts;
+namespace App\Livewire\SportCenters;
 
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Court;
 use App\Models\Governorate;
+use App\Models\SportCenter;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class CourtForm extends Component
+class SportCenterForm extends Component
 {
     public bool $editing = false;
     public $countries = [];
     public $governorates = [];
     public $cities = [];
     public $status;
-    public $court;
+    public $sportCenter;
     public $name;
     public $countryId;
     public $governorateId;
     public $cityId;
+    public $courts = [];
 
     public function mount($id = 0, $status = 0)
     {
@@ -28,13 +30,22 @@ class CourtForm extends Component
 
         if ($id) {
             $this->editing = true;
-            $this->court = Court::findOrFail($id);
-            $this->name = $this->court->name;
-            $this->countryId = $this->court->country_id;
-            $this->governorateId = $this->court->governorate_id;
-            $this->cityId = $this->court->city_id;
+            $this->sportCenter = SportCenter::with(['courts'])->findOrFail($id);
+            $this->name = $this->sportCenter->name;
+            $this->countryId = $this->sportCenter->country_id;
+            $this->governorateId = $this->sportCenter->governorate_id;
+            $this->cityId = $this->sportCenter->city_id;
             $this->getGovernorates();
             $this->getCities();
+
+            if (count($this->sportCenter->courts)) {
+                foreach ($this->sportCenter->courts as $court) {
+                    $this->courts[] = [
+                        'id' => $court->id,
+                        'name' => $court->name,
+                    ];
+                }
+            }
         }
     }
 
@@ -45,6 +56,7 @@ class CourtForm extends Component
             'countryId' => ['required'],
             'governorateId' => ['required'],
             'cityId' => ['required'],
+            'courts.*.name' => ['required', 'max:255']
         ];
     }
 
@@ -60,12 +72,36 @@ class CourtForm extends Component
         ];
 
         if ($this->editing) {
-            $this->court->update($data);
+            $this->sportCenter->update($data);
         } else {
-            Court::create($data);
+            $this->sportCenter = SportCenter::create($data);
         }
 
-        return to_route('courts')->with('success', 'Court has been saved successfully!');
+        $courtsIds = [];
+        foreach ($this->courts as $court) {
+            $createdCourt = $this->sportCenter->courts()->updateOrCreate([
+                'id' => $court['id'] ?? 0,
+            ],[
+                'name' => $court['name']
+            ]);
+            $courtsIds[] = $createdCourt->id;
+        }
+        $this->sportCenter->courts()->whereNotIn('id', $courtsIds)->delete();
+
+        return to_route('sport-centers')->with('success', 'Sport center has been saved successfully!');
+    }
+
+    public function addCourt()
+    {
+        $this->courts[] = [
+            'name' => ''
+        ];
+    }
+
+    public function removeCourt($index)
+    {
+        unset($this->courts[$index]);
+        $this->courts = array_values($this->courts);
     }
 
     #[On('getGovernorates')]
@@ -73,8 +109,8 @@ class CourtForm extends Component
     {
         $this->governorates = Governorate::where('country_id', $this->countryId)->get();
         $selectedGovernorateId = null;
-        if ($this->court) {
-            $selectedGovernorateId = $this->court?->governorate_id;
+        if ($this->sportCenter) {
+            $selectedGovernorateId = $this->sportCenter?->governorate_id;
         } else {
             if (count($this->governorates) == 1) {
                 $selectedGovernorateId = $this->governorates[0]->id;
@@ -89,8 +125,8 @@ class CourtForm extends Component
     {
         $this->cities = City::where('governorate_id', $this->governorateId)->get();
         $selectedCityId = null;
-        if ($this->court) {
-            $selectedCityId = $this->court?->city_id;
+        if ($this->sportCenter) {
+            $selectedCityId = $this->sportCenter?->city_id;
         } else {
             if (count($this->cities) == 1) {
                 $selectedCityId = $this->cities[0]->id;
@@ -102,6 +138,6 @@ class CourtForm extends Component
 
     public function render()
     {
-        return view('livewire.courts.court-form');
+        return view('livewire.sport-centers.sport-center-form');
     }
 }

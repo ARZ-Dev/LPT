@@ -69,8 +69,8 @@ use App\Livewire\HeroSection\HeroSectionForm;
 use App\Livewire\Blogs\BlogIndex;
 use App\Livewire\Blogs\BlogForm;
 
-use App\Livewire\Courts\CourtIndex;
-use App\Livewire\Courts\CourtForm;
+use App\Livewire\SportCenters\SportCenterIndex;
+use App\Livewire\SportCenters\SportCenterForm;
 
 use App\Livewire\GroupStages\GroupStageRanking;
 
@@ -290,10 +290,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     // | Courts
     // |--------------------------------------------------------------------------
 
-    Route::group(['prefix' => 'courts'], function() {
-        Route::get('/', CourtIndex::class)->name('courts');
-        Route::get('/create', CourtForm::class)->name('courts.create');
-        Route::get('/edit/{id}/{status?}', CourtForm::class)->name('courts.edit');
+    Route::group(['prefix' => 'sport-centers'], function() {
+        Route::get('/', SportCenterIndex::class)->name('sport-centers');
+        Route::get('/create', SportCenterForm::class)->name('sport-centers.create');
+        Route::get('/edit/{id}/{status?}', SportCenterForm::class)->name('sport-centers.edit');
     });
 
 });
