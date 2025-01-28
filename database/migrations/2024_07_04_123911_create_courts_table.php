@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('courts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sport_center_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->foreignId('country_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

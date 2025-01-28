@@ -80,7 +80,8 @@ class TournamentCategoryForm extends Component
         }
 
         $this->deuceTypes = TournamentDeuceType::all();
-        $this->courts = Court::all();
+        $courtsIds = json_decode($this->tournament->courts_ids ?? "[]");
+        $this->courts = Court::whereIn('id', $courtsIds)->get();
 
         foreach ($this->category->knockoutStages as $knockoutStage) {
             $this->stagesDetails[$knockoutStage->id] = [

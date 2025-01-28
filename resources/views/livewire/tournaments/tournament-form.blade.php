@@ -13,7 +13,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-12 col-md-6">
+                            <div class="col-sm-12 col-lg-6">
                                 <label class="form-label" for="name">Name *</label>
                                 <input
                                     wire:model="name"
@@ -25,7 +25,7 @@
                                 />
                                 @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-sm-12 col-lg-6">
                                 <label class="form-label" for="selectedCategoriesIds">Level Categories *</label>
                                 <div wire:ignore>
                                     <select
@@ -45,18 +45,58 @@
                                 </div>
                                 @error('selectedCategoriesIds') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-12 col-sm-6">
+                            <div class="col-sm-12 col-lg-6">
                                 <label class="form-label">Start Date *</label>
                                 <input wire:model="startDate" value="{{ $startDate }}" type="text" class="form-control flatpickr-date" placeholder="YYYY-MM-DD">
                                 @error('startDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col-12 col-sm-6">
+                            <div class="col-sm-12 col-lg-6">
                                 <label class="form-label">End Date *</label>
                                 <input wire:model="endDate" value="{{ $endDate }}" type="text" class="form-control flatpickr-date" placeholder="YYYY-MM-DD">
                                 @error('endDate') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
+                            <div class="col-sm-12 col-lg-6">
+                                <label class="form-label" for="sportCenterId">Sport Center *</label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model.live="sportCenterId"
+                                        id="sportCenterId"
+                                        class="selectpicker w-100 @error('sportCenterId') invalid-validation-select @enderror"
+                                        title="Select Sport Center"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-size="5"
+                                        data-tick-icon="ti-check text-white" required>
+                                        @foreach($sportCenters as $sportCenter)
+                                            <option value="{{ $sportCenter->id }}" @selected($sportCenterId == $sportCenter->id)>{{ $sportCenter->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('sportCenterId') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-sm-12 col-lg-6">
+                                <label class="form-label" for="courtsIds">Courts *</label>
+                                <div wire:ignore>
+                                    <select
+                                        wire:model.live="courtsIds"
+                                        id="courtsIds"
+                                        class="selectpicker w-100 @error('courtsIds') invalid-validation-select @enderror"
+                                        title="Select Courts"
+                                        data-style="btn-default"
+                                        data-live-search="true"
+                                        data-icon-base="ti"
+                                        data-size="5"
+                                        data-tick-icon="ti-check text-white" required multiple>
+                                        @foreach($courts as $court)
+                                            <option value="{{ $court->id }}" @selected(in_array($court->id, $courtsIds))>{{ $court->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('courtsIds') <div class="text-danger">{{ $message }}</div> @enderror
+                            </div>
                             @can('tournament-setSubscriptionFees')
-                            <div class="col-12 col-sm-12 mt-3">
+                            <div class="col-sm-12 col-sm-12 mt-3">
                                 <label class="switch switch-primary">
                                     <input wire:model.live="is_free" @checked($is_free ?? false) type="checkbox" class="switch-input" />
                                     <span class="switch-toggle-slider">
@@ -130,6 +170,18 @@
 
         $(document).on('change', '.selectpicker', function() {
             @this.set($(this).attr('wire:model'), $(this).val())
+        })
+
+        $(document).on('change', '#sportCenterId', function() {
+            $wire.dispatch('getCourts', {
+                sportCenterId: $(this).val()
+            })
+        })
+
+        $wire.on('setCourts', function (event) {
+            let courts = event[0];
+            let courtsSelector = $('#courtsIds');
+            setOptions(courtsSelector, courts)
         })
 
     </script>

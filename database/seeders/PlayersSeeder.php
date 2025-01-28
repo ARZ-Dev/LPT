@@ -23,6 +23,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 3,
                 'nickname' => 'sharky do do do',
                 'playing_side' => 'right',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 2,
@@ -36,6 +37,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 5,
                 'nickname' => 'Thunderfoot',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 3,
@@ -49,6 +51,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 7,
                 'nickname' => 'Dynamo',
                 'playing_side' => 'right',
+                'gender' => 'female',
             ],
             [
                 'current_team_id' => 4,
@@ -62,6 +65,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 9,
                 'nickname' => 'Blitz',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 5,
@@ -75,6 +79,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 11,
                 'nickname' => 'Phoenix',
                 'playing_side' => 'right',
+                'gender' => 'female',
             ],
             [
                 'current_team_id' => 6,
@@ -88,6 +93,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 13,
                 'nickname' => 'Raptor',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 7,
@@ -101,6 +107,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 15,
                 'nickname' => 'Blaze',
                 'playing_side' => 'right',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 8,
@@ -114,6 +121,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 17,
                 'nickname' => 'Striker',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 9,
@@ -127,6 +135,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 19,
                 'nickname' => 'Tornado',
                 'playing_side' => 'right',
+                'gender' => 'female',
             ],
             [
                 'current_team_id' => 10,
@@ -140,6 +149,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 21,
                 'nickname' => 'Whirlwind',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 1,
@@ -153,6 +163,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 23,
                 'nickname' => 'Cyclone',
                 'playing_side' => 'right',
+                'gender' => 'female',
             ],
             [
                 'current_team_id' => 2,
@@ -166,6 +177,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 25,
                 'nickname' => 'Typhoon',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 3,
@@ -179,6 +191,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 27,
                 'nickname' => 'Storm',
                 'playing_side' => 'right',
+                'gender' => 'female',
             ],
             [
                 'current_team_id' => 4,
@@ -192,6 +205,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 29,
                 'nickname' => 'Thunder',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 5,
@@ -205,6 +219,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 31,
                 'nickname' => 'Hurricane',
                 'playing_side' => 'right',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 6,
@@ -218,6 +233,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 33,
                 'nickname' => 'Tempest',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 7,
@@ -231,6 +247,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 35,
                 'nickname' => 'Gale',
                 'playing_side' => 'right',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 8,
@@ -244,6 +261,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 37,
                 'nickname' => 'Whirlpool',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 9,
@@ -257,6 +275,7 @@ class PlayersSeeder extends Seeder
                 'country_id' => 39,
                 'nickname' => 'Tsunami',
                 'playing_side' => 'right',
+                'gender' => 'male',
             ],
             [
                 'current_team_id' => 10,
@@ -270,10 +289,11 @@ class PlayersSeeder extends Seeder
                 'country_id' => 41,
                 'nickname' => 'Cyclone',
                 'playing_side' => 'left',
+                'gender' => 'male',
             ],
-            
-            
-            
+
+
+
         ];
 
         foreach ($playersData  as $playerData ) {

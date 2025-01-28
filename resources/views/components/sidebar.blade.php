@@ -126,11 +126,11 @@
         </li>
         @endcan
 
-        @can('court-list')
-        <li class="menu-item {{ request()->is('admin/courts*') ? "active" : "" }}">
-            <a href="{{ route('courts') }}" class="menu-link">
+        @can('sportCenter-list')
+        <li class="menu-item {{ request()->is('admin/sport-centers*') ? "active" : "" }}">
+            <a href="{{ route('sport-centers') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-globe"></i>
-                <div data-i18n="Courts">Courts</div>
+                <div data-i18n="Sport Centers">Sport Centers</div>
             </a>
         </li>
         @endcan
