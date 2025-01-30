@@ -75,13 +75,13 @@ class TournamentCategoryForm extends Component
             if ($group->court_id) {
                 $court = $group->court;
                 $this->courtsIds[$group->id] = $group->court_id;
-                $this->courtsDetails[$group->id] = $court->country?->name . " / " . $court->governorate?->name . " / " . $court->city?->name;
+                $this->courtsDetails[$group->id] = $court->sportCenter?->country?->name . " / " . $court->sportCenter?->governorate?->name . " / " . $court->sportCenter?->city?->name;
             }
         }
 
         $this->deuceTypes = TournamentDeuceType::all();
         $courtsIds = json_decode($this->tournament->courts_ids ?? "[]");
-        $this->courts = Court::whereIn('id', $courtsIds)->get();
+        $this->courts = Court::whereIn('id', $courtsIds)->with('sportCenter')->get();
 
         foreach ($this->category->knockoutStages as $knockoutStage) {
             $this->stagesDetails[$knockoutStage->id] = [
@@ -139,7 +139,7 @@ class TournamentCategoryForm extends Component
     public function setDate()
     {
         if (now()->gt($this->category->start_date) && now()->lt($this->category->end_date)) {
-            $this->matchDate = now();
+            $this->matchDate = now()->format('Y-m-d H:i');
         } else {
             $this->matchDate = $this->category->start_date . " " . now()->format('H:i');
         }
@@ -660,7 +660,7 @@ class TournamentCategoryForm extends Component
     public function getCourtDetails($groupId, $courtId)
     {
         $court = $this->courts->where('id', $courtId)->first();
-        $this->courtsDetails[$groupId] = $court->country?->name . " / " . $court->governorate?->name . " / " . $court->city?->name;
+        $this->courtsDetails[$groupId] = $court->sportCenter?->country?->name . " / " . $court->sportCenter?->governorate?->name . " / " . $court->sportCenter?->city?->name;
         $this->lastNav = "matches";
     }
 
