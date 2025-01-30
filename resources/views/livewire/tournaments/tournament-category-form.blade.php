@@ -291,137 +291,160 @@
 
                     </div>
                     <div class="tab-pane fade {{ $lastNav == "matches" ? "show active" : "" }}" id="navs-pills-justified-matches" role="tabpanel">
-                        @foreach($category->knockoutStages as $stage)
-                            @if($stage->name == "Group Stages")
-                                @php($showSubmitButton = false)
-                                @foreach($category->groups as $group)
-                                    <div class="card mt-4 mb-4 bg-light">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <h5 class="mb-0">{{ $group->name }}</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row d-flex align-items-stretch">
-                                                <div class="col-lg-6 col-sm-12 d-flex">
-                                                    <div class="card m-2 flex-fill d-flex flex-column">
-                                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                                            <h5 class="mb-0">Rankings</h5>
-                                                        </div>
-                                                        <div class="card-body flex-fill">
-                                                            <div class="col-12">
-                                                                <div class="table-responsive">
-                                                                    <table class="dt-row-grouping table border table-bordered">
-                                                                        <thead>
-                                                                        <tr>
-                                                                            <th class="text-center">Rank</th>
-                                                                            <th class="text-center">Team</th>
-                                                                            <th class="text-center">P/W/L</th>
-                                                                            <th class="text-center">Score</th>
-                                                                            <th class="text-center">Action</th>
-                                                                        </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                        @foreach($group->groupTeams as $groupTeam)
-                                                                            @php($rowBg = "")
-                                                                            @if($groupTeam->has_qualified)
-                                                                                @php($rowBg = "bg-label-success")
-                                                                            @elseif($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
-                                                                                @php($rowBg = "bg-label-warning")
-                                                                            @endif
-                                                                            <tr class="{{ $rowBg }}">
-                                                                                <td class="text-center">{{ $groupTeam->rank }}</td>
-                                                                                <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
-                                                                                <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>
-                                                                                <td class="text-center">{{ $groupTeam->score }}</td>
-                                                                                <td class="text-center">
-                                                                                    @if($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
-                                                                                        @php($showSubmitButton = true)
-                                                                                        <input wire:click="toggleQualifiedTeams({{ $group->id }}, {{ $groupTeam->team_id }})" type="checkbox" name="qualified-team-{{ $group->id }}" class="form-check-input">
+                        <div class="accordion mt-3" id="accordionWithIcon">
+                            @foreach($category->knockoutStages as $key => $stage)
+                                @if($stage->name == "Group Stages")
+                                    @php($showSubmitButton = false)
+                                    @foreach($category->groups as $group)
+                                        <div class="card mt-2 bg-light accordion-item {{ $group->is_completed ? "" : "active" }}">
+                                            <h2 class="accordion-header d-flex align-items-center">
+                                                <button
+                                                    type="button"
+                                                    class="accordion-button bg-light {{ $group->is_completed ? "collapsed" : "" }}"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#accordionWithIcon-group{{ $group->id }}"
+                                                        aria-expanded="{{ $group->is_completed ? "false" : "true" }}">
+                                                    <i class="ti ti-{{ $group->is_completed ? "check" : "loader" }} ti-xs me-2"></i>
+                                                    {{ $group->name }}
+                                                </button>
+                                            </h2>
+
+                                            <div id="accordionWithIcon-group{{ $group->id }}" class="accordion-collapse collapse {{ $group->is_completed ? "" : "show" }}">
+                                                <div class="accordion-body">
+                                                    <div class="row d-flex align-items-stretch">
+                                                        <div class="col-lg-6 col-sm-12 d-flex">
+                                                            <div class="card m-2 flex-fill d-flex flex-column">
+                                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                                    <h5 class="mb-0">Rankings</h5>
+                                                                </div>
+                                                                <div class="card-body flex-fill">
+                                                                    <div class="col-12">
+                                                                        <div class="table-responsive">
+                                                                            <table class="dt-row-grouping table border table-bordered">
+                                                                                <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">Rank</th>
+                                                                                    <th class="text-center">Team</th>
+                                                                                    <th class="text-center">P/W/L</th>
+                                                                                    <th class="text-center">Score</th>
+                                                                                    <th class="text-center">Action</th>
+                                                                                </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                @foreach($group->groupTeams as $groupTeam)
+                                                                                    @php($rowBg = "")
+                                                                                    @if($groupTeam->has_qualified)
+                                                                                        @php($rowBg = "bg-label-success")
+                                                                                    @elseif($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
+                                                                                        @php($rowBg = "bg-label-warning")
                                                                                     @endif
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endforeach
-                                                                        </tbody>
-                                                                    </table>
+                                                                                    <tr class="{{ $rowBg }}">
+                                                                                        <td class="text-center">{{ $groupTeam->rank }}</td>
+                                                                                        <td class="text-center">{{ $groupTeam->team?->nickname }}</td>
+                                                                                        <td class="text-center">{{ $groupTeam->matches_played }}/{{ $groupTeam->wins }}/{{ $groupTeam->losses }}</td>
+                                                                                        <td class="text-center">{{ $groupTeam->score }}</td>
+                                                                                        <td class="text-center">
+                                                                                            @if($group->qualification_status == "draw" && in_array($groupTeam->team_id, json_decode($group->drawn_teams_ids ?? [])))
+                                                                                                @php($showSubmitButton = true)
+                                                                                                <input wire:click="toggleQualifiedTeams({{ $group->id }}, {{ $groupTeam->team_id }})" type="checkbox" name="qualified-team-{{ $group->id }}" class="form-check-input">
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    @if($showSubmitButton)
+                                                                        <div class="row">
+                                                                            <div class="col-8 mt-4">
+                                                                                @error('qualifiedTeamsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                                                            </div>
+                                                                            <div class="col-4 text-end mt-4">
+                                                                                <button wire:click="qualifyDrawnTeams({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Qualify</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="card-footer">
-                                                            @if($showSubmitButton)
-                                                                <div class="row">
-                                                                    <div class="col-8 mt-4">
-                                                                        @error('qualifiedTeamsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
-                                                                    </div>
-                                                                    <div class="col-4 text-end mt-4">
-                                                                        <button wire:click="qualifyDrawnTeams({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Qualify</button>
+                                                        <div class="col-lg-6 col-sm-12 d-flex">
+                                                            <div class="card m-2 flex-fill d-flex flex-column">
+                                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                                    <h5 class="mb-0">Court Details</h5>
+                                                                </div>
+                                                                <div class="card-body flex-fill">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <label class="form-label" for="courtId">Court <span class="text-danger">*</span></label>
+                                                                            <div wire:ignore>
+                                                                                <select
+                                                                                    wire:model="courtsIds.{{ $group->id }}"
+                                                                                    wire:change="getCourtDetails({{ $group->id }}, $event.target.value)"
+                                                                                    class="form-select selectpicker w-100"
+                                                                                    aria-label="Default select example"
+                                                                                    title="Select Court"
+                                                                                    data-style="btn-default"
+                                                                                    data-live-search="true"
+                                                                                    data-icon-base="ti"
+                                                                                    data-tick-icon="ti-check text-white"
+                                                                                    required
+                                                                                    @disabled($group->is_completed)
+                                                                                >
+                                                                                    @foreach($courts as $court)
+                                                                                        <option value="{{ $court->id }}" @selected($group->court_id == $court->id)>{{ $court->name }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            @error('courtsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
+                                                                        </div>
+                                                                        <div class="col-12 mt-4">
+                                                                            <label class="form-label" for="courtId">Location</label>
+                                                                            <input wire:model="courtsDetails.{{ $group->id }}" class="form-control" readonly disabled />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-sm-12 d-flex">
-                                                    <div class="card m-2 flex-fill d-flex flex-column">
-                                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                                            <h5 class="mb-0">Court Details</h5>
-                                                        </div>
-                                                        <div class="card-body flex-fill">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <label class="form-label" for="courtId">Court <span class="text-danger">*</span></label>
-                                                                    <div wire:ignore>
-                                                                        <select
-                                                                            wire:model="courtsIds.{{ $group->id }}"
-                                                                            wire:change="getCourtDetails({{ $group->id }}, $event.target.value)"
-                                                                            class="form-select selectpicker w-100"
-                                                                            aria-label="Default select example"
-                                                                            title="Select Court"
-                                                                            data-style="btn-default"
-                                                                            data-live-search="true"
-                                                                            data-icon-base="ti"
-                                                                            data-tick-icon="ti-check text-white"
-                                                                            required
-                                                                            @disabled($group->is_completed)
-                                                                        >
-                                                                            @foreach($courts as $court)
-                                                                                <option value="{{ $court->id }}" @selected($group->court_id == $court->id)>{{ $court->name }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                    @error('courtsIds.' . $group->id) <div class="text-danger">{{ $message }}</div> @enderror
-                                                                </div>
-                                                                <div class="col-12 mt-4">
-                                                                    <label class="form-label" for="courtId">Location</label>
-                                                                    <input wire:model="courtsDetails.{{ $group->id }}" class="form-control" readonly disabled />
+                                                                <div class="card-footer">
+                                                                    @if(!$group->is_completed)
+                                                                        <div class="col-12 text-end mt-4">
+                                                                            <button wire:click="storeGroupCourt({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Save</button>
+                                                                        </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="card-footer">
-                                                            @if(!$group->is_completed)
-                                                                <div class="col-12 text-end mt-4">
-                                                                    <button wire:click="storeGroupCourt({{ $group->id }})" type="button" class="btn btn-primary me-sm-3 me-1">Save</button>
-                                                                </div>
-                                                            @endif
-                                                        </div>
                                                     </div>
+
+                                                    @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts, 'group' => $group, 'scorekeepers' => $scorekeepers])
                                                 </div>
                                             </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="card mt-2 bg-light accordion-item {{ $stage->is_completed ? "" : "active" }}">
+                                        <h2 class="accordion-header d-flex align-items-center">
+                                            <button
+                                                type="button"
+                                                class="accordion-button bg-light"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#accordionWithIcon-{{ $key }}"
+                                                aria-expanded="true">
+                                                <i class="ti ti-{{ $stage->is_completed ? "check" : "loader" }} ti-xs me-2"></i>
+                                                {{ $stage->name }}(s)
+                                            </button>
+                                        </h2>
 
-                                            @include('livewire.partials.matches-table', ['games' => $group->games, 'courts' => $courts, 'group' => $group, 'scorekeepers' => $scorekeepers])
+                                        <div id="accordionWithIcon-{{ $key }}" class="accordion-collapse collapse {{ $stage->is_completed ? "" : "show" }}">
+                                            <div class="accordion-body">
+                                                @include('livewire.partials.matches-table', ['games' => $stage->games, 'courts' => $courts, 'stage' => $stage, 'scorekeepers' => $scorekeepers])
+                                            </div>
                                         </div>
                                     </div>
-                                @endforeach
-                            @else
-                                <div class="card mt-4 mb-4 bg-light">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0">{{ $stage->name }}(s)</h5>
-                                    </div>
-                                    <div class="card-body">
-
-                                        @include('livewire.partials.matches-table', ['games' => $stage->games, 'courts' => $courts, 'stage' => $stage, 'scorekeepers' => $scorekeepers])
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
