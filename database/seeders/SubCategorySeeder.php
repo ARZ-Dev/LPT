@@ -13,44 +13,28 @@ class SubCategorySeeder extends Seeder
         $subCategories = [
             [
                 'category_id' => 1,
-                'name' => 'SUB 1',
+                'name' => 'Payment Sub Cat 1',
             ],
             [
                 'category_id' => 1,
-                'name' => 'SUB 2',
-            ],
-            [
-                'category_id' => 1,
-                'name' => 'SUB 3',
-            ],
-
-            [
-                'category_id' => 2,
-                'name' => 'SUBX 1',
+                'name' => 'Payment Sub Cat 2',
             ],
             [
                 'category_id' => 2,
-                'name' => 'SUBX 2',
+                'name' => 'Payment Sub Cat 3',
             ],
             [
                 'category_id' => 2,
-                'name' => 'SUBX 3',
-            ],
-
-            [
-                'category_id' => 3,
-                'name' => 'SUBXZ 1',
+                'name' => 'Payment Sub Cat 4',
             ],
             [
                 'category_id' => 3,
-                'name' => 'SUBXZ 2',
+                'name' => 'Team',
             ],
             [
                 'category_id' => 3,
-                'name' => 'SUBXZ 3',
+                'name' => 'Player',
             ],
-
-
         ];
 
         foreach ($subCategories as $subCategory) {
