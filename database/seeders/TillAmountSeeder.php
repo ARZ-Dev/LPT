@@ -13,32 +13,20 @@ class TillAmountSeeder extends Seeder
         $tillAmounts = [
             [
                 'till_id' => 1,
-                'amount' => 100,
+                'amount' => 0,
                 'currency_id' => 1,
 
             ],
             [
                 'till_id' => 1,
-                'amount' => 50,
+                'amount' => 0,
                 'currency_id' => 2,
 
             ],
             [
                 'till_id' => 1,
-                'amount' => 1000000,
+                'amount' => 0,
                 'currency_id' => 3,
-            ],
-            [
-                'till_id' => 2,
-                'amount' => 50,
-                'currency_id' => 1,
-
-            ],
-            [
-                'till_id' => 2,
-                'amount' => 500000,
-                'currency_id' => 3,
-
             ],
         ];
         foreach ($tillAmounts as $tillAmount) {

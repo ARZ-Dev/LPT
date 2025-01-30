@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(SubCategorySeeder::class);
         $this->call(CurrencySeeder::class);
-        $this->call(TillSeeder::class);
+//        $this->call(TillSeeder::class);
         $this->call(LevelCategorySeeder::class);
         $this->call(TournamentTypeSeeder::class);
         $this->call(TournamentFormatSeeder::class);
@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CountrySeeder::class);
         $this->call(GovernorateSeeder::class);
         $this->call(CitySeeder::class);
-        $this->call(TillAmountSeeder::class);
+//        $this->call(TillAmountSeeder::class);
         $this->call(TeamsSeeder::class);
         $this->call(PlayersSeeder::class);
         //$this->call(TournamentsSeeder::class);
