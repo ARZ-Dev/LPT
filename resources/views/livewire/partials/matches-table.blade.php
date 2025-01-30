@@ -87,6 +87,9 @@
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#absentTeam{{$game->id}}" class="btn rounded-pill btn-icon btn-warning waves-effect waves-light btn-sm">
                                                 <span class="ti ti-hand-stop text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Absence"></span>
                                             </a>
+                                            <a href="{{ route('matches.set-scores', $game->id) }}" class="btn rounded-pill btn-icon btn-secondary btn-sm">
+                                                <span class="ti ti-report-analytics text-white"  data-bs-toggle="tooltip" data-bs-placement="top" title="Set Scores"></span>
+                                            </a>
                                         @endif
                                     @endif
                                 @else

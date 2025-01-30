@@ -56,6 +56,7 @@ use App\Livewire\Tournaments\TournamentCategoryKnockoutMap;
 use App\Livewire\Matches\MatchesView;
 use App\Livewire\Matches\MatchesForm;
 use App\Livewire\Matches\MatchDetails;
+use App\Livewire\Matches\MatchSetScore;
 
 use App\Livewire\MatchScoringForm;
 use App\Livewire\Matches\KnockoutStageView;
@@ -259,6 +260,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/view/{id}/{status}', MatchesForm::class)->name('matches.view');
         Route::get('{matchId}/scoring', MatchScoringForm::class)->name('matches.scoring');
         Route::get('/{matchId}/details', MatchDetails::class)->name('matches.details');
+        Route::get('/{matchId}/set-scores', MatchSetScore::class)->name('matches.set-scores');
     });
 
     Route::group(['prefix' => 'tournament-types'], function() {
