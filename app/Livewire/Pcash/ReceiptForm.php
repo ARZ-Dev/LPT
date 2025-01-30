@@ -127,6 +127,7 @@ class ReceiptForm extends Component
 
                 if (count($this->subCategories) == 1) {
                     $this->sub_category_id = $this->subCategories[0]->id;
+                    $this->setCharge();
                 }
             }
 

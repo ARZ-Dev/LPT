@@ -17,17 +17,19 @@ class CategorySeeder extends Seeder
         $categoryData = [
             [
                 'user_id' =>  1,
-                'name' => 'Cat 1',
+                'name' => 'Payment Cat 1',
+                'type' => 'payment',
             ],
             [
                 'user_id' =>  1,
-                'name' => 'Cat 2',
+                'name' => 'Payment Cat 2',
+                'type' => 'payment',
             ],
             [
-                'user_id' =>  2,
-                'name' => 'Cat 3',
+                'user_id' =>  1,
+                'name' => 'Tournament Receipts',
+                'type' => 'receipt',
             ],
-
         ];
 
         foreach ($categoryData as &$category) {
