@@ -69,10 +69,16 @@
                                         <th class="border text-center">{{ $homeTeam->nickname }}</th>
                                         @foreach($sets ?? [] as $key => $set)
                                             <td class="border">
-                                                <input wire:model="sets.{{ $key }}.home_team_score" type="text" class="form-control" />
+                                                <input wire:model="sets.{{ $key }}.home_team_score" type="text" class="form-control" placeholder="Set Score" />
                                                 @error('sets.' . $key . '.home_team_score')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
+{{--                                                @if((($set['home_team_score'] == $nbOfGamesToWin + 1) && $set['away_team_score'] == $nbOfGamesToWin) || (($set['away_team_score'] == $nbOfGamesToWin + 1) && $set['home_team_score'] == $nbOfGamesToWin))--}}
+{{--                                                    <input wire:model="sets.{{ $key }}.home_team_tiebreak_score" type="text" class="form-control mt-1" placeholder="Tiebreak Score" />--}}
+{{--                                                    @error('sets.' . $key . '.home_team_tiebreak_score')--}}
+{{--                                                    <span class="text-danger">{{ $message }}</span>--}}
+{{--                                                    @enderror--}}
+{{--                                                @endif--}}
                                             </td>
                                         @endforeach
                                         <td class="border">
@@ -93,10 +99,16 @@
                                         <th class="border text-center">{{ $awayTeam->nickname }}</th>
                                         @foreach($sets ?? [] as $key => $set)
                                             <td class="border">
-                                                <input wire:model="sets.{{ $key }}.away_team_score" type="text" class="form-control" />
+                                                <input wire:model="sets.{{ $key }}.away_team_score" type="text" class="form-control" placeholder="Set Score" //>
                                                 @error('sets.' . $key . '.away_team_score')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
+{{--                                                @if((($set['home_team_score'] == $nbOfGamesToWin + 1) && $set['away_team_score'] == $nbOfGamesToWin) || (($set['away_team_score'] == $nbOfGamesToWin + 1) && $set['home_team_score'] == $nbOfGamesToWin))--}}
+{{--                                                    <input wire:model="sets.{{ $key }}.away_team_tiebreak_score" type="text" class="form-control mt-1" placeholder="Tiebreak Score" />--}}
+{{--                                                    @error('sets.' . $key . '.away_team_tiebreak_score')--}}
+{{--                                                    <span class="text-danger">{{ $message }}</span>--}}
+{{--                                                    @enderror--}}
+{{--                                                @endif--}}
                                             </td>
                                         @endforeach
                                         <td class="border">
