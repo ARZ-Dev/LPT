@@ -3,6 +3,7 @@
 namespace App\Livewire\Matches;
 
 use App\Models\Game;
+use App\Models\Set;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -68,8 +69,8 @@ class MatchSetScore extends Component
     public function rules()
     {
         return [
-            'sets.*.home_team_score' => ['required', 'integer', 'min:0', 'max:7'],
-            'sets.*.away_team_score' => ['required', 'integer', 'min:0', 'max:7'],
+            'sets.*.home_team_score' => ['required', 'integer', 'min:0', 'max:' . $this->nbOfGamesToWin + 1],
+            'sets.*.away_team_score' => ['required', 'integer', 'min:0', 'max:' . $this->nbOfGamesToWin + 1],
         ];
     }
 
@@ -106,8 +107,40 @@ class MatchSetScore extends Component
                     $awayWins++;
                 }
 
-                throw_if(($homeWins !== $this->nbOfSetsToWin) && ($awayWins !== $this->nbOfSetsToWin), 'The winner must win ' . $this->nbOfSetsToWin . ' sets to end the match.');
+                Set::create([
+                    'game_id' => $this->match->id,
+                    'set_number' => $key + 1,
+                    'home_team_score' => $set['home_team_score'],
+                    'away_team_score' => $set['away_team_score'],
+                    'winner_team_id' => $set['home_team_score'] > $set['away_team_score'] ? $this->homeTeam->id : $this->awayTeam->id,
+                    'is_completed' => true,
+                    'completed_at' => now(),
+                ]);
+
             }
+            if (($homeWins !== $this->nbOfSetsToWin) && ($awayWins !== $this->nbOfSetsToWin)) {
+                return throw new \Exception( 'The winner must win ' . $this->nbOfSetsToWin . ' sets to end the match.');
+            }
+
+            $winningTeam = $homeWins > $awayWins ? $this->homeTeam : $this->awayTeam;
+            $loserTeam = $homeWins > $awayWins ? $this->awayTeam : $this->homeTeam;
+
+            $this->match->update([
+                'winner_team_id' => $winningTeam->id,
+                'loser_team_id' => $loserTeam->id,
+                'is_started' => 1,
+                'started_at' => now(),
+                'started_by' => auth()->id(),
+                'is_completed' => 1,
+                'completed_at' => now(),
+            ]);
+
+            MatchesView::updateMatchWinner($this->matchId, $winningTeam->id);
+
+            $this->dispatch('swal:success', [
+                'title' => 'Great!',
+                'text'  => $winningTeam->nickname . " has won!",
+            ]);
 
             DB::commit();
         } catch (\Exception $exception) {
