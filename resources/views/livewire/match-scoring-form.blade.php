@@ -73,12 +73,12 @@
                                                     {{ $set->home_team_score }}
                                                     @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
                                                         <sup>
-                                                            @php($homeTeamScoreDetails = $set->setGames()->latest()->first()->points()->latest()->first())
-                                                            @if($homeTeamScoreDetails->home_team_score == "won")
-                                                                @php($beforeLastDetails = $set->setGames()->latest()->first()->points()->where('point_number', $homeTeamScoreDetails->point_number - 1)->first())
+                                                            @php($homeTeamScoreDetails = $set->setGames()->latest()->first()?->points()->latest()->first())
+                                                            @if($homeTeamScoreDetails?->home_team_score == "won")
+                                                                @php($beforeLastDetails = $set->setGames()->latest()->first()?->points()->where('point_number', $homeTeamScoreDetails->point_number - 1)->first())
                                                                 {{ $beforeLastDetails->home_team_score + 1 }}
                                                             @else
-                                                                {{ $homeTeamScoreDetails->home_team_score }}
+                                                                {{ $homeTeamScoreDetails?->home_team_score }}
                                                             @endif
                                                         </sup>
                                                     @endif
@@ -126,12 +126,12 @@
                                                     {{ $set->away_team_score }}
                                                     @if($set->is_completed && ($set->home_team_score == $nbOfGamesToWin + 1 && $set->away_team_score == $nbOfGamesToWin) || ($set->home_team_score == $nbOfGamesToWin && $set->away_team_score == $nbOfGamesToWin + 1))
                                                         <sup>
-                                                            @php($awayTeamScoreDetails = $set->setGames()->latest()->first()->points()->latest()->first())
-                                                            @if($awayTeamScoreDetails->away_team_score == "won")
-                                                                @php($beforeLastDetails = $set->setGames()->latest()->first()->points()->where('point_number', $awayTeamScoreDetails->point_number - 1)->first())
+                                                            @php($awayTeamScoreDetails = $set->setGames()->latest()->first()?->points()->latest()->first())
+                                                            @if($awayTeamScoreDetails?->away_team_score == "won")
+                                                                @php($beforeLastDetails = $set->setGames()->latest()->first()?->points()->where('point_number', $awayTeamScoreDetails->point_number - 1)->first())
                                                                 {{ $beforeLastDetails->away_team_score + 1 }}
                                                             @else
-                                                                {{ $awayTeamScoreDetails->away_team_score }}
+                                                                {{ $awayTeamScoreDetails?->away_team_score }}
                                                             @endif
                                                         </sup>
                                                     @endif

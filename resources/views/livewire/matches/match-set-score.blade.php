@@ -49,16 +49,12 @@
                                         <td style="width: 20% !important;"></td>
                                         @foreach($sets as $key => $set)
                                             <td style="width: {{ 70 / count($sets) }}% !important;">
-                                                <div class="d-flex justify-content-between">
-                                                    <span>
-                                                        Set {{ $loop->iteration }}
-                                                    </span>
-                                                    @if($loop->iteration > $nbOfSetsToWin)
-                                                    <button type="button" wire:click="removeSet({{ $key }})" class="btn btn-danger rounded-pill btn-icon">
-                                                        <span class="ti ti-circle-minus text-white"></span>
-                                                    </button>
-                                                    @endif
-                                                </div>
+                                                Set {{ $loop->iteration }}
+                                                @if($loop->iteration > $nbOfSetsToWin)
+                                                <button type="button" wire:click="removeSet({{ $key }})" class="btn btn-danger rounded-pill btn-icon m-2">
+                                                    <span class="ti ti-circle-minus text-white"></span>
+                                                </button>
+                                                @endif
                                             </td>
                                         @endforeach
                                         <td style="width: 10% !important;">

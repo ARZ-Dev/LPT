@@ -81,6 +81,8 @@ class MatchSetScore extends Component
         DB::beginTransaction();
         try {
 
+            throw_if($this->match->is_completed, "Match is already completed!");
+
             $homeWins = 0;
             $awayWins = 0;
 
@@ -98,6 +100,10 @@ class MatchSetScore extends Component
                     if ($homeScore != ($this->nbOfGamesToWin + 1) && $awayScore != ($this->nbOfGamesToWin + 1) ) {
                         return throw new \Exception( 'Set '. $key + 1 .' tiebreak winner must have a winning score of '. $this->nbOfGamesToWin + 1 .' games.');
                     }
+                }
+
+                if (($homeScore == ($this->nbOfGamesToWin + 1) && $awayScore < ($this->nbOfGamesToWin - 1)) || ($awayScore == ($this->nbOfGamesToWin + 1) && $homeScore < ($this->nbOfGamesToWin - 1))) {
+                    return throw new \Exception( 'Set '. $key + 1 .' must have a winning score by maximum 2 games difference.');
                 }
 
                 // Count the number of sets won by each player
@@ -119,7 +125,7 @@ class MatchSetScore extends Component
 
             }
             if (($homeWins !== $this->nbOfSetsToWin) && ($awayWins !== $this->nbOfSetsToWin)) {
-                return throw new \Exception( 'The winner must win ' . $this->nbOfSetsToWin . ' sets to end the match.');
+                return throw new \Exception( 'The winner must win exactly ' . $this->nbOfSetsToWin . ' sets to end the match.');
             }
 
             $winningTeam = $homeWins > $awayWins ? $this->homeTeam : $this->awayTeam;
@@ -137,12 +143,9 @@ class MatchSetScore extends Component
 
             MatchesView::updateMatchWinner($this->matchId, $winningTeam->id);
 
-            $this->dispatch('swal:success', [
-                'title' => 'Great!',
-                'text'  => $winningTeam->nickname . " has won!",
-            ]);
-
             DB::commit();
+
+            return to_route('matches.scoring', $this->matchId)->with('success', $winningTeam->nickname . " has won!");
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->dispatch('swal:error', [
