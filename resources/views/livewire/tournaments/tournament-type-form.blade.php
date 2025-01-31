@@ -4,7 +4,7 @@
             <form class="row g-3">
                 <div class="card mb-2">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Edit Tournament Type</h5>
+                        <h5 class="mb-0">{{ $editing ? "Edit" : "Create" }} Tournament Type</h5>
                         <a href="{{ route('types') }}"
                            class="btn btn-primary mb-2 text-nowrap"
                         >

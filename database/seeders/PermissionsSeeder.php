@@ -122,8 +122,10 @@ class PermissionsSeeder extends Seeder
             'matches-view',
             'matches-scoring',
             'matches-setDate',
+            'matches-setScore',
 
             'tournamentType-list',
+            'tournamentType-create',
             'tournamentType-edit',
 
             'sportCenter-list',

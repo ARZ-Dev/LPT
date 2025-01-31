@@ -265,6 +265,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::group(['prefix' => 'tournament-types'], function() {
         Route::get('/', TournamentTypeView::class)->name('types');
+        Route::get('/create', TournamentTypeForm::class)->name('types.create');
         Route::get('/edit/{typeId}', TournamentTypeForm::class)->name('types.edit');
     });
 

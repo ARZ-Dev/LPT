@@ -12,14 +12,18 @@ class TournamentTypeForm extends Component
     public $name;
     public $points;
     public $stagePoints = [];
+    public bool $editing = false;
 
-    public function mount($typeId)
+    public function mount($typeId = 0)
     {
-        $this->type = TournamentType::with('settings')->findOrFail($typeId);
-        $this->name = $this->type->name;
-        $this->points = number_format($this->type->points);
+        if ($typeId) {
+            $this->type = TournamentType::with('settings')->findOrFail($typeId);
+            $this->editing = true;
+            $this->name = $this->type->name;
+            $this->points = number_format($this->type->points);
+        }
 
-        if (count($this->type->settings)) {
+        if (count($this->type?->settings ?? [])) {
             $this->stagePoints = $this->type->settings->toArray();
         } else {
             $stages = ['Group Stages', 'Round of 64', 'Round of 32', 'Round of 16', 'Quarter Final', 'Semi Final', 'Final'];
@@ -36,8 +40,8 @@ class TournamentTypeForm extends Component
     public function rules()
     {
         return [
-            'type' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
+            'points' => ['required', 'min:1'],
             'stagePoints.*.stage' => ['required'],
             'stagePoints.*.points' => ['required', 'integer'],
         ];
@@ -46,6 +50,18 @@ class TournamentTypeForm extends Component
     public function store()
     {
         $this->validate();
+
+        if ($this->editing) {
+            $this->type->update([
+                'name' => $this->name,
+                'points' => $this->points,
+            ]);
+        } else {
+            $this->type = TournamentType::create([
+                'name' => $this->name,
+                'points' => $this->points,
+            ]);
+        }
 
         foreach ($this->stagePoints as $stagePoint) {
             TournamentTypeSettings::updateOrCreate([
