@@ -636,7 +636,7 @@ class TournamentCategoryForm extends Component
         $this->lastNav = "stages";
         $this->validate([
             'stagesDetails.*.tournament_deuce_type_id' => ['required'],
-            'stagesDetails.*.nb_of_sets' => ['required', 'integer', new OddNumber()],
+            'stagesDetails.*.nb_of_sets' => ['required', 'integer'],
             'stagesDetails.*.nb_of_games' => ['required', 'integer'],
             'stagesDetails.*.tie_break' => ['required', 'integer'],
         ]);

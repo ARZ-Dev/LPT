@@ -3,6 +3,7 @@
 namespace App\Livewire\Matches;
 
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class MatchSetScore extends Component
@@ -36,7 +37,6 @@ class MatchSetScore extends Component
         } else {
             $this->stage = $this->match->group?->knockoutStage;
         }
-
 
         $this->nbOfGamesToWin = $this->stage->nb_of_games;
         $this->tiebreakPointsToWin = $this->stage->tie_break;
@@ -77,43 +77,48 @@ class MatchSetScore extends Component
     {
         $this->validate();
 
-        $homeWins = 0;
-        $awayWins = 0;
+        DB::beginTransaction();
+        try {
 
-        foreach ($this->sets as $set) {
-            $homeScore = (int) $set['home_team_score'];
-            $awayScore = (int) $set['away_team_score'];
+            $homeWins = 0;
+            $awayWins = 0;
 
-            // Validate that the set score is either 6 or 7 (tiebreak scenario)
-            if (!($homeScore == 6 || $homeScore == 7) && !($awayScore == 6 || $awayScore == 7)) {
-                $this->addError('sets', 'Each set must have a winning score of 6 or 7 games.');
-                return;
-            }
+            foreach ($this->sets as $key => $set) {
+                $homeScore = (int) $set['home_team_score'];
+                $awayScore = (int) $set['away_team_score'];
 
-            // Check that the winner wins by at least 2 games if no tiebreak
-            if ($homeScore == 6 && $awayScore >= 5) {
-                if ($awayScore != 5) {
-                    $this->addError('sets', 'Winner must win by 2 games unless in a tiebreak.');
-                    return;
+                // Validate that the set score is either 6 or 7 (tiebreak scenario)
+                if (!($homeScore == $this->nbOfGamesToWin || $homeScore == ($this->nbOfGamesToWin + 1)) && !($awayScore == $this->nbOfGamesToWin || $awayScore == ($this->nbOfGamesToWin + 1))) {
+                    return throw new \Exception( 'Set '. $key + 1 .' must have a winning score of '. $this->nbOfGamesToWin .' or '. $this->nbOfGamesToWin + 1 .' games.');
                 }
-            }
 
-            if ($awayScore == 6 && $homeScore >= 5) {
-                if ($homeScore != 5) {
-                    $this->addError('sets', 'Winner must win by 2 games unless in a tiebreak.');
-                    return;
+                // Check that the winner wins by at least 2 games if no tiebreak
+                if ($homeScore >= ($this->nbOfGamesToWin - 1) && $awayScore >= ($this->nbOfGamesToWin - 1)) {
+                    if ($homeScore != ($this->nbOfGamesToWin + 1) && $awayScore != ($this->nbOfGamesToWin + 1) ) {
+                        return throw new \Exception( 'Set '. $key + 1 .' tiebreak winner must have a winning score of '. $this->nbOfGamesToWin + 1 .' games.');
+                    }
                 }
+
+                // Count the number of sets won by each player
+                if ($homeScore > $awayScore) {
+                    $homeWins++;
+                } elseif ($awayScore > $homeScore) {
+                    $awayWins++;
+                }
+
+                throw_if(($homeWins !== $this->nbOfSetsToWin) && ($awayWins !== $this->nbOfSetsToWin), 'The winner must win ' . $this->nbOfSetsToWin . ' sets to end the match.');
             }
 
-            // Count the number of sets won by each player
-            if ($homeScore > $awayScore) {
-                $homeWins++;
-            } elseif ($awayScore > $homeScore) {
-                $awayWins++;
-            }
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text'  => $exception->getMessage(),
+            ]);
         }
 
-        //
+
     }
 
     public function render()

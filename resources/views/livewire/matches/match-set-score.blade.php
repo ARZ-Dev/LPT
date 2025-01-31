@@ -1,5 +1,5 @@
 <div>
-    <form>
+    <form wire:submit.prevent="submit">
 
         <div class="card mb-2">
             <div class="card-header d-flex justify-content-between">
@@ -74,6 +74,9 @@
                                         @foreach($sets ?? [] as $key => $set)
                                             <td class="border">
                                                 <input wire:model="sets.{{ $key }}.home_team_score" type="text" class="form-control" />
+                                                @error('sets.' . $key . '.home_team_score')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </td>
                                         @endforeach
                                         <td class="border">
@@ -95,6 +98,9 @@
                                         @foreach($sets ?? [] as $key => $set)
                                             <td class="border">
                                                 <input wire:model="sets.{{ $key }}.away_team_score" type="text" class="form-control" />
+                                                @error('sets.' . $key . '.away_team_score')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </td>
                                         @endforeach
                                         <td class="border">
@@ -118,6 +124,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
     </form>
